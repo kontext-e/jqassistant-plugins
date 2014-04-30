@@ -11,3 +11,9 @@ is available at maven repositories.
 * build the plugins using gradle wrapper: gradlew jar
 * copy the jar(s) from .../build/libs into the classpath of your project
 * execute jQAssistant tasks
+
+Coming soon
+===========
+* JaCoCo
+* JavaNCSS
+* PMD
