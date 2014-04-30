@@ -8,8 +8,8 @@
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="modules">
           <set>
-            <option value="C:\Users\jn\projects\jqassistant-plugins" />
-            <option value="C:\Users\jn\projects\jqassistant-plugins\checkstyle" />
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/checkstyle" />
           </set>
         </option>
       </GradleProjectSettings>
