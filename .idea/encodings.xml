@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding" useUTFGuessing="true" native2AsciiForPropertiesFiles="false">
+    <file url="file://$PROJECT_DIR$/checkstyle/src/main/java/de/kontext_e/jqassistant/plugin/checkstyle/jaxb/CheckstyleType.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/checkstyle/src/main/java/de/kontext_e/jqassistant/plugin/checkstyle/jaxb/ErrorType.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/checkstyle/src/main/java/de/kontext_e/jqassistant/plugin/checkstyle/jaxb/FileType.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/checkstyle/src/main/java/de/kontext_e/jqassistant/plugin/checkstyle/jaxb/ObjectFactory.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/checkstyle/src/main/java/de/kontext_e/jqassistant/plugin/checkstyle/scanner/CheckstyleScannerPlugin.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/checkstyle/src/main/java/de/kontext_e/jqassistant/plugin/checkstyle/store/descriptor/CheckstyleDescriptor.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/checkstyle/src/main/java/de/kontext_e/jqassistant/plugin/checkstyle/store/descriptor/ErrorDescriptor.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/checkstyle/src/main/java/de/kontext_e/jqassistant/plugin/checkstyle/store/descriptor/FileDescriptor.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/checkstyle/src/main/resources/META-INF/jqassistant-plugin.xml" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/checkstyle/src/main/resources/META-INF/xsd" charset="UTF-8" />
+  </component>
+</project>
+

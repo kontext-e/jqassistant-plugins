@@ -1,0 +1,4 @@
+jar {
+    baseName = 'jqassistant.plugin.checkstyle'
+}
+

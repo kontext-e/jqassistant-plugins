@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/checkstyle/checkstyle.iml" filepath="$PROJECT_DIR$/checkstyle/checkstyle.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jqassistant-plugins.iml" filepath="$PROJECT_DIR$/jqassistant-plugins.iml" />
+    </modules>
+  </component>
+</project>
+
