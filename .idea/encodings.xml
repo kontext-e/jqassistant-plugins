@@ -11,6 +11,24 @@
     <file url="file://$PROJECT_DIR$/checkstyle/src/main/java/de/kontext_e/jqassistant/plugin/checkstyle/store/descriptor/FileDescriptor.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/checkstyle/src/main/resources/META-INF/jqassistant-plugin.xml" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/checkstyle/src/main/resources/META-INF/xsd" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/findbugs/src/main/java/de/kontext_e/jqassistant/plugin/findbugs/jaxb/BugCollectionType.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/findbugs/src/main/java/de/kontext_e/jqassistant/plugin/findbugs/jaxb/BugInstanceType.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/findbugs/src/main/java/de/kontext_e/jqassistant/plugin/findbugs/jaxb/ClassProfileType.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/findbugs/src/main/java/de/kontext_e/jqassistant/plugin/findbugs/jaxb/ClassStatsType.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/findbugs/src/main/java/de/kontext_e/jqassistant/plugin/findbugs/jaxb/ClassType.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/findbugs/src/main/java/de/kontext_e/jqassistant/plugin/findbugs/jaxb/ErrorsType.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/findbugs/src/main/java/de/kontext_e/jqassistant/plugin/findbugs/jaxb/FieldType.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/findbugs/src/main/java/de/kontext_e/jqassistant/plugin/findbugs/jaxb/FindBugsProfileType.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/findbugs/src/main/java/de/kontext_e/jqassistant/plugin/findbugs/jaxb/FindBugsSummaryType.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/findbugs/src/main/java/de/kontext_e/jqassistant/plugin/findbugs/jaxb/ObjectFactory.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/findbugs/src/main/java/de/kontext_e/jqassistant/plugin/findbugs/jaxb/PackageStatsType.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/findbugs/src/main/java/de/kontext_e/jqassistant/plugin/findbugs/jaxb/ProjectType.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/findbugs/src/main/java/de/kontext_e/jqassistant/plugin/findbugs/jaxb/SourceLineType.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/findbugs/src/main/java/de/kontext_e/jqassistant/plugin/findbugs/scanner/FindBugsScannerPlugin.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/findbugs/src/main/java/de/kontext_e/jqassistant/plugin/findbugs/store/descriptor/BugInstanceDescriptor.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/findbugs/src/main/java/de/kontext_e/jqassistant/plugin/findbugs/store/descriptor/FindBugsDescriptor.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/findbugs/src/main/java/de/kontext_e/jqassistant/plugin/findbugs/store/descriptor/SourceLineDescriptor.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/findbugs/src/main/resources/META-INF" charset="UTF-8" />
   </component>
 </project>
 

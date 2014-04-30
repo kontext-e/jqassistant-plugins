@@ -107,9 +107,6 @@ public class CheckstyleScannerPlugin implements FileScannerPlugin {
         final String property = properties.getProperty("jqassistant.plugin.checkstyle.basepackage");
         if(property != null) {
             basePackage = property;
-            System.out.println(" oooooooooooooo BASE PACKAGE="+basePackage);
-        } else {
-            System.out.println(" oooooooooooooo WARNING: property not set, use default="+basePackage);
         }
     }
 }

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="BugCollection" type="BugCollectionType"/>
+  <xs:complexType name="ErrorsType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="MissingClass"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="errors"/>
+    <xs:attribute type="xs:string" name="missingClasses"/>
+  </xs:complexType>
+  <xs:complexType name="BugCollectionType">
+    <xs:sequence>
+      <xs:element type="ProjectType" name="Project"/>
+      <xs:element type="BugInstanceType" name="BugInstance" maxOccurs="unbounded" minOccurs="0"/>
+      <xs:element type="ErrorsType" name="Errors"/>
+      <xs:element type="FindBugsSummaryType" name="FindBugsSummary"/>
+      <xs:element type="xs:string" name="ClassFeatures"/>
+      <xs:element type="xs:string" name="History"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="version"/>
+    <xs:attribute type="xs:string" name="sequence"/>
+    <xs:attribute type="xs:string" name="timestamp"/>
+    <xs:attribute type="xs:string" name="analysisTimestamp"/>
+    <xs:attribute type="xs:string" name="release"/>
+  </xs:complexType>
+  <xs:complexType name="ProjectType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="Jar" maxOccurs="unbounded" minOccurs="0"/>
+      <xs:element type="xs:string" name="AuxClasspathEntry" maxOccurs="unbounded" minOccurs="0"/>
+      <xs:element type="xs:string" name="SrcDir" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="projectName"/>
+  </xs:complexType>
+  <xs:complexType name="FindBugsSummaryType">
+    <xs:sequence>
+      <xs:element type="PackageStatsType" name="PackageStats" maxOccurs="unbounded" minOccurs="0"/>
+      <xs:element type="FindBugsProfileType" name="FindBugsProfile"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="timestamp"/>
+    <xs:attribute type="xs:string" name="total_classes"/>
+    <xs:attribute type="xs:string" name="referenced_classes"/>
+    <xs:attribute type="xs:string" name="total_bugs"/>
+    <xs:attribute type="xs:string" name="total_size"/>
+    <xs:attribute type="xs:string" name="num_packages"/>
+    <xs:attribute type="xs:string" name="vm_version"/>
+    <xs:attribute type="xs:string" name="cpu_seconds"/>
+    <xs:attribute type="xs:string" name="clock_seconds"/>
+    <xs:attribute type="xs:string" name="peak_mbytes"/>
+    <xs:attribute type="xs:string" name="alloc_mbytes"/>
+    <xs:attribute type="xs:string" name="gc_seconds"/>
+    <xs:attribute type="xs:string" name="priority_2"/>
+  </xs:complexType>
+  <xs:complexType name="SourceLineType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="classname" use="optional"/>
+        <xs:attribute type="xs:string" name="start" use="optional"/>
+        <xs:attribute type="xs:string" name="end" use="optional"/>
+        <xs:attribute type="xs:string" name="sourcefile" use="optional"/>
+        <xs:attribute type="xs:string" name="sourcepath" use="optional"/>
+        <xs:attribute type="xs:string" name="startBytecode" use="optional"/>
+        <xs:attribute type="xs:string" name="endBytecode" use="optional"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="FieldType">
+    <xs:sequence>
+      <xs:element type="SourceLineType" name="SourceLine"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="classname" use="optional"/>
+    <xs:attribute type="xs:string" name="name" use="optional"/>
+    <xs:attribute type="xs:string" name="signature" use="optional"/>
+    <xs:attribute type="xs:string" name="isStatic" use="optional"/>
+  </xs:complexType>
+  <xs:complexType name="ClassProfileType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="name" use="optional"/>
+        <xs:attribute type="xs:string" name="totalMilliseconds" use="optional"/>
+        <xs:attribute type="xs:string" name="invocations" use="optional"/>
+        <xs:attribute type="xs:string" name="avgMicrosecondsPerInvocation" use="optional"/>
+        <xs:attribute type="xs:string" name="maxMicrosecondsPerInvocation" use="optional"/>
+        <xs:attribute type="xs:string" name="standardDeviationMircosecondsPerInvocation" use="optional"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="ClassStatsType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="class" use="optional"/>
+        <xs:attribute type="xs:string" name="sourceFile" use="optional"/>
+        <xs:attribute type="xs:string" name="interface" use="optional"/>
+        <xs:attribute type="xs:string" name="size" use="optional"/>
+        <xs:attribute type="xs:string" name="bugs" use="optional"/>
+        <xs:attribute type="xs:string" name="priority_2" use="optional"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="FindBugsProfileType">
+    <xs:sequence>
+      <xs:element type="ClassProfileType" name="ClassProfile" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="PackageStatsType">
+    <xs:sequence>
+      <xs:element type="ClassStatsType" name="ClassStats" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="package" use="optional"/>
+    <xs:attribute type="xs:string" name="total_bugs" use="optional"/>
+    <xs:attribute type="xs:string" name="total_types" use="optional"/>
+    <xs:attribute type="xs:string" name="total_size" use="optional"/>
+    <xs:attribute type="xs:string" name="priority_2" use="optional"/>
+  </xs:complexType>
+  <xs:complexType name="BugInstanceType">
+    <xs:sequence>
+      <xs:element type="ClassType" name="Class"/>
+      <xs:element type="FieldType" name="Field"/>
+      <xs:element type="SourceLineType" name="SourceLine"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="type" use="optional"/>
+    <xs:attribute type="xs:string" name="priority" use="optional"/>
+    <xs:attribute type="xs:string" name="abbrev" use="optional"/>
+    <xs:attribute type="xs:string" name="category" use="optional"/>
+  </xs:complexType>
+  <xs:complexType name="ClassType">
+    <xs:sequence>
+      <xs:element type="SourceLineType" name="SourceLine"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="classname" use="optional"/>
+  </xs:complexType>
+</xs:schema>

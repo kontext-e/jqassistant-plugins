@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/checkstyle/checkstyle.iml" filepath="$PROJECT_DIR$/checkstyle/checkstyle.iml" />
+      <module fileurl="file://$PROJECT_DIR$/findbugs/findbugs.iml" filepath="$PROJECT_DIR$/findbugs/findbugs.iml" />
       <module fileurl="file://$PROJECT_DIR$/jqassistant-plugins.iml" filepath="$PROJECT_DIR$/jqassistant-plugins.iml" />
     </modules>
   </component>

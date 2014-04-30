@@ -10,6 +10,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/checkstyle" />
+            <option value="$PROJECT_DIR$/findbugs" />
           </set>
         </option>
       </GradleProjectSettings>

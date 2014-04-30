@@ -2,3 +2,5 @@ rootProject.name = 'jqassistant-plugins'
 
 include 'checkstyle'
 
+include 'findbugs'
+
