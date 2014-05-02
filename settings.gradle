@@ -4,3 +4,5 @@ include 'checkstyle'
 
 include 'findbugs'
 
+include 'jacoco'
+

@@ -1,0 +1,18 @@
+<jqa-plugin:jqassistant-plugin xmlns:jqa-plugin="http://www.buschmais.com/jqassistant/core/analysis/plugin/schema/v1.0">
+    <store>
+        <type>de.kontext_e.jqassistant.plugin.jacoco.store.descriptor.JacocoDescriptor</type>
+        <type>de.kontext_e.jqassistant.plugin.jacoco.store.descriptor.PackageDescriptor</type>
+        <type>de.kontext_e.jqassistant.plugin.jacoco.store.descriptor.ClassDescriptor</type>
+        <type>de.kontext_e.jqassistant.plugin.jacoco.store.descriptor.MethodDescriptor</type>
+        <type>de.kontext_e.jqassistant.plugin.jacoco.store.descriptor.CounterDescriptor</type>
+    </store>
+    <scanner>
+        <plugin>de.kontext_e.jqassistant.plugin.jacoco.scanner.JacocoScannerPlugin</plugin>
+    </scanner>
+  <rules>
+    <resources>
+      <resource>jacoco.xml</resource>
+    </resources>
+  </rules>
+
+</jqa-plugin:jqassistant-plugin>

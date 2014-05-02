@@ -14,6 +14,5 @@ is available at maven repositories.
 
 Coming soon
 ===========
-* JaCoCo
 * JavaNCSS
 * PMD

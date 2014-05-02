@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="report" type="reportType"/>
+  <xs:complexType name="lineType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="nr" use="optional"/>
+        <xs:attribute type="xs:string" name="mi" use="optional"/>
+        <xs:attribute type="xs:string" name="ci" use="optional"/>
+        <xs:attribute type="xs:string" name="mb" use="optional"/>
+        <xs:attribute type="xs:string" name="cb" use="optional"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="sessioninfoType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="id"/>
+        <xs:attribute type="xs:string" name="start"/>
+        <xs:attribute type="xs:string" name="dump"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="reportType">
+    <xs:sequence>
+      <xs:element type="sessioninfoType" name="sessioninfo"/>
+      <xs:element type="packageType" name="package" maxOccurs="unbounded" minOccurs="0"/>
+      <xs:element type="counterType" name="counter" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="name"/>
+  </xs:complexType>
+  <xs:complexType name="packageType">
+    <xs:sequence>
+      <xs:element type="classType" name="class" maxOccurs="unbounded" minOccurs="0"/>
+      <xs:element type="sourcefileType" name="sourcefile" maxOccurs="unbounded" minOccurs="0"/>
+      <xs:element type="counterType" name="counter" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="name" use="optional"/>
+  </xs:complexType>
+  <xs:complexType name="methodType">
+    <xs:sequence>
+      <xs:element type="counterType" name="counter" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="name" use="optional"/>
+    <xs:attribute type="xs:string" name="desc" use="optional"/>
+    <xs:attribute type="xs:string" name="line" use="optional"/>
+  </xs:complexType>
+  <xs:complexType name="sourcefileType">
+    <xs:sequence>
+      <xs:element type="lineType" name="line" maxOccurs="unbounded" minOccurs="0"/>
+      <xs:element type="counterType" name="counter" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="name" use="optional"/>
+  </xs:complexType>
+  <xs:complexType name="counterType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="type" use="optional"/>
+        <xs:attribute type="xs:string" name="missed" use="optional"/>
+        <xs:attribute type="xs:string" name="covered" use="optional"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="classType">
+    <xs:sequence>
+      <xs:element type="methodType" name="method" maxOccurs="unbounded" minOccurs="0"/>
+      <xs:element type="counterType" name="counter" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="name" use="optional"/>
+  </xs:complexType>
+</xs:schema>

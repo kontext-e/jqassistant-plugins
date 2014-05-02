@@ -11,6 +11,7 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/checkstyle" />
             <option value="$PROJECT_DIR$/findbugs" />
+            <option value="$PROJECT_DIR$/jacoco" />
           </set>
         </option>
       </GradleProjectSettings>

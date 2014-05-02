@@ -29,6 +29,22 @@
     <file url="file://$PROJECT_DIR$/findbugs/src/main/java/de/kontext_e/jqassistant/plugin/findbugs/store/descriptor/FindBugsDescriptor.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/findbugs/src/main/java/de/kontext_e/jqassistant/plugin/findbugs/store/descriptor/SourceLineDescriptor.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/findbugs/src/main/resources/META-INF" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jacoco/src/main/java/de/kontext_e/jqassistant/plugin/jacoco/jaxb/ClassType.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jacoco/src/main/java/de/kontext_e/jqassistant/plugin/jacoco/jaxb/CounterType.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jacoco/src/main/java/de/kontext_e/jqassistant/plugin/jacoco/jaxb/LineType.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jacoco/src/main/java/de/kontext_e/jqassistant/plugin/jacoco/jaxb/MethodType.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jacoco/src/main/java/de/kontext_e/jqassistant/plugin/jacoco/jaxb/ObjectFactory.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jacoco/src/main/java/de/kontext_e/jqassistant/plugin/jacoco/jaxb/PackageType.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jacoco/src/main/java/de/kontext_e/jqassistant/plugin/jacoco/jaxb/ReportType.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jacoco/src/main/java/de/kontext_e/jqassistant/plugin/jacoco/jaxb/SessioninfoType.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jacoco/src/main/java/de/kontext_e/jqassistant/plugin/jacoco/jaxb/SourcefileType.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jacoco/src/main/java/de/kontext_e/jqassistant/plugin/jacoco/scanner/JacocoScannerPlugin.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jacoco/src/main/java/de/kontext_e/jqassistant/plugin/jacoco/store/descriptor/ClassDescriptor.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jacoco/src/main/java/de/kontext_e/jqassistant/plugin/jacoco/store/descriptor/CounterDescriptor.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jacoco/src/main/java/de/kontext_e/jqassistant/plugin/jacoco/store/descriptor/JacocoDescriptor.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jacoco/src/main/java/de/kontext_e/jqassistant/plugin/jacoco/store/descriptor/MethodDescriptor.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jacoco/src/main/java/de/kontext_e/jqassistant/plugin/jacoco/store/descriptor/PackageDescriptor.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jacoco/src/main/resources/META-INF" charset="UTF-8" />
   </component>
 </project>
 
