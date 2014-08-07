@@ -74,6 +74,14 @@ public class CheckstyleScannerPlugin implements FileScannerPlugin {
     protected String convertToFullQualifiedName(final String name) {
         final String separator = "/".equals(System.getProperty("file.separator")) ? "/" :"\\\\";
         final String normalizedName = name.replaceAll(separator, ".");
+        if(!normalizedName.contains(basePackage)) {
+            System.err.println(String.format("Normalized name %s does not contain base package %s", normalizedName, basePackage));
+            return "FQN.ERROR";
+        }
+        if(normalizedName.length() < 5) {
+            System.err.println(String.format("Normalized name %s is shorter as expected", normalizedName));
+            return "FQN.ERROR";
+        }
         return normalizedName.substring(normalizedName.indexOf(basePackage), normalizedName.length() - 5);
     }
 
