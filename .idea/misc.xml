@@ -71,6 +71,10 @@
       </value>
     </option>
   </component>
+  <component name="TestDoxConfiguration">
+    <option name="createTestIfMissing" value="true" />
+    <option name="deletePackageOccurrences" value="true" />
+  </component>
   <component name="XPathView.XPathProjectComponent">
     <history />
     <find-history />
