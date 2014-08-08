@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Gradle: janino-2.6.1">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/codehaus/janino/janino/2.6.1/janino-2.6.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

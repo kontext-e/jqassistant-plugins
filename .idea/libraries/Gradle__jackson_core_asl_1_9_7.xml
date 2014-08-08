@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Gradle: jackson-core-asl-1.9.7">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/codehaus/jackson/jackson-core-asl/1.9.7/jackson-core-asl-1.9.7.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

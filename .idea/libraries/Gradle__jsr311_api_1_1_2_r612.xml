@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Gradle: jsr311-api-1.1.2.r612">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/neo4j/3rdparty/javax/ws/rs/jsr311-api/1.1.2.r612/jsr311-api-1.1.2.r612.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

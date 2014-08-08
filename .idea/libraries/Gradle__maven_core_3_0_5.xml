@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Gradle: maven-core-3.0.5">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/apache/maven/maven-core/3.0.5/maven-core-3.0.5.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

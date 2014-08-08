@@ -1,14 +1,18 @@
 package de.kontext_e.jqassistant.plugin.findbugs.scanner;
 
 import java.io.IOException;
-import java.util.Properties;
+import java.io.InputStream;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
 
-import com.buschmais.jqassistant.core.scanner.api.FileScannerPlugin;
+import com.buschmais.jqassistant.core.scanner.api.Scanner;
+import com.buschmais.jqassistant.core.scanner.api.Scope;
 import com.buschmais.jqassistant.core.store.api.Store;
+import com.buschmais.jqassistant.core.store.api.type.FileDescriptor;
+import com.buschmais.jqassistant.plugin.common.api.scanner.FileSystemResource;
+import com.buschmais.jqassistant.plugin.common.impl.scanner.AbstractScannerPlugin;
 import de.kontext_e.jqassistant.plugin.findbugs.jaxb.BugCollectionType;
 import de.kontext_e.jqassistant.plugin.findbugs.jaxb.BugInstanceType;
 import de.kontext_e.jqassistant.plugin.findbugs.jaxb.ObjectFactory;
@@ -20,12 +24,11 @@ import de.kontext_e.jqassistant.plugin.findbugs.store.descriptor.SourceLineDescr
 /**
  * @author jn4, Kontext E GmbH, 05.02.14
  */
-public class FindBugsScannerPlugin implements FileScannerPlugin {
+public class FindBugsScannerPlugin extends AbstractScannerPlugin<FileSystemResource> {
 
     private static String findBugsFileName = "findbugs.xml";
 
     private JAXBContext jaxbContext;
-    private Store store;
 
     public FindBugsScannerPlugin() {
         try {
@@ -36,25 +39,29 @@ public class FindBugsScannerPlugin implements FileScannerPlugin {
     }
 
     @Override
-    public boolean matches(final String file, final boolean isDirectory) {
-        // hm, matching based on file name seems not so clever, could have any name!?
-        return !isDirectory && file.endsWith(findBugsFileName);
+    public Class<? super FileSystemResource> getType() {
+        return FileSystemResource.class;
     }
 
     @Override
-    public FindBugsDescriptor scanFile(final StreamSource streamSource) throws IOException {
-        final BugCollectionType bugCollectionType = unmarshalFindBugsXml(streamSource);
-        final FindBugsDescriptor findBugsDescriptor = store.create(FindBugsDescriptor.class);
-        writeFindBugsDescriptor(streamSource, bugCollectionType, findBugsDescriptor);
-        addBugInstancesToFindBugsDescriptor(store, bugCollectionType, findBugsDescriptor);
+    public boolean accepts(FileSystemResource item, String path, Scope scope) throws IOException {
+        return !item.isDirectory() && path.endsWith(findBugsFileName);
+    }
+
+    @Override
+    public FileDescriptor scan(FileSystemResource item, String path, Scope scope, Scanner scanner) throws IOException {
+        final BugCollectionType bugCollectionType = unmarshalFindBugsXml(item.createStream());
+        final FindBugsDescriptor findBugsDescriptor = getStore().create(FindBugsDescriptor.class);
+        writeFindBugsDescriptor(path, bugCollectionType, findBugsDescriptor);
+        addBugInstancesToFindBugsDescriptor(getStore(), bugCollectionType, findBugsDescriptor);
         return findBugsDescriptor;
     }
 
-    protected BugCollectionType unmarshalFindBugsXml(final StreamSource streamSource) throws IOException {
+    protected BugCollectionType unmarshalFindBugsXml(final InputStream streamSource) throws IOException {
         BugCollectionType bugCollectionType;
         try {
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-            bugCollectionType = unmarshaller.unmarshal(streamSource, BugCollectionType.class).getValue();
+            bugCollectionType = unmarshaller.unmarshal(new StreamSource(streamSource), BugCollectionType.class).getValue();
         } catch (JAXBException e) {
             throw new IOException("Cannot read model descriptor.", e);
         }
@@ -83,25 +90,18 @@ public class FindBugsScannerPlugin implements FileScannerPlugin {
         }
     }
 
-    protected void writeFindBugsDescriptor(final StreamSource streamSource, final BugCollectionType bugCollectionType, final FindBugsDescriptor findBugsDescriptor) {
-        findBugsDescriptor.setName(streamSource.getSystemId());
-        findBugsDescriptor.setFileName(streamSource.getSystemId());
+    protected void writeFindBugsDescriptor(final String path, final BugCollectionType bugCollectionType, final FindBugsDescriptor findBugsDescriptor) {
+        findBugsDescriptor.setName(path);
+        findBugsDescriptor.setFileName(path);
         findBugsDescriptor.setVersion(bugCollectionType.getVersion());
         findBugsDescriptor.setSequence(bugCollectionType.getSequence());
         findBugsDescriptor.setAnalysisTimestamp(bugCollectionType.getAnalysisTimestamp());
     }
 
-    @Override
-    public FindBugsDescriptor scanDirectory(final String name) throws IOException {
-        // that's correct, we don't want to scan directories
-        return null;
-    }
 
     @Override
-    public void initialize(Store store, Properties properties) {
-        this.store = store;
-
-        final String property = properties.getProperty("jqassistant.plugin.findbugs.filename");
+    public void initialize() {
+        final String property = (String) getProperties().get("jqassistant.plugin.findbugs.filename");
         if(property != null) {
             findBugsFileName = property;
         }

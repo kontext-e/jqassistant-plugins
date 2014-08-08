@@ -1,14 +1,17 @@
 package de.kontext_e.jqassistant.plugin.checkstyle.scanner;
 
 import java.io.IOException;
-import java.util.Properties;
+import java.io.InputStream;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
 
-import com.buschmais.jqassistant.core.scanner.api.FileScannerPlugin;
+import com.buschmais.jqassistant.core.scanner.api.Scanner;
+import com.buschmais.jqassistant.core.scanner.api.Scope;
 import com.buschmais.jqassistant.core.store.api.Store;
+import com.buschmais.jqassistant.plugin.common.api.scanner.FileSystemResource;
+import com.buschmais.jqassistant.plugin.common.impl.scanner.AbstractScannerPlugin;
 import de.kontext_e.jqassistant.plugin.checkstyle.jaxb.CheckstyleType;
 import de.kontext_e.jqassistant.plugin.checkstyle.jaxb.ErrorType;
 import de.kontext_e.jqassistant.plugin.checkstyle.jaxb.FileType;
@@ -21,10 +24,9 @@ import de.kontext_e.jqassistant.plugin.checkstyle.store.descriptor.FileDescripto
 /**
  * @author jn4, Kontext E GmbH, 11.02.14
  */
-public class CheckstyleScannerPlugin implements FileScannerPlugin {
+public class CheckstyleScannerPlugin extends AbstractScannerPlugin<FileSystemResource> {
 
     private JAXBContext jaxbContext;
-    private Store store;
     private static String basePackage = "com";
 
     public CheckstyleScannerPlugin() {
@@ -36,16 +38,21 @@ public class CheckstyleScannerPlugin implements FileScannerPlugin {
     }
 
     @Override
-    public boolean matches(final String file, final boolean isDirectory) {
-        return !isDirectory && file.endsWith("checkstyle.xml");
+    public Class<? super FileSystemResource> getType() {
+        return FileSystemResource.class;
     }
 
     @Override
-    public CheckstyleDescriptor scanFile(final StreamSource streamSource) throws IOException {
-        final CheckstyleType checkstyleType = unmarshalCheckstyleXml(streamSource);
-        final CheckstyleDescriptor checkstyleDescriptor = store.create(CheckstyleDescriptor.class);
-        checkstyleDescriptor.setFileName(streamSource.getSystemId());
-        readFiles(store, checkstyleType, checkstyleDescriptor);
+    public boolean accepts(FileSystemResource item, String path, Scope scope) throws IOException {
+        return !item.isDirectory() && path.endsWith("checkstyle.xml");
+    }
+
+    @Override
+    public com.buschmais.jqassistant.core.store.api.type.FileDescriptor scan(FileSystemResource item, String path, Scope scope, Scanner scanner) throws IOException {
+        final CheckstyleType checkstyleType = unmarshalCheckstyleXml(item.createStream());
+        final CheckstyleDescriptor checkstyleDescriptor = getStore().create(CheckstyleDescriptor.class);
+        checkstyleDescriptor.setFileName(path);
+        readFiles(getStore(), checkstyleType, checkstyleDescriptor);
         return checkstyleDescriptor;
     }
 
@@ -92,11 +99,11 @@ public class CheckstyleScannerPlugin implements FileScannerPlugin {
         return name.substring(name.lastIndexOf(System.getProperty("file.separator")) + 1);
     }
 
-    protected CheckstyleType unmarshalCheckstyleXml(final StreamSource streamSource) throws IOException {
+    protected CheckstyleType unmarshalCheckstyleXml(final InputStream streamSource) throws IOException {
         final CheckstyleType checkstyleType;
         try {
             final Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-            checkstyleType = unmarshaller.unmarshal(streamSource, CheckstyleType.class).getValue();
+            checkstyleType = unmarshaller.unmarshal(new StreamSource(streamSource), CheckstyleType.class).getValue();
         } catch (JAXBException e) {
             throw new IOException("Cannot read model descriptor.", e);
         }
@@ -104,15 +111,9 @@ public class CheckstyleScannerPlugin implements FileScannerPlugin {
     }
 
     @Override
-    public CheckstyleDescriptor scanDirectory(final String name) throws IOException {
-        return null;
-    }
+    public void initialize() {
 
-    @Override
-    public void initialize(Store store, Properties properties) {
-        this.store = store;
-
-        final String property = properties.getProperty("jqassistant.plugin.checkstyle.basepackage");
+        final String property = (String) getProperties().get("jqassistant.plugin.checkstyle.basepackage");
         if(property != null) {
             basePackage = property;
         }

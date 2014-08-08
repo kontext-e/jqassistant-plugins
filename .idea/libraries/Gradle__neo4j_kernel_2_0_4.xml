@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Gradle: neo4j-kernel-2.0.4">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/neo4j/neo4j-kernel/2.0.4/neo4j-kernel-2.0.4.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

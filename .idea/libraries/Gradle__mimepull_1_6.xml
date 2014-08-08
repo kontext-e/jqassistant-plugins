@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Gradle: mimepull-1.6">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/jvnet/mimepull/1.6/mimepull-1.6.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

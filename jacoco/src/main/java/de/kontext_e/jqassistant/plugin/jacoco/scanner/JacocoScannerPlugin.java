@@ -1,8 +1,8 @@
 package de.kontext_e.jqassistant.plugin.jacoco.scanner;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.Properties;
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -10,13 +10,16 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.sax.SAXSource;
-import javax.xml.transform.stream.StreamSource;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
-import com.buschmais.jqassistant.core.scanner.api.FileScannerPlugin;
+import com.buschmais.jqassistant.core.scanner.api.Scanner;
+import com.buschmais.jqassistant.core.scanner.api.Scope;
 import com.buschmais.jqassistant.core.store.api.Store;
+import com.buschmais.jqassistant.core.store.api.type.FileDescriptor;
+import com.buschmais.jqassistant.plugin.common.api.scanner.FileSystemResource;
+import com.buschmais.jqassistant.plugin.common.impl.scanner.AbstractScannerPlugin;
 import de.kontext_e.jqassistant.plugin.jacoco.jaxb.ClassType;
 import de.kontext_e.jqassistant.plugin.jacoco.jaxb.CounterType;
 import de.kontext_e.jqassistant.plugin.jacoco.jaxb.MethodType;
@@ -32,10 +35,9 @@ import de.kontext_e.jqassistant.plugin.jacoco.store.descriptor.PackageDescriptor
 /**
  * @author jn4, Kontext E GmbH, 11.02.14
  */
-public class JacocoScannerPlugin implements FileScannerPlugin {
+public class JacocoScannerPlugin extends AbstractScannerPlugin<FileSystemResource> {
 
     private JAXBContext jaxbContext;
-    private Store store;
     private static String jacocoFileName = "jacoco.xml";
 
     public JacocoScannerPlugin() {
@@ -47,16 +49,30 @@ public class JacocoScannerPlugin implements FileScannerPlugin {
     }
 
     @Override
-    public boolean matches(final String file, final boolean isDirectory) {
-        return !isDirectory && file.endsWith(jacocoFileName);
+    protected void initialize() {
+        final String property = (String) getProperties().get("jqassistant.plugin.jacoco.filename");
+        if(property != null) {
+            jacocoFileName = property;
+        }
+    }
+
+
+    @Override
+    public Class<? super FileSystemResource> getType() {
+        return FileSystemResource.class;
     }
 
     @Override
-    public JacocoDescriptor scanFile(final StreamSource streamSource) throws IOException {
-        final JacocoDescriptor jacocoDescriptor = store.create(JacocoDescriptor.class);
-        jacocoDescriptor.setFileName(streamSource.getSystemId());
-        final ReportType reportType = unmarshalJacocoXml(streamSource);
-        readPackages(store, reportType, jacocoDescriptor);
+    public boolean accepts(FileSystemResource item, String path, Scope scope) throws IOException {
+        return !item.isDirectory() && path.endsWith(jacocoFileName);
+    }
+
+    @Override
+    public FileDescriptor scan(FileSystemResource item, String path, Scope scope, Scanner scanner) throws IOException {
+        final JacocoDescriptor jacocoDescriptor = getStore().create(JacocoDescriptor.class);
+        jacocoDescriptor.setFileName(path);
+        final ReportType reportType = unmarshalJacocoXml(item.createStream());
+        readPackages(getStore(), reportType, jacocoDescriptor);
         return jacocoDescriptor;
     }
 
@@ -73,7 +89,7 @@ public class JacocoScannerPlugin implements FileScannerPlugin {
         for (ClassType classType : packageType.getClazz()) {
             final ClassDescriptor classDescriptor = store.create(ClassDescriptor.class);
             classDescriptor.setName(classType.getName());
-            classDescriptor.setFullQualifiedName(classDescriptor.getName().replaceAll("/","."));
+            classDescriptor.setFullQualifiedName(classDescriptor.getName().replaceAll("/", "."));
             readMethods(store, classType, classDescriptor);
             packageDescriptor.getJacocoClasses().add(classDescriptor);
         }
@@ -122,7 +138,7 @@ public class JacocoScannerPlugin implements FileScannerPlugin {
         return signature.toString();
     }
 
-    protected ReportType unmarshalJacocoXml(final StreamSource streamSource) throws IOException {
+    protected ReportType unmarshalJacocoXml(final InputStream streamSource) throws IOException {
         ReportType reportType;
         try {
             // use own SAXSource to prevent reading of jacoco's report.dtd
@@ -133,7 +149,7 @@ public class JacocoScannerPlugin implements FileScannerPlugin {
             parserFactory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
             parserFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
             XMLReader xmlReader = parserFactory.newSAXParser().getXMLReader();
-            InputSource inputSource = new InputSource(new InputStreamReader(streamSource.getInputStream()));
+            InputSource inputSource = new InputSource(new InputStreamReader(streamSource));
             SAXSource saxSource = new SAXSource(xmlReader, inputSource);
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
             reportType = unmarshaller.unmarshal(saxSource, ReportType.class).getValue();
@@ -141,20 +157,5 @@ public class JacocoScannerPlugin implements FileScannerPlugin {
             throw new IOException("Cannot read model descriptor.", e);
         }
         return reportType;
-    }
-
-    @Override
-    public JacocoDescriptor scanDirectory(final String name) throws IOException {
-        return null;
-    }
-
-    @Override
-    public void initialize(Store store, Properties properties) {
-        this.store = store;
-
-        final String property = properties.getProperty("jqassistant.plugin.jacoco.filename");
-        if(property != null) {
-            jacocoFileName = property;
-        }
     }
 }

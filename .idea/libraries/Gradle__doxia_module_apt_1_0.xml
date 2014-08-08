@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Gradle: doxia-module-apt-1.0">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/apache/maven/doxia/doxia-module-apt/1.0/doxia-module-apt-1.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

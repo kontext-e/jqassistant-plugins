@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Gradle: slf4j-maven-plugin-log-1.0.0">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/googlecode/slf4j-maven-plugin-log/slf4j-maven-plugin-log/1.0.0/slf4j-maven-plugin-log-1.0.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

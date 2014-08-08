@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Gradle: jetty-webapp-9.0.5.v20130815">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/eclipse/jetty/jetty-webapp/9.0.5.v20130815/jetty-webapp-9.0.5.v20130815.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
