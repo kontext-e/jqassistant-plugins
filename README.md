@@ -6,7 +6,7 @@ How to install
 ==============
 For now, that's not quite user friendly. It will get better if jQA is more stable and the latest version
 is available at maven repositories.
-* get and install jQAssistant
+* get and install jQAssistant (note: M4 is not yet on maven central, so you need to install it in your local maven repo)
 * clone this repository
 * build the plugins using gradle wrapper: gradlew jar
 * copy the jar(s) from .../build/libs into the classpath of your project
