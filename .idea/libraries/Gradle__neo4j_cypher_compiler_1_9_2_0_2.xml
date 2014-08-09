@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: neo4j-cypher-compiler-1.9-2.0.2">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.neo4j/neo4j-cypher-compiler-1.9/2.0.2/5ce924e83934ea908944804ef1ea5121f39b3c80/neo4j-cypher-compiler-1.9-2.0.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.neo4j/neo4j-cypher-compiler-1.9/2.0.2/4a7b8120845c5de4a4450c64175895b1fd5b415f/neo4j-cypher-compiler-1.9-2.0.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

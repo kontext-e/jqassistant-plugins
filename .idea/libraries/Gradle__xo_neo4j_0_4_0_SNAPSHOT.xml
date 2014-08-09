@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Gradle: xo.neo4j-0.4.0-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/buschmais/xo/xo.neo4j/0.4.0-SNAPSHOT/xo.neo4j-0.4.0-SNAPSHOT.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
