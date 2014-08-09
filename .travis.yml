@@ -3,4 +3,6 @@ jdk: oraclejdk7
 
 before_install:
  - chmod +x gradlew
-
+ - git clone https://github.com/buschmais/jqassistant.git
+ - cd jqassistant
+ - mvn install
