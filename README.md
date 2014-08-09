@@ -15,3 +15,7 @@ is available at maven repositories.
 Coming soon
 ===========
 * PMD
+
+## Continuous Build
+
+[![Build Status](https://travis-ci.org/jensnerche/jqassistant-plugins.svg?branch=master)](https://travis-ci.org/jensnerche/jqassistant-plugins)
