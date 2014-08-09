@@ -1,9 +1,11 @@
 <component name="libraryTable">
   <library name="Gradle: commons-compiler-2.6.1">
     <CLASSES>
-      <root url="jar://$MAVEN_REPOSITORY$/org/codehaus/janino/commons-compiler/2.6.1/commons-compiler-2.6.1.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.codehaus.janino/commons-compiler/2.6.1/f81764c6e9199c3ba1b2c525408734c45e772494/commons-compiler-2.6.1.jar!/" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.codehaus.janino/commons-compiler/2.6.1/2d2229d9fc2fee4230395f2dd379e108d6eb7320/commons-compiler-2.6.1-sources.jar!/" />
+    </SOURCES>
   </library>
 </component>

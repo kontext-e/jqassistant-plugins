@@ -1,9 +1,11 @@
 <component name="libraryTable">
   <library name="Gradle: rrd4j-2.0.7">
     <CLASSES>
-      <root url="jar://$MAVEN_REPOSITORY$/org/rrd4j/rrd4j/2.0.7/rrd4j-2.0.7.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.rrd4j/rrd4j/2.0.7/4a12d9b72a1c5053c25e515a6b5d2c883c36e598/rrd4j-2.0.7.jar!/" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.rrd4j/rrd4j/2.0.7/807e8a683f557727a9a9d1605a6b8c297931e3d0/rrd4j-2.0.7-sources.jar!/" />
+    </SOURCES>
   </library>
 </component>

@@ -1,9 +1,11 @@
 <component name="libraryTable">
   <library name="Gradle: janino-2.6.1">
     <CLASSES>
-      <root url="jar://$MAVEN_REPOSITORY$/org/codehaus/janino/janino/2.6.1/janino-2.6.1.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.codehaus.janino/janino/2.6.1/454255eb300ab38db19dd23c1f7ba5168bb646ab/janino-2.6.1.jar!/" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.codehaus.janino/janino/2.6.1/9103009ad34959549ebc27e8607c3813e9e9dbec/janino-2.6.1-sources.jar!/" />
+    </SOURCES>
   </library>
 </component>
