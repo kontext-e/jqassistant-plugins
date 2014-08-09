@@ -1,9 +1,11 @@
 <component name="libraryTable">
   <library name="Gradle: xo.impl-0.4.0">
     <CLASSES>
-      <root url="jar://$MAVEN_REPOSITORY$/com/buschmais/xo/xo.impl/0.4.0/xo.impl-0.4.0.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.buschmais.xo/xo.impl/0.4.0/86d41eee6a230c6962b76f2675a113c6da8b414f/xo.impl-0.4.0.jar!/" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.buschmais.xo/xo.impl/0.4.0/5b6dbf5e3f30d07c8a4d718dc36f91e82dc0b41b/xo.impl-0.4.0-sources.jar!/" />
+    </SOURCES>
   </library>
 </component>

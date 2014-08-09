@@ -1,9 +1,11 @@
 <component name="libraryTable">
   <library name="Gradle: parboiled-scala_2.10-1.1.6">
     <CLASSES>
-      <root url="jar://$MAVEN_REPOSITORY$/org/parboiled/parboiled-scala_2.10/1.1.6/parboiled-scala_2.10-1.1.6.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.parboiled/parboiled-scala_2.10/1.1.6/bc93b215151f7dc42653f3eb0243b3130a7e1e11/parboiled-scala_2.10-1.1.6.jar!/" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.parboiled/parboiled-scala_2.10/1.1.6/9112b659511f65e52b6f65a18c7fe8386e0e5e28/parboiled-scala_2.10-1.1.6-sources.jar!/" />
+    </SOURCES>
   </library>
 </component>

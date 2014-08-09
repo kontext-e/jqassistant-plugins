@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: neo4j-lucene-index-2.1.2">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.neo4j/neo4j-lucene-index/2.1.2/55cf6e2d44f4fdbd1c6488d0e8fc7884ae3fb18d/neo4j-lucene-index-2.1.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.neo4j/neo4j-lucene-index/2.1.2/463cff5c2ab4bc892f5447a91a5af77d8d96686f/neo4j-lucene-index-2.1.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

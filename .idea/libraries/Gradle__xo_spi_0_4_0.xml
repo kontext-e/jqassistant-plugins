@@ -1,9 +1,11 @@
 <component name="libraryTable">
   <library name="Gradle: xo.spi-0.4.0">
     <CLASSES>
-      <root url="jar://$MAVEN_REPOSITORY$/com/buschmais/xo/xo.spi/0.4.0/xo.spi-0.4.0.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.buschmais.xo/xo.spi/0.4.0/b2063475339f2ebceb731a137785397abeaf1171/xo.spi-0.4.0.jar!/" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.buschmais.xo/xo.spi/0.4.0/fc61e7dc5a83e379e63c7f05d66c6fa07d0ad8bb/xo.spi-0.4.0-sources.jar!/" />
+    </SOURCES>
   </library>
 </component>
