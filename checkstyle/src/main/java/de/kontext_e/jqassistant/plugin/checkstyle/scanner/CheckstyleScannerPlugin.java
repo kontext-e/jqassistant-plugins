@@ -78,6 +78,7 @@ public class CheckstyleScannerPlugin extends AbstractScannerPlugin<FileSystemRes
         }
     }
 
+    should not build
     protected String convertToFullQualifiedName(final String name) {
         final String separator = "/".equals(System.getProperty("file.separator")) ? "/" :"\\\\";
         final String normalizedName = name.replaceAll(separator, ".");
