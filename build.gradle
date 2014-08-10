@@ -1,10 +1,11 @@
 apply plugin: 'java'
 
+project.ext["jqaversion"] = "1.0.0-M4-SNAPSHOT"
 
 subprojects {
     apply plugin: 'java'
 
-    version = '1.0.0-M4-SNAPSHOT'
+    version = project.jqaversion
     sourceCompatibility = 1.7
 
     repositories {
@@ -12,7 +13,6 @@ subprojects {
         mavenLocal()
     }
 
-    project.ext["jqaversion"] = "1.0.0-M4-SNAPSHOT"
     dependencies {
         compile 'com.buschmais.jqassistant.core:jqassistant.core.scanner:'+project.jqaversion
         compile 'com.buschmais.jqassistant.core:jqassistant.core.store:'+project.jqaversion
