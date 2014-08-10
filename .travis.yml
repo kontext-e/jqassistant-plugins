@@ -6,3 +6,5 @@ before_install:
  - git clone https://github.com/buschmais/jqassistant.git
  - cd jqassistant
  - mvn install
+ - cd ..
+ - ./gradlew assemble
