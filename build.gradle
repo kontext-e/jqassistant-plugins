@@ -1,8 +1,12 @@
 apply plugin: 'java'
+apply plugin: 'maven'
 
+project.group = 'de.kontext-e.jqassistant.plugin'
+project.version = '1.0.0-M4-SNAPSHOT'
 
 subprojects {
     apply plugin: 'java'
+    apply plugin: 'maven'
 
     version = '1.0.0-M4-SNAPSHOT'
     sourceCompatibility = 1.7
@@ -18,6 +22,12 @@ subprojects {
         compile 'com.buschmais.jqassistant.core:jqassistant.core.store:'+project.jqaversion
         compile 'com.buschmais.jqassistant.plugin:jqassistant.plugin.common:'+project.jqaversion
         testCompile group: 'junit', name: 'junit', version: '4.+'
+    }
+
+    install {
+        repositories.mavenInstaller {
+            pom.groupId = 'de.kontext-e.jqassistant.plugin'
+        }
     }
 }
 

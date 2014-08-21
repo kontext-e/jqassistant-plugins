@@ -1,51 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="Encoding" useUTFGuessing="true" native2AsciiForPropertiesFiles="false">
-    <file url="file://$PROJECT_DIR$/.travis.yml" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/checkstyle/src/main/java/de/kontext_e/jqassistant/plugin/checkstyle/jaxb/CheckstyleType.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/checkstyle/src/main/java/de/kontext_e/jqassistant/plugin/checkstyle/jaxb/ErrorType.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/checkstyle/src/main/java/de/kontext_e/jqassistant/plugin/checkstyle/jaxb/FileType.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/checkstyle/src/main/java/de/kontext_e/jqassistant/plugin/checkstyle/jaxb/ObjectFactory.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/checkstyle/src/main/java/de/kontext_e/jqassistant/plugin/checkstyle/scanner/CheckstyleScannerPlugin.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/checkstyle/src/main/java/de/kontext_e/jqassistant/plugin/checkstyle/store/descriptor/CheckstyleDescriptor.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/checkstyle/src/main/java/de/kontext_e/jqassistant/plugin/checkstyle/store/descriptor/ErrorDescriptor.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/checkstyle/src/main/java/de/kontext_e/jqassistant/plugin/checkstyle/store/descriptor/FileDescriptor.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/checkstyle/src/main/resources/META-INF/jqassistant-plugin.xml" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/checkstyle/src/main/resources/META-INF/xsd" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/findbugs/src/main/java/de/kontext_e/jqassistant/plugin/findbugs/jaxb/BugCollectionType.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/findbugs/src/main/java/de/kontext_e/jqassistant/plugin/findbugs/jaxb/BugInstanceType.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/findbugs/src/main/java/de/kontext_e/jqassistant/plugin/findbugs/jaxb/ClassProfileType.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/findbugs/src/main/java/de/kontext_e/jqassistant/plugin/findbugs/jaxb/ClassStatsType.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/findbugs/src/main/java/de/kontext_e/jqassistant/plugin/findbugs/jaxb/ClassType.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/findbugs/src/main/java/de/kontext_e/jqassistant/plugin/findbugs/jaxb/ErrorsType.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/findbugs/src/main/java/de/kontext_e/jqassistant/plugin/findbugs/jaxb/FieldType.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/findbugs/src/main/java/de/kontext_e/jqassistant/plugin/findbugs/jaxb/FindBugsProfileType.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/findbugs/src/main/java/de/kontext_e/jqassistant/plugin/findbugs/jaxb/FindBugsSummaryType.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/findbugs/src/main/java/de/kontext_e/jqassistant/plugin/findbugs/jaxb/ObjectFactory.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/findbugs/src/main/java/de/kontext_e/jqassistant/plugin/findbugs/jaxb/PackageStatsType.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/findbugs/src/main/java/de/kontext_e/jqassistant/plugin/findbugs/jaxb/ProjectType.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/findbugs/src/main/java/de/kontext_e/jqassistant/plugin/findbugs/jaxb/SourceLineType.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/findbugs/src/main/java/de/kontext_e/jqassistant/plugin/findbugs/scanner/FindBugsScannerPlugin.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/findbugs/src/main/java/de/kontext_e/jqassistant/plugin/findbugs/store/descriptor/BugInstanceDescriptor.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/findbugs/src/main/java/de/kontext_e/jqassistant/plugin/findbugs/store/descriptor/FindBugsDescriptor.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/findbugs/src/main/java/de/kontext_e/jqassistant/plugin/findbugs/store/descriptor/SourceLineDescriptor.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/findbugs/src/main/resources/META-INF" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/jacoco/src/main/java/de/kontext_e/jqassistant/plugin/jacoco/jaxb/ClassType.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/jacoco/src/main/java/de/kontext_e/jqassistant/plugin/jacoco/jaxb/CounterType.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/jacoco/src/main/java/de/kontext_e/jqassistant/plugin/jacoco/jaxb/LineType.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/jacoco/src/main/java/de/kontext_e/jqassistant/plugin/jacoco/jaxb/MethodType.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/jacoco/src/main/java/de/kontext_e/jqassistant/plugin/jacoco/jaxb/ObjectFactory.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/jacoco/src/main/java/de/kontext_e/jqassistant/plugin/jacoco/jaxb/PackageType.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/jacoco/src/main/java/de/kontext_e/jqassistant/plugin/jacoco/jaxb/ReportType.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/jacoco/src/main/java/de/kontext_e/jqassistant/plugin/jacoco/jaxb/SessioninfoType.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/jacoco/src/main/java/de/kontext_e/jqassistant/plugin/jacoco/jaxb/SourcefileType.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/jacoco/src/main/java/de/kontext_e/jqassistant/plugin/jacoco/scanner/JacocoScannerPlugin.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/jacoco/src/main/java/de/kontext_e/jqassistant/plugin/jacoco/store/descriptor/ClassDescriptor.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/jacoco/src/main/java/de/kontext_e/jqassistant/plugin/jacoco/store/descriptor/CounterDescriptor.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/jacoco/src/main/java/de/kontext_e/jqassistant/plugin/jacoco/store/descriptor/JacocoDescriptor.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/jacoco/src/main/java/de/kontext_e/jqassistant/plugin/jacoco/store/descriptor/MethodDescriptor.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/jacoco/src/main/java/de/kontext_e/jqassistant/plugin/jacoco/store/descriptor/PackageDescriptor.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/jacoco/src/main/resources/META-INF" charset="UTF-8" />
-  </component>
+  <component name="Encoding" useUTFGuessing="true" native2AsciiForPropertiesFiles="false" />
 </project>
 
