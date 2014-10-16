@@ -1,18 +1,17 @@
-<jqa-plugin:jqassistant-plugin xmlns:jqa-plugin="http://www.buschmais.com/jqassistant/core/analysis/plugin/schema/v1.0">
-    <store>
-        <type>de.kontext_e.jqassistant.plugin.jacoco.store.descriptor.JacocoDescriptor</type>
-        <type>de.kontext_e.jqassistant.plugin.jacoco.store.descriptor.PackageDescriptor</type>
-        <type>de.kontext_e.jqassistant.plugin.jacoco.store.descriptor.ClassDescriptor</type>
-        <type>de.kontext_e.jqassistant.plugin.jacoco.store.descriptor.MethodDescriptor</type>
-        <type>de.kontext_e.jqassistant.plugin.jacoco.store.descriptor.CounterDescriptor</type>
-    </store>
+<jqa-plugin:jqassistant-plugin xmlns:jqa-plugin="http://www.buschmais.com/jqassistant/core/plugin/schema/v1.0">
+    <description>Provides a scanner for JaCoCo XML test coverage result files.</description>
+    <model>
+        <class>de.kontext_e.jqassistant.plugin.jacoco.store.descriptor.JacocoDescriptor</class>
+        <class>de.kontext_e.jqassistant.plugin.jacoco.store.descriptor.PackageDescriptor</class>
+        <class>de.kontext_e.jqassistant.plugin.jacoco.store.descriptor.ClassDescriptor</class>
+        <class>de.kontext_e.jqassistant.plugin.jacoco.store.descriptor.MethodDescriptor</class>
+        <class>de.kontext_e.jqassistant.plugin.jacoco.store.descriptor.CounterDescriptor</class>
+    </model>
     <scanner>
-        <plugin>de.kontext_e.jqassistant.plugin.jacoco.scanner.JacocoScannerPlugin</plugin>
+        <class>de.kontext_e.jqassistant.plugin.jacoco.scanner.JacocoScannerPlugin</class>
     </scanner>
   <rules>
-    <resources>
       <resource>jacoco.xml</resource>
-    </resources>
   </rules>
 
 </jqa-plugin:jqassistant-plugin>

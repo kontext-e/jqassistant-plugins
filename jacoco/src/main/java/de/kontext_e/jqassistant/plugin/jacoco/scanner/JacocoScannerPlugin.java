@@ -47,6 +47,10 @@ public class JacocoScannerPlugin extends FileScannerPlugin {
         }
     }
 
+    @Override
+    public Class getType() {
+        return java.io.File.class;
+    }
 
     @Override
     public boolean accepts(java.io.File item, String path, Scope scope) throws IOException {

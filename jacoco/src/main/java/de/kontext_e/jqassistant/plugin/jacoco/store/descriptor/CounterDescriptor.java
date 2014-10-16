@@ -7,18 +7,18 @@ import com.buschmais.xo.neo4j.api.annotation.Property;
 /**
  * @author jn4, Kontext E GmbH, 11.02.14
  */
-@Label("JACOCO_COUNTER")
+@Label("JacocoCounter")
 public interface CounterDescriptor extends Descriptor {
 
-    @Property("TYPE")
+    @Property("type")
     String getType();
     void setType(String value);
 
-    @Property("MISSED")
+    @Property("missed")
     Long getMissed();
     void setMissed(Long value);
 
-    @Property("COVERED")
+    @Property("covered")
     Long getCovered();
     void setCovered(Long value);
 }

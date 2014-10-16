@@ -4,9 +4,9 @@
         <description>Creates a relationship HAS_BUG between CLASS labeled nodes and BUGINSTANCE labeled nodes with same FQN.</description>
         <cypher><![CDATA[
             MATCH
-                (c:CLASS), (s:SOURCELINE)--(b:BUGINSTANCE)
+                (c:Class), (s:SourceLine)--(b:BugInstance)
             WHERE
-                c.FQN=s.FQN
+                c.fqn=s.fqn
             CREATE UNIQUE
                 (c)-[:HAS_BUG]->(b)
             RETURN
@@ -21,7 +21,7 @@
             MATCH
                 (c)-[:HAS_BUG]->(b)
             RETURN
-                c.FQN, count(c) as BugCount
+                c.fqn, count(c) as BugCount
             ORDER BY
                 BugCount DESC
             LIMIT 10;

@@ -10,7 +10,7 @@ import com.buschmais.xo.neo4j.api.annotation.Relation;
 /**
  * @author jn4, Kontext E GmbH, 11.02.14
  */
-@Label("CHECKSTYLE")
+@Label("Checkstyle")
 public interface CheckstyleDescriptor extends Descriptor, com.buschmais.jqassistant.core.store.api.model.FileDescriptor {
 
     @Relation("CHECKSTYLE_FILES")

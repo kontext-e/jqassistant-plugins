@@ -11,14 +11,14 @@ import com.buschmais.xo.neo4j.api.annotation.Relation;
 /**
  * @author jn4, Kontext E GmbH, 11.02.14
  */
-@Label("JACOCO_METHOD")
+@Label("JacocoMethod")
 public interface MethodDescriptor extends Descriptor, NamedDescriptor {
 
-    @Property("SIGNATURE")
+    @Property("signature")
     String getSignature();
     void setSignature(String value);
 
-    @Property("LINE")
+    @Property("line")
     String getLine();
     void setLine(String value);
 

@@ -4,9 +4,9 @@
     <description>Creates a relationship HAS_CHECKSTYLE_ERROR between CLASS labeled nodes and CHECKSTYLE_ERROR labeled nodes.</description>
     <cypher><![CDATA[
             MATCH
-              (c:CLASS), (f:CHECKSTYLE_FILE)--(e:CHECKSTYLE_ERROR)
+              (c:Class), (f:CheckstyleFile)--(e:CheckstyleError)
             WHERE
-              c.FQN=f.FQN
+              c.fqn=f.fqn
             CREATE UNIQUE
               (c)-[:HAS_CHECKSTYLE_ERROR]->(e)
             RETURN count(c);

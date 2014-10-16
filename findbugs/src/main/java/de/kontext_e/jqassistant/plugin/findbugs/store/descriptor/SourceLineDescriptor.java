@@ -8,26 +8,26 @@ import com.buschmais.xo.neo4j.api.annotation.Property;
 /**
  * @author jn4, Kontext E GmbH, 05.02.14
  */
-@Label("SOURCELINE")
+@Label("SourceLine")
 public interface SourceLineDescriptor extends Descriptor {
 
-    @Property("FQN")
+    @Property("fqn")
     String getClassname();
     void setClassname(String value);
 
-    @Property("START")
+    @Property("start")
     String getStart();
     void setStart(String value);
 
-    @Property("END")
+    @Property("end")
     String getEnd();
     void setEnd(String value);
 
-    @Property("SOURCEFILE")
+    @Property("sourcefile")
     String getSourcefile();
     void setSourcefile(String value);
 
-    @Property("SOURCEPATH")
+    @Property("sourcepath")
     String getSourcepath();
     void setSourcepath(String value);
 }

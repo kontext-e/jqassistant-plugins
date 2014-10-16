@@ -7,6 +7,8 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.buschmais.jqassistant.core.scanner.api.Scanner;
 import com.buschmais.jqassistant.core.scanner.api.Scope;
@@ -26,6 +28,8 @@ import de.kontext_e.jqassistant.plugin.findbugs.store.descriptor.SourceLineDescr
  */
 public class FindBugsScannerPlugin extends FileScannerPlugin {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(FindBugsScannerPlugin.class);
+
     private JAXBContext jaxbContext;
 
     public FindBugsScannerPlugin() {
@@ -37,18 +41,30 @@ public class FindBugsScannerPlugin extends FileScannerPlugin {
     }
 
     @Override
+    public Class getType() {
+        return java.io.File.class;
+    }
+
+    @Override
     public boolean accepts(java.io.File item, String path, Scope scope) throws IOException {
+        LOGGER.info(" ***************************** FindBugs plugin accepts file "+item.getAbsolutePath());
+
         String findBugsFileName = "findbugs.xml";
+
+/*
         final String property = (String) getProperties().get("jqassistant.plugin.findbugs.filename");
         if(property != null) {
             findBugsFileName = property;
         }
+*/
 
-        return !item.isDirectory() && path.endsWith(findBugsFileName);
+        return !item.isDirectory() && item.getAbsolutePath().endsWith(findBugsFileName);
     }
 
     @Override
     public FileDescriptor scan(final java.io.File file, String path, Scope scope, Scanner scanner) throws IOException {
+        LOGGER.info(" ***************************** FindBugs plugin scans file "+path);
+
         final BugCollectionType bugCollectionType = unmarshalFindBugsXml(new FileInputStream(file));
         final FindBugsDescriptor findBugsDescriptor = scanner.getContext().getStore().create(FindBugsDescriptor.class);
         writeFindBugsDescriptor(path, bugCollectionType, findBugsDescriptor);

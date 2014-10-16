@@ -4,9 +4,9 @@
         <description>Creates a relationship JACOCO_CLASS between CLASS labeled nodes and JACOCO_CLASS labeled nodes with same FQN.</description>
         <cypher><![CDATA[
             MATCH
-                (c:CLASS), (s:JACOCO_CLASS)
+                (c:Class), (s:JacocoClass)
             WHERE
-                c.FQN=s.FQN
+                c.fqn=s.fqn
             CREATE UNIQUE
                 (c)-[:JACOCO_CLASS]->(s)
             RETURN
@@ -18,9 +18,9 @@
         <description>Creates a relationship HAS_JACOCO_METHOD between METHOD labeled nodes and JACOCO_METHOD labeled nodes of the same class with same signature.</description>
         <cypher><![CDATA[
             MATCH
-                (c:CLASS)-[:DECLARES]->(m:METHOD), (jc:JACOCO_CLASS)-->(jm:JACOCO_METHOD)
+                (c:Class)-[:DECLARES]->(m:Method), (jc:JacocoClass)-->(jm:JacocoMethod)
             WHERE
-                c.FQN=jc.FQN AND m.SIGNATURE=jm.SIGNATURE
+                c.fqn=jc.fqn AND m.signature=jm.signature
             CREATE UNIQUE
                 (m)-[:HAS_JACOCO_METHOD]->(jm)
             RETURN

@@ -38,6 +38,11 @@ public class CheckstyleScannerPlugin extends FileScannerPlugin {
     }
 
     @Override
+    public Class getType() {
+        return java.io.File.class;
+    }
+
+    @Override
     public boolean accepts(java.io.File item, String path, Scope scope) throws IOException {
         myInitialize();
         return !item.isDirectory() && path.endsWith("checkstyle.xml");

@@ -8,21 +8,21 @@ import com.buschmais.xo.neo4j.api.annotation.Relation;
 /**
  * @author jn4, Kontext E GmbH, 05.02.14
  */
-@Label("BUGINSTANCE")
+@Label("BugInstance")
 public interface BugInstanceDescriptor extends Descriptor {
-    @Property("TYPE")
+    @Property("type")
     String getType();
     void setType(String type);
 
-    @Property("PRIORITY")
+    @Property("priority")
     String getPriority();
     void setPriority(String priority);
 
-    @Property("ABBREV")
+    @Property("abbrev")
     String getAbbrev();
     void setAbbrev(String abbrev);
 
-    @Property("CATEGORY")
+    @Property("category")
     String getCategory();
     void setCategory(String category);
 

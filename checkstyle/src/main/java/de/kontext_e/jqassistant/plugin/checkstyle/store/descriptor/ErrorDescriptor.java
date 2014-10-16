@@ -8,26 +8,26 @@ import com.buschmais.xo.neo4j.api.annotation.Property;
 /**
  * @author jn4, Kontext E GmbH, 11.02.14
  */
-@Label("CHECKSTYLE_ERROR")
+@Label("CheckstyleError")
 public interface ErrorDescriptor extends Descriptor {
 
-    @Property("LINE")
+    @Property("line")
     String getLine();
     void setLine(String value);
 
-    @Property("COLUMN")
+    @Property("column")
     String getColumn();
     void setColumn(String value);
 
-    @Property("SEVERITY")
+    @Property("severity")
     String getSeverity();
     void setSeverity(String value);
 
-    @Property("MESSAGE")
+    @Property("message")
     String getMessage();
     void setMessage(String value);
 
-    @Property("SOURCE")
+    @Property("source")
     String getSource();
     void setSource(String value);
 }
