@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="Gradle: server-api-2.0.4">
-    <CLASSES>
-      <root url="jar://$MAVEN_REPOSITORY$/org/neo4j/server-api/2.0.4/server-api-2.0.4.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>

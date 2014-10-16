@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="Gradle: istack-commons-runtime-2.16">
-    <CLASSES>
-      <root url="jar://$MAVEN_REPOSITORY$/com/sun/istack/istack-commons-runtime/2.16/istack-commons-runtime-2.16.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>

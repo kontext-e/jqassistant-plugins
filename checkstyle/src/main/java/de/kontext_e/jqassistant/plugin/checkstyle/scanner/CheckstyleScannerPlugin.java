@@ -1,5 +1,6 @@
 package de.kontext_e.jqassistant.plugin.checkstyle.scanner;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.xml.bind.JAXBContext;
@@ -10,8 +11,7 @@ import javax.xml.transform.stream.StreamSource;
 import com.buschmais.jqassistant.core.scanner.api.Scanner;
 import com.buschmais.jqassistant.core.scanner.api.Scope;
 import com.buschmais.jqassistant.core.store.api.Store;
-import com.buschmais.jqassistant.plugin.common.api.scanner.FileSystemResource;
-import com.buschmais.jqassistant.plugin.common.impl.scanner.AbstractScannerPlugin;
+import com.buschmais.jqassistant.plugin.common.impl.scanner.FileScannerPlugin;
 import de.kontext_e.jqassistant.plugin.checkstyle.jaxb.CheckstyleType;
 import de.kontext_e.jqassistant.plugin.checkstyle.jaxb.ErrorType;
 import de.kontext_e.jqassistant.plugin.checkstyle.jaxb.FileType;
@@ -24,7 +24,7 @@ import de.kontext_e.jqassistant.plugin.checkstyle.store.descriptor.FileDescripto
 /**
  * @author jn4, Kontext E GmbH, 11.02.14
  */
-public class CheckstyleScannerPlugin extends AbstractScannerPlugin<FileSystemResource> {
+public class CheckstyleScannerPlugin extends FileScannerPlugin {
 
     private JAXBContext jaxbContext;
     private static String basePackage = "com";
@@ -38,21 +38,17 @@ public class CheckstyleScannerPlugin extends AbstractScannerPlugin<FileSystemRes
     }
 
     @Override
-    public Class<? super FileSystemResource> getType() {
-        return FileSystemResource.class;
-    }
-
-    @Override
-    public boolean accepts(FileSystemResource item, String path, Scope scope) throws IOException {
+    public boolean accepts(java.io.File item, String path, Scope scope) throws IOException {
+        myInitialize();
         return !item.isDirectory() && path.endsWith("checkstyle.xml");
     }
 
     @Override
-    public com.buschmais.jqassistant.core.store.api.type.FileDescriptor scan(FileSystemResource item, String path, Scope scope, Scanner scanner) throws IOException {
-        final CheckstyleType checkstyleType = unmarshalCheckstyleXml(item.createStream());
-        final CheckstyleDescriptor checkstyleDescriptor = getStore().create(CheckstyleDescriptor.class);
+    public com.buschmais.jqassistant.core.store.api.model.FileDescriptor scan(final java.io.File file, String path, Scope scope, Scanner scanner) throws IOException {
+        final CheckstyleType checkstyleType = unmarshalCheckstyleXml(new FileInputStream(file));
+        final CheckstyleDescriptor checkstyleDescriptor = scanner.getContext().getStore().create(CheckstyleDescriptor.class);
         checkstyleDescriptor.setFileName(path);
-        readFiles(getStore(), checkstyleType, checkstyleDescriptor);
+        readFiles(scanner.getContext().getStore(), checkstyleType, checkstyleDescriptor);
         return checkstyleDescriptor;
     }
 
@@ -110,9 +106,7 @@ public class CheckstyleScannerPlugin extends AbstractScannerPlugin<FileSystemRes
         return checkstyleType;
     }
 
-    @Override
-    public void initialize() {
-
+    protected void myInitialize() {
         final String property = (String) getProperties().get("jqassistant.plugin.checkstyle.basepackage");
         if(property != null) {
             basePackage = property;

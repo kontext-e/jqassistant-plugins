@@ -1,5 +1,6 @@
 package de.kontext_e.jqassistant.plugin.jacoco.scanner;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -17,9 +18,8 @@ import org.xml.sax.XMLReader;
 import com.buschmais.jqassistant.core.scanner.api.Scanner;
 import com.buschmais.jqassistant.core.scanner.api.Scope;
 import com.buschmais.jqassistant.core.store.api.Store;
-import com.buschmais.jqassistant.core.store.api.type.FileDescriptor;
-import com.buschmais.jqassistant.plugin.common.api.scanner.FileSystemResource;
-import com.buschmais.jqassistant.plugin.common.impl.scanner.AbstractScannerPlugin;
+import com.buschmais.jqassistant.core.store.api.model.FileDescriptor;
+import com.buschmais.jqassistant.plugin.common.impl.scanner.FileScannerPlugin;
 import de.kontext_e.jqassistant.plugin.jacoco.jaxb.ClassType;
 import de.kontext_e.jqassistant.plugin.jacoco.jaxb.CounterType;
 import de.kontext_e.jqassistant.plugin.jacoco.jaxb.MethodType;
@@ -35,10 +35,9 @@ import de.kontext_e.jqassistant.plugin.jacoco.store.descriptor.PackageDescriptor
 /**
  * @author jn4, Kontext E GmbH, 11.02.14
  */
-public class JacocoScannerPlugin extends AbstractScannerPlugin<FileSystemResource> {
+public class JacocoScannerPlugin extends FileScannerPlugin {
 
     private JAXBContext jaxbContext;
-    private static String jacocoFileName = "jacoco.xml";
 
     public JacocoScannerPlugin() {
         try {
@@ -48,31 +47,20 @@ public class JacocoScannerPlugin extends AbstractScannerPlugin<FileSystemResourc
         }
     }
 
-    @Override
-    protected void initialize() {
-        final String property = (String) getProperties().get("jqassistant.plugin.jacoco.filename");
-        if(property != null) {
-            jacocoFileName = property;
-        }
-    }
-
 
     @Override
-    public Class<? super FileSystemResource> getType() {
-        return FileSystemResource.class;
-    }
-
-    @Override
-    public boolean accepts(FileSystemResource item, String path, Scope scope) throws IOException {
+    public boolean accepts(java.io.File item, String path, Scope scope) throws IOException {
+        String jacocoFileName = (String) getProperties().get("jqassistant.plugin.jacoco.filename");
+        if(jacocoFileName == null) jacocoFileName = "jacoco.xml";
         return !item.isDirectory() && path.endsWith(jacocoFileName);
     }
 
     @Override
-    public FileDescriptor scan(FileSystemResource item, String path, Scope scope, Scanner scanner) throws IOException {
-        final JacocoDescriptor jacocoDescriptor = getStore().create(JacocoDescriptor.class);
+    public FileDescriptor scan(final java.io.File file, String path, Scope scope, Scanner scanner) throws IOException {
+        final JacocoDescriptor jacocoDescriptor = scanner.getContext().getStore().create(JacocoDescriptor.class);
         jacocoDescriptor.setFileName(path);
-        final ReportType reportType = unmarshalJacocoXml(item.createStream());
-        readPackages(getStore(), reportType, jacocoDescriptor);
+        final ReportType reportType = unmarshalJacocoXml(new FileInputStream(file));
+        readPackages(scanner.getContext().getStore(), reportType, jacocoDescriptor);
         return jacocoDescriptor;
     }
 

@@ -8,7 +8,7 @@ project.version = '1.0.0-M4-SNAPSHOT'
 subprojects {
     apply plugin: 'java'
     apply plugin: 'maven'
-    apply plugin: 'pmd'
+    //apply plugin: 'pmd'
 
     version = project.jqaversion
     sourceCompatibility = 1.7
@@ -26,10 +26,12 @@ subprojects {
     }
 
 
+/*
     pmd {
 
       ruleSets = ["basic", "braces"]
     }
+*/
 
     install {
         repositories.mavenInstaller {

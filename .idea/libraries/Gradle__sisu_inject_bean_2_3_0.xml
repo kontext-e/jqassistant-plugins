@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="Gradle: sisu-inject-bean-2.3.0">
-    <CLASSES>
-      <root url="jar://$MAVEN_REPOSITORY$/org/sonatype/sisu/sisu-inject-bean/2.3.0/sisu-inject-bean-2.3.0.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>

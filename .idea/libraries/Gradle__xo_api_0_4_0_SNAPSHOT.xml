@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="Gradle: xo.api-0.4.0-SNAPSHOT">
-    <CLASSES>
-      <root url="jar://$MAVEN_REPOSITORY$/com/buschmais/xo/xo.api/0.4.0-SNAPSHOT/xo.api-0.4.0-SNAPSHOT.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>

@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="Gradle: velocity-1.5">
-    <CLASSES>
-      <root url="jar://$MAVEN_REPOSITORY$/org/apache/velocity/velocity/1.5/velocity-1.5.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>

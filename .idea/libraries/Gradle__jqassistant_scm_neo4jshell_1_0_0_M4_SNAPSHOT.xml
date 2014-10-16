@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="Gradle: jqassistant.scm.neo4jshell-1.0.0-M4-SNAPSHOT">
-    <CLASSES>
-      <root url="jar://$MAVEN_REPOSITORY$/com/buschmais/jqassistant/scm/jqassistant.scm.neo4jshell/1.0.0-M4-SNAPSHOT/jqassistant.scm.neo4jshell-1.0.0-M4-SNAPSHOT.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>
