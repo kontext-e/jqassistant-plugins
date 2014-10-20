@@ -1,7 +1,7 @@
 package de.kontext_e.jqassistant.plugin.findbugs.store.descriptor;
 
 
-import java.util.Set;
+import java.util.List;
 
 import com.buschmais.jqassistant.core.store.api.model.Descriptor;
 import com.buschmais.jqassistant.core.store.api.model.FileDescriptor;
@@ -28,5 +28,5 @@ public interface FindBugsDescriptor extends Descriptor, NamedDescriptor, FileDes
     void setAnalysisTimestamp(String analysisTimestamp);
 
     @Relation("CONTAINS")
-    Set<BugInstanceDescriptor> getContains();
+    List<BugInstanceDescriptor> getContains();
 }

@@ -1,6 +1,5 @@
 package de.kontext_e.jqassistant.plugin.findbugs.scanner;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.xml.bind.JAXBContext;
@@ -14,7 +13,8 @@ import com.buschmais.jqassistant.core.scanner.api.Scanner;
 import com.buschmais.jqassistant.core.scanner.api.Scope;
 import com.buschmais.jqassistant.core.store.api.Store;
 import com.buschmais.jqassistant.core.store.api.model.FileDescriptor;
-import com.buschmais.jqassistant.plugin.common.impl.scanner.FileScannerPlugin;
+import com.buschmais.jqassistant.plugin.common.api.scanner.filesystem.VirtualFile;
+import com.buschmais.jqassistant.plugin.common.impl.scanner.AbstractScannerPlugin;
 import de.kontext_e.jqassistant.plugin.findbugs.jaxb.BugCollectionType;
 import de.kontext_e.jqassistant.plugin.findbugs.jaxb.BugInstanceType;
 import de.kontext_e.jqassistant.plugin.findbugs.jaxb.ObjectFactory;
@@ -26,11 +26,13 @@ import de.kontext_e.jqassistant.plugin.findbugs.store.descriptor.SourceLineDescr
 /**
  * @author jn4, Kontext E GmbH, 05.02.14
  */
-public class FindBugsScannerPlugin extends FileScannerPlugin {
+public class FindBugsScannerPlugin extends AbstractScannerPlugin<VirtualFile> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FindBugsScannerPlugin.class);
 
     private JAXBContext jaxbContext;
+
+    private static String findBugsFileName = "findbugs.xml";
 
     public FindBugsScannerPlugin() {
         try {
@@ -41,31 +43,22 @@ public class FindBugsScannerPlugin extends FileScannerPlugin {
     }
 
     @Override
-    public Class getType() {
-        return java.io.File.class;
-    }
-
-    @Override
-    public boolean accepts(java.io.File item, String path, Scope scope) throws IOException {
-        LOGGER.info(" ***************************** FindBugs plugin accepts file "+item.getAbsolutePath());
-
-        String findBugsFileName = "findbugs.xml";
-
-/*
+    protected void initialize() {
+        super.initialize();
         final String property = (String) getProperties().get("jqassistant.plugin.findbugs.filename");
         if(property != null) {
             findBugsFileName = property;
         }
-*/
-
-        return !item.isDirectory() && item.getAbsolutePath().endsWith(findBugsFileName);
     }
 
     @Override
-    public FileDescriptor scan(final java.io.File file, String path, Scope scope, Scanner scanner) throws IOException {
-        LOGGER.info(" ***************************** FindBugs plugin scans file "+path);
+    public boolean accepts(VirtualFile item, String path, Scope scope) throws IOException {
+        return path.endsWith(findBugsFileName);
+    }
 
-        final BugCollectionType bugCollectionType = unmarshalFindBugsXml(new FileInputStream(file));
+    @Override
+    public FileDescriptor scan(final VirtualFile file, String path, Scope scope, Scanner scanner) throws IOException {
+        final BugCollectionType bugCollectionType = unmarshalFindBugsXml(file.createStream());
         final FindBugsDescriptor findBugsDescriptor = scanner.getContext().getStore().create(FindBugsDescriptor.class);
         writeFindBugsDescriptor(path, bugCollectionType, findBugsDescriptor);
         addBugInstancesToFindBugsDescriptor(scanner.getContext().getStore(), bugCollectionType, findBugsDescriptor);

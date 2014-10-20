@@ -1,6 +1,5 @@
 package de.kontext_e.jqassistant.plugin.jacoco.scanner;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -19,7 +18,8 @@ import com.buschmais.jqassistant.core.scanner.api.Scanner;
 import com.buschmais.jqassistant.core.scanner.api.Scope;
 import com.buschmais.jqassistant.core.store.api.Store;
 import com.buschmais.jqassistant.core.store.api.model.FileDescriptor;
-import com.buschmais.jqassistant.plugin.common.impl.scanner.FileScannerPlugin;
+import com.buschmais.jqassistant.plugin.common.api.scanner.filesystem.VirtualFile;
+import com.buschmais.jqassistant.plugin.common.impl.scanner.AbstractScannerPlugin;
 import de.kontext_e.jqassistant.plugin.jacoco.jaxb.ClassType;
 import de.kontext_e.jqassistant.plugin.jacoco.jaxb.CounterType;
 import de.kontext_e.jqassistant.plugin.jacoco.jaxb.MethodType;
@@ -35,7 +35,7 @@ import de.kontext_e.jqassistant.plugin.jacoco.store.descriptor.PackageDescriptor
 /**
  * @author jn4, Kontext E GmbH, 11.02.14
  */
-public class JacocoScannerPlugin extends FileScannerPlugin {
+public class JacocoScannerPlugin extends AbstractScannerPlugin<VirtualFile> {
 
     private JAXBContext jaxbContext;
 
@@ -48,22 +48,17 @@ public class JacocoScannerPlugin extends FileScannerPlugin {
     }
 
     @Override
-    public Class getType() {
-        return java.io.File.class;
-    }
-
-    @Override
-    public boolean accepts(java.io.File item, String path, Scope scope) throws IOException {
+    public boolean accepts(final VirtualFile item, String path, Scope scope) throws IOException {
         String jacocoFileName = (String) getProperties().get("jqassistant.plugin.jacoco.filename");
         if(jacocoFileName == null) jacocoFileName = "jacoco.xml";
-        return !item.isDirectory() && path.endsWith(jacocoFileName);
+        return path.endsWith(jacocoFileName);
     }
 
     @Override
-    public FileDescriptor scan(final java.io.File file, String path, Scope scope, Scanner scanner) throws IOException {
+    public FileDescriptor scan(final VirtualFile file, String path, Scope scope, Scanner scanner) throws IOException {
         final JacocoDescriptor jacocoDescriptor = scanner.getContext().getStore().create(JacocoDescriptor.class);
         jacocoDescriptor.setFileName(path);
-        final ReportType reportType = unmarshalJacocoXml(new FileInputStream(file));
+        final ReportType reportType = unmarshalJacocoXml(file.createStream());
         readPackages(scanner.getContext().getStore(), reportType, jacocoDescriptor);
         return jacocoDescriptor;
     }
