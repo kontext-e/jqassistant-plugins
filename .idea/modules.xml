@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/checkstyle/checkstyle.iml" filepath="$PROJECT_DIR$/checkstyle/checkstyle.iml" />
       <module fileurl="file://$PROJECT_DIR$/findbugs/findbugs.iml" filepath="$PROJECT_DIR$/findbugs/findbugs.iml" />
+      <module fileurl="file://$PROJECT_DIR$/git/git.iml" filepath="$PROJECT_DIR$/git/git.iml" />
       <module fileurl="file://$PROJECT_DIR$/jacoco/jacoco.iml" filepath="$PROJECT_DIR$/jacoco/jacoco.iml" />
       <module fileurl="file://$PROJECT_DIR$/jqassistant-plugins.iml" filepath="$PROJECT_DIR$/jqassistant-plugins.iml" />
     </modules>

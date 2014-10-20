@@ -4,6 +4,8 @@
       <root url="jar://$MAVEN_REPOSITORY$/com/buschmais/jqassistant/core/jqassistant.core.store/1.0.0-M4-SNAPSHOT/jqassistant.core.store-1.0.0-M4-SNAPSHOT.jar!/" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES />
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/buschmais/jqassistant/core/jqassistant.core.store/1.0.0-M4-SNAPSHOT/jqassistant.core.store-1.0.0-M4-SNAPSHOT-sources.jar!/" />
+    </SOURCES>
   </library>
 </component>

@@ -6,3 +6,5 @@ include 'findbugs'
 
 include 'jacoco'
 
+include 'git'
+
