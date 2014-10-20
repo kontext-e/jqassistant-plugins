@@ -76,6 +76,7 @@ dependencies {
 
 task removeJQAReport(type: Delete) {
   delete 'jqassistant/report'
+  delete 'jqassistant/store'
 }
 
 task(jqascan, dependsOn: 'removeJQAReport', type: JavaExec) {

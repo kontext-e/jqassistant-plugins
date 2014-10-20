@@ -3,6 +3,8 @@
     <description>Provides a scanner for git VCS history.</description>
     <model>
         <class>de.kontext_e.jqassistant.plugin.git.store.descriptor.GitDescriptor</class>
+        <class>de.kontext_e.jqassistant.plugin.git.store.descriptor.GitCommitDescriptor</class>
+        <class>de.kontext_e.jqassistant.plugin.git.store.descriptor.GitCommitFile</class>
     </model>
     <scanner>
         <class>de.kontext_e.jqassistant.plugin.git.scanner.GitScannerPlugin</class>
