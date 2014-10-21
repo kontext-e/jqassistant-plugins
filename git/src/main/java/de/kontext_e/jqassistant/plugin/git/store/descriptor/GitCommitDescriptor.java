@@ -22,11 +22,19 @@ public interface GitCommitDescriptor extends Descriptor {
     String getDate();
     void setDate(String date);
 
+    @Property("time")
+    String getTime();
+    void setTime(String time);
+
+    @Property("epoch")
+    Long getEpoch();
+    void setEpoch(Long epoch);
+
     @Property("message")
     String getMessage();
     void setMessage(String message);
 
     @Relation("HAS_FILES")
-    List<GitCommitFile> getFiles();
+    List<GitCommitFileDescriptor> getFiles();
 
 }

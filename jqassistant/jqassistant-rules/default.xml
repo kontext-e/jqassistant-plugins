@@ -4,21 +4,14 @@
         <description>For debugging purposes</description>
         <cypher><![CDATA[
                 match
-                    (g:Git)
+                    (a:GitAuthor)--(g:Git)--(f:GitFile)
                 return
-                    CASE count(g)
-                    WHEN 0
-                    THEN 'Error: Git not imported'
-                    WHEN 1
-                    THEN 'OK
-                    ELSE 'Too much git root nodes' END as result
+                    count(distinct f), count(distinct a)
         ]]></cypher>
     </constraint>
 
     <group id="default">
-<!--
         <includeConstraint refId="git:GitNodeMustExist"/>
--->
     </group>
 
 </jqa:jqassistant-rules>

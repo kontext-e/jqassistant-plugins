@@ -4,7 +4,9 @@
     <model>
         <class>de.kontext_e.jqassistant.plugin.git.store.descriptor.GitDescriptor</class>
         <class>de.kontext_e.jqassistant.plugin.git.store.descriptor.GitCommitDescriptor</class>
-        <class>de.kontext_e.jqassistant.plugin.git.store.descriptor.GitCommitFile</class>
+        <class>de.kontext_e.jqassistant.plugin.git.store.descriptor.GitCommitFileDescriptor</class>
+        <class>de.kontext_e.jqassistant.plugin.git.store.descriptor.GitAuthorDescriptor</class>
+        <class>de.kontext_e.jqassistant.plugin.git.store.descriptor.GitFileDescriptor</class>
     </model>
     <scanner>
         <class>de.kontext_e.jqassistant.plugin.git.scanner.GitScannerPlugin</class>

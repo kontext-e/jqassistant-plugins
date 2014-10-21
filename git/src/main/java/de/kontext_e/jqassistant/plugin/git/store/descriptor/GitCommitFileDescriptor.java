@@ -5,7 +5,7 @@ import com.buschmais.xo.neo4j.api.annotation.Label;
 import com.buschmais.xo.neo4j.api.annotation.Property;
 
 @Label("GitCommitFile")
-public interface GitCommitFile extends Descriptor {
+public interface GitCommitFileDescriptor extends Descriptor {
 
     @Property("modificationKind")
     String getModificationKind();

@@ -14,4 +14,10 @@ public interface GitDescriptor extends Descriptor, NamedDescriptor, FileDescript
     @Relation("HAS_COMMITS")
     List<GitCommitDescriptor> getCommits();
 
+    @Relation("HAS_AUTHORS")
+    List<GitAuthorDescriptor> getAuthors();
+
+    @Relation("HAS_FILES")
+    List<GitFileDescriptor> getFiles();
+
 }

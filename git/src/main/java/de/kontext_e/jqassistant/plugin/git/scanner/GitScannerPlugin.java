@@ -1,7 +1,11 @@
 package de.kontext_e.jqassistant.plugin.git.scanner;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,9 +16,11 @@ import com.buschmais.jqassistant.core.store.api.Store;
 import com.buschmais.jqassistant.core.store.api.model.FileDescriptor;
 import com.buschmais.jqassistant.plugin.common.api.scanner.filesystem.VirtualFile;
 import com.buschmais.jqassistant.plugin.common.impl.scanner.AbstractScannerPlugin;
+import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitAuthorDescriptor;
 import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitCommitDescriptor;
-import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitCommitFile;
+import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitCommitFileDescriptor;
 import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitDescriptor;
+import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitFileDescriptor;
 
 /**
  * @author jn4, Kontext E GmbH
@@ -72,6 +78,9 @@ public class GitScannerPlugin extends AbstractScannerPlugin<VirtualFile> {
     }
 
     private void addCommits(final Store store, final GitDescriptor gitDescriptor, final List<GitCommit> parse) {
+        Map<String, GitAuthorDescriptor> authors = new HashMap<>();
+        Map<String, GitFileDescriptor> files = new HashMap<>();
+
         for (GitCommit gitCommit : parse) {
             GitCommitDescriptor gitCommitDescriptor = store.create(GitCommitDescriptor.class);
 
@@ -82,18 +91,73 @@ public class GitScannerPlugin extends AbstractScannerPlugin<VirtualFile> {
 
             gitDescriptor.getCommits().add(gitCommitDescriptor);
 
-            addCommitFiles(store, gitCommit, gitCommitDescriptor);
+            addCommitForAuthor(authors, gitCommit.getAuthor(), store, gitCommitDescriptor);
+
+            addCommitFiles(store, gitCommit, gitCommitDescriptor, files);
         }
+
+        for (GitAuthorDescriptor gitAuthor : authors.values()) {
+            gitDescriptor.getAuthors().add(gitAuthor);
+        }
+
+        for (GitFileDescriptor gitFile : files.values()) {
+            gitDescriptor.getFiles().add(gitFile);
+        }
+
     }
 
-    private void addCommitFiles(final Store store, final GitCommit gitCommit, final GitCommitDescriptor gitCommitDescriptor) {
+    private void addCommitForAuthor(final Map<String, GitAuthorDescriptor> authors, final String author, final Store store, final GitCommitDescriptor gitCommit) {
+        if(! authors.containsKey(author)) {
+            GitAuthorDescriptor gitAutor = store.create(GitAuthorDescriptor.class);
+            gitAutor.setIdentString(author);
+            gitAutor.setName(author.substring(0, author.indexOf("<")).trim());
+            gitAutor.setEmail(author.substring(author.indexOf("<")+1, author.indexOf(">")).trim());
+            authors.put(author, gitAutor);
+        }
+        authors.get(author).getCommits().add(gitCommit);
+    }
+
+    private void addCommitFiles(final Store store, final GitCommit gitCommit, final GitCommitDescriptor gitCommitDescriptor, final Map<String, GitFileDescriptor> files) {
         for (CommitFile commitFile : gitCommit.getCommitFiles()) {
-            GitCommitFile gitCommitFile = store.create(GitCommitFile.class);
+            GitCommitFileDescriptor gitCommitFile = store.create(GitCommitFileDescriptor.class);
 
             gitCommitFile.setModificationKind(commitFile.getModificationKind());
             gitCommitFile.setRelativePath(commitFile.getRelativePath());
 
             gitCommitDescriptor.getFiles().add(gitCommitFile);
+
+            addAsGitFile(files, gitCommitFile, store, gitCommit.getDate());
+        }
+    }
+
+    private void addAsGitFile(final Map<String, GitFileDescriptor> files, final GitCommitFileDescriptor commitFile, final Store store, final String date) {
+        if(!files.containsKey(commitFile.getRelativePath())) {
+            GitFileDescriptor gitFile = store.create(GitFileDescriptor.class);
+            gitFile.setRelativePath(commitFile.getRelativePath());
+            files.put(commitFile.getRelativePath(), gitFile);
+        }
+
+        GitFileDescriptor gitFileDescriptor = files.get(commitFile.getRelativePath());
+        gitFileDescriptor.getCommitFiles().add(commitFile);
+
+        if("A".equals(commitFile.getModificationKind().toUpperCase())) {
+            gitFileDescriptor.setCreatedAt(date);
+            gitFileDescriptor.setCreatedAtEpoch(epochFromDate(date));
+        } else if("M".equals(commitFile.getModificationKind().toUpperCase())) {
+            gitFileDescriptor.setLastModificationAt(date);
+            gitFileDescriptor.setLastModificationAtEpoch(epochFromDate(date));
+        } else if("D".equals(commitFile.getModificationKind().toUpperCase())) {
+            gitFileDescriptor.setDeletedAt(date);
+            gitFileDescriptor.setDeletedAtEpoch(epochFromDate(date));
+        }
+    }
+
+    private Long epochFromDate(final String date) {
+        try {
+            return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z").parse(date).getTime();
+        } catch (ParseException e) {
+            LOGGER.warn("Could not parse date '"+date+"'", e);
+            return null;
         }
     }
 
