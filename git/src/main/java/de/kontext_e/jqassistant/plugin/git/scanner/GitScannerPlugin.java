@@ -20,12 +20,6 @@ import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitCommitDescriptor;
 import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitCommitFileDescriptor;
 import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitDescriptor;
 import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitFileDescriptor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.Properties;
 
 /**
  * @author jn4, Kontext E GmbH
