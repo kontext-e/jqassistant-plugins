@@ -1,8 +1,16 @@
 package de.kontext_e.jqassistant.plugin.jacoco.scanner;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import com.buschmais.jqassistant.core.scanner.api.Scanner;
+import com.buschmais.jqassistant.core.scanner.api.Scope;
+import com.buschmais.jqassistant.core.store.api.Store;
+import com.buschmais.jqassistant.plugin.common.api.scanner.filesystem.FileResource;
+import com.buschmais.jqassistant.plugin.common.impl.scanner.AbstractScannerPlugin;
+import de.kontext_e.jqassistant.plugin.jacoco.jaxb.*;
+import de.kontext_e.jqassistant.plugin.jacoco.store.descriptor.*;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -10,32 +18,14 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.sax.SAXSource;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
-
-import com.buschmais.jqassistant.core.scanner.api.Scanner;
-import com.buschmais.jqassistant.core.scanner.api.Scope;
-import com.buschmais.jqassistant.core.store.api.Store;
-import com.buschmais.jqassistant.core.store.api.model.FileDescriptor;
-import com.buschmais.jqassistant.plugin.common.api.scanner.filesystem.VirtualFile;
-import com.buschmais.jqassistant.plugin.common.impl.scanner.AbstractScannerPlugin;
-import de.kontext_e.jqassistant.plugin.jacoco.jaxb.ClassType;
-import de.kontext_e.jqassistant.plugin.jacoco.jaxb.CounterType;
-import de.kontext_e.jqassistant.plugin.jacoco.jaxb.MethodType;
-import de.kontext_e.jqassistant.plugin.jacoco.jaxb.ObjectFactory;
-import de.kontext_e.jqassistant.plugin.jacoco.jaxb.PackageType;
-import de.kontext_e.jqassistant.plugin.jacoco.jaxb.ReportType;
-import de.kontext_e.jqassistant.plugin.jacoco.store.descriptor.ClassDescriptor;
-import de.kontext_e.jqassistant.plugin.jacoco.store.descriptor.CounterDescriptor;
-import de.kontext_e.jqassistant.plugin.jacoco.store.descriptor.JacocoDescriptor;
-import de.kontext_e.jqassistant.plugin.jacoco.store.descriptor.MethodDescriptor;
-import de.kontext_e.jqassistant.plugin.jacoco.store.descriptor.PackageDescriptor;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 /**
  * @author jn4, Kontext E GmbH, 11.02.14
  */
-public class JacocoScannerPlugin extends AbstractScannerPlugin<VirtualFile> {
+public class JacocoScannerPlugin extends AbstractScannerPlugin<FileResource,JacocoDescriptor > {
 
     private JAXBContext jaxbContext;
 
@@ -48,14 +38,14 @@ public class JacocoScannerPlugin extends AbstractScannerPlugin<VirtualFile> {
     }
 
     @Override
-    public boolean accepts(final VirtualFile item, String path, Scope scope) throws IOException {
+    public boolean accepts(final FileResource item, String path, Scope scope) throws IOException {
         String jacocoFileName = (String) getProperties().get("jqassistant.plugin.jacoco.filename");
         if(jacocoFileName == null) jacocoFileName = "jacoco.xml";
         return path.endsWith(jacocoFileName);
     }
 
     @Override
-    public FileDescriptor scan(final VirtualFile file, String path, Scope scope, Scanner scanner) throws IOException {
+    public JacocoDescriptor scan(final FileResource file, String path, Scope scope, Scanner scanner) throws IOException {
         final JacocoDescriptor jacocoDescriptor = scanner.getContext().getStore().create(JacocoDescriptor.class);
         jacocoDescriptor.setFileName(path);
         final ReportType reportType = unmarshalJacocoXml(file.createStream());

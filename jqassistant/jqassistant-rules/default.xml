@@ -11,7 +11,9 @@
     </constraint>
 
     <group id="default">
+<!--
         <includeConstraint refId="git:GitNodeMustExist"/>
+-->
     </group>
 
 </jqa:jqassistant-rules>

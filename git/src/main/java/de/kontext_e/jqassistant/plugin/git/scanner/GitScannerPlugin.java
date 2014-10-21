@@ -13,8 +13,7 @@ import org.slf4j.LoggerFactory;
 import com.buschmais.jqassistant.core.scanner.api.Scanner;
 import com.buschmais.jqassistant.core.scanner.api.Scope;
 import com.buschmais.jqassistant.core.store.api.Store;
-import com.buschmais.jqassistant.core.store.api.model.FileDescriptor;
-import com.buschmais.jqassistant.plugin.common.api.scanner.filesystem.VirtualFile;
+import com.buschmais.jqassistant.plugin.common.api.scanner.filesystem.FileResource;
 import com.buschmais.jqassistant.plugin.common.impl.scanner.AbstractScannerPlugin;
 import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitAuthorDescriptor;
 import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitCommitDescriptor;
@@ -25,7 +24,7 @@ import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitFileDescriptor;
 /**
  * @author jn4, Kontext E GmbH
  */
-public class GitScannerPlugin extends AbstractScannerPlugin<VirtualFile> {
+public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitDescriptor> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GitScannerPlugin.class);
     public static final String GIT_PATH = "git.path";
@@ -35,12 +34,12 @@ public class GitScannerPlugin extends AbstractScannerPlugin<VirtualFile> {
     private String gitConfigurationFileName = "jqa_plugin_git.properties";
 
     @Override
-    public boolean accepts(final VirtualFile item, final String path, final Scope scope) throws IOException {
+    public boolean accepts(final FileResource item, final String path, final Scope scope) throws IOException {
         return path.endsWith(gitConfigurationFileName);
     }
 
     @Override
-    public FileDescriptor scan(final VirtualFile item, final String path, final Scope scope, final Scanner scanner) throws IOException {
+    public GitDescriptor scan(final FileResource item, final String path, final Scope scope, final Scanner scanner) throws IOException {
         String pathToGitCommand = "git";
         String pathToGitProject = ".";
         String range = null;
