@@ -4,9 +4,9 @@
         <description>For debugging purposes</description>
         <cypher><![CDATA[
                 match
-                    (a:GitAuthor)--(g:Git)--(f:GitFile)
+                    (g:GitCommit)
                 return
-                    count(distinct f), count(distinct a)
+                    g.epoch, g.time
         ]]></cypher>
     </constraint>
 

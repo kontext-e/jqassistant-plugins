@@ -88,6 +88,8 @@ public class GitScannerPlugin extends AbstractScannerPlugin<VirtualFile> {
             gitCommitDescriptor.setAuthor(gitCommit.getAuthor());
             gitCommitDescriptor.setDate(gitCommit.getDate());
             gitCommitDescriptor.setMessage(buildMessage(gitCommit.getMessage()));
+            gitCommitDescriptor.setEpoch(epochFromDate(gitCommit.getDate()));
+            gitCommitDescriptor.setTime(gitCommit.getDate().substring(11, 19));
 
             gitDescriptor.getCommits().add(gitCommitDescriptor);
 
