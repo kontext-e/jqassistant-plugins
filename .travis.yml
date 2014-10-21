@@ -3,8 +3,10 @@ jdk: oraclejdk8
 
 before_install:
  - chmod +x gradlew
+ - mkdir tmp
+ - cd tmp
  - git clone https://github.com/buschmais/jqassistant.git
  - cd jqassistant
  - mvn install
- - cd ..
+ - cd ../..
  - ./gradlew assemble
