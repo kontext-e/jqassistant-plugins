@@ -103,4 +103,5 @@ task(jqs, type: JavaExec) {
   main = 'com.buschmais.jqassistant.scm.cli.Main'
   classpath = sourceSets.test.runtimeClasspath
   args 'server'
+  standardInput = System.in
 }
