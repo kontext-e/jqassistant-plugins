@@ -4,7 +4,7 @@ import com.buschmais.jqassistant.core.scanner.api.Scanner;
 import com.buschmais.jqassistant.core.scanner.api.Scope;
 import com.buschmais.jqassistant.core.store.api.Store;
 import com.buschmais.jqassistant.plugin.common.api.scanner.filesystem.FileResource;
-import com.buschmais.jqassistant.plugin.common.impl.scanner.AbstractScannerPlugin;
+import com.buschmais.jqassistant.plugin.common.api.scanner.AbstractScannerPlugin;
 import de.kontext_e.jqassistant.plugin.findbugs.jaxb.BugCollectionType;
 import de.kontext_e.jqassistant.plugin.findbugs.jaxb.BugInstanceType;
 import de.kontext_e.jqassistant.plugin.findbugs.jaxb.ObjectFactory;
@@ -43,7 +43,6 @@ public class FindBugsScannerPlugin extends AbstractScannerPlugin<FileResource, F
 
     @Override
     protected void initialize() {
-        super.initialize();
         final String property = (String) getProperties().get("jqassistant.plugin.findbugs.filename");
         if(property != null) {
             findBugsFileName = property;
