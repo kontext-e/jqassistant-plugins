@@ -1,0 +1,8 @@
+@startuml
+de.kontext_e.spikes.trace_to_plantuml.application.Controller -> de.kontext_e.spikes.trace_to_plantuml.application.Boundary : loadEntity([1])
+de.kontext_e.spikes.trace_to_plantuml.application.Boundary -> de.kontext_e.spikes.trace_to_plantuml.application.Repository : readEntity([1])
+de.kontext_e.spikes.trace_to_plantuml.application.Repository -> de.kontext_e.spikes.trace_to_plantuml.application.Boundary : throws(NoSuchEntityException{id=1})
+de.kontext_e.spikes.trace_to_plantuml.application.Boundary -> de.kontext_e.spikes.trace_to_plantuml.application.Controller : return([LoadEntityResult{results=NO_RESULT}])
+de.kontext_e.spikes.trace_to_plantuml.application.Controller -> de.kontext_e.spikes.trace_to_plantuml.application.LoadEntityResult : getResults([])
+de.kontext_e.spikes.trace_to_plantuml.application.LoadEntityResult -> de.kontext_e.spikes.trace_to_plantuml.application.Controller : return([NO_RESULT])
+@enduml
