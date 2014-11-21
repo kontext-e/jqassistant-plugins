@@ -21,17 +21,17 @@ import javax.xml.bind.annotation.XmlValue;
  * <p>Das folgende Schemafragment gibt den erwarteten Content an, der in dieser Klasse enthalten ist.
  * 
  * <pre>
- * &lt;complexType name="errorType">
- *   &lt;simpleContent>
- *     &lt;extension base="&lt;http://www.w3.org/2001/XMLSchema>string">
- *       &lt;attribute name="line" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="column" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="severity" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="message" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="source" type="{http://www.w3.org/2001/XMLSchema}string" />
- *     &lt;/extension>
- *   &lt;/simpleContent>
- * &lt;/complexType>
+ * &lt;complexType name="errorType"&gt;
+ *   &lt;simpleContent&gt;
+ *     &lt;extension base="&lt;http://www.w3.org/2001/XMLSchema&gt;string"&gt;
+ *       &lt;attribute name="line" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+ *       &lt;attribute name="column" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+ *       &lt;attribute name="severity" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+ *       &lt;attribute name="message" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+ *       &lt;attribute name="source" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+ *     &lt;/extension&gt;
+ *   &lt;/simpleContent&gt;
+ * &lt;/complexType&gt;
  * </pre>
  * 
  * 

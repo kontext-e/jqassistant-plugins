@@ -21,21 +21,21 @@ import javax.xml.bind.annotation.XmlType;
  * <p>Das folgende Schemafragment gibt den erwarteten Content an, der in dieser Klasse enthalten ist.
  * 
  * <pre>
- * &lt;complexType name="BugInstanceType">
- *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;sequence>
- *         &lt;element name="Class" type="{}ClassType"/>
- *         &lt;element name="Field" type="{}FieldType"/>
- *         &lt;element name="SourceLine" type="{}SourceLineType"/>
- *       &lt;/sequence>
- *       &lt;attribute name="type" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="priority" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="abbrev" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="category" type="{http://www.w3.org/2001/XMLSchema}string" />
- *     &lt;/restriction>
- *   &lt;/complexContent>
- * &lt;/complexType>
+ * &lt;complexType name="BugInstanceType"&gt;
+ *   &lt;complexContent&gt;
+ *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
+ *       &lt;sequence&gt;
+ *         &lt;element name="Class" type="{}ClassType"/&gt;
+ *         &lt;element name="Field" type="{}FieldType"/&gt;
+ *         &lt;element name="SourceLine" type="{}SourceLineType"/&gt;
+ *       &lt;/sequence&gt;
+ *       &lt;attribute name="type" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+ *       &lt;attribute name="priority" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+ *       &lt;attribute name="abbrev" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+ *       &lt;attribute name="category" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+ *     &lt;/restriction&gt;
+ *   &lt;/complexContent&gt;
+ * &lt;/complexType&gt;
  * </pre>
  * 
  * 
@@ -68,7 +68,7 @@ public class BugInstanceType {
      *
      * @return
      *     possible object is
-     *     {@link com.buschmais.jqassistant.plugin.findbugs.impl.jaxb.ClassType }
+     *     {@link de.kontext_e.jqassistant.plugin.findbugs.jaxb.ClassType }
      *
      */
     public ClassType getClazz() {
@@ -80,7 +80,7 @@ public class BugInstanceType {
      *
      * @param value
      *     allowed object is
-     *     {@link com.buschmais.jqassistant.plugin.findbugs.impl.jaxb.ClassType }
+     *     {@link de.kontext_e.jqassistant.plugin.findbugs.jaxb.ClassType }
      *
      */
     public void setClazz(ClassType value) {
@@ -116,7 +116,7 @@ public class BugInstanceType {
      *
      * @return
      *     possible object is
-     *     {@link com.buschmais.jqassistant.plugin.findbugs.impl.jaxb.SourceLineType }
+     *     {@link de.kontext_e.jqassistant.plugin.findbugs.jaxb.SourceLineType }
      *
      */
     public SourceLineType getSourceLine() {
@@ -128,7 +128,7 @@ public class BugInstanceType {
      *
      * @param value
      *     allowed object is
-     *     {@link com.buschmais.jqassistant.plugin.findbugs.impl.jaxb.SourceLineType }
+     *     {@link de.kontext_e.jqassistant.plugin.findbugs.jaxb.SourceLineType }
      *     
      */
     public void setSourceLine(SourceLineType value) {

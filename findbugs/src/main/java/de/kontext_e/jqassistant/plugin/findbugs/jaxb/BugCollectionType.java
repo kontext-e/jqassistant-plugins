@@ -23,25 +23,25 @@ import javax.xml.bind.annotation.XmlType;
  * <p>Das folgende Schemafragment gibt den erwarteten Content an, der in dieser Klasse enthalten ist.
  * 
  * <pre>
- * &lt;complexType name="BugCollectionType">
- *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;sequence>
- *         &lt;element name="Project" type="{}ProjectType"/>
- *         &lt;element name="BugInstance" type="{}BugInstanceType" maxOccurs="unbounded" minOccurs="0"/>
- *         &lt;element name="Errors" type="{}ErrorsType"/>
- *         &lt;element name="FindBugsSummary" type="{}FindBugsSummaryType"/>
- *         &lt;element name="ClassFeatures" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="History" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *       &lt;/sequence>
- *       &lt;attribute name="version" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="sequence" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="timestamp" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="analysisTimestamp" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="release" type="{http://www.w3.org/2001/XMLSchema}string" />
- *     &lt;/restriction>
- *   &lt;/complexContent>
- * &lt;/complexType>
+ * &lt;complexType name="BugCollectionType"&gt;
+ *   &lt;complexContent&gt;
+ *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
+ *       &lt;sequence&gt;
+ *         &lt;element name="Project" type="{}ProjectType"/&gt;
+ *         &lt;element name="BugInstance" type="{}BugInstanceType" maxOccurs="unbounded" minOccurs="0"/&gt;
+ *         &lt;element name="Errors" type="{}ErrorsType"/&gt;
+ *         &lt;element name="FindBugsSummary" type="{}FindBugsSummaryType"/&gt;
+ *         &lt;element name="ClassFeatures" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+ *         &lt;element name="History" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+ *       &lt;/sequence&gt;
+ *       &lt;attribute name="version" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+ *       &lt;attribute name="sequence" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+ *       &lt;attribute name="timestamp" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+ *       &lt;attribute name="analysisTimestamp" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+ *       &lt;attribute name="release" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+ *     &lt;/restriction&gt;
+ *   &lt;/complexContent&gt;
+ * &lt;/complexType&gt;
  * </pre>
  * 
  * 

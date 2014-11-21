@@ -1,5 +1,6 @@
 apply plugin: 'java'
 apply plugin: 'maven'
+apply plugin: 'signing'
 
 project.ext["jqaversion"] = "1.0.0-M4"
 project.group = 'de.kontext-e.jqassistant.plugin'
@@ -23,6 +24,29 @@ subprojects {
         compile 'com.buschmais.jqassistant.plugin:jqassistant.plugin.common:'+project.jqaversion
         testCompile group: 'junit', name: 'junit', version: '4.+'
     }
+
+    task javadocJar(type: Jar, dependsOn: javadoc) {
+      classifier = 'javadoc'
+      from tasks.javadoc.destinationDir
+    }
+
+    task sourcesJar(type: Jar) {
+      from sourceSets.main.allSource
+      classifier = 'sources'
+    }
+
+    artifacts {
+      archives jar
+
+      archives javadocJar
+      archives sourcesJar
+    }
+
+/* gradle says:  Cannot add task ':signArchives' as a task with that name already exists.
+    signing {
+      sign configurations.archives
+    }
+*/
 
 
 /*
@@ -104,3 +128,45 @@ task(jqs, type: JavaExec) {
   args 'server'
   standardInput = System.in
 }
+
+uploadArchives {
+  repositories {
+    mavenDeployer {
+      beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+      repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+        authentication(userName: sonatypeUsername, password: sonatypePassword)
+      }
+
+      pom.project {
+        name 'ke-jqassistant-plugins'
+        packaging 'jar'
+        description 'Some jQAssistant plugins sponsored by Kontext E'
+        url 'https://github.com/kontext-e/jqassistant-plugins'
+
+        scm {
+          url 'scm:git@github.com:kontext-e/jqassistant.git'
+          connection 'scm:git@github.com:kontext-e/jqassistant.git'
+          developerConnection 'scm:git@github.com:kontext-e/jqassistant.git'
+        }
+
+        licenses {
+          license {
+            name 'GNU General Public License, v3'
+            url 'http://www.gnu.org/licenses/gpl-3.0.html'
+            distribution 'repo'
+          }
+        }
+
+        developers {
+          developer {
+            id 'jens-nerche'
+            name 'Jens Nerche'
+            email 'j.nerche@kontext-e.de'
+          }
+        }
+      }
+    }
+  }
+}
+

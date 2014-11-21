@@ -23,29 +23,29 @@ import javax.xml.bind.annotation.XmlType;
  * <p>Das folgende Schemafragment gibt den erwarteten Content an, der in dieser Klasse enthalten ist.
  * 
  * <pre>
- * &lt;complexType name="FindBugsSummaryType">
- *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;sequence>
- *         &lt;element name="PackageStats" type="{}PackageStatsType" maxOccurs="unbounded" minOccurs="0"/>
- *         &lt;element name="FindBugsProfile" type="{}FindBugsProfileType"/>
- *       &lt;/sequence>
- *       &lt;attribute name="timestamp" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="total_classes" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="referenced_classes" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="total_bugs" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="total_size" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="num_packages" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="vm_version" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="cpu_seconds" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="clock_seconds" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="peak_mbytes" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="alloc_mbytes" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="gc_seconds" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="priority_2" type="{http://www.w3.org/2001/XMLSchema}string" />
- *     &lt;/restriction>
- *   &lt;/complexContent>
- * &lt;/complexType>
+ * &lt;complexType name="FindBugsSummaryType"&gt;
+ *   &lt;complexContent&gt;
+ *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
+ *       &lt;sequence&gt;
+ *         &lt;element name="PackageStats" type="{}PackageStatsType" maxOccurs="unbounded" minOccurs="0"/&gt;
+ *         &lt;element name="FindBugsProfile" type="{}FindBugsProfileType"/&gt;
+ *       &lt;/sequence&gt;
+ *       &lt;attribute name="timestamp" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+ *       &lt;attribute name="total_classes" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+ *       &lt;attribute name="referenced_classes" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+ *       &lt;attribute name="total_bugs" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+ *       &lt;attribute name="total_size" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+ *       &lt;attribute name="num_packages" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+ *       &lt;attribute name="vm_version" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+ *       &lt;attribute name="cpu_seconds" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+ *       &lt;attribute name="clock_seconds" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+ *       &lt;attribute name="peak_mbytes" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+ *       &lt;attribute name="alloc_mbytes" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+ *       &lt;attribute name="gc_seconds" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+ *       &lt;attribute name="priority_2" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+ *     &lt;/restriction&gt;
+ *   &lt;/complexContent&gt;
+ * &lt;/complexType&gt;
  * </pre>
  * 
  * 
@@ -122,7 +122,7 @@ public class FindBugsSummaryType {
      *
      * @return
      *     possible object is
-     *     {@link com.buschmais.jqassistant.plugin.findbugs.impl.jaxb.FindBugsProfileType }
+     *     {@link de.kontext_e.jqassistant.plugin.findbugs.jaxb.FindBugsProfileType }
      *
      */
     public FindBugsProfileType getFindBugsProfile() {
@@ -134,7 +134,7 @@ public class FindBugsSummaryType {
      *
      * @param value
      *     allowed object is
-     *     {@link com.buschmais.jqassistant.plugin.findbugs.impl.jaxb.FindBugsProfileType }
+     *     {@link de.kontext_e.jqassistant.plugin.findbugs.jaxb.FindBugsProfileType }
      *     
      */
     public void setFindBugsProfile(FindBugsProfileType value) {

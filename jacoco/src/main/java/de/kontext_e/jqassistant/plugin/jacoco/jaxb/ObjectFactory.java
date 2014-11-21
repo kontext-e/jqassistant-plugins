@@ -57,7 +57,7 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link com.buschmais.jqassistant.plugin.jacoco.impl.jaxb.SessioninfoType }
+     * Create an instance of {@link de.kontext_e.jqassistant.plugin.jacoco.jaxb.SessioninfoType }
      *
      */
     public SessioninfoType createSessioninfoType() {
@@ -73,7 +73,7 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link com.buschmais.jqassistant.plugin.jacoco.impl.jaxb.MethodType }
+     * Create an instance of {@link de.kontext_e.jqassistant.plugin.jacoco.jaxb.MethodType }
      *
      */
     public MethodType createMethodType() {
@@ -89,7 +89,7 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link com.buschmais.jqassistant.plugin.jacoco.impl.jaxb.CounterType }
+     * Create an instance of {@link de.kontext_e.jqassistant.plugin.jacoco.jaxb.CounterType }
      *
      */
     public CounterType createCounterType() {
@@ -97,7 +97,7 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link com.buschmais.jqassistant.plugin.jacoco.impl.jaxb.ClassType }
+     * Create an instance of {@link de.kontext_e.jqassistant.plugin.jacoco.jaxb.ClassType }
      *
      */
     public ClassType createClassType() {

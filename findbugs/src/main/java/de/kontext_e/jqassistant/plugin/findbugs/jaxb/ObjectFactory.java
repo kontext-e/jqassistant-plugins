@@ -65,7 +65,7 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link com.buschmais.jqassistant.plugin.findbugs.impl.jaxb.SourceLineType }
+     * Create an instance of {@link de.kontext_e.jqassistant.plugin.findbugs.jaxb.SourceLineType }
      *
      */
     public SourceLineType createSourceLineType() {

@@ -21,19 +21,19 @@ import javax.xml.bind.annotation.XmlValue;
  * <p>Das folgende Schemafragment gibt den erwarteten Content an, der in dieser Klasse enthalten ist.
  * 
  * <pre>
- * &lt;complexType name="SourceLineType">
- *   &lt;simpleContent>
- *     &lt;extension base="&lt;http://www.w3.org/2001/XMLSchema>string">
- *       &lt;attribute name="classname" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="start" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="end" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="sourcefile" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="sourcepath" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="startBytecode" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="endBytecode" type="{http://www.w3.org/2001/XMLSchema}string" />
- *     &lt;/extension>
- *   &lt;/simpleContent>
- * &lt;/complexType>
+ * &lt;complexType name="SourceLineType"&gt;
+ *   &lt;simpleContent&gt;
+ *     &lt;extension base="&lt;http://www.w3.org/2001/XMLSchema&gt;string"&gt;
+ *       &lt;attribute name="classname" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+ *       &lt;attribute name="start" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+ *       &lt;attribute name="end" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+ *       &lt;attribute name="sourcefile" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+ *       &lt;attribute name="sourcepath" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+ *       &lt;attribute name="startBytecode" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+ *       &lt;attribute name="endBytecode" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+ *     &lt;/extension&gt;
+ *   &lt;/simpleContent&gt;
+ * &lt;/complexType&gt;
  * </pre>
  * 
  * 

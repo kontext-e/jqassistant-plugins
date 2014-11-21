@@ -21,18 +21,18 @@ import javax.xml.bind.annotation.XmlValue;
  * <p>Das folgende Schemafragment gibt den erwarteten Content an, der in dieser Klasse enthalten ist.
  * 
  * <pre>
- * &lt;complexType name="ClassStatsType">
- *   &lt;simpleContent>
- *     &lt;extension base="&lt;http://www.w3.org/2001/XMLSchema>string">
- *       &lt;attribute name="class" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="sourceFile" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="interface" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="size" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="bugs" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="priority_2" type="{http://www.w3.org/2001/XMLSchema}string" />
- *     &lt;/extension>
- *   &lt;/simpleContent>
- * &lt;/complexType>
+ * &lt;complexType name="ClassStatsType"&gt;
+ *   &lt;simpleContent&gt;
+ *     &lt;extension base="&lt;http://www.w3.org/2001/XMLSchema&gt;string"&gt;
+ *       &lt;attribute name="class" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+ *       &lt;attribute name="sourceFile" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+ *       &lt;attribute name="interface" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+ *       &lt;attribute name="size" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+ *       &lt;attribute name="bugs" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+ *       &lt;attribute name="priority_2" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+ *     &lt;/extension&gt;
+ *   &lt;/simpleContent&gt;
+ * &lt;/complexType&gt;
  * </pre>
  * 
  * 
