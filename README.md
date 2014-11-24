@@ -4,21 +4,27 @@ This repository contains plugins for buschmais' jQAssistant.
 
 How to install
 ==============
-For now, that's not quite user friendly. It will get better if jQA is more stable and the latest version
-is available at maven repositories.
-
-* get and install jQAssistant (note: M4 is not yet on maven central, so you need to install it in your local maven repo)
-
-* clone this repository
-
-* build the plugins and install them into local maven repo: ./gradlew install
+* add [jQAssistant](http://jqassistant.org) to dependencies in your project
 
 * declare additional dependencies in your project:
  
     - groupId de.kontext-e.jqassistant.plugin
-    - artifactId jqassistant.plugin.checkstyle or .findbugs or .jacoco
+    - artifactId jqassistant.plugin.checkstyle or .findbugs or .jacoco or .git
+
+* you may want to configure some properties in jqassistant.properties
+
+    - jqassistant.plugin.checkstyle.basepackage=de.kontext_e.jqassistant.plugin
+    - jqassistant.plugin.findbugs.filename=findbugs.xml
+    - jqassistant.plugin.jacoco.filename=jacoco.xml
+
+* add a file named 'jqa_plugin_git.properties' to 
 
 * execute jQAssistant tasks
+
+Work in progress
+================
+* replace jqa_plugin_git.properties
+* PlantUML sequence diagrams
 
 Coming soon
 ===========
