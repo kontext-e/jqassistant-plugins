@@ -1,57 +1,5 @@
+apply from: "${rootDir}/gradle/uploadArchives.gradle"
+
 jar {
   baseName = 'jqassistant.plugin.git'
-}
-
-project.group = 'de.kontext-e.jqassistant.plugin'
-
-signing {
-  sign configurations.archives
-}
-
-uploadArchives {
-  repositories {
-    mavenDeployer {
-      beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-
-      // releases
-      repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-        authentication(userName: sonatypeUsername, password: sonatypePassword)
-      }
-      // snapshots
-/*
-            repository(url: "https://oss.sonatype.org/content/repositories/snapshots") {
-                authentication(userName: sonatypeUsername, password: sonatypePassword)
-            }
-*/
-
-      pom.project {
-        name 'ke-jqassistant-plugins'
-        packaging 'jar'
-        description 'Some jQAssistant plugins sponsored by Kontext E'
-        url 'https://github.com/kontext-e/jqassistant-plugins'
-
-        scm {
-          url 'scm:git@github.com:kontext-e/jqassistant.git'
-          connection 'scm:git@github.com:kontext-e/jqassistant.git'
-          developerConnection 'scm:git@github.com:kontext-e/jqassistant.git'
-        }
-
-        licenses {
-          license {
-            name 'GNU General Public License, v3'
-            url 'http://www.gnu.org/licenses/gpl-3.0.html'
-            distribution 'repo'
-          }
-        }
-
-        developers {
-          developer {
-            id 'jens-nerche'
-            name 'Jens Nerche'
-            email 'j.nerche@kontext-e.de'
-          }
-        }
-      }
-    }
-  }
 }
