@@ -107,6 +107,8 @@ task(jqascan, dependsOn: 'removeJQAReport', type: JavaExec) {
   main = 'com.buschmais.jqassistant.scm.cli.Main'
   classpath = sourceSets.test.runtimeClasspath
   args 'scan'
+  args '-r'
+  args 'jqassistant'
   args '-f'
   args '.git'
 }

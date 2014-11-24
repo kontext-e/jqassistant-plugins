@@ -4,14 +4,19 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
+import static java.util.Arrays.asList;
 
 public class RunGitLogCommand {
     public static List<String> runGitLog(final String pathToGitCommand, final String pathToGitProject, final String range) throws IOException, InterruptedException {
         final List<String> lines = new LinkedList<String>();
         final List<String> errorLines = new LinkedList<String>();
-        final Process process = Runtime.getRuntime().exec(new String[]{pathToGitCommand, "--git-dir="+ pathToGitProject, "log", "--name-status", "--date=iso"});
+        List<String> args = new ArrayList<>(asList(pathToGitCommand, "--git-dir="+ pathToGitProject, "log", "--name-status", "--date=iso"));
+        if(range != null) args.add(range);
+        final Process process = Runtime.getRuntime().exec(args.toArray(new String[args.size()]));
         inputReader(lines, process.getInputStream());
         inputReader(errorLines, process.getErrorStream());
         process.waitFor();
