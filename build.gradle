@@ -3,7 +3,7 @@ apply plugin: 'maven'
 
 project.ext["jqaversion"] = "1.0.0-M4"
 project.group = 'de.kontext-e.jqassistant.plugin'
-project.version = '1.0.0-M4'
+project.version = '1.0.0-M5-SNAPSHOT'
 
 subprojects {
     apply plugin: 'java'
@@ -11,7 +11,7 @@ subprojects {
     apply plugin: 'signing'
     //apply plugin: 'pmd'
 
-    version = project.jqaversion
+    project.version = '1.0.0-M5-SNAPSHOT'
     sourceCompatibility = 1.7
 
     repositories {
@@ -86,10 +86,10 @@ dependencies {
   testRuntime("com.buschmais.jqassistant.plugin:jqassistant.plugin.jpa2:${project.jqaversion}")
   testRuntime("com.buschmais.jqassistant.plugin:jqassistant.plugin.junit4:${project.jqaversion}")
 
-  testRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.checkstyle:${project.jqaversion}")
-  testRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.findbugs:${project.jqaversion}")
-  testRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.jacoco:${project.jqaversion}")
-  testRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.git:${project.jqaversion}")
+  testRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.checkstyle:${project.version}")
+  testRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.findbugs:${project.version}")
+  testRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.jacoco:${project.version}")
+  testRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.git:${project.version}")
 
   testRuntime("org.neo4j:neo4j:2.1.5")
 
@@ -108,7 +108,7 @@ task(jqascan, dependsOn: 'removeJQAReport', type: JavaExec) {
   classpath = sourceSets.test.runtimeClasspath
   args 'scan'
   args '-f'
-  args 'git/src/test/properties'
+  args '.git'
 }
 
 task(jqaanalyze, type: JavaExec) {

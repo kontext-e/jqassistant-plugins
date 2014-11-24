@@ -6,15 +6,14 @@ import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.buschmais.jqassistant.core.scanner.api.Scanner;
 import com.buschmais.jqassistant.core.scanner.api.Scope;
 import com.buschmais.jqassistant.core.store.api.Store;
-import com.buschmais.jqassistant.plugin.common.api.scanner.filesystem.FileResource;
 import com.buschmais.jqassistant.plugin.common.api.scanner.AbstractScannerPlugin;
+import com.buschmais.jqassistant.plugin.common.api.scanner.filesystem.FileResource;
 import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitAuthorDescriptor;
 import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitCommitDescriptor;
 import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitCommitFileDescriptor;
@@ -27,38 +26,24 @@ import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitFileDescriptor;
 public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitDescriptor> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GitScannerPlugin.class);
-    public static final String GIT_PATH = "git.path";
-    public static final String GIT_REPO = "git.repo";
-    public static final String GIT_RANGE = "git.range";
+    public static final String GIT_PATH = "jqassistant.plugin.git.path";
+    public static final String GIT_RANGE = "jqassistant.plugin.git.range";
 
-    private String gitConfigurationFileName = "jqa_plugin_git.properties";
+    private String pathToGitCommand = "git";
+    private String pathToGitProject = ".";
+    private String range = null;
 
     @Override
     public boolean accepts(final FileResource item, final String path, final Scope scope) throws IOException {
-        return path.endsWith(gitConfigurationFileName);
+        boolean isGitDir = path.endsWith("FETCH_HEAD") && ".git".equals(item.getFile().getParent());
+        if(isGitDir) {
+            pathToGitProject = item.getFile().toPath().getParent().toFile().getAbsolutePath();
+        }
+        return isGitDir;
     }
 
     @Override
     public GitDescriptor scan(final FileResource item, final String path, final Scope scope, final Scanner scanner) throws IOException {
-        String pathToGitCommand = "git";
-        String pathToGitProject = ".";
-        String range = null;
-
-        Properties configuration = new Properties();
-        configuration.load(item.createStream());
-
-        if(configuration.containsKey(GIT_PATH)) {
-            pathToGitCommand = configuration.getProperty(GIT_PATH);
-        }
-
-        if(configuration.containsKey(GIT_REPO)) {
-            pathToGitProject = configuration.getProperty(GIT_REPO);
-        }
-
-        if(configuration.containsKey(GIT_RANGE)) {
-            range = configuration.getProperty(GIT_RANGE);
-        }
-
         Store store = scanner.getContext().getStore();
         final GitDescriptor gitDescriptor = store.create(GitDescriptor.class);
         gitDescriptor.setName(path);
@@ -173,9 +158,15 @@ public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitDes
     @Override
     protected void initialize() {
         super.initialize();
-        final String property = (String) getProperties().get("jqassistant.plugin.git.filename");
-        if(property != null) {
-            gitConfigurationFileName = property;
+
+        final String pathProperty = (String) getProperties().get(GIT_PATH);
+        if(pathProperty != null) {
+            pathToGitCommand = pathProperty;
+        }
+
+        final String rangeProperty = (String) getProperties().get(GIT_RANGE);
+        if(rangeProperty != null) {
+            range = rangeProperty;
         }
     }
 }

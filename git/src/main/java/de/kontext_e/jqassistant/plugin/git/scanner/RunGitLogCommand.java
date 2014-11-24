@@ -11,7 +11,7 @@ public class RunGitLogCommand {
     public static List<String> runGitLog(final String pathToGitCommand, final String pathToGitProject, final String range) throws IOException, InterruptedException {
         final List<String> lines = new LinkedList<String>();
         final List<String> errorLines = new LinkedList<String>();
-        final Process process = Runtime.getRuntime().exec(new String[]{pathToGitCommand, "--git-dir="+ pathToGitProject +System.getProperty("file.separator")+".git", "log", "--name-status", "--date=iso"});
+        final Process process = Runtime.getRuntime().exec(new String[]{pathToGitCommand, "--git-dir="+ pathToGitProject, "log", "--name-status", "--date=iso"});
         inputReader(lines, process.getInputStream());
         inputReader(errorLines, process.getErrorStream());
         process.waitFor();

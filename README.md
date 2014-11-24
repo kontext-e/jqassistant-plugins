@@ -23,7 +23,6 @@ How to install
 
 Work in progress
 ================
-* replace jqa_plugin_git.properties
 * PlantUML sequence diagrams
 
 Coming soon
