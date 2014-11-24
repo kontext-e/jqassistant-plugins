@@ -1,7 +1,9 @@
 project.group = 'de.kontext-e.jqassistant.plugin'
 
-signing {
-  sign configurations.archives
+if(this.hasProperty('signing.keyId')) {
+  signing {
+    sign configurations.archives
+  }
 }
 
 if(this.hasProperty('sonatypeUsername')) {
