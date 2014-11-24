@@ -29,6 +29,7 @@ Work in progress
 Coming soon
 ===========
 * PMD
+* Jenkins
 
 ## Continuous Build
 
