@@ -1,10 +1,19 @@
 package de.kontext_e.jqassistant.plugin.findbugs.scanner;
 
+import java.io.IOException;
+import java.io.InputStream;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.transform.stream.StreamSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.buschmais.jqassistant.core.scanner.api.Scanner;
 import com.buschmais.jqassistant.core.scanner.api.Scope;
 import com.buschmais.jqassistant.core.store.api.Store;
-import com.buschmais.jqassistant.plugin.common.api.scanner.filesystem.FileResource;
 import com.buschmais.jqassistant.plugin.common.api.scanner.AbstractScannerPlugin;
+import com.buschmais.jqassistant.plugin.common.api.scanner.filesystem.FileResource;
 import de.kontext_e.jqassistant.plugin.findbugs.jaxb.BugCollectionType;
 import de.kontext_e.jqassistant.plugin.findbugs.jaxb.BugInstanceType;
 import de.kontext_e.jqassistant.plugin.findbugs.jaxb.ObjectFactory;
@@ -12,15 +21,6 @@ import de.kontext_e.jqassistant.plugin.findbugs.jaxb.SourceLineType;
 import de.kontext_e.jqassistant.plugin.findbugs.store.descriptor.BugInstanceDescriptor;
 import de.kontext_e.jqassistant.plugin.findbugs.store.descriptor.FindBugsDescriptor;
 import de.kontext_e.jqassistant.plugin.findbugs.store.descriptor.SourceLineDescriptor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.transform.stream.StreamSource;
-import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * @author jn4, Kontext E GmbH, 05.02.14
@@ -51,7 +51,7 @@ public class FindBugsScannerPlugin extends AbstractScannerPlugin<FileResource, F
 
     @Override
     public boolean accepts(FileResource item, String path, Scope scope) throws IOException {
-        return path.endsWith(findBugsFileName);
+        return path.endsWith(findBugsFileName) || ("findbugs".equals(item.getFile().toPath().getParent().toFile().getName()) && path.endsWith(".xml"));
     }
 
     @Override

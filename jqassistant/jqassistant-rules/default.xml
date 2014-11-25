@@ -4,7 +4,7 @@
         <description>For debugging purposes</description>
         <cypher><![CDATA[
                 match
-                    (g:Checkstyle)
+                    (g:FindBugs)
                 return
                     g
         ]]></cypher>

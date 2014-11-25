@@ -10,6 +10,7 @@ subprojects {
     apply plugin: 'maven'
     apply plugin: 'signing'
     apply plugin: 'checkstyle'
+    apply plugin: 'findbugs'
 
     //apply plugin: 'pmd'
 
@@ -49,6 +50,12 @@ subprojects {
       ignoreFailures = true
       showViolations = false
       toolVersion = '5.7'
+    }
+
+    findbugs {
+      ignoreFailures = true
+      effort = "max"
+      reportLevel = "medium"
     }
 
 /*
@@ -112,6 +119,7 @@ task(jqascan, dependsOn: 'removeJQAReport', type: JavaExec) {
   args 'jqassistant/jqassistant.properties'
   args '-f'
   args 'findbugs/build/reports'
+  args 'checkstyle/build/reports'
 }
 
 task(jqaanalyze, type: JavaExec) {
