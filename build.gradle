@@ -71,31 +71,31 @@ repositories {
 
 dependencies {
 
-  testRuntime("com.buschmais.jqassistant.core:jqassistant.core.store:${project.jqaversion}")
-  testRuntime("com.buschmais.jqassistant.core:jqassistant.core.scanner:${project.jqaversion}")
-  testRuntime("com.buschmais.jqassistant.core:jqassistant.core.analysis:${project.jqaversion}")
-  testRuntime("com.buschmais.jqassistant.plugin:jqassistant.plugin.common:${project.jqaversion}")
-  testRuntime("com.buschmais.jqassistant.scm:jqassistant.scm.cli:${project.jqaversion}")
+  runtime("com.buschmais.jqassistant.core:jqassistant.core.store:${project.jqaversion}")
+  runtime("com.buschmais.jqassistant.core:jqassistant.core.scanner:${project.jqaversion}")
+  runtime("com.buschmais.jqassistant.core:jqassistant.core.analysis:${project.jqaversion}")
+  runtime("com.buschmais.jqassistant.plugin:jqassistant.plugin.common:${project.jqaversion}")
+  runtime("com.buschmais.jqassistant.scm:jqassistant.scm.cli:${project.jqaversion}")
 
-  testRuntime("com.buschmais.jqassistant.plugin:jqassistant.plugin.cdi:${project.jqaversion}")
-  testRuntime("com.buschmais.jqassistant.plugin:jqassistant.plugin.ejb3:${project.jqaversion}")
-  testRuntime("com.buschmais.jqassistant.plugin:jqassistant.plugin.java:${project.jqaversion}")
-  testRuntime("com.buschmais.jqassistant.plugin:jqassistant.plugin.java8:${project.jqaversion}")
-  testRuntime("com.buschmais.jqassistant.plugin:jqassistant.plugin.javaee6:${project.jqaversion}")
-  testRuntime("com.buschmais.jqassistant.plugin:jqassistant.plugin.jaxrs:${project.jqaversion}")
-  testRuntime("com.buschmais.jqassistant.plugin:jqassistant.plugin.jpa2:${project.jqaversion}")
-  testRuntime("com.buschmais.jqassistant.plugin:jqassistant.plugin.junit4:${project.jqaversion}")
+  runtime("com.buschmais.jqassistant.plugin:jqassistant.plugin.cdi:${project.jqaversion}")
+  runtime("com.buschmais.jqassistant.plugin:jqassistant.plugin.ejb3:${project.jqaversion}")
+  runtime("com.buschmais.jqassistant.plugin:jqassistant.plugin.java:${project.jqaversion}")
+  runtime("com.buschmais.jqassistant.plugin:jqassistant.plugin.java8:${project.jqaversion}")
+  runtime("com.buschmais.jqassistant.plugin:jqassistant.plugin.javaee6:${project.jqaversion}")
+  runtime("com.buschmais.jqassistant.plugin:jqassistant.plugin.jaxrs:${project.jqaversion}")
+  runtime("com.buschmais.jqassistant.plugin:jqassistant.plugin.jpa2:${project.jqaversion}")
+  runtime("com.buschmais.jqassistant.plugin:jqassistant.plugin.junit4:${project.jqaversion}")
 
-  testRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.checkstyle:${project.version}")
-  testRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.findbugs:${project.version}")
-  testRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.jacoco:${project.version}")
-  testRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.git:${project.version}")
+  runtime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.checkstyle:${project.version}")
+  runtime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.findbugs:${project.version}")
+  runtime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.jacoco:${project.version}")
+  runtime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.git:${project.version}")
 
-  testRuntime("org.neo4j:neo4j:2.1.5")
+  runtime("org.neo4j:neo4j:2.1.5")
 
-  testRuntime 'com.sun.jersey:jersey-server:1.13'
-  testRuntime 'com.sun.jersey:jersey-core:1.13'
-  testRuntime 'com.sun.jersey:jersey-servlet:1.13'
+  runtime 'com.sun.jersey:jersey-server:1.13'
+  runtime 'com.sun.jersey:jersey-core:1.13'
+  runtime 'com.sun.jersey:jersey-servlet:1.13'
 }
 
 task removeJQAReport(type: Delete) {
@@ -105,17 +105,17 @@ task removeJQAReport(type: Delete) {
 
 task(jqascan, dependsOn: 'removeJQAReport', type: JavaExec) {
   main = 'com.buschmais.jqassistant.scm.cli.Main'
-  classpath = sourceSets.test.runtimeClasspath
+  classpath = sourceSets.main.runtimeClasspath
   args 'scan'
-  args '-r'
-  args 'jqassistant'
+  args '-p'
+  args 'jqassistant/jqassistant.properties'
   args '-f'
   args '.git'
 }
 
 task(jqaanalyze, type: JavaExec) {
   main = 'com.buschmais.jqassistant.scm.cli.Main'
-  classpath = sourceSets.test.runtimeClasspath
+  classpath = sourceSets.main.runtimeClasspath
   args 'analyze'
   args '-r'
   args 'jqassistant'
