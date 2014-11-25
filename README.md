@@ -16,8 +16,8 @@ How to install
     - jqassistant.plugin.checkstyle.basepackage=de.kontext_e.jqassistant.plugin
     - jqassistant.plugin.findbugs.filename=findbugs.xml
     - jqassistant.plugin.jacoco.filename=jacoco.xml
-
-* add a file named 'jqa_plugin_git.properties' to 
+    - jqassistant.plugin.git.path=/usr/bin/git
+    - jqassistant.plugin.git.range= - a valid git range if not the complete history should be imported -
 
 * execute jQAssistant tasks
 
