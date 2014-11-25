@@ -1,0 +1,109 @@
+<?xml version="1.0"?>
+<!DOCTYPE module PUBLIC
+        "-//Puppy Crawl//DTD Check Configuration 1.2//EN"
+        "http://www.puppycrawl.com/dtds/configuration_1_2.dtd">
+
+<module name="Checker">
+    <property name="localeCountry" value=""/>
+    <property name="localeLanguage" value=""/>
+
+    <module name="TreeWalker">
+        <!-- Checks for Naming Conventions.                  -->
+        <!-- See http://checkstyle.sf.net/config_naming.html -->
+        <module name="ConstantName">
+            <property name="severity" value="info"/>
+        </module>
+        <module name="LocalFinalVariableName"/>
+        <module name="LocalVariableName"/>
+        <module name="MemberName"/>
+        <module name="MethodName"/>
+        <module name="PackageName"/>
+        <module name="ParameterName"/>
+        <module name="StaticVariableName"/>
+        <module name="TypeName"/>
+
+        <!-- Checks for imports                              -->
+        <!-- See http://checkstyle.sf.net/config_import.html -->
+        <module name="AvoidStarImport"/>
+        <module name="IllegalImport"/>
+        <!-- defaults to sun.* packages -->
+        <module name="RedundantImport"/>
+        <module name="UnusedImports"/>
+
+
+        <!-- Checks for Size Violations.                    -->
+        <!-- See http://checkstyle.sf.net/config_sizes.html -->
+        <module name="MethodLength"/>
+        <module name="ParameterNumber">
+            <property name="severity" value="warning"/>
+            <property name="max" value="10"/>
+        </module>
+
+        <!-- Modifier Checks                                    -->
+        <!-- See http://checkstyle.sf.net/config_modifiers.html -->
+        <module name="ModifierOrder"/>
+        <module name="RedundantModifier"/>
+
+        <module name="EmptyStatement"/>
+        <module name="EqualsHashCode">
+            <property name="severity" value="error"/>
+        </module>
+        <module name="HiddenField">
+            <property name="severity" value="warning"/>
+            <property name="tokens" value="VARIABLE_DEF"/>
+            <property name="ignoreConstructorParameter" value="true"/>
+            <property name="ignoreSetter" value="true"/>
+            <property name="ignoreAbstractMethods" value="true"/>
+        </module>
+        <module name="IllegalInstantiation"/>
+        <!-- TODO deactivated because it doesn't work with try-with-resources feature of Java 7 -->
+        <!-- see http://sourceforge.net/tracker/?func=detail&aid=3441097&group_id=29721&atid=397078 -->
+        <!--<module name="InnerAssignment"/>-->
+        <module name="MagicNumber">
+            <property name="severity" value="info"/>
+            <property name="ignoreNumbers" value="-1,0,1,2,3,4,5,6,7,8,9,10"/>
+        </module>
+
+        <module name="FallThrough"/>
+        <module name="DefaultComesLast"/>
+
+        <module name="RedundantThrows">
+            <property name="allowUnchecked" value="true"/>
+            <property name="severity" value="info"/>
+        </module>
+        <module name="SimplifyBooleanExpression"/>
+        <module name="SimplifyBooleanReturn"/>
+        <module name="StringLiteralEquality"/>
+        <module name="NestedForDepth">
+            <property name="max" value="3"/>
+        </module>
+        <module name="NestedIfDepth">
+            <property name="max" value="3"/>
+        </module>
+        <module name="NoFinalizer"/>
+        <module name="CovariantEquals">
+            <property name="severity" value="error"/>
+        </module>
+
+        <!-- needs preprocessing: equals and hash
+                <module name="CyclomaticComplexity">
+                    <property name="max" value="7"/>
+                </module>
+        -->
+
+<!-- needs preprocessing: equals and hash
+        <module name="NPathComplexity">
+            <property name="severity" value="error"/>
+            <property name="max" value="200"/>
+        </module>
+-->
+
+        <module name="JavaNCSS">
+            <property name="severity" value="error"/>
+            <property name="methodMaximum" value="60"/>
+        </module>
+
+
+    </module>
+
+</module>

@@ -9,6 +9,8 @@ subprojects {
     apply plugin: 'java'
     apply plugin: 'maven'
     apply plugin: 'signing'
+    apply plugin: 'checkstyle'
+
     //apply plugin: 'pmd'
 
     project.version = '1.0.0-M5-SNAPSHOT'
@@ -42,13 +44,12 @@ subprojects {
       archives sourcesJar
     }
 
-
-/* gradle says:  Cannot add task ':signArchives' as a task with that name already exists.
-    signing {
-      sign configurations.archives
+    checkstyle {
+      configFile = new File(rootDir, 'config/checkstyle/checks.xml')
+      ignoreFailures = true
+      showViolations = false
+      toolVersion = '5.7'
     }
-*/
-
 
 /*
     pmd {
