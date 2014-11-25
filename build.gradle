@@ -111,7 +111,7 @@ task(jqascan, dependsOn: 'removeJQAReport', type: JavaExec) {
   args '-p'
   args 'jqassistant/jqassistant.properties'
   args '-f'
-  args '.git'
+  args 'findbugs/build/reports'
 }
 
 task(jqaanalyze, type: JavaExec) {

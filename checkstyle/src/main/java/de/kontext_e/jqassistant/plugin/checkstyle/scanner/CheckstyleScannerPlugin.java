@@ -1,10 +1,17 @@
 package de.kontext_e.jqassistant.plugin.checkstyle.scanner;
 
+import java.io.IOException;
+import java.io.InputStream;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.transform.stream.StreamSource;
+
 import com.buschmais.jqassistant.core.scanner.api.Scanner;
 import com.buschmais.jqassistant.core.scanner.api.Scope;
 import com.buschmais.jqassistant.core.store.api.Store;
-import com.buschmais.jqassistant.plugin.common.api.scanner.filesystem.FileResource;
 import com.buschmais.jqassistant.plugin.common.api.scanner.AbstractScannerPlugin;
+import com.buschmais.jqassistant.plugin.common.api.scanner.filesystem.FileResource;
 import de.kontext_e.jqassistant.plugin.checkstyle.jaxb.CheckstyleType;
 import de.kontext_e.jqassistant.plugin.checkstyle.jaxb.ErrorType;
 import de.kontext_e.jqassistant.plugin.checkstyle.jaxb.FileType;
@@ -13,13 +20,6 @@ import de.kontext_e.jqassistant.plugin.checkstyle.store.descriptor.CheckstyleDes
 import de.kontext_e.jqassistant.plugin.checkstyle.store.descriptor.ErrorDescriptor;
 import de.kontext_e.jqassistant.plugin.checkstyle.store.descriptor.FileDescriptor;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.transform.stream.StreamSource;
-import java.io.IOException;
-import java.io.InputStream;
-
 
 /**
  * @author jn4, Kontext E GmbH, 11.02.14
@@ -27,7 +27,7 @@ import java.io.InputStream;
 public class CheckstyleScannerPlugin extends AbstractScannerPlugin<FileResource, CheckstyleDescriptor> {
 
     private JAXBContext jaxbContext;
-    private static String basePackage = "com";
+    private static String basePackage = "de.kontext_e.jqassistant.plugin";
 
     public CheckstyleScannerPlugin() {
         try {
@@ -39,7 +39,7 @@ public class CheckstyleScannerPlugin extends AbstractScannerPlugin<FileResource,
 
     @Override
     public boolean accepts(FileResource item, String path, Scope scope) throws IOException {
-        return path.endsWith("checkstyle.xml");
+        return path.endsWith("checkstyle.xml") || ("checkstyle".equals(item.getFile().toPath().getParent().toFile().getName()) && path.endsWith(".xml"));
     }
 
     @Override

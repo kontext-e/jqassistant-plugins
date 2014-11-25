@@ -1,18 +1,18 @@
 <jqa:jqassistant-rules xmlns:jqa="http://www.buschmais.com/jqassistant/core/analysis/rules/schema/v1.0">
 
-    <constraint id="git:GitNodeMustExist">
+    <constraint id="debug:rule">
         <description>For debugging purposes</description>
         <cypher><![CDATA[
                 match
-                    (g:GitCommit)
+                    (g:Checkstyle)
                 return
-                    g.epoch, g.time
+                    g
         ]]></cypher>
     </constraint>
 
     <group id="default">
 <!--
-        <includeConstraint refId="git:GitNodeMustExist"/>
+        <includeConstraint refId="debug:rule" severity="critical"/>
 -->
     </group>
 
