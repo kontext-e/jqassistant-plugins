@@ -11,6 +11,7 @@ subprojects {
     apply plugin: 'signing'
     apply plugin: 'checkstyle'
     apply plugin: 'findbugs'
+    apply plugin: "jacoco"
 
     //apply plugin: 'pmd'
 
@@ -45,7 +46,19 @@ subprojects {
       archives sourcesJar
     }
 
-    checkstyle {
+
+  jacoco {
+    toolVersion = "0.7.1.201405082137"
+  }
+
+  jacocoTestReport {
+    reports {
+      xml.enabled true
+      csv.enabled false
+    }
+  }
+
+  checkstyle {
       configFile = new File(rootDir, 'config/checkstyle/checks.xml')
       ignoreFailures = true
       showViolations = false
@@ -118,8 +131,11 @@ task(jqascan, dependsOn: 'removeJQAReport', type: JavaExec) {
   args '-p'
   args 'jqassistant/jqassistant.properties'
   args '-f'
-  args 'findbugs/build/reports'
   args 'checkstyle/build/reports'
+  args 'findbugs/build/reports'
+  args 'git/build/reports'
+  args 'jacoco/build/reports'
+  args 'plantuml/build/reports'
 }
 
 task(jqaanalyze, type: JavaExec) {
