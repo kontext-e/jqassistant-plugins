@@ -50,6 +50,7 @@ public class JacocoScannerPlugin extends AbstractScannerPlugin<FileResource,Jaco
     public boolean accepts(final FileResource item, String path, Scope scope) throws IOException {
         String jacocoFileName = (String) getProperties().get("jqassistant.plugin.jacoco.filename");
         if(jacocoFileName == null) jacocoFileName = "jacoco.xml";
+        // TODO remove or if jqassistant #156 ist fixed
         return path.endsWith(jacocoFileName)
                || path.endsWith("jacocoTestReport.xml") // gradle standard
                 ;

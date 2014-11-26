@@ -11,7 +11,9 @@
     </constraint>
 
     <group id="default">
+<!--
         <includeConstraint refId="debug:rule" severity="critical"/>
+-->
     </group>
 
 </jqa:jqassistant-rules>

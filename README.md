@@ -1,6 +1,6 @@
 jqassistant-plugins
 ===================
-This repository contains plugins for buschmais' jQAssistant.
+This repository contains plugins for buschmais' [jQAssistant](http://jqassistant.org).
 
 How to install
 ==============
@@ -10,6 +10,8 @@ How to install
  
     - groupId de.kontext-e.jqassistant.plugin
     - artifactId jqassistant.plugin.checkstyle or .findbugs or .jacoco or .git
+    - e.g. for gradle:   runtime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.checkstyle:1.0.0-M5")
+
 
 * you may want to configure some properties in jqassistant.properties
 
