@@ -83,14 +83,16 @@ public class FindBugsScannerPlugin extends AbstractScannerPlugin<FileResource, F
             bugInstanceDescriptor.setAbbrev(bugInstanceType.getAbbrev());
             bugInstanceDescriptor.setCategory(bugInstanceType.getCategory());
 
-            final SourceLineType bugInstanceTypeSourceLine = bugInstanceType.getSourceLine();
-            final SourceLineDescriptor sourceLineDescriptor = store.create(SourceLineDescriptor.class);
-            sourceLineDescriptor.setClassname(bugInstanceTypeSourceLine.getClassname());
-            sourceLineDescriptor.setStart(bugInstanceTypeSourceLine.getStart());
-            sourceLineDescriptor.setEnd(bugInstanceTypeSourceLine.getEnd());
-            sourceLineDescriptor.setSourcefile(bugInstanceTypeSourceLine.getSourcefile());
-            sourceLineDescriptor.setSourcepath(bugInstanceTypeSourceLine.getSourcepath());
-            bugInstanceDescriptor.setSourceLineDescriptor(sourceLineDescriptor);
+            if(bugInstanceType.getSourceLine() != null) {
+                final SourceLineType bugInstanceTypeSourceLine = bugInstanceType.getSourceLine();
+                final SourceLineDescriptor sourceLineDescriptor = store.create(SourceLineDescriptor.class);
+                sourceLineDescriptor.setClassname(bugInstanceTypeSourceLine.getClassname());
+                sourceLineDescriptor.setStart(bugInstanceTypeSourceLine.getStart());
+                sourceLineDescriptor.setEnd(bugInstanceTypeSourceLine.getEnd());
+                sourceLineDescriptor.setSourcefile(bugInstanceTypeSourceLine.getSourcefile());
+                sourceLineDescriptor.setSourcepath(bugInstanceTypeSourceLine.getSourcepath());
+                bugInstanceDescriptor.setSourceLineDescriptor(sourceLineDescriptor);
+            }
 
             findBugsDescriptor.getContains().add(bugInstanceDescriptor);
         }
