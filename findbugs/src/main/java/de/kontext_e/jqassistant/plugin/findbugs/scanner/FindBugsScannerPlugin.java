@@ -61,11 +61,16 @@ public class FindBugsScannerPlugin extends AbstractScannerPlugin<FileResource, F
 
     @Override
     public boolean accepts(FileResource item, String path, Scope scope) throws IOException {
-        return path.endsWith(findBugsFileName) || ("findbugs".equals(item.getFile().toPath().getParent().toFile().getName()) && path.endsWith(".xml"));
+        boolean accepted = path.endsWith(findBugsFileName) || ("findbugs".equals(item.getFile().toPath().getParent().toFile().getName()) && path.endsWith(".xml"));
+        if(accepted) {
+            LOGGER.debug(String.format("FindBugs accepted file %s", path));
+        }
+        return accepted;
     }
 
     @Override
     public FindBugsDescriptor scan(final FileResource file, String path, Scope scope, Scanner scanner) throws IOException {
+        LOGGER.debug(String.format("FindBugs scans file %s", path));
         final BugCollectionType bugCollectionType = unmarshalFindBugsXml(file.createStream());
         final FindBugsDescriptor findBugsDescriptor = scanner.getContext().getStore().create(FindBugsDescriptor.class);
         writeFindBugsDescriptor(path, bugCollectionType, findBugsDescriptor);
