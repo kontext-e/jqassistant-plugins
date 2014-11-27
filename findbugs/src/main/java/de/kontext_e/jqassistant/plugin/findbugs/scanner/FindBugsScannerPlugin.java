@@ -33,6 +33,7 @@ import de.kontext_e.jqassistant.plugin.findbugs.store.descriptor.SourceLineDescr
 public class FindBugsScannerPlugin extends AbstractScannerPlugin<FileResource, FindBugsDescriptor> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FindBugsScannerPlugin.class);
+    public static final String JQASSISTANT_PLUGIN_FINDBUGS_FILENAME = "jqassistant.plugin.findbugs.filename";
 
     private JAXBContext jaxbContext;
 
@@ -48,10 +49,14 @@ public class FindBugsScannerPlugin extends AbstractScannerPlugin<FileResource, F
 
     @Override
     protected void initialize() {
-        final String property = (String) getProperties().get("jqassistant.plugin.findbugs.filename");
+        final String property = (String) getProperties().get(JQASSISTANT_PLUGIN_FINDBUGS_FILENAME);
         if(property != null) {
             findBugsFileName = property;
         }
+        if(System.getProperty(JQASSISTANT_PLUGIN_FINDBUGS_FILENAME) != null) {
+            findBugsFileName = System.getProperty(JQASSISTANT_PLUGIN_FINDBUGS_FILENAME);
+        }
+        LOGGER.info(String.format("FindBugs plugin looks for files named %s or for all XML files in directories named 'findbugs'", findBugsFileName));
     }
 
     @Override
