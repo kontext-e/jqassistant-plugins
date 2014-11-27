@@ -38,12 +38,14 @@ public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitDes
         boolean isGitDir = path.endsWith("FETCH_HEAD") && ".git".equals(item.getFile().getParent());
         if(isGitDir) {
             pathToGitProject = item.getFile().toPath().getParent().toFile().getAbsolutePath();
+            LOGGER.info("Path to git project is "+pathToGitProject);
         }
         return isGitDir;
     }
 
     @Override
     public GitDescriptor scan(final FileResource item, final String path, final Scope scope, final Scanner scanner) throws IOException {
+        LOGGER.debug("Git plugin scans "+path);
         Store store = scanner.getContext().getStore();
         final GitDescriptor gitDescriptor = store.create(GitDescriptor.class);
         gitDescriptor.setName(path);
@@ -156,22 +158,24 @@ public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitDes
     }
 
     @Override
-    public void initialize(Map<String, Object> properties) {
-        super.initialize(properties);
-
+    protected void initialize() {
+        Map<String, Object> properties = getProperties();
         final String pathProperty = (String) properties.get(GIT_PATH);
         if(pathProperty != null) {
             pathToGitCommand = pathProperty;
         }
+        if(System.getProperty(GIT_PATH) != null) {
+            pathToGitCommand = System.getProperty(GIT_PATH);
+        }
+        LOGGER.debug("Git plugin uses this git installation: "+pathToGitCommand);
 
         final String rangeProperty = (String) properties.get(GIT_RANGE);
         if(rangeProperty != null) {
             range = rangeProperty;
         }
-
-/*
-        System.out.println("Properties: "+getProperties());
-        System.out.println("Range: "+range);
-*/
+        if(System.getProperty(GIT_RANGE) != null) {
+            range = System.getProperty(GIT_RANGE);
+        }
+        LOGGER.debug("Git plugin has configured range "+range);
     }
 }
