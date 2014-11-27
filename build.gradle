@@ -3,7 +3,7 @@ apply plugin: 'maven'
 
 project.ext["jqaversion"] = "1.0.0-M4"
 project.group = 'de.kontext-e.jqassistant.plugin'
-project.version = '1.0.0-M6-SNAPSHOT'
+project.version = '1.0.0-M6'
 
 subprojects {
     apply plugin: 'java'
@@ -15,7 +15,7 @@ subprojects {
 
     //apply plugin: 'pmd'
 
-    project.version = '1.0.0-M6-SNAPSHOT'
+    project.version = '1.0.0-M6'
     sourceCompatibility = 1.7
 
     repositories {
