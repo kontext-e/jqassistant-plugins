@@ -1,10 +1,3 @@
-//
-// Diese Datei wurde mit der JavaTM Architecture for XML Binding(JAXB) Reference Implementation, v2.2.6 generiert 
-// Siehe <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
-// Änderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
-// Generiert: 2014.02.10 um 02:18:03 PM CET 
-//
-
 
 package de.kontext_e.jqassistant.plugin.findbugs.jaxb;
 
@@ -16,11 +9,11 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java-Klasse für ClassType complex type.
+ * <p&gt;Java class for ClassType complex type.
  * 
- * <p>Das folgende Schemafragment gibt den erwarteten Content an, der in dieser Klasse enthalten ist.
+ * <p&gt;The following schema fragment specifies the expected content contained within this class.
  * 
- * <pre>
+ * <pre&gt;
  * &lt;complexType name="ClassType"&gt;
  *   &lt;complexContent&gt;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
@@ -31,7 +24,7 @@ import javax.xml.bind.annotation.XmlType;
  *     &lt;/restriction&gt;
  *   &lt;/complexContent&gt;
  * &lt;/complexType&gt;
- * </pre>
+ * </pre&gt;
  * 
  * 
  */
@@ -47,20 +40,20 @@ public class ClassType {
     protected String classname;
 
     /**
-     * Ruft den Wert der sourceLine-Eigenschaft ab.
+     * Gets the value of the sourceLine property.
      * 
      * @return
      *     possible object is
      *     {@link SourceLineType }
-     *
+     *     
      */
     public SourceLineType getSourceLine() {
         return sourceLine;
     }
 
     /**
-     * Legt den Wert der sourceLine-Eigenschaft fest.
-     *
+     * Sets the value of the sourceLine property.
+     * 
      * @param value
      *     allowed object is
      *     {@link SourceLineType }
@@ -71,7 +64,7 @@ public class ClassType {
     }
 
     /**
-     * Ruft den Wert der classname-Eigenschaft ab.
+     * Gets the value of the classname property.
      * 
      * @return
      *     possible object is
@@ -83,7 +76,7 @@ public class ClassType {
     }
 
     /**
-     * Legt den Wert der classname-Eigenschaft fest.
+     * Sets the value of the classname property.
      * 
      * @param value
      *     allowed object is

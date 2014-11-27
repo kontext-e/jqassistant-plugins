@@ -16,9 +16,14 @@ import com.buschmais.jqassistant.plugin.common.api.scanner.AbstractScannerPlugin
 import com.buschmais.jqassistant.plugin.common.api.scanner.filesystem.FileResource;
 import de.kontext_e.jqassistant.plugin.findbugs.jaxb.BugCollectionType;
 import de.kontext_e.jqassistant.plugin.findbugs.jaxb.BugInstanceType;
+import de.kontext_e.jqassistant.plugin.findbugs.jaxb.FieldType;
+import de.kontext_e.jqassistant.plugin.findbugs.jaxb.MethodType;
 import de.kontext_e.jqassistant.plugin.findbugs.jaxb.ObjectFactory;
 import de.kontext_e.jqassistant.plugin.findbugs.jaxb.SourceLineType;
+import de.kontext_e.jqassistant.plugin.findbugs.store.descriptor.BugInstanceClassDescriptor;
 import de.kontext_e.jqassistant.plugin.findbugs.store.descriptor.BugInstanceDescriptor;
+import de.kontext_e.jqassistant.plugin.findbugs.store.descriptor.BugInstanceFieldDescriptor;
+import de.kontext_e.jqassistant.plugin.findbugs.store.descriptor.BugInstanceMethodDescriptor;
 import de.kontext_e.jqassistant.plugin.findbugs.store.descriptor.FindBugsDescriptor;
 import de.kontext_e.jqassistant.plugin.findbugs.store.descriptor.SourceLineDescriptor;
 
@@ -83,19 +88,56 @@ public class FindBugsScannerPlugin extends AbstractScannerPlugin<FileResource, F
             bugInstanceDescriptor.setAbbrev(bugInstanceType.getAbbrev());
             bugInstanceDescriptor.setCategory(bugInstanceType.getCategory());
 
+            if(bugInstanceType.getClazz() != null) {
+                final BugInstanceClassDescriptor bugInstanceClassDescriptor = store.create(BugInstanceClassDescriptor.class);
+                final SourceLineType bugInstanceTypeSourceLine = bugInstanceType.getClazz().getSourceLine();
+                final SourceLineDescriptor sourceLineDescriptor = createSourceLineDescriptor(store, bugInstanceTypeSourceLine);
+                bugInstanceClassDescriptor.setSourceLineDescriptor(sourceLineDescriptor);
+                bugInstanceDescriptor.setBugInstanceClass(bugInstanceClassDescriptor);
+            }
+
+            if(bugInstanceType.getMethod() != null) {
+                for (MethodType methodType : bugInstanceType.getMethod()) {
+                    final BugInstanceMethodDescriptor bugInstanceMethodDescriptor = store.create(BugInstanceMethodDescriptor.class);
+                    bugInstanceMethodDescriptor.setFullQualifiedName(methodType.getClassname());
+                    bugInstanceMethodDescriptor.setName(methodType.getName());
+                    bugInstanceMethodDescriptor.setSignature(methodType.getSignature());
+                    bugInstanceMethodDescriptor.setIsStatic(Boolean.valueOf(methodType.getIsStatic()));
+                    bugInstanceMethodDescriptor.setSourceLineDescriptor(createSourceLineDescriptor(store, methodType.getSourceLine()));
+                    bugInstanceDescriptor.getBugInstanceMethods().add(bugInstanceMethodDescriptor);
+                }
+            }
+
+            if(bugInstanceType.getField() != null) {
+                for (FieldType fieldType : bugInstanceType.getField()) {
+                    final BugInstanceFieldDescriptor bugInstanceFieldDescriptor = store.create(BugInstanceFieldDescriptor.class);
+                    bugInstanceFieldDescriptor.setFullQualifiedName(fieldType.getClassname());
+                    bugInstanceFieldDescriptor.setName(fieldType.getName());
+                    bugInstanceFieldDescriptor.setSignature(fieldType.getSignature());
+                    bugInstanceFieldDescriptor.setIsStatic(Boolean.valueOf(fieldType.getIsStatic()));
+                    bugInstanceFieldDescriptor.setSourceLineDescriptor(createSourceLineDescriptor(store, fieldType.getSourceLine()));
+                    bugInstanceDescriptor.getBugInstanceFields().add(bugInstanceFieldDescriptor);
+                }
+            }
+
             if(bugInstanceType.getSourceLine() != null) {
                 final SourceLineType bugInstanceTypeSourceLine = bugInstanceType.getSourceLine();
-                final SourceLineDescriptor sourceLineDescriptor = store.create(SourceLineDescriptor.class);
-                sourceLineDescriptor.setClassname(bugInstanceTypeSourceLine.getClassname());
-                sourceLineDescriptor.setStart(bugInstanceTypeSourceLine.getStart());
-                sourceLineDescriptor.setEnd(bugInstanceTypeSourceLine.getEnd());
-                sourceLineDescriptor.setSourcefile(bugInstanceTypeSourceLine.getSourcefile());
-                sourceLineDescriptor.setSourcepath(bugInstanceTypeSourceLine.getSourcepath());
+                final SourceLineDescriptor sourceLineDescriptor = createSourceLineDescriptor(store, bugInstanceTypeSourceLine);
                 bugInstanceDescriptor.setSourceLineDescriptor(sourceLineDescriptor);
             }
 
             findBugsDescriptor.getContains().add(bugInstanceDescriptor);
         }
+    }
+
+    private SourceLineDescriptor createSourceLineDescriptor(final Store store, final SourceLineType bugInstanceTypeSourceLine) {
+        final SourceLineDescriptor sourceLineDescriptor = store.create(SourceLineDescriptor.class);
+        sourceLineDescriptor.setClassname(bugInstanceTypeSourceLine.getClassname());
+        sourceLineDescriptor.setStart(bugInstanceTypeSourceLine.getStart());
+        sourceLineDescriptor.setEnd(bugInstanceTypeSourceLine.getEnd());
+        sourceLineDescriptor.setSourcefile(bugInstanceTypeSourceLine.getSourcefile());
+        sourceLineDescriptor.setSourcepath(bugInstanceTypeSourceLine.getSourcepath());
+        return sourceLineDescriptor;
     }
 
     protected void writeFindBugsDescriptor(final String path, final BugCollectionType bugCollectionType, final FindBugsDescriptor findBugsDescriptor) {

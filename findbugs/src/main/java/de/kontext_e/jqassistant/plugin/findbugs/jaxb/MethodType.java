@@ -9,12 +9,12 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p&gt;Java class for FieldType complex type.
+ * <p&gt;Java class for MethodType complex type.
  * 
  * <p&gt;The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre&gt;
- * &lt;complexType name="FieldType"&gt;
+ * &lt;complexType name="MethodType"&gt;
  *   &lt;complexContent&gt;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
  *       &lt;sequence&gt;
@@ -24,6 +24,7 @@ import javax.xml.bind.annotation.XmlType;
  *       &lt;attribute name="name" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
  *       &lt;attribute name="signature" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
  *       &lt;attribute name="isStatic" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+ *       &lt;attribute name="role" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
  *     &lt;/restriction&gt;
  *   &lt;/complexContent&gt;
  * &lt;/complexType&gt;
@@ -32,10 +33,10 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "FieldType", propOrder = {
+@XmlType(name = "MethodType", propOrder = {
     "sourceLine"
 })
-public class FieldType {
+public class MethodType {
 
     @XmlElement(name = "SourceLine", required = true)
     protected SourceLineType sourceLine;
@@ -47,6 +48,8 @@ public class FieldType {
     protected String signature;
     @XmlAttribute(name = "isStatic")
     protected String isStatic;
+    @XmlAttribute(name = "role")
+    protected String role;
 
     /**
      * Gets the value of the sourceLine property.
@@ -166,6 +169,30 @@ public class FieldType {
      */
     public void setIsStatic(String value) {
         this.isStatic = value;
+    }
+
+    /**
+     * Gets the value of the role property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getRole() {
+        return role;
+    }
+
+    /**
+     * Sets the value of the role property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setRole(String value) {
+        this.role = value;
     }
 
 }

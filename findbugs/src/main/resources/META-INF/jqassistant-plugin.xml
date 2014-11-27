@@ -5,6 +5,9 @@
         <class>de.kontext_e.jqassistant.plugin.findbugs.store.descriptor.FindBugsDescriptor</class>
         <class>de.kontext_e.jqassistant.plugin.findbugs.store.descriptor.BugInstanceDescriptor</class>
         <class>de.kontext_e.jqassistant.plugin.findbugs.store.descriptor.SourceLineDescriptor</class>
+        <class>de.kontext_e.jqassistant.plugin.findbugs.store.descriptor.BugInstanceClassDescriptor</class>
+        <class>de.kontext_e.jqassistant.plugin.findbugs.store.descriptor.BugInstanceMethodDescriptor</class>
+        <class>de.kontext_e.jqassistant.plugin.findbugs.store.descriptor.BugInstanceFieldDescriptor</class>
     </model>
     <scanner>
         <class>de.kontext_e.jqassistant.plugin.findbugs.scanner.FindBugsScannerPlugin</class>

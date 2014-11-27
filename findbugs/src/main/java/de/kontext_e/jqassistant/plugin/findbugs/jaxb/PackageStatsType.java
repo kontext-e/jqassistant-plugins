@@ -1,10 +1,3 @@
-//
-// Diese Datei wurde mit der JavaTM Architecture for XML Binding(JAXB) Reference Implementation, v2.2.6 generiert 
-// Siehe <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
-// Änderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
-// Generiert: 2014.02.10 um 02:18:03 PM CET 
-//
-
 
 package de.kontext_e.jqassistant.plugin.findbugs.jaxb;
 
@@ -18,11 +11,11 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java-Klasse für PackageStatsType complex type.
+ * <p&gt;Java class for PackageStatsType complex type.
  * 
- * <p>Das folgende Schemafragment gibt den erwarteten Content an, der in dieser Klasse enthalten ist.
+ * <p&gt;The following schema fragment specifies the expected content contained within this class.
  * 
- * <pre>
+ * <pre&gt;
  * &lt;complexType name="PackageStatsType"&gt;
  *   &lt;complexContent&gt;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
@@ -37,7 +30,7 @@ import javax.xml.bind.annotation.XmlType;
  *     &lt;/restriction&gt;
  *   &lt;/complexContent&gt;
  * &lt;/complexType&gt;
- * </pre>
+ * </pre&gt;
  * 
  * 
  */
@@ -63,20 +56,20 @@ public class PackageStatsType {
     /**
      * Gets the value of the classStats property.
      * 
-     * <p>
+     * <p&gt;
      * This accessor method returns a reference to the live list,
      * not a snapshot. Therefore any modification you make to the
      * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the classStats property.
+     * This is why there is not a <CODE&gt;set</CODE&gt; method for the classStats property.
      * 
-     * <p>
+     * <p&gt;
      * For example, to add a new item, do as follows:
-     * <pre>
+     * <pre&gt;
      *    getClassStats().add(newItem);
-     * </pre>
+     * </pre&gt;
      * 
      * 
-     * <p>
+     * <p&gt;
      * Objects of the following type(s) are allowed in the list
      * {@link ClassStatsType }
      * 
@@ -90,7 +83,7 @@ public class PackageStatsType {
     }
 
     /**
-     * Ruft den Wert der package-Eigenschaft ab.
+     * Gets the value of the package property.
      * 
      * @return
      *     possible object is
@@ -102,7 +95,7 @@ public class PackageStatsType {
     }
 
     /**
-     * Legt den Wert der package-Eigenschaft fest.
+     * Sets the value of the package property.
      * 
      * @param value
      *     allowed object is
@@ -114,7 +107,7 @@ public class PackageStatsType {
     }
 
     /**
-     * Ruft den Wert der totalBugs-Eigenschaft ab.
+     * Gets the value of the totalBugs property.
      * 
      * @return
      *     possible object is
@@ -126,7 +119,7 @@ public class PackageStatsType {
     }
 
     /**
-     * Legt den Wert der totalBugs-Eigenschaft fest.
+     * Sets the value of the totalBugs property.
      * 
      * @param value
      *     allowed object is
@@ -138,7 +131,7 @@ public class PackageStatsType {
     }
 
     /**
-     * Ruft den Wert der totalTypes-Eigenschaft ab.
+     * Gets the value of the totalTypes property.
      * 
      * @return
      *     possible object is
@@ -150,7 +143,7 @@ public class PackageStatsType {
     }
 
     /**
-     * Legt den Wert der totalTypes-Eigenschaft fest.
+     * Sets the value of the totalTypes property.
      * 
      * @param value
      *     allowed object is
@@ -162,7 +155,7 @@ public class PackageStatsType {
     }
 
     /**
-     * Ruft den Wert der totalSize-Eigenschaft ab.
+     * Gets the value of the totalSize property.
      * 
      * @return
      *     possible object is
@@ -174,7 +167,7 @@ public class PackageStatsType {
     }
 
     /**
-     * Legt den Wert der totalSize-Eigenschaft fest.
+     * Sets the value of the totalSize property.
      * 
      * @param value
      *     allowed object is
@@ -186,7 +179,7 @@ public class PackageStatsType {
     }
 
     /**
-     * Ruft den Wert der priority2-Eigenschaft ab.
+     * Gets the value of the priority2 property.
      * 
      * @return
      *     possible object is
@@ -198,7 +191,7 @@ public class PackageStatsType {
     }
 
     /**
-     * Legt den Wert der priority2-Eigenschaft fest.
+     * Sets the value of the priority2 property.
      * 
      * @param value
      *     allowed object is

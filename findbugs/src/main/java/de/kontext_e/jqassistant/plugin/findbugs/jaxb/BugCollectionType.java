@@ -1,10 +1,3 @@
-//
-// Diese Datei wurde mit der JavaTM Architecture for XML Binding(JAXB) Reference Implementation, v2.2.6 generiert 
-// Siehe <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
-// Änderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
-// Generiert: 2014.02.10 um 02:18:03 PM CET 
-//
-
 
 package de.kontext_e.jqassistant.plugin.findbugs.jaxb;
 
@@ -18,11 +11,11 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java-Klasse für BugCollectionType complex type.
+ * <p&gt;Java class for BugCollectionType complex type.
  * 
- * <p>Das folgende Schemafragment gibt den erwarteten Content an, der in dieser Klasse enthalten ist.
+ * <p&gt;The following schema fragment specifies the expected content contained within this class.
  * 
- * <pre>
+ * <pre&gt;
  * &lt;complexType name="BugCollectionType"&gt;
  *   &lt;complexContent&gt;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
@@ -42,7 +35,7 @@ import javax.xml.bind.annotation.XmlType;
  *     &lt;/restriction&gt;
  *   &lt;/complexContent&gt;
  * &lt;/complexType&gt;
- * </pre>
+ * </pre&gt;
  * 
  * 
  */
@@ -81,24 +74,24 @@ public class BugCollectionType {
     protected String release;
 
     /**
-     * Ruft den Wert der project-Eigenschaft ab.
+     * Gets the value of the project property.
      * 
      * @return
      *     possible object is
      *     {@link ProjectType }
-     *
+     *     
      */
     public ProjectType getProject() {
         return project;
     }
 
     /**
-     * Legt den Wert der project-Eigenschaft fest.
-     *
+     * Sets the value of the project property.
+     * 
      * @param value
      *     allowed object is
      *     {@link ProjectType }
-     *
+     *     
      */
     public void setProject(ProjectType value) {
         this.project = value;
@@ -106,25 +99,25 @@ public class BugCollectionType {
 
     /**
      * Gets the value of the bugInstance property.
-     *
-     * <p>
+     * 
+     * <p&gt;
      * This accessor method returns a reference to the live list,
      * not a snapshot. Therefore any modification you make to the
      * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the bugInstance property.
-     *
-     * <p>
+     * This is why there is not a <CODE&gt;set</CODE&gt; method for the bugInstance property.
+     * 
+     * <p&gt;
      * For example, to add a new item, do as follows:
-     * <pre>
+     * <pre&gt;
      *    getBugInstance().add(newItem);
-     * </pre>
-     *
-     *
-     * <p>
+     * </pre&gt;
+     * 
+     * 
+     * <p&gt;
      * Objects of the following type(s) are allowed in the list
      * {@link BugInstanceType }
-     *
-     *
+     * 
+     * 
      */
     public List<BugInstanceType> getBugInstance() {
         if (bugInstance == null) {
@@ -134,44 +127,44 @@ public class BugCollectionType {
     }
 
     /**
-     * Ruft den Wert der errors-Eigenschaft ab.
-     *
+     * Gets the value of the errors property.
+     * 
      * @return
      *     possible object is
      *     {@link ErrorsType }
-     *
+     *     
      */
     public ErrorsType getErrors() {
         return errors;
     }
 
     /**
-     * Legt den Wert der errors-Eigenschaft fest.
-     *
+     * Sets the value of the errors property.
+     * 
      * @param value
      *     allowed object is
      *     {@link ErrorsType }
-     *
+     *     
      */
     public void setErrors(ErrorsType value) {
         this.errors = value;
     }
 
     /**
-     * Ruft den Wert der findBugsSummary-Eigenschaft ab.
-     *
+     * Gets the value of the findBugsSummary property.
+     * 
      * @return
      *     possible object is
      *     {@link FindBugsSummaryType }
-     *
+     *     
      */
     public FindBugsSummaryType getFindBugsSummary() {
         return findBugsSummary;
     }
 
     /**
-     * Legt den Wert der findBugsSummary-Eigenschaft fest.
-     *
+     * Sets the value of the findBugsSummary property.
+     * 
      * @param value
      *     allowed object is
      *     {@link FindBugsSummaryType }
@@ -182,7 +175,7 @@ public class BugCollectionType {
     }
 
     /**
-     * Ruft den Wert der classFeatures-Eigenschaft ab.
+     * Gets the value of the classFeatures property.
      * 
      * @return
      *     possible object is
@@ -194,7 +187,7 @@ public class BugCollectionType {
     }
 
     /**
-     * Legt den Wert der classFeatures-Eigenschaft fest.
+     * Sets the value of the classFeatures property.
      * 
      * @param value
      *     allowed object is
@@ -206,7 +199,7 @@ public class BugCollectionType {
     }
 
     /**
-     * Ruft den Wert der history-Eigenschaft ab.
+     * Gets the value of the history property.
      * 
      * @return
      *     possible object is
@@ -218,7 +211,7 @@ public class BugCollectionType {
     }
 
     /**
-     * Legt den Wert der history-Eigenschaft fest.
+     * Sets the value of the history property.
      * 
      * @param value
      *     allowed object is
@@ -230,7 +223,7 @@ public class BugCollectionType {
     }
 
     /**
-     * Ruft den Wert der version-Eigenschaft ab.
+     * Gets the value of the version property.
      * 
      * @return
      *     possible object is
@@ -242,7 +235,7 @@ public class BugCollectionType {
     }
 
     /**
-     * Legt den Wert der version-Eigenschaft fest.
+     * Sets the value of the version property.
      * 
      * @param value
      *     allowed object is
@@ -254,7 +247,7 @@ public class BugCollectionType {
     }
 
     /**
-     * Ruft den Wert der sequence-Eigenschaft ab.
+     * Gets the value of the sequence property.
      * 
      * @return
      *     possible object is
@@ -266,7 +259,7 @@ public class BugCollectionType {
     }
 
     /**
-     * Legt den Wert der sequence-Eigenschaft fest.
+     * Sets the value of the sequence property.
      * 
      * @param value
      *     allowed object is
@@ -278,7 +271,7 @@ public class BugCollectionType {
     }
 
     /**
-     * Ruft den Wert der timestamp-Eigenschaft ab.
+     * Gets the value of the timestamp property.
      * 
      * @return
      *     possible object is
@@ -290,7 +283,7 @@ public class BugCollectionType {
     }
 
     /**
-     * Legt den Wert der timestamp-Eigenschaft fest.
+     * Sets the value of the timestamp property.
      * 
      * @param value
      *     allowed object is
@@ -302,7 +295,7 @@ public class BugCollectionType {
     }
 
     /**
-     * Ruft den Wert der analysisTimestamp-Eigenschaft ab.
+     * Gets the value of the analysisTimestamp property.
      * 
      * @return
      *     possible object is
@@ -314,7 +307,7 @@ public class BugCollectionType {
     }
 
     /**
-     * Legt den Wert der analysisTimestamp-Eigenschaft fest.
+     * Sets the value of the analysisTimestamp property.
      * 
      * @param value
      *     allowed object is
@@ -326,7 +319,7 @@ public class BugCollectionType {
     }
 
     /**
-     * Ruft den Wert der release-Eigenschaft ab.
+     * Gets the value of the release property.
      * 
      * @return
      *     possible object is
@@ -338,7 +331,7 @@ public class BugCollectionType {
     }
 
     /**
-     * Legt den Wert der release-Eigenschaft fest.
+     * Sets the value of the release property.
      * 
      * @param value
      *     allowed object is

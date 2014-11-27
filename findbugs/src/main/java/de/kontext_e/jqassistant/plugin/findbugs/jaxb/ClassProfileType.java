@@ -1,10 +1,3 @@
-//
-// Diese Datei wurde mit der JavaTM Architecture for XML Binding(JAXB) Reference Implementation, v2.2.6 generiert 
-// Siehe <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
-// Änderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
-// Generiert: 2014.02.10 um 02:18:03 PM CET 
-//
-
 
 package de.kontext_e.jqassistant.plugin.findbugs.jaxb;
 
@@ -16,11 +9,11 @@ import javax.xml.bind.annotation.XmlValue;
 
 
 /**
- * <p>Java-Klasse für ClassProfileType complex type.
+ * <p&gt;Java class for ClassProfileType complex type.
  * 
- * <p>Das folgende Schemafragment gibt den erwarteten Content an, der in dieser Klasse enthalten ist.
+ * <p&gt;The following schema fragment specifies the expected content contained within this class.
  * 
- * <pre>
+ * <pre&gt;
  * &lt;complexType name="ClassProfileType"&gt;
  *   &lt;simpleContent&gt;
  *     &lt;extension base="&lt;http://www.w3.org/2001/XMLSchema&gt;string"&gt;
@@ -33,7 +26,7 @@ import javax.xml.bind.annotation.XmlValue;
  *     &lt;/extension&gt;
  *   &lt;/simpleContent&gt;
  * &lt;/complexType&gt;
- * </pre>
+ * </pre&gt;
  * 
  * 
  */
@@ -59,7 +52,7 @@ public class ClassProfileType {
     protected String standardDeviationMircosecondsPerInvocation;
 
     /**
-     * Ruft den Wert der value-Eigenschaft ab.
+     * Gets the value of the value property.
      * 
      * @return
      *     possible object is
@@ -71,7 +64,7 @@ public class ClassProfileType {
     }
 
     /**
-     * Legt den Wert der value-Eigenschaft fest.
+     * Sets the value of the value property.
      * 
      * @param value
      *     allowed object is
@@ -83,7 +76,7 @@ public class ClassProfileType {
     }
 
     /**
-     * Ruft den Wert der name-Eigenschaft ab.
+     * Gets the value of the name property.
      * 
      * @return
      *     possible object is
@@ -95,7 +88,7 @@ public class ClassProfileType {
     }
 
     /**
-     * Legt den Wert der name-Eigenschaft fest.
+     * Sets the value of the name property.
      * 
      * @param value
      *     allowed object is
@@ -107,7 +100,7 @@ public class ClassProfileType {
     }
 
     /**
-     * Ruft den Wert der totalMilliseconds-Eigenschaft ab.
+     * Gets the value of the totalMilliseconds property.
      * 
      * @return
      *     possible object is
@@ -119,7 +112,7 @@ public class ClassProfileType {
     }
 
     /**
-     * Legt den Wert der totalMilliseconds-Eigenschaft fest.
+     * Sets the value of the totalMilliseconds property.
      * 
      * @param value
      *     allowed object is
@@ -131,7 +124,7 @@ public class ClassProfileType {
     }
 
     /**
-     * Ruft den Wert der invocations-Eigenschaft ab.
+     * Gets the value of the invocations property.
      * 
      * @return
      *     possible object is
@@ -143,7 +136,7 @@ public class ClassProfileType {
     }
 
     /**
-     * Legt den Wert der invocations-Eigenschaft fest.
+     * Sets the value of the invocations property.
      * 
      * @param value
      *     allowed object is
@@ -155,7 +148,7 @@ public class ClassProfileType {
     }
 
     /**
-     * Ruft den Wert der avgMicrosecondsPerInvocation-Eigenschaft ab.
+     * Gets the value of the avgMicrosecondsPerInvocation property.
      * 
      * @return
      *     possible object is
@@ -167,7 +160,7 @@ public class ClassProfileType {
     }
 
     /**
-     * Legt den Wert der avgMicrosecondsPerInvocation-Eigenschaft fest.
+     * Sets the value of the avgMicrosecondsPerInvocation property.
      * 
      * @param value
      *     allowed object is
@@ -179,7 +172,7 @@ public class ClassProfileType {
     }
 
     /**
-     * Ruft den Wert der maxMicrosecondsPerInvocation-Eigenschaft ab.
+     * Gets the value of the maxMicrosecondsPerInvocation property.
      * 
      * @return
      *     possible object is
@@ -191,7 +184,7 @@ public class ClassProfileType {
     }
 
     /**
-     * Legt den Wert der maxMicrosecondsPerInvocation-Eigenschaft fest.
+     * Sets the value of the maxMicrosecondsPerInvocation property.
      * 
      * @param value
      *     allowed object is
@@ -203,7 +196,7 @@ public class ClassProfileType {
     }
 
     /**
-     * Ruft den Wert der standardDeviationMircosecondsPerInvocation-Eigenschaft ab.
+     * Gets the value of the standardDeviationMircosecondsPerInvocation property.
      * 
      * @return
      *     possible object is
@@ -215,7 +208,7 @@ public class ClassProfileType {
     }
 
     /**
-     * Legt den Wert der standardDeviationMircosecondsPerInvocation-Eigenschaft fest.
+     * Sets the value of the standardDeviationMircosecondsPerInvocation property.
      * 
      * @param value
      *     allowed object is

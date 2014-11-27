@@ -1,10 +1,3 @@
-//
-// Diese Datei wurde mit der JavaTM Architecture for XML Binding(JAXB) Reference Implementation, v2.2.6 generiert 
-// Siehe <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
-// Änderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
-// Generiert: 2014.02.10 um 02:18:03 PM CET 
-//
-
 
 package de.kontext_e.jqassistant.plugin.findbugs.jaxb;
 
@@ -18,11 +11,11 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java-Klasse für FindBugsSummaryType complex type.
+ * <p&gt;Java class for FindBugsSummaryType complex type.
  * 
- * <p>Das folgende Schemafragment gibt den erwarteten Content an, der in dieser Klasse enthalten ist.
+ * <p&gt;The following schema fragment specifies the expected content contained within this class.
  * 
- * <pre>
+ * <pre&gt;
  * &lt;complexType name="FindBugsSummaryType"&gt;
  *   &lt;complexContent&gt;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
@@ -36,6 +29,7 @@ import javax.xml.bind.annotation.XmlType;
  *       &lt;attribute name="total_bugs" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
  *       &lt;attribute name="total_size" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
  *       &lt;attribute name="num_packages" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+ *       &lt;attribute name="java_version" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
  *       &lt;attribute name="vm_version" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
  *       &lt;attribute name="cpu_seconds" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
  *       &lt;attribute name="clock_seconds" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
@@ -46,7 +40,7 @@ import javax.xml.bind.annotation.XmlType;
  *     &lt;/restriction&gt;
  *   &lt;/complexContent&gt;
  * &lt;/complexType&gt;
- * </pre>
+ * </pre&gt;
  * 
  * 
  */
@@ -73,6 +67,8 @@ public class FindBugsSummaryType {
     protected String totalSize;
     @XmlAttribute(name = "num_packages")
     protected String numPackages;
+    @XmlAttribute(name = "java_version")
+    protected String javaVersion;
     @XmlAttribute(name = "vm_version")
     protected String vmVersion;
     @XmlAttribute(name = "cpu_seconds")
@@ -90,25 +86,25 @@ public class FindBugsSummaryType {
 
     /**
      * Gets the value of the packageStats property.
-     *
-     * <p>
+     * 
+     * <p&gt;
      * This accessor method returns a reference to the live list,
      * not a snapshot. Therefore any modification you make to the
      * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the packageStats property.
-     *
-     * <p>
+     * This is why there is not a <CODE&gt;set</CODE&gt; method for the packageStats property.
+     * 
+     * <p&gt;
      * For example, to add a new item, do as follows:
-     * <pre>
+     * <pre&gt;
      *    getPackageStats().add(newItem);
-     * </pre>
-     *
-     *
-     * <p>
+     * </pre&gt;
+     * 
+     * 
+     * <p&gt;
      * Objects of the following type(s) are allowed in the list
      * {@link PackageStatsType }
-     *
-     *
+     * 
+     * 
      */
     public List<PackageStatsType> getPackageStats() {
         if (packageStats == null) {
@@ -118,23 +114,23 @@ public class FindBugsSummaryType {
     }
 
     /**
-     * Ruft den Wert der findBugsProfile-Eigenschaft ab.
-     *
+     * Gets the value of the findBugsProfile property.
+     * 
      * @return
      *     possible object is
-     *     {@link de.kontext_e.jqassistant.plugin.findbugs.jaxb.FindBugsProfileType }
-     *
+     *     {@link FindBugsProfileType }
+     *     
      */
     public FindBugsProfileType getFindBugsProfile() {
         return findBugsProfile;
     }
 
     /**
-     * Legt den Wert der findBugsProfile-Eigenschaft fest.
-     *
+     * Sets the value of the findBugsProfile property.
+     * 
      * @param value
      *     allowed object is
-     *     {@link de.kontext_e.jqassistant.plugin.findbugs.jaxb.FindBugsProfileType }
+     *     {@link FindBugsProfileType }
      *     
      */
     public void setFindBugsProfile(FindBugsProfileType value) {
@@ -142,7 +138,7 @@ public class FindBugsSummaryType {
     }
 
     /**
-     * Ruft den Wert der timestamp-Eigenschaft ab.
+     * Gets the value of the timestamp property.
      * 
      * @return
      *     possible object is
@@ -154,7 +150,7 @@ public class FindBugsSummaryType {
     }
 
     /**
-     * Legt den Wert der timestamp-Eigenschaft fest.
+     * Sets the value of the timestamp property.
      * 
      * @param value
      *     allowed object is
@@ -166,7 +162,7 @@ public class FindBugsSummaryType {
     }
 
     /**
-     * Ruft den Wert der totalClasses-Eigenschaft ab.
+     * Gets the value of the totalClasses property.
      * 
      * @return
      *     possible object is
@@ -178,7 +174,7 @@ public class FindBugsSummaryType {
     }
 
     /**
-     * Legt den Wert der totalClasses-Eigenschaft fest.
+     * Sets the value of the totalClasses property.
      * 
      * @param value
      *     allowed object is
@@ -190,7 +186,7 @@ public class FindBugsSummaryType {
     }
 
     /**
-     * Ruft den Wert der referencedClasses-Eigenschaft ab.
+     * Gets the value of the referencedClasses property.
      * 
      * @return
      *     possible object is
@@ -202,7 +198,7 @@ public class FindBugsSummaryType {
     }
 
     /**
-     * Legt den Wert der referencedClasses-Eigenschaft fest.
+     * Sets the value of the referencedClasses property.
      * 
      * @param value
      *     allowed object is
@@ -214,7 +210,7 @@ public class FindBugsSummaryType {
     }
 
     /**
-     * Ruft den Wert der totalBugs-Eigenschaft ab.
+     * Gets the value of the totalBugs property.
      * 
      * @return
      *     possible object is
@@ -226,7 +222,7 @@ public class FindBugsSummaryType {
     }
 
     /**
-     * Legt den Wert der totalBugs-Eigenschaft fest.
+     * Sets the value of the totalBugs property.
      * 
      * @param value
      *     allowed object is
@@ -238,7 +234,7 @@ public class FindBugsSummaryType {
     }
 
     /**
-     * Ruft den Wert der totalSize-Eigenschaft ab.
+     * Gets the value of the totalSize property.
      * 
      * @return
      *     possible object is
@@ -250,7 +246,7 @@ public class FindBugsSummaryType {
     }
 
     /**
-     * Legt den Wert der totalSize-Eigenschaft fest.
+     * Sets the value of the totalSize property.
      * 
      * @param value
      *     allowed object is
@@ -262,7 +258,7 @@ public class FindBugsSummaryType {
     }
 
     /**
-     * Ruft den Wert der numPackages-Eigenschaft ab.
+     * Gets the value of the numPackages property.
      * 
      * @return
      *     possible object is
@@ -274,7 +270,7 @@ public class FindBugsSummaryType {
     }
 
     /**
-     * Legt den Wert der numPackages-Eigenschaft fest.
+     * Sets the value of the numPackages property.
      * 
      * @param value
      *     allowed object is
@@ -286,7 +282,31 @@ public class FindBugsSummaryType {
     }
 
     /**
-     * Ruft den Wert der vmVersion-Eigenschaft ab.
+     * Gets the value of the javaVersion property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getJavaVersion() {
+        return javaVersion;
+    }
+
+    /**
+     * Sets the value of the javaVersion property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setJavaVersion(String value) {
+        this.javaVersion = value;
+    }
+
+    /**
+     * Gets the value of the vmVersion property.
      * 
      * @return
      *     possible object is
@@ -298,7 +318,7 @@ public class FindBugsSummaryType {
     }
 
     /**
-     * Legt den Wert der vmVersion-Eigenschaft fest.
+     * Sets the value of the vmVersion property.
      * 
      * @param value
      *     allowed object is
@@ -310,7 +330,7 @@ public class FindBugsSummaryType {
     }
 
     /**
-     * Ruft den Wert der cpuSeconds-Eigenschaft ab.
+     * Gets the value of the cpuSeconds property.
      * 
      * @return
      *     possible object is
@@ -322,7 +342,7 @@ public class FindBugsSummaryType {
     }
 
     /**
-     * Legt den Wert der cpuSeconds-Eigenschaft fest.
+     * Sets the value of the cpuSeconds property.
      * 
      * @param value
      *     allowed object is
@@ -334,7 +354,7 @@ public class FindBugsSummaryType {
     }
 
     /**
-     * Ruft den Wert der clockSeconds-Eigenschaft ab.
+     * Gets the value of the clockSeconds property.
      * 
      * @return
      *     possible object is
@@ -346,7 +366,7 @@ public class FindBugsSummaryType {
     }
 
     /**
-     * Legt den Wert der clockSeconds-Eigenschaft fest.
+     * Sets the value of the clockSeconds property.
      * 
      * @param value
      *     allowed object is
@@ -358,7 +378,7 @@ public class FindBugsSummaryType {
     }
 
     /**
-     * Ruft den Wert der peakMbytes-Eigenschaft ab.
+     * Gets the value of the peakMbytes property.
      * 
      * @return
      *     possible object is
@@ -370,7 +390,7 @@ public class FindBugsSummaryType {
     }
 
     /**
-     * Legt den Wert der peakMbytes-Eigenschaft fest.
+     * Sets the value of the peakMbytes property.
      * 
      * @param value
      *     allowed object is
@@ -382,7 +402,7 @@ public class FindBugsSummaryType {
     }
 
     /**
-     * Ruft den Wert der allocMbytes-Eigenschaft ab.
+     * Gets the value of the allocMbytes property.
      * 
      * @return
      *     possible object is
@@ -394,7 +414,7 @@ public class FindBugsSummaryType {
     }
 
     /**
-     * Legt den Wert der allocMbytes-Eigenschaft fest.
+     * Sets the value of the allocMbytes property.
      * 
      * @param value
      *     allowed object is
@@ -406,7 +426,7 @@ public class FindBugsSummaryType {
     }
 
     /**
-     * Ruft den Wert der gcSeconds-Eigenschaft ab.
+     * Gets the value of the gcSeconds property.
      * 
      * @return
      *     possible object is
@@ -418,7 +438,7 @@ public class FindBugsSummaryType {
     }
 
     /**
-     * Legt den Wert der gcSeconds-Eigenschaft fest.
+     * Sets the value of the gcSeconds property.
      * 
      * @param value
      *     allowed object is
@@ -430,7 +450,7 @@ public class FindBugsSummaryType {
     }
 
     /**
-     * Ruft den Wert der priority2-Eigenschaft ab.
+     * Gets the value of the priority2 property.
      * 
      * @return
      *     possible object is
@@ -442,7 +462,7 @@ public class FindBugsSummaryType {
     }
 
     /**
-     * Legt den Wert der priority2-Eigenschaft fest.
+     * Sets the value of the priority2 property.
      * 
      * @param value
      *     allowed object is

@@ -1,5 +1,7 @@
 package de.kontext_e.jqassistant.plugin.findbugs.store.descriptor;
 
+import java.util.List;
+
 import com.buschmais.jqassistant.core.store.api.model.Descriptor;
 import com.buschmais.xo.neo4j.api.annotation.Label;
 import com.buschmais.xo.neo4j.api.annotation.Property;
@@ -9,7 +11,7 @@ import com.buschmais.xo.neo4j.api.annotation.Relation;
  * @author jn4, Kontext E GmbH, 05.02.14
  */
 @Label("BugInstance")
-public interface BugInstanceDescriptor extends Descriptor {
+public interface BugInstanceDescriptor extends Descriptor, SourceLineContainingDescriptor {
     @Property("type")
     String getType();
     void setType(String type);
@@ -26,7 +28,13 @@ public interface BugInstanceDescriptor extends Descriptor {
     String getCategory();
     void setCategory(String category);
 
-    @Relation("SOURCELINE")
-    SourceLineDescriptor getSourceLineDescriptor();
-    void setSourceLineDescriptor(SourceLineDescriptor sourceLineDescriptor);
+    @Relation("CLASS")
+    BugInstanceClassDescriptor getBugInstanceClass();
+    void setBugInstanceClass(BugInstanceClassDescriptor bugInstanceClassDescriptor);
+
+    @Relation("METHODS")
+    List<BugInstanceMethodDescriptor> getBugInstanceMethods();
+
+    @Relation("FIELDS")
+    List<BugInstanceFieldDescriptor> getBugInstanceFields();
 }

@@ -1,80 +1,70 @@
-//
-// Diese Datei wurde mit der JavaTM Architecture for XML Binding(JAXB) Reference Implementation, v2.2.6 generiert 
-// Siehe <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
-// Änderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
-// Generiert: 2014.02.10 um 02:18:03 PM CET 
-//
-
 
 package de.kontext_e.jqassistant.plugin.findbugs.jaxb;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.XmlValue;
 
 
 /**
- * <p>Java-Klasse für ErrorsType complex type.
+ * <p&gt;Java class for ErrorsType complex type.
  * 
- * <p>Das folgende Schemafragment gibt den erwarteten Content an, der in dieser Klasse enthalten ist.
+ * <p&gt;The following schema fragment specifies the expected content contained within this class.
  * 
- * <pre>
+ * <pre&gt;
  * &lt;complexType name="ErrorsType"&gt;
- *   &lt;complexContent&gt;
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
- *       &lt;sequence&gt;
- *         &lt;element name="MissingClass" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
- *       &lt;/sequence&gt;
+ *   &lt;simpleContent&gt;
+ *     &lt;extension base="&lt;http://www.w3.org/2001/XMLSchema&gt;string"&gt;
  *       &lt;attribute name="errors" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
  *       &lt;attribute name="missingClasses" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
- *     &lt;/restriction&gt;
- *   &lt;/complexContent&gt;
+ *     &lt;/extension&gt;
+ *   &lt;/simpleContent&gt;
  * &lt;/complexType&gt;
- * </pre>
+ * </pre&gt;
  * 
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ErrorsType", propOrder = {
-    "missingClass"
+    "value"
 })
 public class ErrorsType {
 
-    @XmlElement(name = "MissingClass", required = true)
-    protected String missingClass;
+    @XmlValue
+    protected String value;
     @XmlAttribute(name = "errors")
     protected String errors;
     @XmlAttribute(name = "missingClasses")
     protected String missingClasses;
 
     /**
-     * Ruft den Wert der missingClass-Eigenschaft ab.
+     * Gets the value of the value property.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getMissingClass() {
-        return missingClass;
+    public String getValue() {
+        return value;
     }
 
     /**
-     * Legt den Wert der missingClass-Eigenschaft fest.
+     * Sets the value of the value property.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setMissingClass(String value) {
-        this.missingClass = value;
+    public void setValue(String value) {
+        this.value = value;
     }
 
     /**
-     * Ruft den Wert der errors-Eigenschaft ab.
+     * Gets the value of the errors property.
      * 
      * @return
      *     possible object is
@@ -86,7 +76,7 @@ public class ErrorsType {
     }
 
     /**
-     * Legt den Wert der errors-Eigenschaft fest.
+     * Sets the value of the errors property.
      * 
      * @param value
      *     allowed object is
@@ -98,7 +88,7 @@ public class ErrorsType {
     }
 
     /**
-     * Ruft den Wert der missingClasses-Eigenschaft ab.
+     * Gets the value of the missingClasses property.
      * 
      * @return
      *     possible object is
@@ -110,7 +100,7 @@ public class ErrorsType {
     }
 
     /**
-     * Legt den Wert der missingClasses-Eigenschaft fest.
+     * Sets the value of the missingClasses property.
      * 
      * @param value
      *     allowed object is

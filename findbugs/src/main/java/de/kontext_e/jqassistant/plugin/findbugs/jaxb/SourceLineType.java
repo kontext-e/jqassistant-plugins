@@ -1,10 +1,3 @@
-//
-// Diese Datei wurde mit der JavaTM Architecture for XML Binding(JAXB) Reference Implementation, v2.2.6 generiert 
-// Siehe <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
-// Änderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
-// Generiert: 2014.02.10 um 02:18:03 PM CET 
-//
-
 
 package de.kontext_e.jqassistant.plugin.findbugs.jaxb;
 
@@ -16,11 +9,11 @@ import javax.xml.bind.annotation.XmlValue;
 
 
 /**
- * <p>Java-Klasse für SourceLineType complex type.
+ * <p&gt;Java class for SourceLineType complex type.
  * 
- * <p>Das folgende Schemafragment gibt den erwarteten Content an, der in dieser Klasse enthalten ist.
+ * <p&gt;The following schema fragment specifies the expected content contained within this class.
  * 
- * <pre>
+ * <pre&gt;
  * &lt;complexType name="SourceLineType"&gt;
  *   &lt;simpleContent&gt;
  *     &lt;extension base="&lt;http://www.w3.org/2001/XMLSchema&gt;string"&gt;
@@ -34,7 +27,7 @@ import javax.xml.bind.annotation.XmlValue;
  *     &lt;/extension&gt;
  *   &lt;/simpleContent&gt;
  * &lt;/complexType&gt;
- * </pre>
+ * </pre&gt;
  * 
  * 
  */
@@ -62,7 +55,7 @@ public class SourceLineType {
     protected String endBytecode;
 
     /**
-     * Ruft den Wert der value-Eigenschaft ab.
+     * Gets the value of the value property.
      * 
      * @return
      *     possible object is
@@ -74,7 +67,7 @@ public class SourceLineType {
     }
 
     /**
-     * Legt den Wert der value-Eigenschaft fest.
+     * Sets the value of the value property.
      * 
      * @param value
      *     allowed object is
@@ -86,7 +79,7 @@ public class SourceLineType {
     }
 
     /**
-     * Ruft den Wert der classname-Eigenschaft ab.
+     * Gets the value of the classname property.
      * 
      * @return
      *     possible object is
@@ -98,7 +91,7 @@ public class SourceLineType {
     }
 
     /**
-     * Legt den Wert der classname-Eigenschaft fest.
+     * Sets the value of the classname property.
      * 
      * @param value
      *     allowed object is
@@ -110,7 +103,7 @@ public class SourceLineType {
     }
 
     /**
-     * Ruft den Wert der start-Eigenschaft ab.
+     * Gets the value of the start property.
      * 
      * @return
      *     possible object is
@@ -122,7 +115,7 @@ public class SourceLineType {
     }
 
     /**
-     * Legt den Wert der start-Eigenschaft fest.
+     * Sets the value of the start property.
      * 
      * @param value
      *     allowed object is
@@ -134,7 +127,7 @@ public class SourceLineType {
     }
 
     /**
-     * Ruft den Wert der end-Eigenschaft ab.
+     * Gets the value of the end property.
      * 
      * @return
      *     possible object is
@@ -146,7 +139,7 @@ public class SourceLineType {
     }
 
     /**
-     * Legt den Wert der end-Eigenschaft fest.
+     * Sets the value of the end property.
      * 
      * @param value
      *     allowed object is
@@ -158,7 +151,7 @@ public class SourceLineType {
     }
 
     /**
-     * Ruft den Wert der sourcefile-Eigenschaft ab.
+     * Gets the value of the sourcefile property.
      * 
      * @return
      *     possible object is
@@ -170,7 +163,7 @@ public class SourceLineType {
     }
 
     /**
-     * Legt den Wert der sourcefile-Eigenschaft fest.
+     * Sets the value of the sourcefile property.
      * 
      * @param value
      *     allowed object is
@@ -182,7 +175,7 @@ public class SourceLineType {
     }
 
     /**
-     * Ruft den Wert der sourcepath-Eigenschaft ab.
+     * Gets the value of the sourcepath property.
      * 
      * @return
      *     possible object is
@@ -194,7 +187,7 @@ public class SourceLineType {
     }
 
     /**
-     * Legt den Wert der sourcepath-Eigenschaft fest.
+     * Sets the value of the sourcepath property.
      * 
      * @param value
      *     allowed object is
@@ -206,7 +199,7 @@ public class SourceLineType {
     }
 
     /**
-     * Ruft den Wert der startBytecode-Eigenschaft ab.
+     * Gets the value of the startBytecode property.
      * 
      * @return
      *     possible object is
@@ -218,7 +211,7 @@ public class SourceLineType {
     }
 
     /**
-     * Legt den Wert der startBytecode-Eigenschaft fest.
+     * Sets the value of the startBytecode property.
      * 
      * @param value
      *     allowed object is
@@ -230,7 +223,7 @@ public class SourceLineType {
     }
 
     /**
-     * Ruft den Wert der endBytecode-Eigenschaft ab.
+     * Gets the value of the endBytecode property.
      * 
      * @return
      *     possible object is
@@ -242,7 +235,7 @@ public class SourceLineType {
     }
 
     /**
-     * Legt den Wert der endBytecode-Eigenschaft fest.
+     * Sets the value of the endBytecode property.
      * 
      * @param value
      *     allowed object is
