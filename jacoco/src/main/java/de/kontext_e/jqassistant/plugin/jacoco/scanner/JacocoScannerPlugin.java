@@ -10,6 +10,8 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.sax.SAXSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -36,7 +38,10 @@ import de.kontext_e.jqassistant.plugin.jacoco.store.descriptor.PackageDescriptor
  */
 public class JacocoScannerPlugin extends AbstractScannerPlugin<FileResource,JacocoDescriptor > {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(JacocoScannerPlugin.class);
+    public static final String JQASSISTANT_PLUGIN_JACOCO_FILENAME = "jqassistant.plugin.jacoco.filename";
     private JAXBContext jaxbContext;
+    private String jacocoFileName = "jacocoTestReport.xml";
 
     public JacocoScannerPlugin() {
         try {
@@ -47,17 +52,31 @@ public class JacocoScannerPlugin extends AbstractScannerPlugin<FileResource,Jaco
     }
 
     @Override
+    protected void initialize() {
+        super.initialize();
+
+        String jacocoFileNameProperty = (String) getProperties().get(JQASSISTANT_PLUGIN_JACOCO_FILENAME);
+        if(jacocoFileNameProperty != null) {
+            jacocoFileName = jacocoFileNameProperty;
+        }
+        if(System.getProperty(JQASSISTANT_PLUGIN_JACOCO_FILENAME) != null) {
+            jacocoFileName = System.getProperty(JQASSISTANT_PLUGIN_JACOCO_FILENAME);
+        }
+        LOGGER.info("Jacoco plugin looks for files named "+jacocoFileName);
+    }
+
+    @Override
     public boolean accepts(final FileResource item, String path, Scope scope) throws IOException {
-        String jacocoFileName = (String) getProperties().get("jqassistant.plugin.jacoco.filename");
-        if(jacocoFileName == null) jacocoFileName = "jacoco.xml";
-        // TODO remove or if jqassistant #156 ist fixed
-        return path.endsWith(jacocoFileName)
-               || path.endsWith("jacocoTestReport.xml") // gradle standard
-                ;
+        boolean accepted = path.endsWith(jacocoFileName);
+        if(accepted) {
+            LOGGER.debug("Jacoco plugin accepted "+path);
+        }
+        return accepted;
     }
 
     @Override
     public JacocoDescriptor scan(final FileResource file, String path, Scope scope, Scanner scanner) throws IOException {
+        LOGGER.debug("Jacoco plugin scans "+path);
         final JacocoDescriptor jacocoDescriptor = scanner.getContext().getStore().create(JacocoDescriptor.class);
         jacocoDescriptor.setFileName(path);
         final ReportType reportType = unmarshalJacocoXml(file.createStream());
