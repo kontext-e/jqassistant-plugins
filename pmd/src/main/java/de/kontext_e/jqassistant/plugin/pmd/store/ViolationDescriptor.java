@@ -5,7 +5,7 @@ import com.buschmais.xo.neo4j.api.annotation.Label;
 import com.buschmais.xo.neo4j.api.annotation.Property;
 
 /**
- * @author jn4, Kontext E GmbH, 05.02.14
+ * @author aw, Kontext E GmbH, 29.01.15
  */
 @Label("PmdViolation")
 public interface ViolationDescriptor extends Descriptor {

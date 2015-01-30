@@ -35,7 +35,6 @@ public class PmdScannerPlugin extends AbstractScannerPlugin<FileResource, PmdDes
      public static final String JQASSISTANT_PLUGIN_PMD_FILENAME = "jqassistant.plugin.pmd.filename";
 
     private JAXBContext jaxbContext;
-    private static String basePackage = "org";
     private String pmdFileName = "pmd.xml";
     private String pmdDirName = "pmd";
 
@@ -56,7 +55,7 @@ public class PmdScannerPlugin extends AbstractScannerPlugin<FileResource, PmdDes
         if(System.getProperty(JQASSISTANT_PLUGIN_PMD_FILENAME) != null) {
             pmdFileName = System.getProperty(JQASSISTANT_PLUGIN_PMD_FILENAME);
         }
-        LOGGER.info(String.format("PMD plugin looks for files named %s or for all XML files in directories named 'findbugs'", pmdFileName));
+        LOGGER.info(String.format("PMD plugin looks for files named %s or for all XML files in directories named 'pmd'", pmdFileName));
     }
 
     @Override
@@ -82,7 +81,13 @@ public class PmdScannerPlugin extends AbstractScannerPlugin<FileResource, PmdDes
         for (FileType fileType : pmdType.getFile()) {
             final FileDescriptor fileDescriptor = store.create(FileDescriptor.class);
             fileDescriptor.setName(truncateName(fileType.getName()));
-            //fileDescriptor.setFullQualifiedName(convertToFullQualifiedName(fileType.getName()));
+            
+            //create fqn from first Violation element attributes:
+            String classname = fileType.getViolation().get(0).getClazz();
+            String packagename = fileType.getViolation().get(0).getPackage();
+            String fqn = packagename+"."+classname;            
+            fileDescriptor.setFullQualifiedName(fqn);
+            
             pmdDescriptor.getFiles().add(fileDescriptor);
             readViolations(store, fileType, fileDescriptor);
         }
