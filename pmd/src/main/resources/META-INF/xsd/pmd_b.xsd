@@ -1,0 +1,37 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:element name="violation">
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="xs:string">
+					<xs:attribute name="ruleset" use="required" type="xs:string"/>
+					<xs:attribute name="rule" use="required" type="xs:string"/>
+					<xs:attribute name="priority" use="required" type="xs:int"/>
+					<xs:attribute name="package" use="required" type="xs:string"/>
+					<xs:attribute name="externalInfoUrl" use="required" type="xs:string"/>
+					<xs:attribute name="endline" use="required" type="xs:int"/>
+					<xs:attribute name="endcolumn" use="required" type="xs:int"/>
+					<xs:attribute name="class" use="required" type="xs:string"/>
+					<xs:attribute name="beginline" use="required" type="xs:int"/>
+					<xs:attribute name="begincolumn" use="required" type="xs:int"/>
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="pmd">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="file" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attribute name="version" use="required" type="xs:string"/>
+			<xs:attribute name="timestamp" use="required" type="xs:string"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="file">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="violation" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attribute name="name" use="required" type="xs:string"/>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>
