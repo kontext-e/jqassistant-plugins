@@ -3,7 +3,7 @@ apply plugin: 'maven'
 
 project.ext["jqaversion"] = "1.0.0-RC1"
 project.group = 'de.kontext-e.jqassistant.plugin'
-project.version = '1.0.0-M6'
+project.version = '1.0.0-M7'
 
 subprojects {
     apply plugin: 'java'
@@ -12,10 +12,9 @@ subprojects {
     apply plugin: 'checkstyle'
     apply plugin: 'findbugs'
     apply plugin: "jacoco"
+    apply plugin: 'pmd'
 
-    //apply plugin: 'pmd'
-
-    project.version = '1.0.0-M6'
+    project.version = '1.0.0-M7'
     sourceCompatibility = 1.7
 
     repositories {
@@ -71,12 +70,11 @@ subprojects {
       reportLevel = "medium"
     }
 
-/*
     pmd {
-      ruleSets = ["basic", "braces", "design"]
+      ruleSets = ["java-basic", "java-braces"]
       ignoreFailures = true
+      sourceSets = [sourceSets.main]
     }
-*/
 
     install {
         repositories.mavenInstaller {
@@ -110,6 +108,7 @@ dependencies {
   runtime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.findbugs:${project.version}")
   runtime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.jacoco:${project.version}")
   runtime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.git:${project.version}")
+  runtime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.pmd:${project.version}")
 
   //runtime("org.neo4j:neo4j:2.1.5")
 
@@ -134,7 +133,17 @@ task(jqascan, dependsOn: 'removeJQAReport', type: JavaExec) {
   args 'findbugs/build/reports'
   args 'git/build/reports'
   args 'jacoco/build/reports'
+  args 'pmd/build/reports'
   args 'plantuml/build/reports'
+  args 'checkstyle/build/classes'
+  args 'findbugs/build/classes'
+  args 'git/build/classes'
+  args 'jacoco/build/classes'
+  args 'pmd/build/classes'
+  args 'plantuml/build/classes'
+
+  args '.git'
+
 }
 
 task(jqaanalyze, type: JavaExec) {
@@ -142,7 +151,7 @@ task(jqaanalyze, type: JavaExec) {
   classpath = sourceSets.main.runtimeClasspath
   args 'analyze'
   args '-r'
-  args 'jqassistant'
+  args 'jqassistant/jqassistant-rules'
 }
 
 task(jqa, dependsOn: ['jqascan','jqaanalyze']) {
