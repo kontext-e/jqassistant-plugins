@@ -8,5 +8,7 @@ include 'jacoco'
 
 include 'git'
 
+include 'pmd'
+
 include 'plantuml'
 
