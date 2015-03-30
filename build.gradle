@@ -1,7 +1,7 @@
 apply plugin: 'java'
 apply plugin: 'maven'
 
-project.ext["jqaversion"] = "1.0.0-M4"
+project.ext["jqaversion"] = "1.0.0-RC1"
 project.group = 'de.kontext-e.jqassistant.plugin'
 project.version = '1.0.0-M6'
 
@@ -105,14 +105,13 @@ dependencies {
   runtime("com.buschmais.jqassistant.plugin:jqassistant.plugin.javaee6:${project.jqaversion}")
   runtime("com.buschmais.jqassistant.plugin:jqassistant.plugin.jaxrs:${project.jqaversion}")
   runtime("com.buschmais.jqassistant.plugin:jqassistant.plugin.jpa2:${project.jqaversion}")
-  runtime("com.buschmais.jqassistant.plugin:jqassistant.plugin.junit4:${project.jqaversion}")
 
   runtime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.checkstyle:${project.version}")
   runtime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.findbugs:${project.version}")
   runtime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.jacoco:${project.version}")
   runtime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.git:${project.version}")
 
-  runtime("org.neo4j:neo4j:2.1.5")
+  //runtime("org.neo4j:neo4j:2.1.5")
 
   runtime 'com.sun.jersey:jersey-server:1.13'
   runtime 'com.sun.jersey:jersey-core:1.13'
