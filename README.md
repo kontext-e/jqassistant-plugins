@@ -9,8 +9,8 @@ How to install
 * declare additional dependencies in your project:
  
     - groupId de.kontext-e.jqassistant.plugin
-    - artifactId jqassistant.plugin.checkstyle or .findbugs or .jacoco or .git
-    - e.g. for gradle:   runtime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.checkstyle:1.0.0-M6")
+    - artifactId jqassistant.plugin.checkstyle or .findbugs or .jacoco or .git or .pmd
+    - e.g. for gradle:   runtime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.checkstyle:1.0.0-RC1")
 
 
 * you may want to configure some properties in jqassistant.properties or as system property (java -Dpropertyname=propertyvalue):
@@ -18,6 +18,7 @@ How to install
     - jqassistant.plugin.checkstyle.basepackage=de.kontext_e.jqassistant.plugin
     - jqassistant.plugin.findbugs.filename=findbugs.xml
     - jqassistant.plugin.jacoco.filename=jacoco.xml
+    - jqassistant.plugin.pmd.filename=pmd.xml
     - jqassistant.plugin.git.path=/usr/bin/git
     - jqassistant.plugin.git.range= - a valid git range if not the complete history should be imported -
 
