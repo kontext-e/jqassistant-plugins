@@ -158,8 +158,8 @@ public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitDes
     }
 
     @Override
-    public void initialize() {
-        super.initialize();
+    protected void configure() {
+        super.configure();
 
         Map<String, Object> properties = getProperties();
         final String pathProperty = (String) properties.get(GIT_PATH);

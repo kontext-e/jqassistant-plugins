@@ -45,10 +45,11 @@ public class PmdScannerPlugin extends AbstractScannerPlugin<FileResource, PmdDes
             throw new IllegalStateException("Cannot create JAXB context.", e);
         }
     }
-    
+
     @Override
-    public void initialize() {
-        super.initialize();
+    protected void configure() {
+        super.configure();
+
         final String property = (String) getProperties().get(JQASSISTANT_PLUGIN_PMD_FILENAME);
         if(property != null) {
             pmdFileName = property;
