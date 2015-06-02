@@ -47,7 +47,8 @@ public class PmdScannerPlugin extends AbstractScannerPlugin<FileResource, PmdDes
     }
     
     @Override
-    protected void initialize() {
+    public void initialize() {
+        super.initialize();
         final String property = (String) getProperties().get(JQASSISTANT_PLUGIN_PMD_FILENAME);
         if(property != null) {
             pmdFileName = property;

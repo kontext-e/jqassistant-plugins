@@ -48,7 +48,9 @@ public class FindBugsScannerPlugin extends AbstractScannerPlugin<FileResource, F
     }
 
     @Override
-    protected void initialize() {
+    public void initialize() {
+        super.initialize();
+
         final String property = (String) getProperties().get(JQASSISTANT_PLUGIN_FINDBUGS_FILENAME);
         if(property != null) {
             findBugsFileName = property;

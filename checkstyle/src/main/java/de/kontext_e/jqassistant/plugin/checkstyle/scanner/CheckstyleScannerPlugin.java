@@ -120,7 +120,9 @@ public class CheckstyleScannerPlugin extends AbstractScannerPlugin<FileResource,
     }
 
     @Override
-    protected void initialize() {
+    public void initialize() {
+        super.initialize();
+
         final String property = (String) getProperties().get(JQASSISTANT_PLUGIN_CHECKSTYLE_BASEPACKAGE);
         if(property != null) {
             basePackage = property;

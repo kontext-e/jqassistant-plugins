@@ -52,7 +52,7 @@ public class JacocoScannerPlugin extends AbstractScannerPlugin<FileResource,Jaco
     }
 
     @Override
-    protected void initialize() {
+    public void initialize() {
         super.initialize();
 
         String jacocoFileNameProperty = (String) getProperties().get(JQASSISTANT_PLUGIN_JACOCO_FILENAME);

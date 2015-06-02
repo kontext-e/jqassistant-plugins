@@ -1,9 +1,9 @@
 apply plugin: 'java'
 apply plugin: 'maven'
 
-project.ext["jqaversion"] = "1.0.0-RC1"
+project.ext["jqaversion"] = "1.0.0"
 project.group = 'de.kontext-e.jqassistant.plugin'
-project.version = '1.0.0-RC1'
+project.version = '1.0.0'
 
 subprojects {
     apply plugin: 'java'
