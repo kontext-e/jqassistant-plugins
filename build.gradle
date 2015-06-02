@@ -14,7 +14,7 @@ subprojects {
     apply plugin: "jacoco"
     apply plugin: 'pmd'
 
-    project.version = '1.0.0-RC1'
+    project.version = '1.0.0'
     sourceCompatibility = 1.7
 
     repositories {
