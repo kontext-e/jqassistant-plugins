@@ -45,6 +45,11 @@ subprojects {
       archives sourcesJar
     }
 
+  if (JavaVersion.current().isJava8Compatible()) {
+    tasks.withType(Javadoc) {
+        options.addStringOption('Xdoclint:none', '-quiet')
+      }
+  }
 
   jacoco {
     toolVersion = "0.7.1.201405082137"
