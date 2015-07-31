@@ -1,14 +1,5 @@
 package de.kontext_e.jqassistant.plugin.git.scanner;
 
-import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.buschmais.jqassistant.core.scanner.api.Scanner;
 import com.buschmais.jqassistant.core.scanner.api.Scope;
 import com.buschmais.jqassistant.core.store.api.Store;
@@ -19,6 +10,15 @@ import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitCommitDescriptor;
 import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitCommitFileDescriptor;
 import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitDescriptor;
 import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitFileDescriptor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author jn4, Kontext E GmbH
@@ -36,6 +36,8 @@ public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitDes
     @Override
     public boolean accepts(final FileResource item, final String path, final Scope scope) throws IOException {
         boolean isGitDir = path.endsWith("FETCH_HEAD") && ".git".equals(item.getFile().getParent());
+        isGitDir |= path.endsWith("ORIG_HEAD") && ".git".equals(item.getFile().getParent());
+        isGitDir |= path.endsWith("index") && ".git".equals(item.getFile().getParent());
         if(isGitDir) {
             pathToGitProject = item.getFile().toPath().getParent().toFile().getAbsolutePath();
             LOGGER.info("Path to git project is "+pathToGitProject);
