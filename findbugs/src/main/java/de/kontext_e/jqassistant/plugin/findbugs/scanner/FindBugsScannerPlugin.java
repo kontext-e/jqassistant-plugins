@@ -1,14 +1,5 @@
 package de.kontext_e.jqassistant.plugin.findbugs.scanner;
 
-import java.io.IOException;
-import java.io.InputStream;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.transform.stream.StreamSource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.buschmais.jqassistant.core.scanner.api.Scanner;
 import com.buschmais.jqassistant.core.scanner.api.Scope;
 import com.buschmais.jqassistant.core.store.api.Store;
@@ -26,6 +17,15 @@ import de.kontext_e.jqassistant.plugin.findbugs.store.descriptor.BugInstanceFiel
 import de.kontext_e.jqassistant.plugin.findbugs.store.descriptor.BugInstanceMethodDescriptor;
 import de.kontext_e.jqassistant.plugin.findbugs.store.descriptor.FindBugsDescriptor;
 import de.kontext_e.jqassistant.plugin.findbugs.store.descriptor.SourceLineDescriptor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.transform.stream.StreamSource;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * @author jn4, Kontext E GmbH, 05.02.14
@@ -144,11 +144,13 @@ public class FindBugsScannerPlugin extends AbstractScannerPlugin<FileResource, F
 
     private SourceLineDescriptor createSourceLineDescriptor(final Store store, final SourceLineType bugInstanceTypeSourceLine) {
         final SourceLineDescriptor sourceLineDescriptor = store.create(SourceLineDescriptor.class);
-        sourceLineDescriptor.setClassname(bugInstanceTypeSourceLine.getClassname());
-        sourceLineDescriptor.setStart(bugInstanceTypeSourceLine.getStart());
-        sourceLineDescriptor.setEnd(bugInstanceTypeSourceLine.getEnd());
-        sourceLineDescriptor.setSourcefile(bugInstanceTypeSourceLine.getSourcefile());
-        sourceLineDescriptor.setSourcepath(bugInstanceTypeSourceLine.getSourcepath());
+        if(bugInstanceTypeSourceLine != null) {
+            sourceLineDescriptor.setClassname(bugInstanceTypeSourceLine.getClassname());
+            sourceLineDescriptor.setStart(bugInstanceTypeSourceLine.getStart());
+            sourceLineDescriptor.setEnd(bugInstanceTypeSourceLine.getEnd());
+            sourceLineDescriptor.setSourcefile(bugInstanceTypeSourceLine.getSourcefile());
+            sourceLineDescriptor.setSourcepath(bugInstanceTypeSourceLine.getSourcepath());
+        }
         return sourceLineDescriptor;
     }
 
