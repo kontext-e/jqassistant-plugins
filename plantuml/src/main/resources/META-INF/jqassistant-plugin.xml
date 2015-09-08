@@ -3,6 +3,7 @@
     <description>Provides a scanner for git VCS history.</description>
     <model>
         <class>de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlSequenceDiagramDescriptor</class>
+        <class>de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlPackageDescriptor</class>
     </model>
     <scanner>
         <class>de.kontext_e.jqassistant.plugin.plantuml.scanner.SequenceDiagramScannerPlugin</class>

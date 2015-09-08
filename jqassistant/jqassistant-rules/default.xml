@@ -4,15 +4,15 @@
         <description>For debugging purposes</description>
         <cypher><![CDATA[
                 match
-                    (g:PmdFile)
+                    (g:PlantUmlPackage)
                 return
                     g
         ]]></cypher>
     </constraint>
 
     <group id="default">
-        <!--
         <includeConstraint refId="debug:rule" severity="info"/>
+        <!--
         -->
     </group>
 

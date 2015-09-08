@@ -26,6 +26,8 @@ subprojects {
         compile 'com.buschmais.jqassistant.core:jqassistant.core.store:'+project.jqaversion
         compile 'com.buschmais.jqassistant.plugin:jqassistant.plugin.common:'+project.jqaversion
         testCompile group: 'junit', name: 'junit', version: '4.11'
+        testCompile group: 'org.hamcrest', name: 'hamcrest-all', version: '1.3'
+        testCompile group: 'org.mockito', name: 'mockito-all', version: '1.9.5'
     }
 
     task javadocJar(type: Jar, dependsOn: javadoc) {
@@ -114,6 +116,7 @@ dependencies {
   runtime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.jacoco:${project.version}")
   runtime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.git:${project.version}")
   runtime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.pmd:${project.version}")
+  runtime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.plantuml:${project.version}")
 
   runtime 'com.sun.jersey:jersey-server:1.13'
   runtime 'com.sun.jersey:jersey-core:1.13'
@@ -138,6 +141,7 @@ task(jqascan, dependsOn: 'removeJQAReport', type: JavaExec) {
   args 'jacoco/build/reports'
   args 'pmd/build/reports'
   args 'plantuml/build/reports'
+  args 'plantuml/src/test/plantuml'
   args 'java:classpath::checkstyle/build/classes'
   args 'java:classpath::findbugs/build/classes'
   args 'java:classpath::git/build/classes'

@@ -1,0 +1,10 @@
+@startuml
+
+skinparam packageStyle rect
+
+package de.kontext_e.jqassistant.plugin.plantuml.scanner {}
+package de.kontext_e.jqassistant.plugin.plantuml.store.descriptor {}
+
+de.kontext_e.jqassistant.plugin.plantuml.scanner --> de.kontext_e.jqassistant.plugin.plantuml.store.descriptor
+
+@enduml
