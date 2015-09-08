@@ -34,9 +34,21 @@ class PumlLineParser {
     }
 
     private void createRelation(final String line) {
+        boolean swap = false;
+        if(line.contains("<")) {
+            swap = true;
+        }
+
         String packageNamesOnly = line.replaceAll("[-<>]", " ");
         String lhs = packageNamesOnly.substring(0, packageNamesOnly.indexOf(" ")).trim();
         String rhs = packageNamesOnly.substring(packageNamesOnly.indexOf(" ")).trim();
+
+        if(swap) {
+            String tmp = lhs;
+            lhs = rhs;
+            rhs = tmp;
+        }
+
         if(!mappingFromFqnToPackage.containsKey(lhs)) {
             LOGGER.warn("Syntax error: unknown package "+lhs);
             return;
