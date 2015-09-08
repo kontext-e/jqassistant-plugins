@@ -11,8 +11,8 @@
     </constraint>
 
     <group id="default">
-        <includeConstraint refId="debug:rule" severity="info"/>
         <!--
+        <includeConstraint refId="debug:rule" severity="info"/>
         -->
     </group>
 
