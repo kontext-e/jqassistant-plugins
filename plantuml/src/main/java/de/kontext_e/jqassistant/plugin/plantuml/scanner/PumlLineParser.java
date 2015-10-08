@@ -14,9 +14,11 @@ class PumlLineParser {
 
     private final Store store;
     private final Map<String, PlantUmlPackageDescriptor> mappingFromFqnToPackage = new HashMap<>();
+    private ParsingState parsingState = ParsingState.ACCEPTING;
 
-    public PumlLineParser(final Store store) {
+    public PumlLineParser(final Store store, final ParsingState parsingState) {
         this.store = store;
+        this.parsingState = parsingState;
     }
 
     protected void parseLine(final String line) {
@@ -24,12 +26,24 @@ class PumlLineParser {
 
         String normalizedLine = line.trim().toLowerCase();
 
-        if(normalizedLine.startsWith("package ")) {
-            createPackageNode(line);
+        if(parsingState == ParsingState.IGNORING && normalizedLine.startsWith("[\"plantuml\"")) {
+            parsingState = ParsingState.PLANTUMLFOUND;
+        }
+        if(parsingState == ParsingState.ACCEPTING && normalizedLine.startsWith("----")) {
+            parsingState = ParsingState.IGNORING;
+        }
+        if(parsingState == ParsingState.PLANTUMLFOUND && normalizedLine.startsWith("----")) {
+            parsingState = ParsingState.ACCEPTING;
         }
 
-        if(normalizedLine.contains("-")) {
-            createRelation(line);
+        if(parsingState == ParsingState.ACCEPTING) {
+            if (normalizedLine.startsWith("package ")) {
+                createPackageNode(line);
+            }
+
+            if (!normalizedLine.startsWith("-") && normalizedLine.contains("-")) {
+                createRelation(line);
+            }
         }
     }
 
@@ -50,11 +64,11 @@ class PumlLineParser {
         }
 
         if(!mappingFromFqnToPackage.containsKey(lhs)) {
-            LOGGER.warn("Syntax error: unknown package "+lhs);
+            LOGGER.warn("Syntax error: unknown lhs package "+lhs+ " of line "+line);
             return;
         }
         if(!mappingFromFqnToPackage.containsKey(rhs)) {
-            LOGGER.warn("Syntax error: unknown package "+rhs);
+            LOGGER.warn("Syntax error: unknown rhs package "+rhs+ " of line "+line);
             return;
         }
 
@@ -62,7 +76,8 @@ class PumlLineParser {
     }
 
     protected PlantUmlPackageDescriptor createPackageNode(final String line) {
-        final String name = line.substring("package ".length(), line.indexOf("{")).trim();
+        int lengthOfPackageLiteral = "package ".length();
+        final String name = line.substring(lengthOfPackageLiteral, line.indexOf(" ", lengthOfPackageLiteral)).trim();
         PlantUmlPackageDescriptor packageDescriptor = store.create(PlantUmlPackageDescriptor.class);
         packageDescriptor.setFullQualifiedName(name);
         mappingFromFqnToPackage.put(name, packageDescriptor);

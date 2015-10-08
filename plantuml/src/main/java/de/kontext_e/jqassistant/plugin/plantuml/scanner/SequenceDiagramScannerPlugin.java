@@ -19,7 +19,7 @@ public class SequenceDiagramScannerPlugin extends AbstractScannerPlugin<FileReso
 
     @Override
     public boolean accepts(final FileResource item, final String path, final Scope scope) throws IOException {
-        boolean accepted = path.endsWith(".puml");
+        boolean accepted = path.endsWith(".puml") || path.endsWith(".adoc");
         if(accepted) {
             LOGGER.info("PlantUML accepted path "+path);
         }
@@ -33,21 +33,10 @@ public class SequenceDiagramScannerPlugin extends AbstractScannerPlugin<FileReso
         plantUmlSequenceDiagramDescriptor.setFileName(path);
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(item.createStream()))) {
-            final PumlLineParser pumlLineParser = new PumlLineParser(store);
+            final PumlLineParser pumlLineParser = new PumlLineParser(store, path.endsWith(".puml") ? ParsingState.ACCEPTING : ParsingState.IGNORING);
             String line;
-            boolean inDiagram = false;
             while ((line = reader.readLine()) != null) {
-                if (line.contains("@startuml")) {
-                    inDiagram = true;
-                    continue;
-                }
-                if (line.contains("@enduml")) {
-                    inDiagram = false;
-                    continue;
-                }
-                if (inDiagram) {
-                    pumlLineParser.parseLine(line);
-                }
+                pumlLineParser.parseLine(line);
             }
         }
 

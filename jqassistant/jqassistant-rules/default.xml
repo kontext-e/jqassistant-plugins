@@ -1,6 +1,7 @@
 <jqa:jqassistant-rules xmlns:jqa="http://www.buschmais.com/jqassistant/core/analysis/rules/schema/v1.0">
 
     <constraint id="debug:rule" severity="critical">
+        <requiresConcept refId="dependency:Package"/>
         <description>For debugging purposes</description>
         <cypher><![CDATA[
                 match
@@ -10,7 +11,23 @@
         ]]></cypher>
     </constraint>
 
+    <constraint id="dependency:WrongDirection" severity="critical">
+        <requiresConcept refId="dependency:Package"/>
+        <description>Finds package dependencies which are in the wrong direction according to the documentation.</description>
+        <cypher><![CDATA[
+            MATCH
+                (p1:PlantUmlPackage)-[:MAY_DEPEND_ON]->(p2:PlantUmlPackage),
+                (p3:Package)-[:DEPENDS_ON]->(p4:Package)
+            WHERE
+                p1.fqn = p4.fqn
+                AND p2.fqn = p3.fqn
+            RETURN
+                p3.fqn + "-->" + p4.fqn AS WrongDirection;
+        ]]></cypher>
+    </constraint>
+
     <group id="default">
+        <includeConstraint refId="dependency:WrongDirection" severity="critical"/>
         <!--
         <includeConstraint refId="debug:rule" severity="info"/>
         -->
