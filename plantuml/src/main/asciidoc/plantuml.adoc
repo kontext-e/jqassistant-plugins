@@ -1,0 +1,10 @@
+<<PlantUMLScanner>>
+[[PlantUMLScanner]]
+
+== Scanner for PlantUML files
+
+=== :File:PlantUML
+Represents a PlantUML file.
+
+=== :File:Asciidoc:PlantUML
+Represents an Asciidoc file with embedded PlantUML.
