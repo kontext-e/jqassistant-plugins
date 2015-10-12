@@ -3,8 +3,22 @@
 
 == Scanner for PlantUML files
 
-=== :File:PlantUML
+=== :File:PlantUml
 Represents a PlantUML file.
 
-=== :File:Asciidoc:PlantUML
+=== :File:Asciidoc:PlantUml
 Represents an Asciidoc file with embedded PlantUML.
+
+=== Packages
+This is how the source is organized:
+
+[plantuml, packages, png]
+....
+skinparam packageStyle rect
+
+package de.kontext_e.jqassistant.plugin.plantuml.scanner {}
+package de.kontext_e.jqassistant.plugin.plantuml.store.descriptor {}
+
+de.kontext_e.jqassistant.plugin.plantuml.scanner --> de.kontext_e.jqassistant.plugin.plantuml.store.descriptor
+....
+
