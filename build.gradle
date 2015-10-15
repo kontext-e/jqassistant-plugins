@@ -3,7 +3,7 @@ apply plugin: 'maven'
 apply plugin: 'org.asciidoctor.gradle.asciidoctor'
 apply plugin: 'com.github.jruby-gradle.base'
 
-project.ext["jqaversion"] = "1.0.0"
+project.ext["jqaversion"] = "1.1.0-RC2-SNAPSHOT"
 project.group = 'de.kontext-e.jqassistant.plugin'
 project.version = '1.1.0-SNAPSHOT'
 
@@ -47,6 +47,7 @@ subprojects {
 
     repositories {
         mavenCentral()
+        mavenLocal()
     }
 
     dependencies {
@@ -155,6 +156,7 @@ dependencies {
   runtime("com.buschmais.jqassistant.plugin:jqassistant.plugin.javaee6:${project.jqaversion}")
   runtime("com.buschmais.jqassistant.plugin:jqassistant.plugin.jaxrs:${project.jqaversion}")
   runtime("com.buschmais.jqassistant.plugin:jqassistant.plugin.jpa2:${project.jqaversion}")
+  runtime("com.buschmais.jqassistant.plugin:jqassistant.plugin.junit:${project.jqaversion}")
 
   runtime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.checkstyle:${project.version}")
   runtime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.findbugs:${project.version}")
