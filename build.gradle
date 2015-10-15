@@ -1,5 +1,7 @@
 apply plugin: 'java'
 apply plugin: 'maven'
+apply plugin: 'org.asciidoctor.gradle.asciidoctor'
+apply plugin: 'com.github.jruby-gradle.base'
 
 project.ext["jqaversion"] = "1.0.0"
 project.group = 'de.kontext-e.jqassistant.plugin'
@@ -13,6 +15,19 @@ buildscript {
   dependencies {
     classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.2'
     classpath 'com.github.jruby-gradle:jruby-gradle-plugin:0.1.11'
+  }
+}
+
+asciidoctor {
+  dependsOn jrubyPrepareGems
+  requires = ['asciidoctor-diagram']
+  gemPath = jrubyPrepareGems.outputDir
+  sourceDir = file('doc/architecture')
+
+  resources {
+    from('doc/architecture') {
+      include '**/*.png'
+    }
   }
 }
 
@@ -151,6 +166,9 @@ dependencies {
   runtime 'com.sun.jersey:jersey-server:1.13'
   runtime 'com.sun.jersey:jersey-core:1.13'
   runtime 'com.sun.jersey:jersey-servlet:1.13'
+
+
+  gems 'rubygems:asciidoctor-diagram:1.2.1'
 }
 
 task removeJQAReport(type: Delete) {
@@ -189,7 +207,8 @@ task(jqaanalyze, type: JavaExec) {
   classpath = sourceSets.main.runtimeClasspath
   args 'analyze'
   args '-r'
-  args 'jqassistant/jqassistant-rules'
+  args 'doc/architecture'
+  //args 'jqassistant/jqassistant-rules'
 }
 
 task(jqa, dependsOn: ['jqascan','jqaanalyze']) {
