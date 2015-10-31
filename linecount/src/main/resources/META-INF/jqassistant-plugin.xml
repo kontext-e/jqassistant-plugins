@@ -1,0 +1,13 @@
+<jqa-plugin:jqassistant-plugin
+        xmlns:jqa-plugin="http://www.buschmais.com/jqassistant/core/plugin/schema/v1.0" name="Linecount">
+    <description>Provides a scanner for counting the lines of files.</description>
+    <model>
+        <class>de.kontext_e.jqassistant.plugin.linecount.store.descriptor.LinecountDescriptor</class>
+    </model>
+    <scanner>
+        <class>de.kontext_e.jqassistant.plugin.linecount.scanner.LinecountScannerPlugin</class>
+    </scanner>
+  <rules>
+      <resource>linecount.xml</resource>
+  </rules>
+</jqa-plugin:jqassistant-plugin>

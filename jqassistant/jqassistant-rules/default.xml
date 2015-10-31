@@ -5,9 +5,9 @@
         <description>For debugging purposes</description>
         <cypher><![CDATA[
                 match
-                    (g:PlantUmlPackage)
+                    (g:GitFile)
                 return
-                    g
+                    g.relativePath
         ]]></cypher>
     </constraint>
 
