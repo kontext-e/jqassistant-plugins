@@ -5,9 +5,8 @@ This repository contains plugins for buschmais' [jQAssistant](http://jqassistant
 How to install
 ==============
 * If you want to add the git plugins to your [jQAssistant](http://jqassistant.org) installation you currently have to
-  manually add the an org.eclipse.jgit jar file to the plugins directory of jqassistant.sh: Use at least version [4.1
-  .1 from Maven Central](http://search.maven.org/remotecontent?filepath=org/eclipse/jgit/org.eclipse.jgit/4.1.1
-  .201511131810-r/org.eclipse.jgit-4.1.1.201511131810-r.jar).
+  manually add the an org.eclipse.jgit jar file to the plugins directory of jqassistant: Use at least version 
+  [4.1.1 from Maven Central](http://search.maven.org/remotecontent?filepath=org/eclipse/jgit/org.eclipse.jgit/4.1.1.201511131810-r/org.eclipse.jgit-4.1.1.201511131810-r.jar).
 
 * add [jQAssistant](http://jqassistant.org) to dependencies in your project (and jgit if git processing is desired).
 
