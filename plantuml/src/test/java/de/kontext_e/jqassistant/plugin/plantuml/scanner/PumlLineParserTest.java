@@ -7,6 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.buschmais.jqassistant.core.store.api.Store;
+import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlDescriptor;
 import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlPackageDescriptor;
 
 import static org.mockito.Mockito.mock;
@@ -16,10 +17,11 @@ import static org.mockito.Mockito.when;
 public class PumlLineParserTest {
     private PumlLineParser pumlLineParser;
     private Store mockStore = mock(Store.class);
+    private PlantUmlDescriptor plantUmlDescriptor = mock(PlantUmlDescriptor.class);
 
     @Before
     public void setUp() {
-        pumlLineParser = new PumlLineParser(mockStore, ParsingState.ACCEPTING);
+        pumlLineParser = new PumlLineParser(mockStore, plantUmlDescriptor, ParsingState.ACCEPTING);
     }
 
     @Test
@@ -70,7 +72,7 @@ public class PumlLineParserTest {
                                 "Comments regarding structure and interdependencies at Level 1:\n";
         String[] lines = asciidoc.split("\\n");
         Assert.assertThat(lines.length, Matchers.greaterThan(1));
-        pumlLineParser = new PumlLineParser(mockStore, ParsingState.IGNORING);
+        pumlLineParser = new PumlLineParser(mockStore, plantUmlDescriptor, ParsingState.IGNORING);
         final PlantUmlPackageDescriptor mockDescriptor = mock(PlantUmlPackageDescriptor.class);
         when(mockStore.create(PlantUmlPackageDescriptor.class)).thenReturn(mockDescriptor);
         final Set<PlantUmlPackageDescriptor> mockSet = mock(Set.class);

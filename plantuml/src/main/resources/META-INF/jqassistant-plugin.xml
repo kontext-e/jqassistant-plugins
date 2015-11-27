@@ -2,7 +2,7 @@
         xmlns:jqa-plugin="http://www.buschmais.com/jqassistant/core/plugin/schema/v1.0" name="PlantUML">
     <description>Provides a scanner for git VCS history.</description>
     <model>
-        <class>de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlSequenceDiagramDescriptor</class>
+        <class>de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlDescriptor</class>
         <class>de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlPackageDescriptor</class>
     </model>
     <scanner>

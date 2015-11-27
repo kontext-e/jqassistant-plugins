@@ -6,8 +6,32 @@
 === :File:PlantUml
 Represents a PlantUML file.
 
-=== :File:Asciidoc:PlantUml
-Represents an Asciidoc file with embedded PlantUML.
+.Properties of :File:PlantUml
+[options="header"]
+|====
+| Name       | Description
+| fileName   | The file path relative to the given scan start directory, e.g. '/asciidoc/plantuml.adoc'.
+|====
+
+
+[[:PlantUmlPackage]]
+=== :PlantUmlPackage:PlantUmlElement
+Represents a PlantUML class diagram package.
+
+.Properties of :PlantUmlPackage
+[options="header"]
+|====
+| Name       | Description
+| fqn        | Fully qualified name, e.g. 'java.lang'
+|====
+
+.Relations of :PlantUmlPackage
+[options="header"]
+|====
+| Name              | Target label(s)            | Cardinality | Description
+| MAY_DEPEND_ON     | <<:PlantUmlPackage>>       | 0..n        | References other packages this package is allowed to depend on
+|====
+
 
 === Packages
 The following diagram shows the main building blocks of the PlantUML plugin and their interdependencies:
@@ -31,8 +55,11 @@ de.kontext_e.jqassistant.plugin.plantuml.scanner --> de.kontext_e.jqassistant.pl
 .Open discussion topics
 [cols="1,2" options=""]
 |===
-| Can only scan class diagrams | Maybe other diagrams will follow if needed for rules or executable architecture documentation
+| Can only scan class diagrams                                  | Maybe other diagrams will follow if needed for rules or executable architecture documentation
 | Does only scan packages of class diagrams and ignores classes | Should be enough for the architecture
-| Uses own syntax parser and not the plantuml.jar | Mostly because the PlantUML source is a mess
+| Uses own syntax parser and not the plantuml.jar               | Mostly because the PlantUML source is a mess
 |===
 
+==== Package de.kontext_e.jqassistant.plugin.plantuml.store.descriptor
+
+*Purpose:* _the XO data model_
