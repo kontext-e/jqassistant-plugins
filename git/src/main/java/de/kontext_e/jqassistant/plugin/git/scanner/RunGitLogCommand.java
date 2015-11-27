@@ -1,5 +1,8 @@
 package de.kontext_e.jqassistant.plugin.git.scanner;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,18 +14,23 @@ import java.util.List;
 import static java.util.Arrays.asList;
 
 public class RunGitLogCommand {
+    private static final Logger LOGGER = LoggerFactory.getLogger(RunGitLogCommand.class);
+
     public static List<String> runGitLog(final String pathToGitCommand, final String pathToGitProject, final String range) throws IOException, InterruptedException {
         final List<String> lines = new LinkedList<String>();
         final List<String> errorLines = new LinkedList<String>();
         List<String> args = new ArrayList<>(asList(pathToGitCommand, "--git-dir="+ pathToGitProject, "log", "--name-status", "--date=iso"));
-        if(range != null) args.add(range);
+        if(range != null) {
+            args.add(range);
+        }
+        LOGGER.debug("Running git command '{}'", args);
         final Process process = Runtime.getRuntime().exec(args.toArray(new String[args.size()]));
         inputReader(lines, process.getInputStream());
         inputReader(errorLines, process.getErrorStream());
         process.waitFor();
 
         if(errorLines.size() > 0) {
-            System.err.println("errors: " + errorLines);
+            LOGGER.error("errors: {}", errorLines);
             throw new RuntimeException("Error on executing git command");
         }
 
