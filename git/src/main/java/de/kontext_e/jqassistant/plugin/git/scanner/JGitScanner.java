@@ -6,13 +6,11 @@ import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffFormatter;
 import org.eclipse.jgit.diff.RawTextComparator;
 import org.eclipse.jgit.lib.ObjectId;
-import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevTree;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
-import org.eclipse.jgit.treewalk.TreeWalk;
 import org.eclipse.jgit.util.io.DisabledOutputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,9 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * A Scanner based on Eclipse JGit.
@@ -39,12 +35,27 @@ import java.util.List;
  */
 public class JGitScanner {
 
-    Logger logger = LoggerFactory.getLogger(JGitScanner.class);
+    private static final Logger logger = LoggerFactory.getLogger(JGitScanner.class);
 
-    public List<GitCommit> scan(final String path) throws IOException {
-        logger.debug("Searching for git directory from '{}' (if relative: '{}'", path, System.getProperty("user.dir"));
+    private String path = null;
+    private Map<String,GitCommit> commits = new HashMap<String,GitCommit>();
+
+    private GitCommit retrieveCommit (String sha) {
+        if (!commits.containsKey(sha)) {
+            commits.put(sha, new GitCommit (sha));
+        }
+        return commits.get(sha);
+    }
+
+    public JGitScanner (final String path) {
+        this.path = path;
+    }
+
+    public List<GitCommit> scan() throws IOException {
+        logger.debug("Searching for git directory from '{}' (if relative: '{}')", path, System.getProperty("user.dir"));
         FileRepositoryBuilder builder = new FileRepositoryBuilder();
-        Repository repository = builder.setGitDir(new File(path))
+        Repository repository = builder
+                .setGitDir(new File(path))
                 .readEnvironment() // scan environment GIT_* variables
                 .build();
         logger.debug("Using Git repository in '{}'", repository.getDirectory());
@@ -70,33 +81,32 @@ public class JGitScanner {
 
             for (RevCommit commit : commits) {
                 logger.debug("Commit-Message: '{}'", commit.getShortMessage());
+                String author = commit.getAuthorIdent().getName() + " <" +
+                        commit.getAuthorIdent().getEmailAddress() + ">";
+                String date = dateFormat.format (new Date(commit.getCommitTime()));
+                GitCommit gitCommit = retrieveCommit(commit.getId().toString());
+                gitCommit.setAuthor(author);
+                // TODO Add Committer also!
+                gitCommit.setDate(date);
+                gitCommit.setMessage(commit.getFullMessage());
 
-                RevCommit parent = null;
-                List<CommitFile> commitedFiles = new LinkedList<CommitFile>();
-
-                if (commit.getParentCount() > 0) {
-                    parent = rw.parseCommit(commit.getParent(0).getId());
+                for (int i = 0; i < commit.getParentCount(); i++) {
+                    ObjectId parentId = commit.getParent(i).getId();
+                    RevCommit parent = rw.parseCommit(parentId);
 
                     List<DiffEntry> diffs = df.scan(parent.getTree(), commit.getTree());
                     for (DiffEntry diff : diffs) {
                         logger.debug("changeType={}, path={}",
                                 diff.getChangeType().name(), diff.getNewPath());
                         CommitFile commitFile = new CommitFile(diff.getChangeType().toString(), diff.getNewPath());
-                        commitedFiles.add(commitFile);
+                        gitCommit.getCommitFiles().add(commitFile);
                     }
+
+                    String parentSha = parentId.toString();
+                    GitCommit parentCommit = retrieveCommit(parentSha);
+                    gitCommit.getParents().add(parentCommit);
                 }
 
-                String author = commit.getAuthorIdent().getName() + " <" +
-                        commit.getAuthorIdent().getEmailAddress() + ">";
-                String date = dateFormat.format (new Date(commit.getCommitTime()));
-                GitCommit gitCommit = new GitCommit(
-                        commit.getId().toString() // SHA
-                        ,  author // Author
-                        // TODO Add Commiter also!
-                        , date // Date
-                        , commitedFiles
-                        , commit.getFullMessage()
-                );
                 result.add(gitCommit);
             }
         } catch (GitAPIException e) {

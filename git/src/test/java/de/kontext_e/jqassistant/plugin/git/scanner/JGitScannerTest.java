@@ -19,8 +19,8 @@ import static org.junit.Assert.assertThat;
 public class JGitScannerTest {
     @Test
     public void testScan () throws IOException {
-        JGitScanner jGitScanner = new JGitScanner();
-        List<GitCommit> commits = jGitScanner.scan ("../.git");
+        JGitScanner jGitScanner = new JGitScanner("../.git");
+        List<GitCommit> commits = jGitScanner.scan ();
 
         assertThat (commits.size(), greaterThan (0));
     }

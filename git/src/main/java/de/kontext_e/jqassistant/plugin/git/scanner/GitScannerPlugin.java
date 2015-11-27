@@ -49,20 +49,24 @@ public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitDes
         gitDescriptor.setName(path);
         gitDescriptor.setFileName(path);
 
-        JGitScanner jGitScanner = new JGitScanner();
+        JGitScanner jGitScanner = new JGitScanner(pathToGitProject);
 
-        List<GitCommit> parse = jGitScanner.scan(pathToGitProject);
+        List<GitCommit> parse = jGitScanner.scan();
         addCommits(store, gitDescriptor, parse);
 
         return gitDescriptor;
     }
 
-    private void addCommits(final Store store, final GitDescriptor gitDescriptor, final List<GitCommit> parse) {
-        Map<String, GitAuthorDescriptor> authors = new HashMap<>();
-        Map<String, GitFileDescriptor> files = new HashMap<>();
+    private void addCommits(final Store store, final GitDescriptor gitDescriptor, final List<GitCommit> gitCommits) {
+        Map<String, GitAuthorDescriptor> authors = new HashMap<String,GitAuthorDescriptor>();
+        Map<String, GitFileDescriptor> files = new HashMap<String,GitFileDescriptor>();
+        Map<String, GitCommitDescriptor> commits = new HashMap<String,GitCommitDescriptor>();
 
-        for (GitCommit gitCommit : parse) {
+        // First pass: Add the commits to the graph
+        for (GitCommit gitCommit : gitCommits) {
             GitCommitDescriptor gitCommitDescriptor = store.create(GitCommitDescriptor.class);
+            String sha = gitCommit.getSha();
+            commits.put(sha, gitCommitDescriptor);
 
             gitCommitDescriptor.setSha(gitCommit.getSha());
             gitCommitDescriptor.setAuthor(gitCommit.getAuthor());
@@ -76,6 +80,16 @@ public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitDes
             addCommitForAuthor(authors, gitCommit.getAuthor(), store, gitCommitDescriptor);
 
             addCommitFiles(store, gitCommit, gitCommitDescriptor, files);
+        }
+
+        // Second pass: Add the parents to the graph
+        for (GitCommit gitCommit : gitCommits) {
+            String sha = gitCommit.getSha();
+            GitCommitDescriptor gitCommitDescriptor = commits.get(sha);
+            for (GitCommit parent : gitCommit.getParents()) {
+                String parentSha = parent.getSha();
+                gitCommitDescriptor.getParents().add(commits.get(parentSha));
+            }
         }
 
         for (GitAuthorDescriptor gitAuthor : authors.values()) {
