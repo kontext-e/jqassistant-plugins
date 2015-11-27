@@ -35,9 +35,9 @@ public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitDes
 
     @Override
     public boolean accepts(final FileResource item, final String path, final Scope scope) throws IOException {
-        boolean isGitDir = path.endsWith("FETCH_HEAD") && ".git".equals(item.getFile().getParent());
-        isGitDir |= path.endsWith("ORIG_HEAD") && ".git".equals(item.getFile().getParent());
-        isGitDir |= path.endsWith("index") && ".git".equals(item.getFile().getParent());
+        boolean isGitDir = path.endsWith("index") && ".git".equals(item.getFile().getParent());
+        //        isGitDir |= path.endsWith("ORIG_HEAD") && ".git".equals(item.getFile().getParent());
+        //        isGitDir |= path.endsWith("FETCH_HEAD") && ".git".equals(item.getFile().getParent());
         if(isGitDir) {
             pathToGitProject = item.getFile().toPath().getParent().toFile().getAbsolutePath();
             LOGGER.info("Path to git project is "+pathToGitProject);
