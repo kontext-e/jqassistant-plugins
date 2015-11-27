@@ -3,9 +3,9 @@ apply plugin: 'maven'
 apply plugin: 'org.asciidoctor.gradle.asciidoctor'
 apply plugin: 'com.github.jruby-gradle.base'
 
-project.ext["jqaversion"] = "1.1.0-RC2-SNAPSHOT"
+project.ext["jqaversion"] = "1.1.0-RC2"
 project.group = 'de.kontext-e.jqassistant.plugin'
-project.version = '1.1.0-SNAPSHOT'
+project.version = '1.1.0-RC2'
 
 buildscript {
   repositories {
@@ -42,7 +42,7 @@ subprojects {
     apply plugin: 'org.asciidoctor.gradle.asciidoctor'
     apply plugin: 'com.github.jruby-gradle.base'
 
-    project.version = '1.1.0-SNAPSHOT'
+    project.version = '1.1.0-RC2'
     sourceCompatibility = 1.7
 
     repositories {
@@ -164,7 +164,7 @@ dependencies {
   runtime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.linecount:${project.version}")
   runtime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.git:${project.version}")
   runtime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.pmd:${project.version}")
-  runtime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.plantuml:${project.version}")
+  runtime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.plantuml:0.0.1-RC2")
 
   runtime 'com.sun.jersey:jersey-server:1.13'
   runtime 'com.sun.jersey:jersey-core:1.13'
