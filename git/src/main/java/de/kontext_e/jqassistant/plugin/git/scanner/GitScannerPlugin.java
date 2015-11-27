@@ -26,10 +26,8 @@ import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitFileDescriptor;
 public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitDescriptor> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GitScannerPlugin.class);
-    public static final String GIT_PATH = "jqassistant.plugin.git.path";
     public static final String GIT_RANGE = "jqassistant.plugin.git.range";
 
-    private String pathToGitCommand = "git";
     private String pathToGitProject = ".";
     private String range = null;
 
@@ -153,14 +151,6 @@ public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitDes
         super.configure();
 
         Map<String, Object> properties = getProperties();
-        final String pathProperty = (String) properties.get(GIT_PATH);
-        if(pathProperty != null) {
-            pathToGitCommand = pathProperty;
-        }
-        if(System.getProperty(GIT_PATH) != null) {
-            pathToGitCommand = System.getProperty(GIT_PATH);
-        }
-        LOGGER.debug("Git plugin uses this git installation: "+pathToGitCommand);
 
         final String rangeProperty = (String) properties.get(GIT_RANGE);
         if(rangeProperty != null) {
