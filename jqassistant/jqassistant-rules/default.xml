@@ -26,6 +26,17 @@
         ]]></cypher>
     </constraint>
 
+    <!-- make a concept out of this:
+        match (l:Linecount), (g:GitFile) where g.relativePath =~ ('.*'+l.name) return distinct g.relativePath, l.linecount order by l.linecount desc;
+    -->
+    <!-- make a concept out of this:
+        match (l:Linecount), (g:GitFile) where g.relativePath =~ ('.*'+l.name)
+        with distinct g, l.linecount as linecount
+        match (g)-(cf:GitCommitFile)
+        return g.relativePath, count(cf) as modifications, linecount
+        order by modifications desc, linecount desc;
+    -->
+
     <group id="default">
         <includeConstraint refId="dependency:WrongDirection" severity="critical"/>
         <!--
