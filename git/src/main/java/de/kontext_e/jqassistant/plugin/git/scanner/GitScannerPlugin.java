@@ -45,20 +45,16 @@ public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitDes
 
     @Override
     public GitDescriptor scan(final FileResource item, final String path, final Scope scope, final Scanner scanner) throws IOException {
-        LOGGER.debug("Git plugin scans "+path);
+        LOGGER.debug("Git plugin scans '{}' in '{}'", path, pathToGitProject);
         Store store = scanner.getContext().getStore();
         final GitDescriptor gitDescriptor = store.create(GitDescriptor.class);
         gitDescriptor.setName(path);
         gitDescriptor.setFileName(path);
 
-        try {
-            List<String> log = RunGitLogCommand.runGitLog(pathToGitCommand, pathToGitProject, range);
-            List<GitCommit> parse = new Parser().parse(log);
-            addCommits(store, gitDescriptor, parse);
-        } catch (Exception e) {
-            LOGGER.error("Unable to scan git repository: "+e.toString());
-            LOGGER.debug("Exception details:", e);
-        }
+        JGitScanner jGitScanner = new JGitScanner();
+
+        List<GitCommit> parse = jGitScanner.scan(pathToGitProject);
+        addCommits(store, gitDescriptor, parse);
 
         return gitDescriptor;
     }
@@ -73,7 +69,7 @@ public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitDes
             gitCommitDescriptor.setSha(gitCommit.getSha());
             gitCommitDescriptor.setAuthor(gitCommit.getAuthor());
             gitCommitDescriptor.setDate(gitCommit.getDate());
-            gitCommitDescriptor.setMessage(buildMessage(gitCommit.getMessage()));
+            gitCommitDescriptor.setMessage(gitCommit.getMessage());
             gitCommitDescriptor.setEpoch(epochFromDate(gitCommit.getDate()));
             gitCommitDescriptor.setTime(gitCommit.getDate().substring(11, 19));
 
@@ -95,14 +91,17 @@ public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitDes
     }
 
     private void addCommitForAuthor(final Map<String, GitAuthorDescriptor> authors, final String author, final Store store, final GitCommitDescriptor gitCommit) {
-        if(! authors.containsKey(author)) {
-            GitAuthorDescriptor gitAutor = store.create(GitAuthorDescriptor.class);
-            gitAutor.setIdentString(author);
-            gitAutor.setName(author.substring(0, author.indexOf("<")).trim());
-            gitAutor.setEmail(author.substring(author.indexOf("<")+1, author.indexOf(">")).trim());
-            authors.put(author, gitAutor);
+        if (null != author) {
+            if(! authors.containsKey(author)) {
+                LOGGER.debug ("Adding new author '{}'", author);
+                GitAuthorDescriptor gitAutor = store.create(GitAuthorDescriptor.class);
+                gitAutor.setIdentString(author);
+                gitAutor.setName(author.substring(0, author.indexOf("<")).trim());
+                gitAutor.setEmail(author.substring(author.indexOf("<")+1, author.indexOf(">")).trim());
+                authors.put(author, gitAutor);
+            }
+            authors.get(author).getCommits().add(gitCommit);
         }
-        authors.get(author).getCommits().add(gitCommit);
     }
 
     private void addCommitFiles(final Store store, final GitCommit gitCommit, final GitCommitDescriptor gitCommitDescriptor, final Map<String, GitFileDescriptor> files) {
@@ -147,14 +146,6 @@ public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitDes
             LOGGER.warn("Could not parse date '"+date+"'", e);
             return null;
         }
-    }
-
-    private String buildMessage(final List<String> message) {
-        StringBuilder builder = new StringBuilder();
-        for (String m : message) {
-            builder.append(m).append("\n");
-        }
-        return builder.toString();
     }
 
     @Override

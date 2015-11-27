@@ -63,11 +63,12 @@ public class ParserTest {
         ));
 
         assertThat(parseResult.size(), is(1));
-        assertThat(parseResult.get(0).getMessage().size(), is(4));
-        assertThat(parseResult.get(0).getMessage().get(0), is("Merge branch 'develop' of something into develop"));
-        assertThat(parseResult.get(0).getMessage().get(1), is("Conflicts:"));
-        assertThat(parseResult.get(0).getMessage().get(2), is("package1/ClassA.java"));
-        assertThat(parseResult.get(0).getMessage().get(3), is("package2/ClassB.java"));
+        String[] message = parseResult.get(0).getMessage().split("\n");
+        assertThat(message.length, is(4));
+        assertThat(message[0], is("Merge branch 'develop' of something into develop"));
+        assertThat(message[1], is("Conflicts:"));
+        assertThat(message[2], is("package1/ClassA.java"));
+        assertThat(message[3], is("package2/ClassB.java"));
     }
 
     @Test

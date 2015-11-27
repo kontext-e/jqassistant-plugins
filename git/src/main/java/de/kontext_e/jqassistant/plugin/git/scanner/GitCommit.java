@@ -7,15 +7,27 @@ public class GitCommit {
     private final String sha;
     private final String author;
     private final String date;
-    private final List<String> message = new LinkedList<String>();
+    private final String message;
     private final List<CommitFile> commitFiles = new LinkedList<CommitFile>();
 
     public GitCommit(final String sha, final String author, final String date, final List<CommitFile> currentCommitFiles, final List<String> currentMessage) {
+        this (sha, author, date, currentCommitFiles, buildMessage(currentMessage));
+    }
+
+    public GitCommit(final String sha, final String author, final String date, final List<CommitFile> currentCommitFiles, final String currentMessage) {
         this.sha = sha;
         this.author = author;
         this.date = date;
         this.commitFiles.addAll(currentCommitFiles);
-        this.message.addAll(currentMessage);
+        this.message = currentMessage;
+    }
+
+    private static String buildMessage(final List<String> message) {
+        StringBuilder builder = new StringBuilder();
+        for (String m : message) {
+            builder.append(m).append("\n");
+        }
+        return builder.toString();
     }
 
     public String getSha() {
@@ -30,7 +42,7 @@ public class GitCommit {
         return date;
     }
 
-    public List<String> getMessage() {
+    public String getMessage() {
         return message;
     }
 
