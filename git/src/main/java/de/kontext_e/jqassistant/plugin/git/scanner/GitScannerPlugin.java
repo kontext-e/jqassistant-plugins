@@ -51,8 +51,8 @@ public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitDes
 
         JGitScanner jGitScanner = new JGitScanner(pathToGitProject);
 
-        List<GitCommit> parse = jGitScanner.scan();
-        addCommits(store, gitDescriptor, parse);
+        List<GitCommit> commits = jGitScanner.scan();
+        addCommits(store, gitDescriptor, commits);
 
         return gitDescriptor;
     }
