@@ -5,9 +5,9 @@
         <description>For debugging purposes</description>
         <cypher><![CDATA[
                 match
-                    (g:GitFile)
+                    (g:PlantUmlPackage)
                 return
-                    g.relativePath
+                    g
         ]]></cypher>
     </constraint>
 
@@ -26,19 +26,9 @@
         ]]></cypher>
     </constraint>
 
-    <!-- make a concept out of this:
-        match (l:Linecount), (g:GitFile) where g.relativePath =~ ('.*'+l.name) return distinct g.relativePath, l.linecount order by l.linecount desc;
-    -->
-    <!-- make a concept out of this:
-        match (l:Linecount), (g:GitFile) where g.relativePath =~ ('.*'+l.name)
-        with distinct g, l.linecount as linecount
-        match (g)-(cf:GitCommitFile)
-        return g.relativePath, count(cf) as modifications, linecount
-        order by modifications desc, linecount desc;
-    -->
-
     <group id="default">
         <includeConstraint refId="dependency:WrongDirection" severity="critical"/>
+        <includeConstraint refId="naming-rules:TestsMustEndWithTest" severity="critical"/>
         <!--
         <includeConstraint refId="debug:rule" severity="info"/>
         -->

@@ -1,3 +1,5 @@
+project.version = '0.0.1-RC2'
+
 jar {
   baseName = 'jqassistant.plugin.plantuml'
 }
