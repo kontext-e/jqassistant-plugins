@@ -10,15 +10,29 @@ Represents a PlantUML file.
 Represents an Asciidoc file with embedded PlantUML.
 
 === Packages
-This is how the source is organized:
+The following diagram shows the main building blocks of the PlantUML plugin and their interdependencies:
 
 [plantuml, packages, png]
 ....
 skinparam packageStyle rect
 
-package de.kontext_e.jqassistant.plugin.plantuml.scanner {}
-package de.kontext_e.jqassistant.plugin.plantuml.store.descriptor {}
+package de.kontext_e.jqassistant.plugin.plantuml {
+    package de.kontext_e.jqassistant.plugin.plantuml.scanner {}
+    package de.kontext_e.jqassistant.plugin.plantuml.store.descriptor {}
+}
 
 de.kontext_e.jqassistant.plugin.plantuml.scanner --> de.kontext_e.jqassistant.plugin.plantuml.store.descriptor
 ....
+
+==== Package de.kontext_e.jqassistant.plugin.plantuml.scanner
+
+*Purpose:* _scans PlantUML and Asciidoc files and imports class diagram packages into the database_
+
+.Open discussion topics
+[cols="1,2" options=""]
+|===
+| Can only scan class diagrams | Maybe other diagrams will follow if needed for rules or executable architecture documentation
+| Does only scan packages of class diagrams and ignores classes | Should be enough for the architecture
+| Uses own syntax parser and not the plantuml.jar | Mostly because the PlantUML source is a mess
+|===
 
