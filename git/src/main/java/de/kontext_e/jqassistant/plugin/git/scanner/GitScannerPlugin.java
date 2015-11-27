@@ -1,6 +1,8 @@
 package de.kontext_e.jqassistant.plugin.git.scanner;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
@@ -30,26 +32,36 @@ public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitDes
     public static final String GIT_RANGE = "jqassistant.plugin.git.range";
 
     private String pathToGitCommand = "git";
-    private String pathToGitProject = ".";
     private String range = null;
 
     @Override
     public boolean accepts(final FileResource item, final String path, final Scope scope) throws IOException {
-        boolean isGitDir = path.endsWith("index") && ".git".equals(item.getFile().getParent());
-        if(isGitDir) {
-            pathToGitProject = item.getFile().toPath().getParent().toFile().getAbsolutePath();
-            LOGGER.info("Path to git project is "+pathToGitProject);
+        File gitDirectory = item.getFile();
+        LOGGER.debug ("Checking path {} / dir {}", path, gitDirectory);
+        boolean isGitDir = path.endsWith("/HEAD")
+                && ".git".equals(gitDirectory.toPath().toAbsolutePath().getParent().toFile().getName());
+        if (!isGitDir) {
+            return false;
         }
-        return isGitDir;
+        String pathToGitProject = item.getFile().toPath().getParent().toFile().getAbsolutePath();
+        LOGGER.info("Accepted Git project in '{}'", pathToGitProject);
+        return true;
     }
 
     @Override
     public GitDescriptor scan(final FileResource item, final String path, final Scope scope, final Scanner scanner) throws IOException {
-        LOGGER.debug("Git plugin scans "+path);
+        // This is called with path = "/HEAD"
+        final Path headPath = item.getFile().toPath().toAbsolutePath();
+        final Path gitPath = headPath.getParent(); // Path of dir of /HEAD
+        final String pathToGitProject = gitPath.toFile().getAbsolutePath();
+        final Path projectPath = gitPath.getParent(); // Path of parent of dir of /HEAD
+        final String projectName = projectPath.toFile().getName();
         Store store = scanner.getContext().getStore();
         final GitDescriptor gitDescriptor = store.create(GitDescriptor.class);
-        gitDescriptor.setName(path);
-        gitDescriptor.setFileName(path);
+        gitDescriptor.setName(projectName);
+        // For some reason the file name is presented in the neo4j console ...
+        // TODO: The file name is not representative - use the project name instead
+        gitDescriptor.setFileName(projectName);
 
         try {
             List<String> log = RunGitLogCommand.runGitLog(pathToGitCommand, pathToGitProject, range);
