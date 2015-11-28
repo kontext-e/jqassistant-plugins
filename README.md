@@ -26,10 +26,12 @@ How to install
 
 Work in progress
 ================
-* PlantUML sequence diagrams
+* PlantUML class diagram packages; please note: although the plantuml plugin will become version 1.1.0, it is
+  far from a complete PlantUML import; in fact, only the packages of class diagrams were imported for now
+  because this is the only thing that is currently needed for architecture rules
 
-Coming soon
-===========
+Coming later
+============
 * Jenkins
 
 ## Continuous Build
