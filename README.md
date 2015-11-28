@@ -24,6 +24,10 @@ How to install
 
 * execute jQAssistant tasks
 
+Plugin doc
+==========
+* [plantuml](https://github.com/kontext-e/jqassistant-plugins/blob/master/plantuml/src/main/asciidoc/plantuml.adoc)
+
 Work in progress
 ================
 * PlantUML class diagram packages; please note: although the plantuml plugin will become version 1.1.0, it is
