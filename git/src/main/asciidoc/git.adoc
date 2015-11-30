@@ -7,7 +7,7 @@
 [options="header"]
 |====
 | Name                           | Description
-| jqassistant.plugin.git.range   | Optional: Only commits of this history range were imported.
+| jqassistant.plugin.git.range   | Optional: Only commits of this history range were imported. Default: complete history
 |====
 
 
