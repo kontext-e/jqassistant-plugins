@@ -98,7 +98,7 @@ public class JGitScanner {
                     for (DiffEntry diff : diffs) {
                         logger.debug("changeType={}, path={}",
                                 diff.getChangeType().name(), diff.getNewPath());
-                        CommitFile commitFile = new CommitFile(diff.getChangeType().toString(), diff.getNewPath());
+                        CommitFile commitFile = new CommitFile(diff.getChangeType().toString().substring(0, 1), diff.getNewPath());
                         gitCommit.getCommitFiles().add(commitFile);
                     }
 
