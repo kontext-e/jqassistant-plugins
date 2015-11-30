@@ -168,7 +168,8 @@ public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitDes
             range = rangeProperty;
         }
         if(System.getProperty(GIT_RANGE) != null) {
-            range = System.getProperty(GIT_RANGE);
+            throw new RuntimeException ("Ranges are currently not supported!");
+//            range = System.getProperty(GIT_RANGE);
         }
         LOGGER.debug("Git plugin has configured range "+range);
     }
