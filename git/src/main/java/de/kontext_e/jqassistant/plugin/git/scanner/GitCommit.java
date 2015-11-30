@@ -1,12 +1,13 @@
 package de.kontext_e.jqassistant.plugin.git.scanner;
 
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
 public class GitCommit {
     private final String sha;
     private String author;
-    private String date;
+    private Date date;
     private String message;
     private final List<CommitFile> commitFiles = new LinkedList<CommitFile>();
     private final List<GitCommit> parents = new LinkedList<GitCommit>();
@@ -32,10 +33,10 @@ public class GitCommit {
     }
     protected void setAuthor (final String author) {this.author = author;}
 
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
-    protected void setDate (final String date) {this.date = date;}
+    protected void setDate (final Date date) {this.date = date;}
 
     public String getMessage() {
         return message;

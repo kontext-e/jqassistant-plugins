@@ -83,7 +83,7 @@ public class JGitScanner {
                 logger.debug("Commit-Message: '{}'", commit.getShortMessage());
                 String author = commit.getAuthorIdent().getName() + " <" +
                         commit.getAuthorIdent().getEmailAddress() + ">";
-                String date = dateFormat.format (new Date(commit.getCommitTime()));
+                Date date = new Date(1000*(long)commit.getCommitTime());
                 GitCommit gitCommit = retrieveCommit(commit.getId().toString());
                 gitCommit.setAuthor(author);
                 // TODO Add Committer also!

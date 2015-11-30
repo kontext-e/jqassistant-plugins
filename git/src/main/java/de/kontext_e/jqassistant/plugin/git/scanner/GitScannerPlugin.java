@@ -1,8 +1,10 @@
 package de.kontext_e.jqassistant.plugin.git.scanner;
 
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +26,10 @@ import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitFileDescriptor;
  * @author jn4, Kontext E GmbH
  */
 public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitDescriptor> {
+
+    private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+    private static final DateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm:ss Z");
+    private static final DateFormat DATE_TIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GitScannerPlugin.class);
     public static final String GIT_RANGE = "jqassistant.plugin.git.range";
@@ -70,10 +76,10 @@ public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitDes
 
             gitCommitDescriptor.setSha(gitCommit.getSha());
             gitCommitDescriptor.setAuthor(gitCommit.getAuthor());
-            gitCommitDescriptor.setDate(gitCommit.getDate());
+            gitCommitDescriptor.setDate(DATE_FORMAT.format(gitCommit.getDate()));
             gitCommitDescriptor.setMessage(gitCommit.getMessage());
-            gitCommitDescriptor.setEpoch(epochFromDate(gitCommit.getDate()));
-            gitCommitDescriptor.setTime(gitCommit.getDate().substring(11, 19));
+            gitCommitDescriptor.setEpoch(gitCommit.getDate().getTime());
+            gitCommitDescriptor.setTime(TIME_FORMAT.format(gitCommit.getDate()));
 
             gitDescriptor.getCommits().add(gitCommitDescriptor);
 
@@ -129,7 +135,7 @@ public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitDes
         }
     }
 
-    private void addAsGitFile(final Map<String, GitFileDescriptor> files, final GitCommitFileDescriptor commitFile, final Store store, final String date) {
+    private void addAsGitFile(final Map<String, GitFileDescriptor> files, final GitCommitFileDescriptor commitFile, final Store store, final Date date) {
         if(!files.containsKey(commitFile.getRelativePath())) {
             GitFileDescriptor gitFile = store.create(GitFileDescriptor.class);
             gitFile.setRelativePath(commitFile.getRelativePath());
@@ -140,23 +146,14 @@ public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitDes
         gitFileDescriptor.getCommitFiles().add(commitFile);
 
         if("A".equals(commitFile.getModificationKind().toUpperCase())) {
-            gitFileDescriptor.setCreatedAt(date);
-            gitFileDescriptor.setCreatedAtEpoch(epochFromDate(date));
+            gitFileDescriptor.setCreatedAt(DATE_TIME_FORMAT.format(date));
+            gitFileDescriptor.setCreatedAtEpoch(date.getTime());
         } else if("M".equals(commitFile.getModificationKind().toUpperCase())) {
-            gitFileDescriptor.setLastModificationAt(date);
-            gitFileDescriptor.setLastModificationAtEpoch(epochFromDate(date));
+            gitFileDescriptor.setLastModificationAt(DATE_TIME_FORMAT.format(date));
+            gitFileDescriptor.setLastModificationAtEpoch(date.getTime());
         } else if("D".equals(commitFile.getModificationKind().toUpperCase())) {
-            gitFileDescriptor.setDeletedAt(date);
-            gitFileDescriptor.setDeletedAtEpoch(epochFromDate(date));
-        }
-    }
-
-    private Long epochFromDate(final String date) {
-        try {
-            return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z").parse(date).getTime();
-        } catch (ParseException e) {
-            LOGGER.warn("Could not parse date '"+date+"'", e);
-            return null;
+            gitFileDescriptor.setDeletedAt(DATE_TIME_FORMAT.format(date));
+            gitFileDescriptor.setDeletedAtEpoch(date.getTime());
         }
     }
 
