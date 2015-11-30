@@ -26,6 +26,7 @@ How to install
 
 Plugin doc
 ==========
+* [git](https://github.com/kontext-e/jqassistant-plugins/blob/master/git/src/main/asciidoc/git.adoc)
 * [plantuml](https://github.com/kontext-e/jqassistant-plugins/blob/master/plantuml/src/main/asciidoc/plantuml.adoc)
 
 Work in progress
