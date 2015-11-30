@@ -35,6 +35,12 @@ public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitDes
     private String range = null;
 
     @Override
+    /**
+     * Check whether this is the start of a git repository?
+     *
+     * If the path is "/HEAD" and the file (behind item) lives in a directory called ".git" this must be a git
+     * repository and the scanner may perform it's work on it (call to "scan" method).
+     */
     public boolean accepts(final FileResource item, final String path, final Scope scope) throws IOException {
         File gitDirectory = item.getFile();
         LOGGER.debug ("Checking path {} / dir {}", path, gitDirectory);
@@ -48,23 +54,30 @@ public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitDes
         return true;
     }
 
-    @Override
-    public GitDescriptor scan(final FileResource item, final String path, final Scope scope, final Scanner scanner) throws IOException {
-        // This is called with path = "/HEAD"
-        final Path headPath = item.getFile().toPath().toAbsolutePath();
+    protected static void initGitDescriptor (final GitDescriptor gitDescriptor, final File file) throws IOException {
+        final Path headPath = file.toPath().toAbsolutePath().normalize();
+        LOGGER.debug ("Full path to Git directory HEAD is '{}'", headPath);
         final Path gitPath = headPath.getParent(); // Path of dir of /HEAD
         final String pathToGitProject = gitPath.toFile().getAbsolutePath();
+        LOGGER.debug ("Full path to Git directory is '{}'", pathToGitProject);
         final Path projectPath = gitPath.getParent(); // Path of parent of dir of /HEAD
         final String projectName = projectPath.toFile().getName();
-        Store store = scanner.getContext().getStore();
-        final GitDescriptor gitDescriptor = store.create(GitDescriptor.class);
+        LOGGER.debug ("Git Project name is '{}'", projectName);
         gitDescriptor.setName(projectName);
         // For some reason the file name is presented in the neo4j console ...
-        // TODO: The file name is not representative - use the project name instead
-        gitDescriptor.setFileName(projectName);
+        // TODO: The file name is not representative - use the project name instead?
+        gitDescriptor.setFileName(pathToGitProject);
+    }
 
+    @Override
+    public GitDescriptor scan(final FileResource item, final String path, final Scope scope, final Scanner scanner) throws IOException {
+        // This is called with path = "/HEAD" since this is the only "accepted" file
+        LOGGER.debug ("Scanning Git directory '{}' (call with path: '{}')", item.getFile(), path);
+        final Store store = scanner.getContext().getStore();
+        final GitDescriptor gitDescriptor = store.create(GitDescriptor.class);
+        initGitDescriptor(gitDescriptor, item.getFile());
         try {
-            List<String> log = RunGitLogCommand.runGitLog(pathToGitCommand, pathToGitProject, range);
+            List<String> log = RunGitLogCommand.runGitLog(pathToGitCommand, gitDescriptor.getFileName(), range);
             List<GitCommit> parse = new Parser().parse(log);
             addCommits(store, gitDescriptor, parse);
         } catch (Exception e) {
