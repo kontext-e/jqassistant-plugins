@@ -150,4 +150,25 @@ public class JGitScanner {
 
         return result;
     }
+
+    public List<GitTag> findTags () throws IOException {
+        Repository repository = getRepository();
+
+        List<GitTag> result = new LinkedList<GitTag>();
+
+        try (Git git = new Git(repository)) {
+            List<Ref> tags = git.tagList().call();
+            for (Ref tagRef : tags) {
+                GitTag newTag = new GitTag (tagRef.getName(), ObjectId.toString(tagRef.getObjectId()));
+                result.add (newTag);
+            }
+        } catch (GitAPIException e) {
+            throw new IllegalStateException("Could not read branches from Git repository '" + path + "'", e);
+        } finally {
+            repository.close();
+        }
+
+        return result;
+    }
+
 }

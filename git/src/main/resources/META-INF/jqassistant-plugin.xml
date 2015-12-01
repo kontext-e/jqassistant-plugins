@@ -8,6 +8,7 @@
         <class>de.kontext_e.jqassistant.plugin.git.store.descriptor.GitCommitFileDescriptor</class>
         <class>de.kontext_e.jqassistant.plugin.git.store.descriptor.GitAuthorDescriptor</class>
         <class>de.kontext_e.jqassistant.plugin.git.store.descriptor.GitFileDescriptor</class>
+        <class>de.kontext_e.jqassistant.plugin.git.store.descriptor.GitTagDescriptor</class>
     </model>
     <scanner>
         <class>de.kontext_e.jqassistant.plugin.git.scanner.GitScannerPlugin</class>

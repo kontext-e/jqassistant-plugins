@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitTagDescriptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,14 +61,15 @@ public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitDes
 
         List<GitCommit> commits = jGitScanner.findCommits();
         List<GitBranch> branches = jGitScanner.findBranches();
+        List<GitTag> tags = jGitScanner.findTags();
 
-        addCommits(store, gitDescriptor, commits, branches);
+        addCommits(store, gitDescriptor, commits, branches, tags);
 
         return gitDescriptor;
     }
 
     private void addCommits(final Store store, final GitDescriptor gitDescriptor,
-                            final List<GitCommit> gitCommits, final  List<GitBranch> branches) {
+                            final List<GitCommit> gitCommits, final  List<GitBranch> branches, final List<GitTag> tags) {
         Map<String, GitAuthorDescriptor> authors = new HashMap<String,GitAuthorDescriptor>();
         Map<String, GitFileDescriptor> files = new HashMap<String,GitFileDescriptor>();
         Map<String, GitCommitDescriptor> commits = new HashMap<String,GitCommitDescriptor>();
@@ -123,6 +125,22 @@ public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitDes
                 LOGGER.warn ("Cannot retrieve commit '{}' for branch '{}'", sha, name);
             }
             gitBranchDescriptor.setHead(gitCommitDescriptor);
+            gitDescriptor.getBranches().add(gitBranchDescriptor);
+        }
+
+        for (GitTag gitTag : tags) {
+            GitTagDescriptor gitTagDescriptor = store.create(GitTagDescriptor.class);
+            String label = gitTag.getLabel();
+            label = label.replaceFirst("refs/tags/", "");
+            String sha = gitTag.getCommitSha();
+            LOGGER.debug ("Adding new Branch '{}' with Head '{}'", label, sha);
+            gitTagDescriptor.setLabel(label);
+            GitCommitDescriptor gitCommitDescriptor = commits.get(sha);
+            if (null == gitCommitDescriptor) {
+                LOGGER.warn ("Cannot retrieve commit '{}' for branch '{}'", sha, label);
+            }
+            gitTagDescriptor.setCommit(gitCommitDescriptor);
+            gitDescriptor.getTags().add(gitTagDescriptor);
         }
     }
 
