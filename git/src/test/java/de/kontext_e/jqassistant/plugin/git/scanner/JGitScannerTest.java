@@ -18,10 +18,18 @@ import static org.junit.Assert.assertThat;
 // TODO This is not a real Unit test! Make gradle run it in some kind of integration test phase!!!
 public class JGitScannerTest {
     @Test
-    public void testScan () throws IOException {
+    public void testFindCommits () throws IOException {
         JGitScanner jGitScanner = new JGitScanner("../.git");
-        List<GitCommit> commits = jGitScanner.scan ();
+        List<GitCommit> commits = jGitScanner.findCommits ();
 
         assertThat (commits.size(), greaterThan (0));
+    }
+
+    @Test
+    public void testFindTags () throws IOException {
+        JGitScanner jGitScanner = new JGitScanner("../.git");
+        List<GitTag> tags = jGitScanner.findTags ();
+
+        assertThat (tags.size(), greaterThan (0));
     }
 }
