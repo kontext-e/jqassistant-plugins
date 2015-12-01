@@ -20,4 +20,6 @@ public interface GitDescriptor extends Descriptor, NamedDescriptor, FileDescript
     @Relation("HAS_FILES")
     List<GitFileDescriptor> getFiles();
 
+    @Relation("HAS_BRANCHES")
+    List<GitBranchDescriptor> getBranches();
 }

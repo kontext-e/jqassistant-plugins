@@ -1,11 +1,13 @@
 package de.kontext_e.jqassistant.plugin.git.scanner;
 
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.ListBranchCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffFormatter;
 import org.eclipse.jgit.diff.RawTextComparator;
 import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevTree;
@@ -33,6 +35,7 @@ import java.util.*;
  * @author Gerd Aschemann - gerd@aschemann.net - @GerdAschemann
  * @since 1.1.0
  */
+// TODO: Rename this! In fact it is not a Scanner but a Repository!
 public class JGitScanner {
 
     private static final Logger logger = LoggerFactory.getLogger(JGitScanner.class);
@@ -51,14 +54,8 @@ public class JGitScanner {
         this.path = path;
     }
 
-    public List<GitCommit> scan() throws IOException {
-        logger.debug("Searching for git directory from '{}' (if relative: '{}')", path, System.getProperty("user.dir"));
-        FileRepositoryBuilder builder = new FileRepositoryBuilder();
-        Repository repository = builder
-                .setGitDir(new File(path))
-                .readEnvironment() // scan environment GIT_* variables
-                .build();
-        logger.debug("Using Git repository in '{}'", repository.getDirectory());
+    public List<GitCommit> findCommits() throws IOException {
+        Repository repository = getRepository();
 
         List<GitCommit> result = new LinkedList<GitCommit>();
 
@@ -81,10 +78,10 @@ public class JGitScanner {
 
             for (RevCommit commit : commits) {
                 logger.debug("Commit-Message: '{}'", commit.getShortMessage());
-                String author = commit.getAuthorIdent().getName() + " <" +
+                final String author = commit.getAuthorIdent().getName() + " <" +
                         commit.getAuthorIdent().getEmailAddress() + ">";
-                Date date = new Date(1000*(long)commit.getCommitTime());
-                GitCommit gitCommit = retrieveCommit(commit.getId().toString());
+                final Date date = new Date(1000 * (long) commit.getCommitTime());
+                final GitCommit gitCommit = retrieveCommit(ObjectId.toString(commit.getId()));
                 gitCommit.setAuthor(author);
                 // TODO Add Committer also!
                 gitCommit.setDate(date);
@@ -96,14 +93,17 @@ public class JGitScanner {
 
                     List<DiffEntry> diffs = df.scan(parent.getTree(), commit.getTree());
                     for (DiffEntry diff : diffs) {
-                        logger.debug("changeType={}, path={}",
-                                diff.getChangeType().name(), diff.getNewPath());
-                        CommitFile commitFile = new CommitFile(diff.getChangeType().toString().substring(0, 1), diff.getNewPath());
+                        final String changeType = diff.getChangeType().toString().substring(0, 1);
+                        final String oldPath = diff.getOldPath();
+                        final String newPath = diff.getNewPath();
+                        final String path = "D".equalsIgnoreCase(changeType) ? oldPath : newPath;
+                        logger.debug("changeType={}, path={}", changeType, path);
+                        final CommitFile commitFile = new CommitFile(changeType, path);
                         gitCommit.getCommitFiles().add(commitFile);
                     }
 
-                    String parentSha = parentId.toString();
-                    GitCommit parentCommit = retrieveCommit(parentSha);
+                    String parentSha = ObjectId.toString(parentId);
+                    final GitCommit parentCommit = retrieveCommit(parentSha);
                     gitCommit.getParents().add(parentCommit);
                 }
 
@@ -113,9 +113,41 @@ public class JGitScanner {
             throw new IllegalStateException("Could not read logs from Git repository '" + path + "'", e);
         } finally {
             rw.close();
+            repository.close();
         }
 
         logger.debug("Found #{} commits", result.size());
+        return result;
+    }
+
+    private Repository getRepository() throws IOException {
+        logger.debug("Opening repository for git directory '{}'", path);
+        FileRepositoryBuilder builder = new FileRepositoryBuilder();
+        Repository repository = builder
+                .setGitDir(new File(path))
+                .readEnvironment() // scan environment GIT_* variables
+                .build();
+        logger.debug("Using Git repository in '{}'", repository.getDirectory());
+        return repository;
+    }
+
+    public List<GitBranch> findBranches () throws IOException {
+        Repository repository = getRepository();
+
+        List<GitBranch> result = new LinkedList<GitBranch>();
+
+        try (Git git = new Git(repository)) {
+            List<Ref> branches = git.branchList().setListMode(ListBranchCommand.ListMode.ALL).call();
+            for (Ref branchRef : branches) {
+                GitBranch newBranch = new GitBranch (branchRef.getName(), ObjectId.toString(branchRef.getObjectId()));
+                result.add (newBranch);
+            }
+        } catch (GitAPIException e) {
+            throw new IllegalStateException("Could not read branches from Git repository '" + path + "'", e);
+        } finally {
+            repository.close();
+        }
+
         return result;
     }
 }

@@ -2,12 +2,12 @@ package de.kontext_e.jqassistant.plugin.git.scanner;
 
 import java.io.IOException;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,6 +17,7 @@ import com.buschmais.jqassistant.core.store.api.Store;
 import com.buschmais.jqassistant.plugin.common.api.scanner.AbstractScannerPlugin;
 import com.buschmais.jqassistant.plugin.common.api.scanner.filesystem.FileResource;
 import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitAuthorDescriptor;
+import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitBranchDescriptor;
 import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitCommitDescriptor;
 import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitCommitFileDescriptor;
 import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitDescriptor;
@@ -57,13 +58,16 @@ public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitDes
 
         JGitScanner jGitScanner = new JGitScanner(pathToGitProject);
 
-        List<GitCommit> commits = jGitScanner.scan();
-        addCommits(store, gitDescriptor, commits);
+        List<GitCommit> commits = jGitScanner.findCommits();
+        List<GitBranch> branches = jGitScanner.findBranches();
+
+        addCommits(store, gitDescriptor, commits, branches);
 
         return gitDescriptor;
     }
 
-    private void addCommits(final Store store, final GitDescriptor gitDescriptor, final List<GitCommit> gitCommits) {
+    private void addCommits(final Store store, final GitDescriptor gitDescriptor,
+                            final List<GitCommit> gitCommits, final  List<GitBranch> branches) {
         Map<String, GitAuthorDescriptor> authors = new HashMap<String,GitAuthorDescriptor>();
         Map<String, GitFileDescriptor> files = new HashMap<String,GitFileDescriptor>();
         Map<String, GitCommitDescriptor> commits = new HashMap<String,GitCommitDescriptor>();
@@ -72,6 +76,7 @@ public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitDes
         for (GitCommit gitCommit : gitCommits) {
             GitCommitDescriptor gitCommitDescriptor = store.create(GitCommitDescriptor.class);
             String sha = gitCommit.getSha();
+            LOGGER.debug ("Adding new Commit '{}'", sha);
             commits.put(sha, gitCommitDescriptor);
 
             gitCommitDescriptor.setSha(gitCommit.getSha());
@@ -106,6 +111,19 @@ public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitDes
             gitDescriptor.getFiles().add(gitFile);
         }
 
+        for (GitBranch gitBranch : branches) {
+            GitBranchDescriptor gitBranchDescriptor = store.create(GitBranchDescriptor.class);
+            String name = gitBranch.getName();
+            name = name.replaceFirst("refs/", "");
+            String sha = gitBranch.getCommitSha();
+            LOGGER.debug ("Adding new Branch '{}' with Head '{}'", name, sha);
+            gitBranchDescriptor.setName(name);
+            GitCommitDescriptor gitCommitDescriptor = commits.get(sha);
+            if (null == gitCommitDescriptor) {
+                LOGGER.warn ("Cannot retrieve commit '{}' for branch '{}'", sha, name);
+            }
+            gitBranchDescriptor.setHead(gitCommitDescriptor);
+        }
     }
 
     private void addCommitForAuthor(final Map<String, GitAuthorDescriptor> authors, final String author, final Store store, final GitCommitDescriptor gitCommit) {
