@@ -159,11 +159,23 @@ public class JGitScanner {
         try (Git git = new Git(repository)) {
             List<Ref> tags = git.tagList().call();
             for (Ref tagRef : tags) {
-                GitTag newTag = new GitTag (tagRef.getName(), ObjectId.toString(tagRef.getObjectId()));
+                String label = tagRef.getName();
+                String objectId = ObjectId.toString(tagRef.getObjectId());
+                if (tagRef.isSymbolic()) {
+                    String newObjectId = ObjectId.toString(tagRef.getLeaf().getObjectId());
+                    logger.debug("Tag '{}' is symbolic: use SHA '{}' instead of '{}'", label, newObjectId, objectId);
+                    objectId = newObjectId;
+                } else {
+                    logger.debug("Tag '{}' is real: use SHA '{}'", label, objectId);
+                }
+                if (tagRef.isPeeled()) {
+                    logger.debug("Tag '{}' is peeled: has peeled SHA '{}'", label, ObjectId.toString(tagRef.getPeeledObjectId()));
+                }
+                GitTag newTag = new GitTag (label, objectId);
                 result.add (newTag);
             }
         } catch (GitAPIException e) {
-            throw new IllegalStateException("Could not read branches from Git repository '" + path + "'", e);
+            throw new IllegalStateException("Could not read tags from Git repository '" + path + "'", e);
         } finally {
             repository.close();
         }
