@@ -1,7 +1,9 @@
 package de.kontext_e.jqassistant.plugin.git.scanner;
 
+import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
+import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -36,28 +38,52 @@ public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitDes
     private static final Logger LOGGER = LoggerFactory.getLogger(GitScannerPlugin.class);
     public static final String GIT_RANGE = "jqassistant.plugin.git.range";
 
-    private String pathToGitProject = ".";
     private String range = null;
 
     @Override
+    /**
+     * Check whether this is the start of a git repository?
+     *
+     * If the path is "/HEAD" and the file (behind item) lives in a directory called ".git" this must be a git
+     * repository and the scanner may perform it's work on it (call to "scan" method).
+     */
     public boolean accepts(final FileResource item, final String path, final Scope scope) throws IOException {
-        boolean isGitDir = path.endsWith("index") && ".git".equals(item.getFile().getParent());
-        if(isGitDir) {
-            pathToGitProject = item.getFile().toPath().getParent().toFile().getAbsolutePath();
-            LOGGER.info("Path to git project is "+pathToGitProject);
+        File gitDirectory = item.getFile();
+        LOGGER.debug ("Checking path {} / dir {}", path, gitDirectory);
+        boolean isGitDir = path.endsWith("/HEAD")
+                && ".git".equals(gitDirectory.toPath().toAbsolutePath().getParent().toFile().getName());
+        if (!isGitDir) {
+            return false;
         }
-        return isGitDir;
+        String pathToGitProject = item.getFile().toPath().getParent().toFile().getAbsolutePath();
+        LOGGER.info("Accepted Git project in '{}'", pathToGitProject);
+        return true;
+    }
+
+    protected static void initGitDescriptor (final GitDescriptor gitDescriptor, final File file) throws IOException {
+        final Path headPath = file.toPath().toAbsolutePath().normalize();
+        LOGGER.debug ("Full path to Git directory HEAD is '{}'", headPath);
+        final Path gitPath = headPath.getParent(); // Path of dir of /HEAD
+        final String pathToGitProject = gitPath.toFile().getAbsolutePath();
+        LOGGER.debug ("Full path to Git directory is '{}'", pathToGitProject);
+        final Path projectPath = gitPath.getParent(); // Path of parent of dir of /HEAD
+        final String projectName = projectPath.toFile().getName();
+        LOGGER.debug ("Git Project name is '{}'", projectName);
+        gitDescriptor.setName(projectName);
+        // For some reason the file name is presented in the neo4j console ...
+        // TODO: The file name is not representative - use the project name instead?
+        gitDescriptor.setFileName(pathToGitProject);
     }
 
     @Override
     public GitDescriptor scan(final FileResource item, final String path, final Scope scope, final Scanner scanner) throws IOException {
-        LOGGER.debug("Git plugin scans '{}' in '{}'", path, pathToGitProject);
+        // This is called with path = "/HEAD" since this is the only "accepted" file
+        LOGGER.debug ("Scanning Git directory '{}' (call with path: '{}')", item.getFile(), path);
         Store store = scanner.getContext().getStore();
         final GitDescriptor gitDescriptor = store.create(GitDescriptor.class);
-        gitDescriptor.setName(path);
-        gitDescriptor.setFileName(path);
+        initGitDescriptor(gitDescriptor, item.getFile());
 
-        JGitScanner jGitScanner = new JGitScanner(pathToGitProject);
+        JGitScanner jGitScanner = new JGitScanner(gitDescriptor.getFileName());
 
         List<GitCommit> commits = jGitScanner.findCommits();
         List<GitBranch> branches = jGitScanner.findBranches();
@@ -133,11 +159,11 @@ public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitDes
             String label = gitTag.getLabel();
             label = label.replaceFirst("refs/tags/", "");
             String sha = gitTag.getCommitSha();
-            LOGGER.debug ("Adding new Branch '{}' with Head '{}'", label, sha);
+            LOGGER.debug ("Adding new Tag '{}' with Commit '{}'", label, sha);
             gitTagDescriptor.setLabel(label);
             GitCommitDescriptor gitCommitDescriptor = commits.get(sha);
             if (null == gitCommitDescriptor) {
-                LOGGER.warn ("Cannot retrieve commit '{}' for branch '{}'", sha, label);
+                LOGGER.warn ("Cannot retrieve commit '{}' for tag '{}'", sha, label);
             }
             gitTagDescriptor.setCommit(gitCommitDescriptor);
             gitDescriptor.getTags().add(gitTagDescriptor);
