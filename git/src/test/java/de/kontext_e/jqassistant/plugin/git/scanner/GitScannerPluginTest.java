@@ -19,13 +19,22 @@ import static org.mockito.Mockito.verify;
  */
 
 public class GitScannerPluginTest {
+    private static final boolean IS_WINDOWS = isWindows();
+
+    private static final boolean isWindows () {
+        // TODO: This is really ugly, isn't it?
+        final String osName = System.getProperty("os.name");
+        return null != osName && osName.startsWith("Windows");
+    }
 
     @Test
     public void testGitScannerInitGitDescriptorDefault () {
         GitDescriptor gitDescriptor = mock(GitDescriptor.class);
         try {
             GitScannerPlugin.initGitDescriptor(gitDescriptor, new File("/tmp/xxx/.git/HEAD"));
-            verify(gitDescriptor).setFileName("/tmp/xxx/.git");
+            if (!IS_WINDOWS) {
+                verify(gitDescriptor).setFileName("/tmp/xxx/.git");
+            }
             verify(gitDescriptor).setName("xxx");
         } catch (IOException e) {
             e.printStackTrace();
