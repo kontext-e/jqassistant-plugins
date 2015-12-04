@@ -1,0 +1,93 @@
+<<GitScanner>>
+[[GitScanner]]
+
+== Scanner for Git repositories
+
+.Configuration parameters
+[options="header"]
+|====
+| Name                           | Description
+| jqassistant.plugin.git.range   | Optional: Only commits of this history range were imported. Default: complete history
+|====
+
+
+=== :File:Git
+Represents a git repository filesystem directory.
+
+=== :GitAuthor
+Represents an author who commited to this repository.
+
+.Properties of :GitAuthor
+[options="header"]
+|====
+| Name          | Description
+| identString   | The authors ident string.
+| name          | The authors name.
+| email         | The authors email address.
+|====
+
+.Relations of :GitAuthor
+[options="header"]
+|====
+| Name     | Target label(s)  | Cardinality | Description
+| COMMITED | <<:GitCommit>>   | 0..n        | References the commits of this author.
+|====
+
+=== :GitCommit
+Represents a single commit.
+
+.Properties of :GitCommit
+[options="header"]
+|====
+| Name          | Description
+| sha           | The sha key
+| author        | The author as a string, e.g. Jens Nerche <j.nerche@kontext-e.de>
+| date          | The date with time
+| time          | The time part of the date
+| epoch         | The date in epoch representation: milliseconds since 1970-01-01
+| message       | The commit message
+|====
+
+.Relations of :GitCommit
+[options="header"]
+|====
+| Name              | Target label(s)            | Cardinality | Description
+| HAS_FILES         | <<:GitCommitFile>>         | 0..n        | References the files of this commit
+|====
+
+=== :GitCommitFile
+Represents a file contained in one commit.
+
+.Properties of :GitCommitFile
+[options="header"]
+|====
+| Name              | Description
+| modificationKind  | A for added, M for modified, D for deleted
+| relativePath      | Given in the commit, e.g. git/src/main/java/de/kontext_e/jqassistant/plugin/git/scanner/GitScannerPlugin.java
+|====
+
+
+=== :GitFile
+Represents a file in the repository which was added, modified, or deleted in the given range.
+The difference to <<:GitCommitFile>> is that each file has only a single <<:GitFile>> node,
+but may have multiple <<:GitCommitFile>> nodes, one for each commit containing this file.
+
+.Properties of :GitFile
+[options="header"]
+|====
+| Name                      | Description
+| relativePath              | Given in the commit, e.g. git/src/main/java/de/kontext_e/jqassistant/plugin/git/scanner/GitScannerPlugin.java
+| createdAt                 | Full human readable timestamp of creation, e.g. 2014-04-30 11:48:10 +0200
+| deletedAt                 | Full human readable timestamp of deletion, e.g. 2014-04-30 11:48:10 +0200
+| lastModificationAt        | Full human readable timestamp of last modification, e.g. 2014-04-30 11:48:10 +0200
+| createdAtEpoch            | Creation timestamp in epoch representation, e.g. 1398851290000
+| deletedAtEpoch            | Deletion timestamp in epoch representation, e.g. 1398851290000
+| lastModificationAtEpoch   | Last modification timestamp in epoch representation, e.g. 1398851290000
+|====
+
+.Relations of :GitFile
+[options="header"]
+|====
+| Name              | Target label(s)            | Cardinality | Description
+| MODIFIED_BY       | <<:GitCommitFile>>         | 0..n        | References the commit files of this file
+|====
