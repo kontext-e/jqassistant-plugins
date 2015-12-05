@@ -97,9 +97,9 @@ public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitDes
 
     private void addCommits(final Store store, final GitDescriptor gitDescriptor,
                             final List<GitCommit> gitCommits, final  List<GitBranch> branches, final List<GitTag> tags) {
-        Map<String, GitAuthorDescriptor> authors = new HashMap<String,GitAuthorDescriptor>();
-        Map<String, GitFileDescriptor> files = new HashMap<String,GitFileDescriptor>();
-        Map<String, GitCommitDescriptor> commits = new HashMap<String,GitCommitDescriptor>();
+        Map<String, GitAuthorDescriptor> authors = new HashMap<>();
+        Map<String, GitFileDescriptor> files = new HashMap<>();
+        Map<String, GitCommitDescriptor> commits = new HashMap<>();
 
         // First pass: Add the commits to the graph
         for (GitCommit gitCommit : gitCommits) {

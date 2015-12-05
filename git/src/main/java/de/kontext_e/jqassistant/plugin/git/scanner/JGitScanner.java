@@ -91,7 +91,7 @@ public class JGitScanner {
     public List<GitCommit> findCommits() throws IOException {
         Repository repository = getRepository();
 
-        List<GitCommit> result = new LinkedList<GitCommit>();
+        List<GitCommit> result = new LinkedList<>();
 
         ObjectId head = repository.resolve("HEAD");
         logger.debug("Found head: {}", head);
@@ -168,7 +168,7 @@ public class JGitScanner {
     public List<GitBranch> findBranches () throws IOException {
         Repository repository = getRepository();
 
-        List<GitBranch> result = new LinkedList<GitBranch>();
+        List<GitBranch> result = new LinkedList<>();
 
         try (Git git = new Git(repository)) {
             List<Ref> branches = git.branchList().setListMode(ListBranchCommand.ListMode.ALL).call();
@@ -188,7 +188,7 @@ public class JGitScanner {
     public List<GitTag> findTags () throws IOException {
         Repository repository = getRepository();
 
-        List<GitTag> result = new LinkedList<GitTag>();
+        List<GitTag> result = new LinkedList<>();
 
         try (Git git = new Git(repository)) {
             List<Ref> tags = git.tagList().call();
