@@ -1,11 +1,17 @@
 #!/usr/bin/env groovy
+import groovy.util.logging.Slf4j
 @Grab ('org.ajoberstar:grgit')
+@Grab ('org.slf4j:slf4j-api')
 @Grab ('org.slf4j:slf4j-simple')
 
 import org.ajoberstar.grgit.Grgit
 import org.ajoberstar.grgit.Branch
 import org.ajoberstar.grgit.Tag
 import org.ajoberstar.grgit.operation.MergeOp
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+
+Logger logger = LoggerFactory.getLogger("testcase1")
 
 File createFile (File dir, String name, String contents) {
     File file = new File(dir, name)
@@ -64,6 +70,7 @@ createPom (sampleRemoteDir, "1.0.0")
 grgit.add (patterns: ['pom.xml'])
 grgit.commit (message: "Released version 1.0.0")
 Tag releaseTag1_0 = grgit.tag.add (name: '1.0.0')
+logger.info ("Created tag '{}'", releaseTag1_0)
 
 createPom (sampleRemoteDir, "1.0.1-SNAPSHOT")
 grgit.add (patterns: ['pom.xml'])
