@@ -2,15 +2,16 @@ package de.kontext_e.jqassistant.plugin.git.scanner;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.ListBranchCommand;
+import org.eclipse.jgit.api.LogCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffFormatter;
 import org.eclipse.jgit.diff.RawTextComparator;
+import org.eclipse.jgit.lib.AnyObjectId;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.revwalk.RevTree;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.util.io.DisabledOutputStream;
@@ -41,7 +42,8 @@ public class JGitScanner {
     private static final Logger logger = LoggerFactory.getLogger(JGitScanner.class);
 
     private String path = null;
-    private Map<String,GitCommit> commits = new HashMap<String,GitCommit>();
+    private String range = null;
+    private Map<String,GitCommit> commits = new HashMap<>();
 
     private GitCommit retrieveCommit (String sha) {
         if (!commits.containsKey(sha)) {
@@ -50,8 +52,40 @@ public class JGitScanner {
         return commits.get(sha);
     }
 
-    public JGitScanner (final String path) {
+    public JGitScanner (final String path, String range) {
         this.path = path;
+        this.range = range;
+    }
+
+    protected static LogCommand getLogWithOrWithOutRange (Git git, String range) throws IOException {
+        LogCommand result = git.log();
+
+        if (null == range) {
+            result = result.all();
+        } else {
+            int firstDot = range.indexOf('.');
+            if (firstDot <= 0) {
+                throw new IllegalArgumentException ("Git range must start like '<rev specification>..'");
+            }
+            int lastDot = range.lastIndexOf(".");
+            if (lastDot - firstDot != 1) {
+                throw new IllegalArgumentException ("Git range specials ('three dot notation' etc.) are not supported!");
+            }
+            String sinceString = range.substring(0, firstDot);
+            String untilString = lastDot + 1 < range.length() ? range.substring(lastDot + 1) : "HEAD";
+            logger.debug ("Using range from '{}' to '{}'", sinceString, untilString);
+            AnyObjectId since = git.getRepository().resolve(sinceString);
+            if (null == since) {
+                throw new IllegalArgumentException("Could not retrieve 'since' Range part '" + sinceString + "'");
+            }
+            AnyObjectId until = git.getRepository().resolve(untilString);
+            if (null == until) {
+                throw new IllegalArgumentException("Could not retrieve 'until' Range part '" + untilString + "'");
+            }
+            result = result.addRange(since, until);
+        }
+
+        return result;
     }
 
     public List<GitCommit> findCommits() throws IOException {
@@ -65,8 +99,8 @@ public class JGitScanner {
         RevWalk rw = new RevWalk(repository);
 
         try (Git git = new Git(repository)) {
-            Iterable<RevCommit> commits = null;
-            commits = git.log().all().call();
+            LogCommand logCommand = getLogWithOrWithOutRange(git, range);
+            Iterable<RevCommit> commits = logCommand.call();
 
             DiffFormatter df = new DiffFormatter(DisabledOutputStream.INSTANCE);
             df.setRepository(repository);

@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitTagDescriptor;
+import org.eclipse.jgit.api.Git;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -83,7 +84,7 @@ public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitDes
         final GitDescriptor gitDescriptor = store.create(GitDescriptor.class);
         initGitDescriptor(gitDescriptor, item.getFile());
 
-        JGitScanner jGitScanner = new JGitScanner(gitDescriptor.getFileName());
+        JGitScanner jGitScanner = new JGitScanner(gitDescriptor.getFileName(), range);
 
         List<GitCommit> commits = jGitScanner.findCommits();
         List<GitBranch> branches = jGitScanner.findBranches();
@@ -127,7 +128,12 @@ public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitDes
             GitCommitDescriptor gitCommitDescriptor = commits.get(sha);
             for (GitCommit parent : gitCommit.getParents()) {
                 String parentSha = parent.getSha();
-                gitCommitDescriptor.getParents().add(commits.get(parentSha));
+                GitCommitDescriptor parentCommit = commits.get(parentSha);
+                if (null == parentCommit) {
+                    LOGGER.warn ("Cannot add (parent) commit with SHA '{}' (excluded by range?)", parentSha);
+                } else {
+                    gitCommitDescriptor.getParents().add(parentCommit);
+                }
             }
         }
 
@@ -219,20 +225,25 @@ public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitDes
         }
     }
 
+    private void setRange (String range) {
+        this.range = range;
+        LOGGER.info ("Git plugin has configured range '{}'", range);
+    }
+
     @Override
     protected void configure() {
         super.configure();
 
         Map<String, Object> properties = getProperties();
 
-        final String rangeProperty = (String) properties.get(GIT_RANGE);
+        String rangeProperty = (String) properties.get(GIT_RANGE);
         if(rangeProperty != null) {
-            range = rangeProperty;
+            setRange(rangeProperty);
+        } else {
+            rangeProperty = System.getProperty(GIT_RANGE);
+            if (rangeProperty != null) {
+                setRange(rangeProperty);
+            }
         }
-        if(System.getProperty(GIT_RANGE) != null) {
-            throw new RuntimeException ("Ranges are currently not supported!");
-//            range = System.getProperty(GIT_RANGE);
-        }
-        LOGGER.debug("Git plugin has configured range "+range);
     }
 }

@@ -8,7 +8,7 @@
 |====
 | Name                           | Description
 | jqassistant.plugin.git.range   | Optional: Only commits of this history range were imported. Default: complete
-history (_WARNING_: This is not yet supported due to the incomplete migration to JGit!)
+history (_WARNING_: Only 'two dot' ranges are supported!)
 |====
 
 
