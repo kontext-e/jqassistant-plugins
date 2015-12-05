@@ -180,6 +180,20 @@ public class JGitScanner {
         return result;
     }
 
+    private RevCommit resolveFirstCommitForTag (Git git, Ref tagRef) throws IOException, GitAPIException {
+        LogCommand log = git.log();
+        Ref peeledRef = git.getRepository().peel(tagRef);
+        if(peeledRef.getPeeledObjectId() != null) {
+            log.add(peeledRef.getPeeledObjectId());
+        } else {
+            log.add(tagRef.getObjectId());
+        }
+
+        Iterable<RevCommit> logs = log.call();
+
+        return logs.iterator().next();
+    }
+
     public List<GitTag> findTags () throws IOException {
         Repository repository = getRepository();
 
@@ -189,17 +203,9 @@ public class JGitScanner {
             List<Ref> tags = git.tagList().call();
             for (Ref tagRef : tags) {
                 String label = tagRef.getName();
-                String objectId = ObjectId.toString(tagRef.getObjectId());
-                if (tagRef.isSymbolic()) {
-                    String newObjectId = ObjectId.toString(tagRef.getLeaf().getObjectId());
-                    logger.debug("Tag '{}' is symbolic: use SHA '{}' instead of '{}'", label, newObjectId, objectId);
-                    objectId = newObjectId;
-                } else {
-                    logger.debug("Tag '{}' is real: use SHA '{}'", label, objectId);
-                }
-                if (tagRef.isPeeled()) {
-                    logger.debug("Tag '{}' is peeled: has peeled SHA '{}'", label, ObjectId.toString(tagRef.getPeeledObjectId()));
-                }
+                RevCommit firstCommit = resolveFirstCommitForTag (git, tagRef);
+                String objectId = ObjectId.toString(firstCommit);
+                logger.debug ("Found Tag '{}' (name = '{}', sha = '{}')", tagRef, label, objectId);
                 GitTag newTag = new GitTag (label, objectId);
                 result.add (newTag);
             }
