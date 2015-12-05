@@ -20,8 +20,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -106,9 +104,6 @@ public class JGitScanner {
             df.setRepository(repository);
             df.setDiffComparator(RawTextComparator.DEFAULT);
             df.setDetectRenames(true);
-
-            // TODO Improve this: It does not make sense to forward dates as Strings ...
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
 
             for (RevCommit commit : commits) {
                 logger.debug("Commit-Message: '{}'", commit.getShortMessage());
