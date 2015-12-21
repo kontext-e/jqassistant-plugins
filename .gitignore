@@ -12,3 +12,5 @@ target
 build/
 data/
 neo4j-home/
+*.png
+*.png.cache
