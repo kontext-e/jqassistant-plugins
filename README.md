@@ -4,7 +4,11 @@ This repository contains plugins for buschmais' [jQAssistant](http://jqassistant
 
 How to install
 ==============
-* add [jQAssistant](http://jqassistant.org) to dependencies in your project
+* If you want to add the git plugins to your [jQAssistant](http://jqassistant.org) installation you currently have to
+  manually add the an org.eclipse.jgit jar file to the plugins directory of jqassistant: Use at least version 
+  [4.1.1 from Maven Central](http://search.maven.org/remotecontent?filepath=org/eclipse/jgit/org.eclipse.jgit/4.1.1.201511131810-r/org.eclipse.jgit-4.1.1.201511131810-r.jar).
+
+* add [jQAssistant](http://jqassistant.org) to dependencies in your project (and jgit if git processing is desired).
 
 * declare additional dependencies in your project:
  
@@ -19,17 +23,19 @@ How to install
     - jqassistant.plugin.findbugs.filename=findbugs.xml
     - jqassistant.plugin.jacoco.filename=jacoco.xml
     - jqassistant.plugin.pmd.filename=pmd.xml
-    - jqassistant.plugin.git.path=/usr/bin/git
     - jqassistant.plugin.git.range= - a valid git range if not the complete history should be imported -
 
 * execute jQAssistant tasks
 
+
 Work in progress
 ================
-* PlantUML sequence diagrams
+* PlantUML class diagram packages; please note: although the plantuml plugin will become version 1.1.0, it is
+  far from a complete PlantUML import; in fact, only the packages of class diagrams were imported for now
+  because this is the only thing that is currently needed for architecture rules
 
-Coming soon
-===========
+Coming later
+============
 * Jenkins
 
 ## Continuous Build

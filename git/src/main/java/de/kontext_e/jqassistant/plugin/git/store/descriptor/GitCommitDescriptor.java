@@ -37,4 +37,7 @@ public interface GitCommitDescriptor extends Descriptor {
     @Relation("HAS_FILES")
     List<GitCommitFileDescriptor> getFiles();
 
+    @Relation("HAS_PARENTS")
+    List<GitCommitDescriptor> getParents();
+
 }

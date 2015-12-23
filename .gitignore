@@ -11,3 +11,6 @@ target
 .gradle/
 build/
 data/
+neo4j-home/
+*.png
+*.png.cache

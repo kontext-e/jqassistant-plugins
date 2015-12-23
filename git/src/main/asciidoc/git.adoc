@@ -1,0 +1,191 @@
+<<GitScanner>>
+[[GitScanner]]
+
+== Scanner for Git repositories
+
+.Configuration parameters
+[options="header"]
+|====
+| Name                           | Description
+| jqassistant.plugin.git.range   | Optional: Only commits of this history range were imported. Default: complete
+history (_WARNING_: Only 'two dot' ranges are supported!)
+|====
+
+
+=== :File:Git
+Represents a git repository filesystem directory.
+
+.Relations of :Git
+[options="header"]
+|====
+| Name         | Target label(s)  | Cardinality | Description
+| HAS_COMMITS  | <<:GitCommit>>   | 0..n        | References the commits of the Git repository.
+| HAS_AUTHORS  | <<:GitAuthor>>   | 0..n        | References the authors of the Git repository.
+| HAS_FILES    | <<:GitFile>>     | 0..n        | References the files of the Git repository.
+| HAS_BRANCHES | <<:GitBranch>>   | 0..n        | References the branches of the Git repository.
+| HAS_TAGS     | <<:GitTag>>      | 0..n        | References the tags of the Git repository.
+|====
+
+=== :GitAuthor
+Represents an author who commited to this repository.
+
+.Properties of :GitAuthor
+[options="header"]
+|====
+| Name          | Description
+| identString   | The authors ident string.
+| name          | The authors name.
+| email         | The authors email address.
+|====
+
+.Relations of :GitAuthor
+[options="header"]
+|====
+| Name     | Target label(s)  | Cardinality | Description
+| COMMITED | <<:GitCommit>>   | 0..n        | References the commits of this author.
+|====
+
+=== :GitCommit
+Represents a single commit.
+
+.Properties of :GitCommit
+[options="header"]
+|====
+| Name          | Description
+| sha           | The sha key
+| author        | The author as a string, e.g. Jens Nerche <j.nerche@kontext-e.de>
+| date          | The date with time
+| time          | The time part of the date
+| epoch         | The date in epoch representation: milliseconds since 1970-01-01
+| message       | The commit message
+|====
+
+.Relations of :GitCommit
+[options="header"]
+|====
+| Name              | Target label(s)            | Cardinality | Description
+| HAS_FILES         | <<:GitCommitFile>>         | 0..n        | References the files of this commit
+| HAS_PARENTS       | <<:GitCommit>>             | 0..n        | References to parent <<:GitCommit>>s
+|====
+
+=== :GitCommitFile
+Represents a file contained in one commit.
+
+.Properties of :GitCommitFile
+[options="header"]
+|====
+| Name              | Description
+| modificationKind  | A for added, M for modified, D for deleted
+| relativePath      | Given in the commit, e.g. git/src/main/java/de/kontext_e/jqassistant/plugin/git/scanner/GitScannerPlugin.java
+|====
+
+
+=== :GitFile
+Represents a file in the repository which was added, modified, or deleted in the given range.
+The difference to <<:GitCommitFile>> is that each file has only a single <<:GitFile>> node,
+but may have multiple <<:GitCommitFile>> nodes, one for each commit containing this file.
+
+.Properties of :GitFile
+[options="header"]
+|====
+| Name                      | Description
+| relativePath              | Given in the commit, e.g. git/src/main/java/de/kontext_e/jqassistant/plugin/git/scanner/GitScannerPlugin.java
+| createdAt                 | Full human readable timestamp of creation, e.g. 2014-04-30 11:48:10 +0200
+| deletedAt                 | Full human readable timestamp of deletion, e.g. 2014-04-30 11:48:10 +0200
+| lastModificationAt        | Full human readable timestamp of last modification, e.g. 2014-04-30 11:48:10 +0200
+| createdAtEpoch            | Creation timestamp in epoch representation, e.g. 1398851290000
+| deletedAtEpoch            | Deletion timestamp in epoch representation, e.g. 1398851290000
+| lastModificationAtEpoch   | Last modification timestamp in epoch representation, e.g. 1398851290000
+|====
+
+.Relations of :GitFile
+[options="header"]
+|====
+| Name              | Target label(s)            | Cardinality | Description
+| MODIFIED_BY       | <<:GitCommitFile>>         | 0..n        | References the commit files of this file
+|====
+
+=== :GitBranch
+Represents a Git branch, i.e., a named GitCommit, to allow for easy tracking of concurrent changes such as
+development lines. Hence, it is a reference to <<:GitCommit>>.
+
+.Properties of :GitBranch
+[options="header"]
+|====
+| Name                      | Description
+| name                      | The name of the branch.
+|====
+
+.Relations of :GitBranch
+[options="header"]
+|====
+| Name              | Target label(s)            | Cardinality | Description
+| HEAD              | <<:GitCommit>>             | 1..1        | The reference to the <<:GitCommit>>.
+|====
+
+_Note_: Tracking branches are currently not directly modelled: Misc. Branches may just point to the same <<:GitCommit>>
+
+=== :GitTag
+
+Similar to a <<:GitBranch>>, a Git tag gives a <<:GitCommit>> a name. But it is more used to mark a certain Git
+commit with the Tag (label), e.g., to allow to mark a Git branch when it is no longer needed or when a
+certain event happened (like a release of the software).
+
+.Properties of :GitTag
+[options="header"]
+|====
+| Name                      | Description
+| label                     | The name (label) of the referenced <<:GitCommit>>.
+|====
+
+.Relations of :GitTag
+[options="header"]
+|====
+| Name              | Target label(s)            | Cardinality | Description
+| commit            | <<:GitCommit>>             | 1..1        | The reference to the <<:GitCommit>>.
+|====
+
+
+=== Git Sample Queries
+
+.Find _release/_ branches which are merged to develop!
+[source, cypher]
+----
+MATCH
+    (git:Git)
+      // Any branch
+      --> (branch:GitBranch)
+      -[:HEAD]-> (branchHead:GitCommit)
+      <-[r:HAS_PARENTS*]-(developHead:GitCommit)
+      // The develop branch
+      <-[:HEAD]- (develop:GitBranch {name: "remotes/origin/develop"})
+WHERE branch.name =~ "remotes/origin/release/.*"
+RETURN * // git, develop, branch
+----
+
+
+////
+Playground
+// We are still searching for the contrary of the release/ branch matcher: Find release/ branches which were not
+// merged to develop!
+
+[source, cypher]
+----
+MATCH
+    (git:Git)
+      // Any branch
+      --> (branch:GitBranch)
+      -[:HEAD]-> (branchHead:GitCommit)
+      <-[r:HAS_PARENTS*]-(developHead:GitCommit)
+      <-[:HEAD]- (develop:GitBranch {name: "remotes/origin/develop"})
+WHERE branch.name =~ "remotes/origin/release/.*"
+  AND r is NULL
+RETURN * // git, develop, branch
+//MATCH
+//    (gitD) --> (develop:GitBranch {name: "remotes/origin/develop"}) -[:HEAD]-> (developHead:GitCommit)
+//OPTIONAL MATCH
+//    (developHead)<-[r:HAS_PARENTS*]-(parent:GitCommit)
+//WHERE r is null
+RETURN git
+----
+////

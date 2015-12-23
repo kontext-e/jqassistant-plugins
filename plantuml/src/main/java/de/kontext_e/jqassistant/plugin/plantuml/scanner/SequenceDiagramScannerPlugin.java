@@ -32,7 +32,7 @@ public class SequenceDiagramScannerPlugin extends AbstractScannerPlugin<FileReso
         plantUmlDescriptor.setFileName(path);
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(item.createStream()))) {
-            final PumlLineParser pumlLineParser = new PumlLineParser(store, path.endsWith(".puml") ? ParsingState.ACCEPTING : ParsingState.IGNORING);
+            final PumlLineParser pumlLineParser = new PumlLineParser(store, plantUmlDescriptor, path.endsWith(".puml") ? ParsingState.ACCEPTING : ParsingState.IGNORING);
             String line;
             while ((line = reader.readLine()) != null) {
                 pumlLineParser.parseLine(line);

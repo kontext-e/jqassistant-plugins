@@ -1,5 +1,12 @@
 apply from: "${rootDir}/gradle/uploadArchives.gradle"
 
+apply plugin: 'groovy'
+
 jar {
   baseName = 'jqassistant.plugin.git'
+}
+
+dependencies {
+  testCompile 'org.codehaus.groovy:groovy-all:2.4.+'
+  testCompile 'org.ajoberstar:grgit:1+'
 }

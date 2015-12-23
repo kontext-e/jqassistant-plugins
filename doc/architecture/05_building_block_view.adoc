@@ -7,7 +7,9 @@
 [source, cypher, role=constraint, depends=junit4:TestClass, severity=blocker]
 ----
 MATCH
-    (t)
+    (t:Junit4:Test:Class)
+WHERE NOT
+    t.name =~ ".*Test"
 RETURN
     t AS InvalidTestClass
 ----

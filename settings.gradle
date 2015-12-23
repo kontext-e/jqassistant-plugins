@@ -12,3 +12,5 @@ include 'pmd'
 
 include 'plantuml'
 
+include 'linecount'
+

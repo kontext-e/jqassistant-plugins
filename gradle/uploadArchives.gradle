@@ -49,6 +49,11 @@ if(this.hasProperty('sonatypeUsername')) {
               name 'Jens Nerche'
               email 'j.nerche@kontext-e.de'
             }
+            developer {
+              id 'gerd-aschemann'
+              name 'Gerd Aschemann'
+              email 'gerd@aschemann.net'
+            }
           }
         }
       }

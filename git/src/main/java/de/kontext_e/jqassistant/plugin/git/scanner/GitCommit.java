@@ -1,21 +1,27 @@
 package de.kontext_e.jqassistant.plugin.git.scanner;
 
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
 public class GitCommit {
     private final String sha;
-    private final String author;
-    private final String date;
-    private final List<String> message = new LinkedList<String>();
+    private String author;
+    private Date date;
+    private String message;
     private final List<CommitFile> commitFiles = new LinkedList<CommitFile>();
+    private final List<GitCommit> parents = new LinkedList<GitCommit>();
 
-    public GitCommit(final String sha, final String author, final String date, final List<CommitFile> currentCommitFiles, final List<String> currentMessage) {
+    public GitCommit(final String sha) {
         this.sha = sha;
-        this.author = author;
-        this.date = date;
-        this.commitFiles.addAll(currentCommitFiles);
-        this.message.addAll(currentMessage);
+    }
+
+    private static String buildMessage(final List<String> message) {
+        StringBuilder builder = new StringBuilder();
+        for (String m : message) {
+            builder.append(m).append("\n");
+        }
+        return builder.toString();
     }
 
     public String getSha() {
@@ -25,17 +31,24 @@ public class GitCommit {
     public String getAuthor() {
         return author;
     }
+    protected void setAuthor (final String author) {this.author = author;}
 
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
+    protected void setDate (final Date date) {this.date = date;}
 
-    public List<String> getMessage() {
+    public String getMessage() {
         return message;
     }
+    protected void setMessage (String message) {this.message = message;}
 
     public List<CommitFile> getCommitFiles() {
         return commitFiles;
+    }
+
+    public List<GitCommit> getParents() {
+        return parents;
     }
 
     @Override
@@ -45,33 +58,22 @@ public class GitCommit {
                 ", author='" + author + '\'' +
                 ", date='" + date + '\'' +
                 ", message=" + message +
-                ", commitFiles=" + commitFiles +
                 '}';
     }
 
     @Override
+    /* Equality is only determined by the sha */
     public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
         final GitCommit that = (GitCommit) o;
-
-        if (author != null ? !author.equals(that.author) : that.author != null) return false;
-        if (commitFiles != null ? !commitFiles.equals(that.commitFiles) : that.commitFiles != null) return false;
-        if (date != null ? !date.equals(that.date) : that.date != null) return false;
-        if (message != null ? !message.equals(that.message) : that.message != null) return false;
-        if (sha != null ? !sha.equals(that.sha) : that.sha != null) return false;
-
-        return true;
+        return sha.equals(that.sha);
     }
 
     @Override
+    /* sha is the hashCode */
     public int hashCode() {
-        int result = sha != null ? sha.hashCode() : 0;
-        result = 31 * result + (author != null ? author.hashCode() : 0);
-        result = 31 * result + (date != null ? date.hashCode() : 0);
-        result = 31 * result + (message != null ? message.hashCode() : 0);
-        result = 31 * result + (commitFiles != null ? commitFiles.hashCode() : 0);
-        return result;
+        return sha.hashCode();
     }
 }
