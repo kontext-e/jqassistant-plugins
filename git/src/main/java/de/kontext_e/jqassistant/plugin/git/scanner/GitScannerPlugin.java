@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 
 import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitTagDescriptor;
-import org.eclipse.jgit.api.Git;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,14 +22,14 @@ import com.buschmais.jqassistant.plugin.common.api.scanner.filesystem.FileResour
 import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitAuthorDescriptor;
 import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitBranchDescriptor;
 import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitCommitDescriptor;
-import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitCommitFileDescriptor;
-import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitDescriptor;
+import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitChangeDescriptor;
+import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitRepositoryDescriptor;
 import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitFileDescriptor;
 
 /**
  * @author jn4, Kontext E GmbH
  */
-public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitDescriptor> {
+public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitRepositoryDescriptor> {
 
     private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
     private static final DateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm:ss Z");
@@ -61,7 +60,7 @@ public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitDes
         return true;
     }
 
-    protected static void initGitDescriptor (final GitDescriptor gitDescriptor, final File file) throws IOException {
+    protected static void initGitDescriptor (final GitRepositoryDescriptor gitRepositoryDescriptor, final File file) throws IOException {
         final Path headPath = file.toPath().toAbsolutePath().normalize();
         LOGGER.debug ("Full path to Git directory HEAD is '{}'", headPath);
         final Path gitPath = headPath.getParent(); // Path of dir of /HEAD
@@ -70,32 +69,32 @@ public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitDes
         final Path projectPath = gitPath.getParent(); // Path of parent of dir of /HEAD
         final String projectName = projectPath.toFile().getName();
         LOGGER.debug ("Git Project name is '{}'", projectName);
-        gitDescriptor.setName(projectName);
+        gitRepositoryDescriptor.setName(projectName);
         // For some reason the file name is presented in the neo4j console ...
         // TODO: The file name is not representative - use the project name instead?
-        gitDescriptor.setFileName(pathToGitProject);
+        gitRepositoryDescriptor.setFileName(pathToGitProject);
     }
 
     @Override
-    public GitDescriptor scan(final FileResource item, final String path, final Scope scope, final Scanner scanner) throws IOException {
+    public GitRepositoryDescriptor scan(final FileResource item, final String path, final Scope scope, final Scanner scanner) throws IOException {
         // This is called with path = "/HEAD" since this is the only "accepted" file
         LOGGER.debug ("Scanning Git directory '{}' (call with path: '{}')", item.getFile(), path);
         Store store = scanner.getContext().getStore();
-        final GitDescriptor gitDescriptor = store.create(GitDescriptor.class);
-        initGitDescriptor(gitDescriptor, item.getFile());
+        final GitRepositoryDescriptor gitRepositoryDescriptor = store.create(GitRepositoryDescriptor.class);
+        initGitDescriptor(gitRepositoryDescriptor, item.getFile());
 
-        JGitScanner jGitScanner = new JGitScanner(gitDescriptor.getFileName(), range);
+        JGitScanner jGitScanner = new JGitScanner(gitRepositoryDescriptor.getFileName(), range);
 
         List<GitCommit> commits = jGitScanner.findCommits();
         List<GitBranch> branches = jGitScanner.findBranches();
         List<GitTag> tags = jGitScanner.findTags();
 
-        addCommits(store, gitDescriptor, commits, branches, tags);
+        addCommits(store, gitRepositoryDescriptor, commits, branches, tags);
 
-        return gitDescriptor;
+        return gitRepositoryDescriptor;
     }
 
-    private void addCommits(final Store store, final GitDescriptor gitDescriptor,
+    private void addCommits(final Store store, final GitRepositoryDescriptor gitRepositoryDescriptor,
                             final List<GitCommit> gitCommits, final  List<GitBranch> branches, final List<GitTag> tags) {
         Map<String, GitAuthorDescriptor> authors = new HashMap<>();
         Map<String, GitFileDescriptor> files = new HashMap<>();
@@ -115,7 +114,7 @@ public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitDes
             gitCommitDescriptor.setEpoch(gitCommit.getDate().getTime());
             gitCommitDescriptor.setTime(TIME_FORMAT.format(gitCommit.getDate()));
 
-            gitDescriptor.getCommits().add(gitCommitDescriptor);
+            gitRepositoryDescriptor.getCommits().add(gitCommitDescriptor);
 
             addCommitForAuthor(authors, gitCommit.getAuthor(), store, gitCommitDescriptor);
 
@@ -138,11 +137,11 @@ public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitDes
         }
 
         for (GitAuthorDescriptor gitAuthor : authors.values()) {
-            gitDescriptor.getAuthors().add(gitAuthor);
+            gitRepositoryDescriptor.getAuthors().add(gitAuthor);
         }
 
         for (GitFileDescriptor gitFile : files.values()) {
-            gitDescriptor.getFiles().add(gitFile);
+            gitRepositoryDescriptor.getFiles().add(gitFile);
         }
 
         for (GitBranch gitBranch : branches) {
@@ -157,7 +156,7 @@ public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitDes
                 LOGGER.warn ("Cannot retrieve commit '{}' for branch '{}'", sha, name);
             }
             gitBranchDescriptor.setHead(gitCommitDescriptor);
-            gitDescriptor.getBranches().add(gitBranchDescriptor);
+            gitRepositoryDescriptor.getBranches().add(gitBranchDescriptor);
         }
 
         for (GitTag gitTag : tags) {
@@ -172,7 +171,7 @@ public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitDes
                 LOGGER.warn ("Cannot retrieve commit '{}' for tag '{}'", sha, label);
             }
             gitTagDescriptor.setCommit(gitCommitDescriptor);
-            gitDescriptor.getTags().add(gitTagDescriptor);
+            gitRepositoryDescriptor.getTags().add(gitTagDescriptor);
         }
     }
 
@@ -191,35 +190,29 @@ public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitDes
     }
 
     private void addCommitFiles(final Store store, final GitCommit gitCommit, final GitCommitDescriptor gitCommitDescriptor, final Map<String, GitFileDescriptor> files) {
-        for (CommitFile commitFile : gitCommit.getCommitFiles()) {
-            GitCommitFileDescriptor gitCommitFile = store.create(GitCommitFileDescriptor.class);
-
-            gitCommitFile.setModificationKind(commitFile.getModificationKind());
-            gitCommitFile.setRelativePath(commitFile.getRelativePath());
-
+        for (GitChange gitChange : gitCommit.getGitChanges()) {
+            GitChangeDescriptor gitCommitFile = store.create(GitChangeDescriptor.class);
+            gitCommitFile.setModificationKind(gitChange.getModificationKind());
             gitCommitDescriptor.getFiles().add(gitCommitFile);
-
-            addAsGitFile(files, gitCommitFile, store, gitCommit.getDate());
+            addAsGitFile(files, gitChange.getRelativePath(), gitCommitFile, store, gitCommit.getDate());
         }
     }
 
-    private void addAsGitFile(final Map<String, GitFileDescriptor> files, final GitCommitFileDescriptor commitFile, final Store store, final Date date) {
-        if(!files.containsKey(commitFile.getRelativePath())) {
-            GitFileDescriptor gitFile = store.create(GitFileDescriptor.class);
-            gitFile.setRelativePath(commitFile.getRelativePath());
-            files.put(commitFile.getRelativePath(), gitFile);
+    private void addAsGitFile(final Map<String, GitFileDescriptor> files, String relativePath, final GitChangeDescriptor change, final Store store, final Date date) {
+        GitFileDescriptor gitFileDescriptor = files.get(relativePath);
+        if(gitFileDescriptor == null) {
+            gitFileDescriptor = store.create(GitFileDescriptor.class);
+            gitFileDescriptor.setRelativePath(relativePath);
+            files.put(relativePath, gitFileDescriptor);
         }
-
-        GitFileDescriptor gitFileDescriptor = files.get(commitFile.getRelativePath());
-        gitFileDescriptor.getCommitFiles().add(commitFile);
-
-        if("A".equals(commitFile.getModificationKind().toUpperCase())) {
+        change.setModifies(gitFileDescriptor);
+        if("A".equals(change.getModificationKind().toUpperCase())) {
             gitFileDescriptor.setCreatedAt(DATE_TIME_FORMAT.format(date));
             gitFileDescriptor.setCreatedAtEpoch(date.getTime());
-        } else if("M".equals(commitFile.getModificationKind().toUpperCase())) {
+        } else if("M".equals(change.getModificationKind().toUpperCase())) {
             gitFileDescriptor.setLastModificationAt(DATE_TIME_FORMAT.format(date));
             gitFileDescriptor.setLastModificationAtEpoch(date.getTime());
-        } else if("D".equals(commitFile.getModificationKind().toUpperCase())) {
+        } else if("D".equals(change.getModificationKind().toUpperCase())) {
             gitFileDescriptor.setDeletedAt(DATE_TIME_FORMAT.format(date));
             gitFileDescriptor.setDeletedAtEpoch(date.getTime());
         }

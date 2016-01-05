@@ -2,10 +2,11 @@
         xmlns:jqa-plugin="http://www.buschmais.com/jqassistant/core/plugin/schema/v1.0" name="Git">
     <description>Provides a scanner for git VCS history.</description>
     <model>
-        <class>de.kontext_e.jqassistant.plugin.git.store.descriptor.GitBranchDescriptor</class>
         <class>de.kontext_e.jqassistant.plugin.git.store.descriptor.GitDescriptor</class>
+        <class>de.kontext_e.jqassistant.plugin.git.store.descriptor.GitBranchDescriptor</class>
+        <class>de.kontext_e.jqassistant.plugin.git.store.descriptor.GitRepositoryDescriptor</class>
         <class>de.kontext_e.jqassistant.plugin.git.store.descriptor.GitCommitDescriptor</class>
-        <class>de.kontext_e.jqassistant.plugin.git.store.descriptor.GitCommitFileDescriptor</class>
+        <class>de.kontext_e.jqassistant.plugin.git.store.descriptor.GitChangeDescriptor</class>
         <class>de.kontext_e.jqassistant.plugin.git.store.descriptor.GitAuthorDescriptor</class>
         <class>de.kontext_e.jqassistant.plugin.git.store.descriptor.GitFileDescriptor</class>
         <class>de.kontext_e.jqassistant.plugin.git.store.descriptor.GitTagDescriptor</class>
@@ -13,7 +14,7 @@
     <scanner>
         <class>de.kontext_e.jqassistant.plugin.git.scanner.GitScannerPlugin</class>
     </scanner>
-  <rules>
-      <resource>git.xml</resource>
-  </rules>
+    <rules>
+        <resource>git.xml</resource>
+    </rules>
 </jqa-plugin:jqassistant-plugin>

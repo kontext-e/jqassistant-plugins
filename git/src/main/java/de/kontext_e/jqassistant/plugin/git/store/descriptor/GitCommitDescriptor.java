@@ -2,13 +2,12 @@ package de.kontext_e.jqassistant.plugin.git.store.descriptor;
 
 import java.util.List;
 
-import com.buschmais.jqassistant.core.store.api.model.Descriptor;
 import com.buschmais.xo.neo4j.api.annotation.Label;
 import com.buschmais.xo.neo4j.api.annotation.Property;
 import com.buschmais.xo.neo4j.api.annotation.Relation;
 
-@Label("GitCommit")
-public interface GitCommitDescriptor extends Descriptor {
+@Label("Commit")
+public interface GitCommitDescriptor extends GitDescriptor {
 
     @Property("sha")
     String getSha();
@@ -34,10 +33,10 @@ public interface GitCommitDescriptor extends Descriptor {
     String getMessage();
     void setMessage(String message);
 
-    @Relation("HAS_FILES")
-    List<GitCommitFileDescriptor> getFiles();
+    @Relation("CONTAINS_CHANGE")
+    List<GitChangeDescriptor> getFiles();
 
-    @Relation("HAS_PARENTS")
+    @Relation("HAS_PARENT")
     List<GitCommitDescriptor> getParents();
 
 }

@@ -2,13 +2,13 @@ package de.kontext_e.jqassistant.plugin.git.store.descriptor;
 
 import java.util.List;
 
-import com.buschmais.jqassistant.core.store.api.model.Descriptor;
 import com.buschmais.xo.neo4j.api.annotation.Label;
 import com.buschmais.xo.neo4j.api.annotation.Property;
 import com.buschmais.xo.neo4j.api.annotation.Relation;
+import com.buschmais.xo.neo4j.api.annotation.Relation.Incoming;
 
-@Label("GitFile")
-public interface GitFileDescriptor extends Descriptor {
+@Label("File")
+public interface GitFileDescriptor extends GitDescriptor {
 
     @Property("relativePath")
     String getRelativePath();
@@ -37,8 +37,5 @@ public interface GitFileDescriptor extends Descriptor {
     @Property("lastModificationAtEpoch")
     Long getLastModificationAtEpoch();
     void setLastModificationAtEpoch(Long lastModificationAtEpoch);
-
-    @Relation("MODIFIED_BY")
-    List<GitCommitFileDescriptor> getCommitFiles();
 
 }

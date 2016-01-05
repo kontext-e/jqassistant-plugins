@@ -11,13 +11,13 @@ import com.buschmais.xo.neo4j.api.annotation.Relation;
  * @author Gerd Aschemann - gerd@aschemann.net - @GerdAschemann
  * @since 1.1.0
  */
-@Label("GitBranch")
-public interface GitBranchDescriptor extends Descriptor {
+@Label("Branch")
+public interface GitBranchDescriptor extends GitDescriptor {
     @Property("name")
     public String getName();
     public void setName(String name);
 
-    @Relation("HEAD")
+    @Relation("HAS_HEAD")
     public GitCommitDescriptor getHead();
     public void setHead(GitCommitDescriptor commit);
 }
