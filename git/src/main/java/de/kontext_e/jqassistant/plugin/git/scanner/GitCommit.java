@@ -9,7 +9,7 @@ public class GitCommit {
     private String author;
     private Date date;
     private String message;
-    private final List<CommitFile> commitFiles = new LinkedList<CommitFile>();
+    private final List<GitChange> gitChanges = new LinkedList<GitChange>();
     private final List<GitCommit> parents = new LinkedList<GitCommit>();
 
     public GitCommit(final String sha) {
@@ -43,8 +43,8 @@ public class GitCommit {
     }
     protected void setMessage (String message) {this.message = message;}
 
-    public List<CommitFile> getCommitFiles() {
-        return commitFiles;
+    public List<GitChange> getGitChanges() {
+        return gitChanges;
     }
 
     public List<GitCommit> getParents() {

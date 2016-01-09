@@ -127,8 +127,8 @@ public class JGitScanner {
                         final String newPath = diff.getNewPath();
                         final String path = "D".equalsIgnoreCase(changeType) ? oldPath : newPath;
                         logger.debug("changeType={}, path={}", changeType, path);
-                        final CommitFile commitFile = new CommitFile(changeType, path);
-                        gitCommit.getCommitFiles().add(commitFile);
+                        final GitChange gitChange = new GitChange(changeType, path);
+                        gitCommit.getGitChanges().add(gitChange);
                     }
 
                     String parentSha = ObjectId.toString(parentId);

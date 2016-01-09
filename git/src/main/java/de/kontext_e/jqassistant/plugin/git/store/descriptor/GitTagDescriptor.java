@@ -11,13 +11,13 @@ import com.buschmais.xo.neo4j.api.annotation.Relation;
  * @author Gerd Aschemann - gerd@aschemann.net - @GerdAschemann
  * @since 1.1.0
  */
-@Label("GitTag")
-public interface GitTagDescriptor extends Descriptor {
+@Label("Tag")
+public interface GitTagDescriptor extends GitDescriptor {
     @Property("label")
-    public String getLabel();
+    String getLabel();
     public void setLabel(String name);
 
-    @Relation("commit")
-    public GitCommitDescriptor getCommit();
+    @Relation("ON_COMMIT")
+    GitCommitDescriptor getCommit();
     public void setCommit(GitCommitDescriptor commit);
 }
