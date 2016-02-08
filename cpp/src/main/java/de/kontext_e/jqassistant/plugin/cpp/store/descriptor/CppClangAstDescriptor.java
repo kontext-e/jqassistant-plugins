@@ -1,10 +1,10 @@
 package de.kontext_e.jqassistant.plugin.cpp.store.descriptor;
 
 import com.buschmais.jqassistant.core.store.api.model.Descriptor;
-import com.buschmais.xo.api.annotation.Abstract;
+import com.buschmais.jqassistant.plugin.common.api.model.FileDescriptor;
 import com.buschmais.xo.neo4j.api.annotation.Label;
 
-@Label("Cpp")
-@Abstract
-public interface CppDescriptor extends Descriptor {
+@Label("Ast")
+public interface CppClangAstDescriptor extends Descriptor, FileDescriptor {
+    void addClass();
 }
