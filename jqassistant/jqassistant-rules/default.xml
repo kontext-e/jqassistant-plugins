@@ -5,9 +5,9 @@
         <description>For debugging purposes</description>
         <cypher><![CDATA[
                 match
-                    (g:GitFile)
+                    (g:Cpp)
                 return
-                    g.relativePath
+                    g.fileName
         ]]></cypher>
     </constraint>
 
@@ -39,8 +39,8 @@
 
     <group id="default">
         <includeConstraint refId="dependency:WrongDirection" severity="critical"/>
-        <!--
         <includeConstraint refId="debug:rule" severity="info"/>
+        <!--
         -->
     </group>
 

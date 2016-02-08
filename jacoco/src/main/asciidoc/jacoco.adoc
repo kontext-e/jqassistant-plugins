@@ -1,0 +1,33 @@
+<<JacocoScanner>>
+[[JacocoScanner]]
+
+== Scanner for JaCoCo report files
+Accepts all files with the given file name (default: jacocoTestReport.xml) or
+being in a directory named 'jacoco' and end with '.xml'.
+
+.Configuration parameters
+[options="header"]
+|====
+| Name                                  | Description
+| jqassistant.plugin.jacoco.filename    | Optional: file name of the JaCoCo XML report file. Default: jacocoTestReport.xml
+|====
+
+=== :File:Jacoco
+Represents a JaCoCo report file.
+
+.Relations
+[options="header"]
+|====
+| Name              | Target label(s)       | Cardinality | Description
+| JACOCO_PACKAGES   | <<:JacocoPackage>>    | 0..n        | A Java package containing the Java classes for which the test coverage were recorded.
+|====
+
+=== :JacocoPackage
+Represents a Java package containing the Java classes for which the test coverage were recorded.
+
+.Relations
+[options="header"]
+|====
+| Name              | Target label(s)       | Cardinality | Description
+| JACOCO_CLASSES    | <<:JacocoClass>>      | 0..n        | A Java class for which the test coverage were recorded.
+|====

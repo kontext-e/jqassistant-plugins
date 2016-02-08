@@ -1,0 +1,12 @@
+<jqa:jqassistant-rules xmlns:jqa="http://www.buschmais.com/jqassistant/core/analysis/rules/schema/v1.0">
+
+  <concept id="cpp:Cpp">
+    <description>.</description>
+    <cypher><![CDATA[
+            MATCH
+              (c:Cpp)
+            RETURN count(c);
+	    ]]></cypher>
+  </concept>
+
+</jqa:jqassistant-rules>
