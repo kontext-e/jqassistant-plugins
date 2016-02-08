@@ -6,5 +6,4 @@ import com.buschmais.xo.neo4j.api.annotation.Label;
 
 @Label("Ast")
 public interface CppClangAstDescriptor extends Descriptor, FileDescriptor {
-    void addClass();
 }

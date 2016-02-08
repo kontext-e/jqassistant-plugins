@@ -28,7 +28,7 @@ public class CppAstParser {
 
     private void parseLine(final Store store, final String line) {
         String normalizedLine = line.trim();
-        if(normalizedLine.startsWith("CXXRecordDecl")) {
+        if(normalizedLine.contains("CXXRecordDecl")) {
             parseCxxRecordDecl(store, normalizedLine);
         }
     }
@@ -36,6 +36,9 @@ public class CppAstParser {
     private void parseCxxRecordDecl(final Store store, final String normalizedLine) {
         if(normalizedLine.endsWith("definition") && normalizedLine.contains(" class ")) {
             ClassDescriptor classDescriptor = store.create(ClassDescriptor.class);
+            int indexOfClass = normalizedLine.indexOf(" class ");
+            int indexOfDefinition = normalizedLine.indexOf("definition", indexOfClass);
+            classDescriptor.setName(normalizedLine.substring(indexOfClass + "class ".length(), indexOfDefinition).trim());
         }
     }
 }

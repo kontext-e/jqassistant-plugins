@@ -2,6 +2,7 @@
     <description>Provides a scanner for Checkstyle XML result files.</description>
     <model>
         <class>de.kontext_e.jqassistant.plugin.cpp.store.descriptor.CppClangAstDescriptor</class>
+        <class>de.kontext_e.jqassistant.plugin.cpp.store.descriptor.ClassDescriptor</class>
     </model>
     <scanner>
         <class>de.kontext_e.jqassistant.plugin.cpp.scanner.CppScannerPlugin</class>

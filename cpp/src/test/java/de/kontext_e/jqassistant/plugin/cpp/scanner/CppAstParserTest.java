@@ -10,6 +10,7 @@ import de.kontext_e.jqassistant.plugin.cpp.store.descriptor.ClassDescriptor;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.when;
 
 public class CppAstParserTest {
 
@@ -33,12 +34,15 @@ public class CppAstParserTest {
     @Test
     public void parseCxxRecordDefinition() throws Exception {
         ByteArrayInputStream is = new ByteArrayInputStream(
-                "     CXXRecordDecl 0x2b24038 <line:12:1, line:36:1> line:12:7 class Alice definition     "
+                "|-CXXRecordDecl 0x2b24038 <line:12:1, line:36:1> line:12:7 class Alice definition     "
                         .getBytes());
+        ClassDescriptor mockClassDescriptor = mock(ClassDescriptor.class);
+        when(store.create(ClassDescriptor.class)).thenReturn(mockClassDescriptor);
 
         cppAstParser.readStream(store, is);
 
         verify(store).create(ClassDescriptor.class);
+        verify(mockClassDescriptor).setName("Alice");
     }
 
 

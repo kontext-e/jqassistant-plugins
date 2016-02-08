@@ -190,6 +190,7 @@ task(jqascan, dependsOn: 'removeJQAReport', type: JavaExec) {
   args '-p'
   args 'jqassistant/jqassistant.properties'
   args '-f'
+/*
   args 'checkstyle/src/main'
   args 'findbugs/src/main'
   args 'git/src/main'
@@ -208,7 +209,6 @@ task(jqascan, dependsOn: 'removeJQAReport', type: JavaExec) {
   args 'plantuml/build/reports'
   args 'cpp/build/reports'
 //  args 'plantuml/src/test/plantuml'
-  args 'cpp/src/test/ast'
   args 'plantuml/src/test/asciidoc'
   args 'java:classpath::checkstyle/build/classes'
   args 'java:classpath::findbugs/build/classes'
@@ -218,6 +218,10 @@ task(jqascan, dependsOn: 'removeJQAReport', type: JavaExec) {
   args 'java:classpath::pmd/build/classes'
   args 'java:classpath::plantuml/build/classes'
   args 'java:classpath::cpp/build/classes'
+
+  args 'cpp/src/test/ast'
+*/
+  args 'privatetestdata'
 
   args '.git'
 
