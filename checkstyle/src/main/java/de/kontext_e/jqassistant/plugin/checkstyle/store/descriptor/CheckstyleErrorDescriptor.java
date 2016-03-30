@@ -9,7 +9,7 @@ import com.buschmais.xo.neo4j.api.annotation.Property;
  * @author jn4, Kontext E GmbH, 11.02.14
  */
 @Label("CheckstyleError")
-public interface ErrorDescriptor extends Descriptor {
+public interface CheckstyleErrorDescriptor extends Descriptor {
 
     @Property("line")
     String getLine();

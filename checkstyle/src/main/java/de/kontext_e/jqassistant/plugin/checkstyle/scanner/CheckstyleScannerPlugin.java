@@ -19,15 +19,15 @@ import de.kontext_e.jqassistant.plugin.checkstyle.jaxb.CheckstyleType;
 import de.kontext_e.jqassistant.plugin.checkstyle.jaxb.ErrorType;
 import de.kontext_e.jqassistant.plugin.checkstyle.jaxb.FileType;
 import de.kontext_e.jqassistant.plugin.checkstyle.jaxb.ObjectFactory;
-import de.kontext_e.jqassistant.plugin.checkstyle.store.descriptor.CheckstyleDescriptor;
-import de.kontext_e.jqassistant.plugin.checkstyle.store.descriptor.ErrorDescriptor;
-import de.kontext_e.jqassistant.plugin.checkstyle.store.descriptor.FileDescriptor;
+import de.kontext_e.jqassistant.plugin.checkstyle.store.descriptor.CheckstyleReportDescriptor;
+import de.kontext_e.jqassistant.plugin.checkstyle.store.descriptor.CheckstyleErrorDescriptor;
+import de.kontext_e.jqassistant.plugin.checkstyle.store.descriptor.CheckstyleFileDescriptor;
 
 
 /**
  * @author jn4, Kontext E GmbH, 11.02.14
  */
-public class CheckstyleScannerPlugin extends AbstractScannerPlugin<FileResource, CheckstyleDescriptor> {
+public class CheckstyleScannerPlugin extends AbstractScannerPlugin<FileResource, CheckstyleReportDescriptor> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CheckstyleScannerPlugin.class);
     public static final String JQASSISTANT_PLUGIN_CHECKSTYLE_BASEPACKAGE = "jqassistant.plugin.checkstyle.basepackage";
@@ -56,34 +56,34 @@ public class CheckstyleScannerPlugin extends AbstractScannerPlugin<FileResource,
     }
 
     @Override
-    public CheckstyleDescriptor scan(final FileResource file, String path, Scope scope, Scanner scanner) throws IOException {
+    public CheckstyleReportDescriptor scan(final FileResource file, String path, Scope scope, Scanner scanner) throws IOException {
         LOGGER.debug("Checkstyle scans path "+path);
         final CheckstyleType checkstyleType = unmarshalCheckstyleXml(file.createStream());
-        final CheckstyleDescriptor checkstyleDescriptor = scanner.getContext().getStore().create(CheckstyleDescriptor.class);
-        checkstyleDescriptor.setFileName(path);
-        readFiles(scanner.getContext().getStore(), checkstyleType, checkstyleDescriptor);
-        return checkstyleDescriptor;
+        final CheckstyleReportDescriptor checkstyleReportDescriptor = scanner.getContext().getStore().create(CheckstyleReportDescriptor.class);
+        checkstyleReportDescriptor.setFileName(path);
+        readFiles(scanner.getContext().getStore(), checkstyleType, checkstyleReportDescriptor);
+        return checkstyleReportDescriptor;
     }
 
-    private void readFiles(final Store store, final CheckstyleType checkstyleType, final CheckstyleDescriptor checkstyleDescriptor) {
+    private void readFiles(final Store store, final CheckstyleType checkstyleType, final CheckstyleReportDescriptor checkstyleReportDescriptor) {
         for (FileType fileType : checkstyleType.getFile()) {
-            final FileDescriptor fileDescriptor = store.create(FileDescriptor.class);
-            fileDescriptor.setName(truncateName(fileType.getName()));
-            fileDescriptor.setFullQualifiedName(convertToFullQualifiedName(fileType.getName()));
-            checkstyleDescriptor.getFiles().add(fileDescriptor);
-            readErrors(store, fileType, fileDescriptor);
+            final CheckstyleFileDescriptor checkstyleFileDescriptor = store.create(CheckstyleFileDescriptor.class);
+            checkstyleFileDescriptor.setName(truncateName(fileType.getName()));
+            checkstyleFileDescriptor.setFullQualifiedName(convertToFullQualifiedName(fileType.getName()));
+            checkstyleReportDescriptor.getFiles().add(checkstyleFileDescriptor);
+            readErrors(store, fileType, checkstyleFileDescriptor);
         }
     }
 
-    private void readErrors(final Store store, final FileType fileType, final FileDescriptor fileDescriptor) {
+    private void readErrors(final Store store, final FileType fileType, final CheckstyleFileDescriptor checkstyleFileDescriptor) {
         for (ErrorType errorType : fileType.getError()) {
-            final ErrorDescriptor errorDescriptor = store.create(ErrorDescriptor.class);
-            errorDescriptor.setLine(errorType.getLine());
-            errorDescriptor.setColumn(errorType.getColumn());
-            errorDescriptor.setSeverity(errorType.getSeverity());
-            errorDescriptor.setMessage(errorType.getMessage());
-            errorDescriptor.setSource(errorType.getSource());
-            fileDescriptor.getErrors().add(errorDescriptor);
+            final CheckstyleErrorDescriptor checkstyleErrorDescriptor = store.create(CheckstyleErrorDescriptor.class);
+            checkstyleErrorDescriptor.setLine(errorType.getLine());
+            checkstyleErrorDescriptor.setColumn(errorType.getColumn());
+            checkstyleErrorDescriptor.setSeverity(errorType.getSeverity());
+            checkstyleErrorDescriptor.setMessage(errorType.getMessage());
+            checkstyleErrorDescriptor.setSource(errorType.getSource());
+            checkstyleFileDescriptor.getErrors().add(checkstyleErrorDescriptor);
         }
     }
 
