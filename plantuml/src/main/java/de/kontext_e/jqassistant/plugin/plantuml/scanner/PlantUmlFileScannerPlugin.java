@@ -11,10 +11,10 @@ import com.buschmais.jqassistant.core.scanner.api.Scope;
 import com.buschmais.jqassistant.core.store.api.Store;
 import com.buschmais.jqassistant.plugin.common.api.scanner.AbstractScannerPlugin;
 import com.buschmais.jqassistant.plugin.common.api.scanner.filesystem.FileResource;
-import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlDescriptor;
+import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlFileDescriptor;
 
-public class SequenceDiagramScannerPlugin extends AbstractScannerPlugin<FileResource, PlantUmlDescriptor> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(SequenceDiagramScannerPlugin.class);
+public class PlantUmlFileScannerPlugin extends AbstractScannerPlugin<FileResource, PlantUmlFileDescriptor> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(PlantUmlFileScannerPlugin.class);
 
     @Override
     public boolean accepts(final FileResource item, final String path, final Scope scope) throws IOException {
@@ -26,20 +26,20 @@ public class SequenceDiagramScannerPlugin extends AbstractScannerPlugin<FileReso
     }
 
     @Override
-    public PlantUmlDescriptor scan(final FileResource item, final String path, final Scope scope, final Scanner scanner) throws IOException {
+    public PlantUmlFileDescriptor scan(final FileResource item, final String path, final Scope scope, final Scanner scanner) throws IOException {
         final Store store = scanner.getContext().getStore();
-        final PlantUmlDescriptor plantUmlDescriptor = store.create(PlantUmlDescriptor.class);
-        plantUmlDescriptor.setFileName(path);
+        final PlantUmlFileDescriptor plantUmlFileDescriptor = store.create(PlantUmlFileDescriptor.class);
+        plantUmlFileDescriptor.setFileName(path);
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(item.createStream()))) {
-            final PumlLineParser pumlLineParser = new PumlLineParser(store, plantUmlDescriptor, path.endsWith(".puml") ? ParsingState.ACCEPTING : ParsingState.IGNORING);
+            final PumlLineParser pumlLineParser = new PumlLineParser(store, plantUmlFileDescriptor, path.endsWith(".puml") ? ParsingState.ACCEPTING : ParsingState.IGNORING);
             String line;
             while ((line = reader.readLine()) != null) {
                 pumlLineParser.parseLine(line);
             }
         }
 
-        return plantUmlDescriptor;
+        return plantUmlFileDescriptor;
     }
 
 

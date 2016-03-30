@@ -9,7 +9,7 @@ import com.buschmais.xo.neo4j.api.annotation.Label;
 import com.buschmais.xo.neo4j.api.annotation.Relation;
 
 @Label("PlantUml")
-public interface PlantUmlDescriptor extends Descriptor, NamedDescriptor, FileDescriptor {
+public interface PlantUmlFileDescriptor extends Descriptor, NamedDescriptor, FileDescriptor {
 
     @Relation("CONTAINS")
     Set<PlantUmlElement> getPlantUmlElements();
