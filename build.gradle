@@ -190,7 +190,7 @@ task(jqascan, dependsOn: 'removeJQAReport', type: JavaExec) {
   args '-p'
   args 'jqassistant/jqassistant.properties'
   args '-f'
-/*
+
   args 'checkstyle/src/main'
   args 'findbugs/src/main'
   args 'git/src/main'
@@ -219,9 +219,8 @@ task(jqascan, dependsOn: 'removeJQAReport', type: JavaExec) {
   args 'java:classpath::plantuml/build/classes'
   args 'java:classpath::cpp/build/classes'
 
-  args 'cpp/src/test/ast'
-*/
-  args 'privatetestdata'
+  //args 'cpp/src/test/ast'
+  //args 'privatetestdata'
 
   args '.git'
 
