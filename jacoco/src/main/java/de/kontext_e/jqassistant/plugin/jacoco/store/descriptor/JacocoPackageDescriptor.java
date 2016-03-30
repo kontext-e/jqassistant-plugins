@@ -11,7 +11,7 @@ import com.buschmais.xo.neo4j.api.annotation.Relation;
  * @author jn4, Kontext E GmbH, 11.02.14
  */
 @Label("JacocoPackage")
-public interface PackageDescriptor extends Descriptor, NamedDescriptor {
+public interface JacocoPackageDescriptor extends Descriptor, NamedDescriptor {
     @Relation("JACOCO_CLASSES")
-    Set<ClassDescriptor> getJacocoClasses();
+    Set<JacocoClassDescriptor> getJacocoClasses();
 }

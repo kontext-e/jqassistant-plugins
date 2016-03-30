@@ -12,7 +12,7 @@ import com.buschmais.xo.neo4j.api.annotation.Relation;
  * @author jn4, Kontext E GmbH, 11.02.14
  */
 @Label("JacocoMethod")
-public interface MethodDescriptor extends Descriptor, NamedDescriptor {
+public interface JacocoMethodDescriptor extends Descriptor, NamedDescriptor {
 
     @Property("signature")
     String getSignature();
@@ -23,5 +23,5 @@ public interface MethodDescriptor extends Descriptor, NamedDescriptor {
     void setLine(String value);
 
     @Relation("JACOCO_COUNTERS")
-    Set<CounterDescriptor> getJacocoCounters();
+    Set<JacocoCounterDescriptor> getJacocoCounters();
 }

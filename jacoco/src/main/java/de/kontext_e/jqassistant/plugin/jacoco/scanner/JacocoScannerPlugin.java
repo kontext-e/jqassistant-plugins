@@ -1,18 +1,8 @@
 package de.kontext_e.jqassistant.plugin.jacoco.scanner;
 
-import com.buschmais.jqassistant.core.scanner.api.Scanner;
-import com.buschmais.jqassistant.core.scanner.api.Scope;
-import com.buschmais.jqassistant.core.store.api.Store;
-import com.buschmais.jqassistant.plugin.common.api.scanner.AbstractScannerPlugin;
-import com.buschmais.jqassistant.plugin.common.api.scanner.filesystem.FileResource;
-import de.kontext_e.jqassistant.plugin.jacoco.jaxb.*;
-import de.kontext_e.jqassistant.plugin.jacoco.store.descriptor.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
-
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -20,14 +10,33 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.sax.SAXSource;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+
+import com.buschmais.jqassistant.core.scanner.api.Scanner;
+import com.buschmais.jqassistant.core.scanner.api.Scope;
+import com.buschmais.jqassistant.core.store.api.Store;
+import com.buschmais.jqassistant.plugin.common.api.scanner.AbstractScannerPlugin;
+import com.buschmais.jqassistant.plugin.common.api.scanner.filesystem.FileResource;
+import de.kontext_e.jqassistant.plugin.jacoco.jaxb.ClassType;
+import de.kontext_e.jqassistant.plugin.jacoco.jaxb.CounterType;
+import de.kontext_e.jqassistant.plugin.jacoco.jaxb.MethodType;
+import de.kontext_e.jqassistant.plugin.jacoco.jaxb.ObjectFactory;
+import de.kontext_e.jqassistant.plugin.jacoco.jaxb.PackageType;
+import de.kontext_e.jqassistant.plugin.jacoco.jaxb.ReportType;
+import de.kontext_e.jqassistant.plugin.jacoco.store.descriptor.JacocoClassDescriptor;
+import de.kontext_e.jqassistant.plugin.jacoco.store.descriptor.JacocoCounterDescriptor;
+import de.kontext_e.jqassistant.plugin.jacoco.store.descriptor.JacocoReportDescriptor;
+import de.kontext_e.jqassistant.plugin.jacoco.store.descriptor.JacocoMethodDescriptor;
+import de.kontext_e.jqassistant.plugin.jacoco.store.descriptor.JacocoPackageDescriptor;
 
 /**
  * @author jn4, Kontext E GmbH, 11.02.14
  */
-public class JacocoScannerPlugin extends AbstractScannerPlugin<FileResource,JacocoDescriptor > {
+public class JacocoScannerPlugin extends AbstractScannerPlugin<FileResource,JacocoReportDescriptor> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JacocoScannerPlugin.class);
     public static final String JQASSISTANT_PLUGIN_JACOCO_FILENAME = "jqassistant.plugin.jacoco.filename";
@@ -66,53 +75,53 @@ public class JacocoScannerPlugin extends AbstractScannerPlugin<FileResource,Jaco
     }
 
     @Override
-    public JacocoDescriptor scan(final FileResource file, String path, Scope scope, Scanner scanner) throws IOException {
+    public JacocoReportDescriptor scan(final FileResource file, String path, Scope scope, Scanner scanner) throws IOException {
         LOGGER.debug("Jacoco plugin scans "+path);
-        final JacocoDescriptor jacocoDescriptor = scanner.getContext().getStore().create(JacocoDescriptor.class);
-        jacocoDescriptor.setFileName(path);
+        final JacocoReportDescriptor jacocoReportDescriptor = scanner.getContext().getStore().create(JacocoReportDescriptor.class);
+        jacocoReportDescriptor.setFileName(path);
         final ReportType reportType = unmarshalJacocoXml(file.createStream());
-        readPackages(scanner.getContext().getStore(), reportType, jacocoDescriptor);
-        return jacocoDescriptor;
+        readPackages(scanner.getContext().getStore(), reportType, jacocoReportDescriptor);
+        return jacocoReportDescriptor;
     }
 
-    private void readPackages(final Store store, final ReportType reportType, final JacocoDescriptor jacocoDescriptor) {
+    private void readPackages(final Store store, final ReportType reportType, final JacocoReportDescriptor jacocoReportDescriptor) {
         for (PackageType packageType : reportType.getPackage()) {
-            final PackageDescriptor packageDescriptor = store.create(PackageDescriptor.class);
-            packageDescriptor.setName(packageType.getName());
-            readClasses(store, packageType, packageDescriptor);
-            jacocoDescriptor.getJacocoPackages().add(packageDescriptor);
+            final JacocoPackageDescriptor jacocoPackageDescriptor = store.create(JacocoPackageDescriptor.class);
+            jacocoPackageDescriptor.setName(packageType.getName());
+            readClasses(store, packageType, jacocoPackageDescriptor);
+            jacocoReportDescriptor.getJacocoPackages().add(jacocoPackageDescriptor);
         }
     }
 
-    private void readClasses(final Store store, final PackageType packageType, final PackageDescriptor packageDescriptor) {
+    private void readClasses(final Store store, final PackageType packageType, final JacocoPackageDescriptor jacocoPackageDescriptor) {
         for (ClassType classType : packageType.getClazz()) {
-            final ClassDescriptor classDescriptor = store.create(ClassDescriptor.class);
-            classDescriptor.setName(classType.getName());
-            classDescriptor.setFullQualifiedName(classDescriptor.getName().replaceAll("/", "."));
-            readMethods(store, classType, classDescriptor);
-            packageDescriptor.getJacocoClasses().add(classDescriptor);
+            final JacocoClassDescriptor jacocoClassDescriptor = store.create(JacocoClassDescriptor.class);
+            jacocoClassDescriptor.setName(classType.getName());
+            jacocoClassDescriptor.setFullQualifiedName(jacocoClassDescriptor.getName().replaceAll("/", "."));
+            readMethods(store, classType, jacocoClassDescriptor);
+            jacocoPackageDescriptor.getJacocoClasses().add(jacocoClassDescriptor);
         }
     }
 
-    private void readMethods(final Store store, final ClassType classType, final ClassDescriptor classDescriptor) {
+    private void readMethods(final Store store, final ClassType classType, final JacocoClassDescriptor jacocoClassDescriptor) {
         for (MethodType methodType : classType.getMethod()) {
-            final MethodDescriptor methodDescriptor = store.create(MethodDescriptor.class);
-            methodDescriptor.setName(methodType.getName());
-            methodDescriptor.setSignature(getMethodSignature(methodType.getName(), methodType.getDesc()));
-            methodDescriptor.setLine(methodType.getLine());
-            classDescriptor.getJacocoMethods().add(methodDescriptor);
-            readCounters(store, methodType, methodDescriptor);
+            final JacocoMethodDescriptor jacocoMethodDescriptor = store.create(JacocoMethodDescriptor.class);
+            jacocoMethodDescriptor.setName(methodType.getName());
+            jacocoMethodDescriptor.setSignature(getMethodSignature(methodType.getName(), methodType.getDesc()));
+            jacocoMethodDescriptor.setLine(methodType.getLine());
+            jacocoClassDescriptor.getJacocoMethods().add(jacocoMethodDescriptor);
+            readCounters(store, methodType, jacocoMethodDescriptor);
         }
 
     }
 
-    private void readCounters(final Store store, final MethodType methodType, final MethodDescriptor methodDescriptor) {
+    private void readCounters(final Store store, final MethodType methodType, final JacocoMethodDescriptor jacocoMethodDescriptor) {
         for (CounterType counterType : methodType.getCounter()) {
-            final CounterDescriptor counterDescriptor = store.create(CounterDescriptor.class);
-            counterDescriptor.setType(counterType.getType());
-            counterDescriptor.setMissed(Long.valueOf(counterType.getMissed()));
-            counterDescriptor.setCovered(Long.valueOf(counterType.getCovered()));
-            methodDescriptor.getJacocoCounters().add(counterDescriptor);
+            final JacocoCounterDescriptor jacocoCounterDescriptor = store.create(JacocoCounterDescriptor.class);
+            jacocoCounterDescriptor.setType(counterType.getType());
+            jacocoCounterDescriptor.setMissed(Long.valueOf(counterType.getMissed()));
+            jacocoCounterDescriptor.setCovered(Long.valueOf(counterType.getCovered()));
+            jacocoMethodDescriptor.getJacocoCounters().add(jacocoCounterDescriptor);
         }
     }
 

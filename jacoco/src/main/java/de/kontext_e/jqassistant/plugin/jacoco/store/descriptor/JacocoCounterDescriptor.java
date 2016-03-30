@@ -8,7 +8,7 @@ import com.buschmais.xo.neo4j.api.annotation.Property;
  * @author jn4, Kontext E GmbH, 11.02.14
  */
 @Label("JacocoCounter")
-public interface CounterDescriptor extends Descriptor {
+public interface JacocoCounterDescriptor extends Descriptor {
 
     @Property("type")
     String getType();
