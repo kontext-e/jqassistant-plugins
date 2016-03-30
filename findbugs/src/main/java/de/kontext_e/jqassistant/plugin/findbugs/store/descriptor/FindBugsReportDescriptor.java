@@ -14,7 +14,7 @@ import com.buschmais.xo.neo4j.api.annotation.Relation;
  * @author jn4, Kontext E GmbH, 05.02.14
  */
 @Label("FindBugs")
-public interface FindBugsDescriptor extends Descriptor, NamedDescriptor, FileDescriptor {
+public interface FindBugsReportDescriptor extends Descriptor, NamedDescriptor, FileDescriptor {
     @Property("version")
     String getVersion();
     void setVersion(String version);
@@ -28,5 +28,5 @@ public interface FindBugsDescriptor extends Descriptor, NamedDescriptor, FileDes
     void setAnalysisTimestamp(String analysisTimestamp);
 
     @Relation("CONTAINS")
-    List<BugInstanceDescriptor> getContains();
+    List<FindBugsBugInstanceDescriptor> getContains();
 }

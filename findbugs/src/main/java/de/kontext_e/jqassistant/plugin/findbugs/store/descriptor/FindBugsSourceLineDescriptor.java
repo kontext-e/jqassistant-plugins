@@ -9,7 +9,7 @@ import com.buschmais.xo.neo4j.api.annotation.Property;
  * @author jn4, Kontext E GmbH, 05.02.14
  */
 @Label("SourceLine")
-public interface SourceLineDescriptor extends Descriptor {
+public interface FindBugsSourceLineDescriptor extends Descriptor {
 
     @Property("fqn")
     String getClassname();

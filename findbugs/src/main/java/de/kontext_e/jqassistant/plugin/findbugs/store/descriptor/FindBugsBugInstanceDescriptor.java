@@ -11,7 +11,7 @@ import com.buschmais.xo.neo4j.api.annotation.Relation;
  * @author jn4, Kontext E GmbH, 05.02.14
  */
 @Label("BugInstance")
-public interface BugInstanceDescriptor extends Descriptor, SourceLineContainingDescriptor {
+public interface FindBugsBugInstanceDescriptor extends Descriptor, FindBugsSourceLineContainingDescriptor {
     @Property("type")
     String getType();
     void setType(String type);
@@ -29,12 +29,12 @@ public interface BugInstanceDescriptor extends Descriptor, SourceLineContainingD
     void setCategory(String category);
 
     @Relation("CLASS")
-    BugInstanceClassDescriptor getBugInstanceClass();
-    void setBugInstanceClass(BugInstanceClassDescriptor bugInstanceClassDescriptor);
+    FindBugsBugInstanceClassDescriptor getBugInstanceClass();
+    void setBugInstanceClass(FindBugsBugInstanceClassDescriptor findBugsBugInstanceClassDescriptor);
 
     @Relation("METHODS")
-    List<BugInstanceMethodDescriptor> getBugInstanceMethods();
+    List<FindBugsBugInstanceMethodDescriptor> getBugInstanceMethods();
 
     @Relation("FIELDS")
-    List<BugInstanceFieldDescriptor> getBugInstanceFields();
+    List<FindBugsBugInstanceFieldDescriptor> getBugInstanceFields();
 }

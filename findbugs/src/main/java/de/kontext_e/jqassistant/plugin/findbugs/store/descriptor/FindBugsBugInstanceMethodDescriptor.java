@@ -7,7 +7,7 @@ import com.buschmais.xo.neo4j.api.annotation.Label;
 import com.buschmais.xo.neo4j.api.annotation.Property;
 
 @Label("BugInstanceMethod")
-public interface BugInstanceMethodDescriptor extends Descriptor, NamedDescriptor, FullQualifiedNameDescriptor, SourceLineContainingDescriptor {
+public interface FindBugsBugInstanceMethodDescriptor extends Descriptor, NamedDescriptor, FullQualifiedNameDescriptor, FindBugsSourceLineContainingDescriptor {
 
     @Property("signature")
     String getSignature();

@@ -2,12 +2,12 @@
         xmlns:jqa-plugin="http://www.buschmais.com/jqassistant/core/plugin/schema/v1.0" name="FindBugs">
     <description>Provides a scanner for FindBugs XML result files.</description>
     <model>
-        <class>de.kontext_e.jqassistant.plugin.findbugs.store.descriptor.FindBugsDescriptor</class>
-        <class>de.kontext_e.jqassistant.plugin.findbugs.store.descriptor.BugInstanceDescriptor</class>
-        <class>de.kontext_e.jqassistant.plugin.findbugs.store.descriptor.SourceLineDescriptor</class>
-        <class>de.kontext_e.jqassistant.plugin.findbugs.store.descriptor.BugInstanceClassDescriptor</class>
-        <class>de.kontext_e.jqassistant.plugin.findbugs.store.descriptor.BugInstanceMethodDescriptor</class>
-        <class>de.kontext_e.jqassistant.plugin.findbugs.store.descriptor.BugInstanceFieldDescriptor</class>
+        <class>de.kontext_e.jqassistant.plugin.findbugs.store.descriptor.FindBugsReportDescriptor</class>
+        <class>de.kontext_e.jqassistant.plugin.findbugs.store.descriptor.FindBugsBugInstanceDescriptor</class>
+        <class>de.kontext_e.jqassistant.plugin.findbugs.store.descriptor.FindBugsSourceLineDescriptor</class>
+        <class>de.kontext_e.jqassistant.plugin.findbugs.store.descriptor.FindBugsBugInstanceClassDescriptor</class>
+        <class>de.kontext_e.jqassistant.plugin.findbugs.store.descriptor.FindBugsBugInstanceMethodDescriptor</class>
+        <class>de.kontext_e.jqassistant.plugin.findbugs.store.descriptor.FindBugsBugInstanceFieldDescriptor</class>
     </model>
     <scanner>
         <class>de.kontext_e.jqassistant.plugin.findbugs.scanner.FindBugsScannerPlugin</class>

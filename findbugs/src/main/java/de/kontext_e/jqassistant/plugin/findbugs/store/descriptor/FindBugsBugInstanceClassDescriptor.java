@@ -5,6 +5,6 @@ import com.buschmais.jqassistant.core.store.api.model.FullQualifiedNameDescripto
 import com.buschmais.xo.neo4j.api.annotation.Label;
 
 @Label("BugInstanceClass")
-public interface BugInstanceClassDescriptor extends Descriptor, FullQualifiedNameDescriptor, SourceLineContainingDescriptor {
+public interface FindBugsBugInstanceClassDescriptor extends Descriptor, FullQualifiedNameDescriptor, FindBugsSourceLineContainingDescriptor {
 
 }
