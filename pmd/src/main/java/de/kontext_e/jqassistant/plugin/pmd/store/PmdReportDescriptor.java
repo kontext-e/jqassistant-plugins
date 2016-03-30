@@ -11,8 +11,8 @@ import com.buschmais.xo.neo4j.api.annotation.Relation;
  * @author aw, Kontext E GmbH, 29.01.15
  */
 @Label("Pmd")
-public interface PmdDescriptor extends Descriptor, com.buschmais.jqassistant.plugin.common.api.model.FileDescriptor {
+public interface PmdReportDescriptor extends Descriptor, com.buschmais.jqassistant.plugin.common.api.model.FileDescriptor {
 
     @Relation("PMD_FILES")
-    Set<FileDescriptor> getFiles();
+    Set<PmdFileDescriptor> getFiles();
 }

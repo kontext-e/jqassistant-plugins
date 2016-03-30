@@ -8,7 +8,7 @@ import com.buschmais.xo.neo4j.api.annotation.Property;
  * @author aw, Kontext E GmbH, 29.01.15
  */
 @Label("PmdViolation")
-public interface ViolationDescriptor extends Descriptor {
+public interface PmdViolationDescriptor extends Descriptor {
     @Property("rule")
     String getRule();
     void setRule(String rule);

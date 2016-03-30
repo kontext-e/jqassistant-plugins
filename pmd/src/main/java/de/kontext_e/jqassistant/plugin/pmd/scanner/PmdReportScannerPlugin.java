@@ -21,24 +21,24 @@ import de.kontext_e.jqassistant.plugin.pmd.jaxb.FileType;
 import de.kontext_e.jqassistant.plugin.pmd.jaxb.ObjectFactory;
 import de.kontext_e.jqassistant.plugin.pmd.jaxb.PmdType;
 import de.kontext_e.jqassistant.plugin.pmd.jaxb.ViolationType;
-import de.kontext_e.jqassistant.plugin.pmd.store.FileDescriptor;
-import de.kontext_e.jqassistant.plugin.pmd.store.PmdDescriptor;
-import de.kontext_e.jqassistant.plugin.pmd.store.ViolationDescriptor;
+import de.kontext_e.jqassistant.plugin.pmd.store.PmdFileDescriptor;
+import de.kontext_e.jqassistant.plugin.pmd.store.PmdReportDescriptor;
+import de.kontext_e.jqassistant.plugin.pmd.store.PmdViolationDescriptor;
 
 
 /**
  * @author aw, Kontext E GmbH, 29.01.15
  */
-public class PmdScannerPlugin extends AbstractScannerPlugin<FileResource, PmdDescriptor> {
+public class PmdReportScannerPlugin extends AbstractScannerPlugin<FileResource, PmdReportDescriptor> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(PmdScannerPlugin.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PmdReportScannerPlugin.class);
      public static final String JQASSISTANT_PLUGIN_PMD_FILENAME = "jqassistant.plugin.pmd.filename";
 
     private JAXBContext jaxbContext;
     private String pmdFileName = "pmd.xml";
     private String pmdDirName = "pmd";
 
-    public PmdScannerPlugin() {
+    public PmdReportScannerPlugin() {
         try {
             jaxbContext = JAXBContext.newInstance(ObjectFactory.class);
         } catch (JAXBException e) {
@@ -70,39 +70,39 @@ public class PmdScannerPlugin extends AbstractScannerPlugin<FileResource, PmdDes
     }
 
     @Override
-    public PmdDescriptor scan(final FileResource file, String path, Scope scope, Scanner scanner) throws IOException {
+    public PmdReportDescriptor scan(final FileResource file, String path, Scope scope, Scanner scanner) throws IOException {
         LOGGER.debug("Pmd scans path "+path);
         final PmdType pmdType = unmarshalPmdXml(file.createStream());
-        final PmdDescriptor pmdDescriptor = scanner.getContext().getStore().create(PmdDescriptor.class);
-        pmdDescriptor.setFileName(path);
-        readFiles(scanner.getContext().getStore(), pmdType, pmdDescriptor);
-        return pmdDescriptor;
+        final PmdReportDescriptor pmdReportDescriptor = scanner.getContext().getStore().create(PmdReportDescriptor.class);
+        pmdReportDescriptor.setFileName(path);
+        readFiles(scanner.getContext().getStore(), pmdType, pmdReportDescriptor);
+        return pmdReportDescriptor;
     }
 
-    private void readFiles(final Store store, final PmdType pmdType, final PmdDescriptor pmdDescriptor) {
+    private void readFiles(final Store store, final PmdType pmdType, final PmdReportDescriptor pmdReportDescriptor) {
         for (FileType fileType : pmdType.getFile()) {
-            final FileDescriptor fileDescriptor = store.create(FileDescriptor.class);
-            fileDescriptor.setName(truncateName(fileType.getName()));
+            final PmdFileDescriptor pmdFileDescriptor = store.create(PmdFileDescriptor.class);
+            pmdFileDescriptor.setName(truncateName(fileType.getName()));
             
             //create fqn from first Violation element attributes:
             String classname = fileType.getViolation().get(0).getClazz();
             String packagename = fileType.getViolation().get(0).getPackage();
             String fqn = packagename+"."+classname;            
-            fileDescriptor.setFullQualifiedName(fqn);
+            pmdFileDescriptor.setFullQualifiedName(fqn);
             
-            pmdDescriptor.getFiles().add(fileDescriptor);
-            readViolations(store, fileType, fileDescriptor);
+            pmdReportDescriptor.getFiles().add(pmdFileDescriptor);
+            readViolations(store, fileType, pmdFileDescriptor);
         }
     }
 
-    private void readViolations(final Store store, final FileType fileType, final FileDescriptor fileDescriptor) {
+    private void readViolations(final Store store, final FileType fileType, final PmdFileDescriptor pmdFileDescriptor) {
         for (ViolationType vioType : fileType.getViolation()) {
-            final ViolationDescriptor vioDescriptor = store.create(ViolationDescriptor.class);
+            final PmdViolationDescriptor vioDescriptor = store.create(PmdViolationDescriptor.class);
             vioDescriptor.setRule(vioType.getRule());
             vioDescriptor.setRuleSet(vioType.getRuleset());
             vioDescriptor.setPriority(vioType.getPriority());
             vioDescriptor.setMethod(vioType.getMethod());
-            fileDescriptor.getViolations().add(vioDescriptor);
+            pmdFileDescriptor.getViolations().add(vioDescriptor);
         }
     }
 

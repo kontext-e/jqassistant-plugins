@@ -12,8 +12,8 @@ import com.buschmais.xo.neo4j.api.annotation.Relation;
  * @author aw, Kontext E GmbH, 29.01.15
  */
 @Label("PmdFile")
-public interface FileDescriptor extends Descriptor, NamedDescriptor, FullQualifiedNameDescriptor {
+public interface PmdFileDescriptor extends Descriptor, NamedDescriptor, FullQualifiedNameDescriptor {
 
     @Relation("PMD_VIOLATIONS")
-    Set<ViolationDescriptor> getViolations();
+    Set<PmdViolationDescriptor> getViolations();
 }
