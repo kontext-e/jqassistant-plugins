@@ -33,6 +33,7 @@ public class PmdReportScannerPlugin extends AbstractScannerPlugin<FileResource, 
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PmdReportScannerPlugin.class);
      public static final String JQASSISTANT_PLUGIN_PMD_FILENAME = "jqassistant.plugin.pmd.filename";
+     public static final String JQASSISTANT_PLUGIN_PMD_DIRNAME = "jqassistant.plugin.pmd.dirname";
 
     private JAXBContext jaxbContext;
     private String pmdFileName = "pmd.xml";
@@ -50,14 +51,19 @@ public class PmdReportScannerPlugin extends AbstractScannerPlugin<FileResource, 
     protected void configure() {
         super.configure();
 
-        final String property = (String) getProperties().get(JQASSISTANT_PLUGIN_PMD_FILENAME);
-        if(property != null) {
-            pmdFileName = property;
+        if(getProperties().containsKey(JQASSISTANT_PLUGIN_PMD_FILENAME)) {
+            pmdFileName = (String) getProperties().get(JQASSISTANT_PLUGIN_PMD_FILENAME);
         }
         if(System.getProperty(JQASSISTANT_PLUGIN_PMD_FILENAME) != null) {
             pmdFileName = System.getProperty(JQASSISTANT_PLUGIN_PMD_FILENAME);
         }
-        LOGGER.info(String.format("PMD plugin looks for files named %s or for all XML files in directories named 'pmd'", pmdFileName));
+        if(getProperties().containsKey(JQASSISTANT_PLUGIN_PMD_DIRNAME)) {
+            pmdDirName = (String) getProperties().get(JQASSISTANT_PLUGIN_PMD_DIRNAME);
+        }
+        if(System.getProperty(JQASSISTANT_PLUGIN_PMD_DIRNAME) != null) {
+            pmdDirName = System.getProperty(JQASSISTANT_PLUGIN_PMD_DIRNAME);
+        }
+        LOGGER.info(String.format("PMD plugin looks for files named %s or for all XML files in directories named '%s'", pmdFileName, pmdDirName));
     }
 
     @Override
