@@ -1,0 +1,54 @@
+<<PmdReportScanner>>
+[[PmdReportScanner]]
+
+== Scanner for PMD report files
+Accepts all files with the given file name (default: pmd.xml) or
+being in a directory named 'pmd' and end with '.xml'.
+
+.Configuration parameters
+[options="header"]
+|====
+| Name                                      | Description
+| jqassistant.plugin.pmd.filename           | Optional: file name of the PMD XML report file. Default: pmd.xml
+| jqassistant.plugin.pmd.dirname            | Optional: name of the directory containing an XML. Default: pmd
+|====
+
+=== :Pmd:File:Report
+Represents a PMD report file.
+
+.Relations
+[options="header"]
+|====
+| Name              | Target label(s)           | Cardinality | Description
+| HAS_FILES         | <<:Pmd:File>>             | 0..n        | A file containing PMD issues
+|====
+
+=== :Pmd:File
+Represents a physical file with full path in a PMD report.
+
+.Properties
+[options="header"]
+|====
+| Name              | Description
+| name              | The file name.
+|====
+
+.Relations
+[options="header"]
+|====
+| Name              | Target label(s)           | Cardinality | Description
+| HAS_VIOLATIONS    | <<:Pmd:Violation>>        | 0..n        | The PMD violations of this file.
+|====
+
+=== :Pmd:Violation
+Represents a PMD violation.
+
+.Properties
+[options="header"]
+|====
+| Name              | Description
+| rule              | PMD rule name.
+| priority          | Violation priority, e.g. 4.
+| ruleset           | Name of PMD rule set, e.g. 'Unnecessary'.
+| method            | Name of the Java method where the violation was found.
+|====

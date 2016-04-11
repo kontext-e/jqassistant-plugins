@@ -10,6 +10,7 @@ being in a directory named 'findbugs' and end with '.xml'.
 |====
 | Name                                      | Description
 | jqassistant.plugin.findbugs.filename      | Optional: file name of the FindBugs XML report file. Default: findbugs.xml
+| jqassistant.plugin.findbugs.dirname       | Optional: name of the directory containing an XML. Default: Default: findbugs
 |====
 
 === :FindBugs:File:Report
