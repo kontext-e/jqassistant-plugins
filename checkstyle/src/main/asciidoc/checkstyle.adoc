@@ -1,0 +1,39 @@
+<<CheckstyleReportScanner>>
+[[CheckstyleReportScanner]]
+
+== Scanner for Checkstyle report files
+Accepts all files with the given file name (default: checkstyle.xml) or
+being in a directory named 'checkstyle' and end with '.xml'.
+
+.Configuration parameters
+[options="header"]
+|====
+| Name                                      | Description
+| jqassistant.plugin.checkstyle.filename    | Optional: file name of the Checkstyle XML report file. Default: checkstyle.xml
+| jqassistant.plugin.checkstyle.dirname     | Optional: name of the directory containing an XML. Default: checkstyle
+| jqassistant.plugin.checkstyle.basepackage | Optional: name of the base package so that the plugin can determine the package out of the scanned file name. Default: org
+|====
+
+=== :Checkstyle:File:Report
+Represents a Checkstyle report file.
+
+.Relations
+[options="header"]
+|====
+| Name              | Target label(s)       | Cardinality | Description
+| CHECKSTYLE_FILES  | <<:Checkstyle:File>>  | 0..n        | A 'File' element in the Checkstyle report.
+|====
+
+=== :Checkstyle:File
+Represents a File element in the Checkstyle report.
+
+.Relations
+[options="header"]
+|====
+| Name              | Target label(s)       | Cardinality | Description
+| CHECKSTYLE_ERRORS | <<:Checkstyle:Error>> | 0..n        | An issue found by Checkstyle.
+|====
+
+=== :Checkstyle:Error
+Represents an Issue found by Checkstyle. In Checkstyle speak, all is an Error independend from
+reporting level info, warning, or error.
