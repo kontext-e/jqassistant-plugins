@@ -27,6 +27,11 @@ How to install
 
 * execute jQAssistant tasks
 
+Some docs
+=========
+From master branch. Note: most recent versions from branches may differ.
+
+* [Git](https://github.com/kontext-e/jqassistant-plugins/blob/master/git/src/main/asciidoc/git.adoc)
 
 Work in progress
 ================

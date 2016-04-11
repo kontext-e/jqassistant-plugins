@@ -37,3 +37,4 @@ Represents a File element in the Checkstyle report.
 === :Checkstyle:Error
 Represents an Issue found by Checkstyle. In Checkstyle speak, all is an Error independend from
 reporting level info, warning, or error.
+
