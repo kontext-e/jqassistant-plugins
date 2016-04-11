@@ -34,10 +34,12 @@ public class FindBugsScannerPlugin extends AbstractScannerPlugin<FileResource, F
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FindBugsScannerPlugin.class);
     public static final String JQASSISTANT_PLUGIN_FINDBUGS_FILENAME = "jqassistant.plugin.findbugs.filename";
+    public static final String JQASSISTANT_PLUGIN_FINDBUGS_DIRNAME = "jqassistant.plugin.findbugs.dirname";
 
     private JAXBContext jaxbContext;
 
     private static String findBugsFileName = "findbugs.xml";
+    private static String findBugsDirName = "findbugs";
 
     public FindBugsScannerPlugin() {
         try {
@@ -51,19 +53,18 @@ public class FindBugsScannerPlugin extends AbstractScannerPlugin<FileResource, F
     protected void configure() {
         super.configure();
 
-        final String property = (String) getProperties().get(JQASSISTANT_PLUGIN_FINDBUGS_FILENAME);
-        if(property != null) {
-            findBugsFileName = property;
+        if(getProperties().containsKey(JQASSISTANT_PLUGIN_FINDBUGS_FILENAME)) {
+            findBugsFileName = (String) getProperties().get(JQASSISTANT_PLUGIN_FINDBUGS_FILENAME);
         }
-        if(System.getProperty(JQASSISTANT_PLUGIN_FINDBUGS_FILENAME) != null) {
-            findBugsFileName = System.getProperty(JQASSISTANT_PLUGIN_FINDBUGS_FILENAME);
+        if(getProperties().containsKey(JQASSISTANT_PLUGIN_FINDBUGS_DIRNAME)) {
+            findBugsDirName = (String) getProperties().get(JQASSISTANT_PLUGIN_FINDBUGS_DIRNAME);
         }
-        LOGGER.info(String.format("FindBugs plugin looks for files named %s or for all XML files in directories named 'findbugs'", findBugsFileName));
+        LOGGER.info(String.format("FindBugs plugin looks for files named %s or for all XML files in directories named %s", findBugsFileName, findBugsDirName));
     }
 
     @Override
     public boolean accepts(FileResource item, String path, Scope scope) throws IOException {
-        boolean accepted = path.endsWith(findBugsFileName) || ("findbugs".equals(item.getFile().toPath().getParent().toFile().getName()) && path.endsWith(".xml"));
+        boolean accepted = path.endsWith(findBugsFileName) || (findBugsDirName.equals(item.getFile().toPath().getParent().toFile().getName()) && path.endsWith(".xml"));
         if(accepted) {
             LOGGER.debug(String.format("FindBugs accepted file %s", path));
         }
