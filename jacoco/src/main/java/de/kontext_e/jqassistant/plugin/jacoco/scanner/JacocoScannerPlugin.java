@@ -33,6 +33,8 @@ import de.kontext_e.jqassistant.plugin.jacoco.store.descriptor.JacocoReportDescr
 import de.kontext_e.jqassistant.plugin.jacoco.store.descriptor.JacocoMethodDescriptor;
 import de.kontext_e.jqassistant.plugin.jacoco.store.descriptor.JacocoPackageDescriptor;
 
+import static java.lang.String.format;
+
 /**
  * @author jn4, Kontext E GmbH, 11.02.14
  */
@@ -40,7 +42,9 @@ public class JacocoScannerPlugin extends AbstractScannerPlugin<FileResource,Jaco
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JacocoScannerPlugin.class);
     public static final String JQASSISTANT_PLUGIN_JACOCO_FILENAME = "jqassistant.plugin.jacoco.filename";
+    public static final String JQASSISTANT_PLUGIN_JACOCO_DIRNAME = "jqassistant.plugin.jacoco.dirname";
     private JAXBContext jaxbContext;
+    private String jacocoDirName = "jacoco";
     private String jacocoFileName = "jacocoTestReport.xml";
 
     public JacocoScannerPlugin() {
@@ -55,19 +59,18 @@ public class JacocoScannerPlugin extends AbstractScannerPlugin<FileResource,Jaco
     protected void configure() {
         super.configure();
 
-        String jacocoFileNameProperty = (String) getProperties().get(JQASSISTANT_PLUGIN_JACOCO_FILENAME);
-        if(jacocoFileNameProperty != null) {
-            jacocoFileName = jacocoFileNameProperty;
+        if(getProperties().containsKey(JQASSISTANT_PLUGIN_JACOCO_DIRNAME)) {
+            jacocoDirName = (String) getProperties().get(JQASSISTANT_PLUGIN_JACOCO_DIRNAME);
         }
-        if(System.getProperty(JQASSISTANT_PLUGIN_JACOCO_FILENAME) != null) {
-            jacocoFileName = System.getProperty(JQASSISTANT_PLUGIN_JACOCO_FILENAME);
+        if(getProperties().containsKey(JQASSISTANT_PLUGIN_JACOCO_FILENAME)) {
+            jacocoFileName = (String) getProperties().get(JQASSISTANT_PLUGIN_JACOCO_FILENAME);
         }
-        LOGGER.info("Jacoco plugin looks for files named "+jacocoFileName+" and files in directory jacoco");
+        LOGGER.info(format("Jacoco plugin looks for files named %s and files in directory %s", jacocoFileName, jacocoDirName));
     }
 
     @Override
     public boolean accepts(final FileResource item, String path, Scope scope) throws IOException {
-        boolean accepted = path.endsWith(jacocoFileName) || ("jacoco".equalsIgnoreCase(item.getFile().toPath().getParent().toFile().getName()) && path.endsWith(".xml"));
+        boolean accepted = path.endsWith(jacocoFileName) || (jacocoDirName.equalsIgnoreCase(item.getFile().toPath().getParent().toFile().getName()) && path.endsWith(".xml"));
         if(accepted) {
             LOGGER.debug("Jacoco plugin accepted "+path);
         }
