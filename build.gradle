@@ -3,9 +3,9 @@ apply plugin: 'maven'
 apply plugin: 'org.asciidoctor.gradle.asciidoctor'
 apply plugin: 'com.github.jruby-gradle.base'
 
-project.ext["jqaversion"] = "1.1.0-RC2"
+project.ext["jqaversion"] = "1.1.2"
 project.group = 'de.kontext-e.jqassistant.plugin'
-project.version = '1.1.0-RC3-SNAPSHOT'
+project.version = '1.1.0-RC4-SNAPSHOT'
 
 buildscript {
   repositories {
@@ -150,6 +150,8 @@ dependencies {
   runtime("com.buschmais.jqassistant.core:jqassistant.core.store:${project.jqaversion}")
   runtime("com.buschmais.jqassistant.core:jqassistant.core.scanner:${project.jqaversion}")
   runtime("com.buschmais.jqassistant.core:jqassistant.core.analysis:${project.jqaversion}")
+  runtime("com.buschmais.jqassistant.core:jqassistant.core.report:${project.jqaversion}")
+  runtime("com.buschmais.jqassistant.core:jqassistant.core.plugin:${project.jqaversion}")
   runtime("com.buschmais.jqassistant.plugin:jqassistant.plugin.common:${project.jqaversion}")
   runtime("com.buschmais.jqassistant.scm:jqassistant.scm.cli:${project.jqaversion}")
 
