@@ -131,7 +131,7 @@ certain event happened (like a release of the software).
 [options="header"]
 |====
 | Name                      | Description
-| label                     | The name (label) of the referenced <<:GitCommit>>.
+| label                     | The name (label) of the referenced <<:Git:Commit>>.
 |====
 
 .Relations of :Git:Tag
@@ -151,8 +151,8 @@ MATCH
     (git:Git)
       // Any branch
       --> (branch:GitBranch)
-      -[:HEAD]-> (branchHead:GitCommit)
-      <-[r:HAS_PARENTS*]-(developHead:GitCommit)
+      -[:HEAD]-> (branchHead:Git:Commit)
+      <-[r:HAS_PARENTS*]-(developHead:Git:Commit)
       // The develop branch
       <-[:HEAD]- (develop:GitBranch {name: "remotes/origin/develop"})
 WHERE branch.name =~ "remotes/origin/release/.*"
@@ -170,17 +170,17 @@ Playground
 MATCH
     (git:Git)
       // Any branch
-      --> (branch:GitBranch)
-      -[:HEAD]-> (branchHead:GitCommit)
-      <-[r:HAS_PARENTS*]-(developHead:GitCommit)
+      --> (branch:Git:Branch)
+      -[:HEAD]-> (branchHead:Git:Commit)
+      <-[r:HAS_PARENTS*]-(developHead:Git:Commit)
       <-[:HEAD]- (develop:GitBranch {name: "remotes/origin/develop"})
 WHERE branch.name =~ "remotes/origin/release/.*"
   AND r is NULL
 RETURN * // git, develop, branch
 //MATCH
-//    (gitD) --> (develop:GitBranch {name: "remotes/origin/develop"}) -[:HEAD]-> (developHead:GitCommit)
+//    (gitD) --> (develop:Git:Branch {name: "remotes/origin/develop"}) -[:HEAD]-> (developHead:Git:Commit)
 //OPTIONAL MATCH
-//    (developHead)<-[r:HAS_PARENTS*]-(parent:GitCommit)
+//    (developHead)<-[r:HAS_PARENTS*]-(parent:Git:Commit)
 //WHERE r is null
 RETURN git
 ----
