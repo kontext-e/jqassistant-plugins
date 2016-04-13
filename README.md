@@ -31,7 +31,12 @@ Some docs
 =========
 From master branch. Note: most recent versions from branches may differ.
 
-* [Git](https://github.com/kontext-e/jqassistant-plugins/blob/master/git/src/main/asciidoc/git.adoc)
+* [Checkstyle Plugin](https://github.com/kontext-e/jqassistant-plugins/blob/master/checkstyle/src/main/asciidoc/checkstyle.adoc)
+* [FindBugs Plugin](https://github.com/kontext-e/jqassistant-plugins/blob/master/findbugs/src/main/asciidoc/findbugs.adoc)
+* [Git Plugin](https://github.com/kontext-e/jqassistant-plugins/blob/master/git/src/main/asciidoc/git.adoc)
+* [JaCoCo Plugin](https://github.com/kontext-e/jqassistant-plugins/blob/master/jacoco/src/main/asciidoc/jacoco.adoc)
+* [PlantUML Plugin](https://github.com/kontext-e/jqassistant-plugins/blob/master/plantuml/src/main/asciidoc/plantuml.adoc)
+* [PMD Plugin](https://github.com/kontext-e/jqassistant-plugins/blob/master/pmd/src/main/asciidoc/pmd.adoc)
 
 Work in progress
 ================
