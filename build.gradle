@@ -170,7 +170,7 @@ dependencies {
   runtime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.linecount:${project.version}")
   runtime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.git:${project.version}")
   runtime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.pmd:${project.version}")
-  runtime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.plantuml:0.0.1-RC2")
+  runtime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.plantuml:${project.version}")
   runtime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.cpp:${project.version}")
 
   runtime 'com.sun.jersey:jersey-server:1.13'

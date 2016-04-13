@@ -14,7 +14,7 @@ How to install
  
     - groupId de.kontext-e.jqassistant.plugin
     - artifactId jqassistant.plugin.checkstyle or .findbugs or .jacoco or .git or .pmd
-    - e.g. for gradle:   runtime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.checkstyle:1.0.0")
+    - e.g. for gradle:   runtime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.checkstyle:1.1.0")
 
 
 * you may want to configure some properties in jqassistant.properties or as system property (java -Dpropertyname=propertyvalue):
@@ -35,7 +35,7 @@ From master branch. Note: most recent versions from branches may differ.
 
 Work in progress
 ================
-* PlantUML class diagram packages; please note: although the plantuml plugin will become version 1.1.0, it is
+* PlantUML class diagram packages; please note: although the plantuml plugin is version 1.1.0, it is
   far from a complete PlantUML import; in fact, only the packages of class diagrams were imported for now
   because this is the only thing that is currently needed for architecture rules
 
