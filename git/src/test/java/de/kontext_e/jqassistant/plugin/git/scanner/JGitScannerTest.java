@@ -1,14 +1,13 @@
 package de.kontext_e.jqassistant.plugin.git.scanner;
 
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.LogCommand;
-import org.eclipse.jgit.lib.AnyObjectId;
-import org.eclipse.jgit.lib.ObjectId;
-import org.eclipse.jgit.lib.Repository;
-import org.junit.Test;
-
 import java.io.IOException;
 import java.util.List;
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.LogCommand;
+import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.Repository;
+import org.junit.Ignore;
+import org.junit.Test;
 
 import static org.hamcrest.Matchers.greaterThan;
 import static org.junit.Assert.assertThat;
@@ -25,6 +24,7 @@ import static org.mockito.Mockito.when;
  */
 // TODO This is not a real Unit test! Make gradle run it in some kind of integration test phase!!!
 public class JGitScannerTest {
+    @Ignore("No unit test, depends on state of git repo")
     @Test
     public void testFindCommits () throws IOException {
         JGitScanner jGitScanner = new JGitScanner("../.git", null);
@@ -33,6 +33,7 @@ public class JGitScannerTest {
         assertThat (commits.size(), greaterThan (0));
     }
 
+    @Ignore("No unit test, depends on state of git repo")
     @Test
     public void testFindTags () throws IOException {
         JGitScanner jGitScanner = new JGitScanner("../.git", null);
