@@ -7,6 +7,6 @@ jar {
 }
 
 dependencies {
-  testCompile 'org.codehaus.groovy:groovy-all:2.4.+'
-  testCompile 'org.ajoberstar:grgit:1+'
+  testCompile 'org.codehaus.groovy:groovy-all:2.4.6'
+  testCompile 'org.ajoberstar:grgit:1.6.0'
 }
