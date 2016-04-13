@@ -1,0 +1,90 @@
+<<JacocoScanner>>
+[[JacocoScanner]]
+
+== Scanner for JaCoCo report files
+Accepts all files with the given file name (default: jacocoTestReport.xml) or
+being in a directory named 'jacoco' and end with '.xml'.
+
+.Configuration parameters
+[options="header"]
+|====
+| Name                                  | Description
+| jqassistant.plugin.jacoco.filename    | Optional: file name of the JaCoCo XML report file. Default: jacocoTestReport.xml
+| jqassistant.plugin.jacoco.dirname     | Optional: directory of the JaCoCo XML report file. Default: jacoco
+|====
+
+=== :Jacoco:Report:File
+Represents a JaCoCo report file.
+
+.Properties
+[options="header"]
+|====
+| Name                      | Description
+| name                      | Name of the report file.
+|====
+
+.Relations
+[options="header"]
+|====
+| Name              | Target label(s)       | Cardinality | Description
+| HAS_PACKAGES      | <<:Jacoco:Package>>   | 0..n        | A Java package containing the Java classes for which the test coverage were recorded.
+|====
+
+=== :Jacoco:Counter
+Represents a coverage metric: missed and covered lines and branches.
+
+.Properties
+[options="header"]
+|====
+| Name                      | Description
+| type                      | Type of metric: INSTRUCTION, BRANCH, LINE, COMPLEXITY, METHOD.
+| missed                    | Number of missed things of the metric.
+| covered                   | Number of covered things of the metric.
+|====
+
+=== :Jacoco:Method
+Represents a Java method in the Jacoco report.
+
+.Properties
+[options="header"]
+|====
+| Name                      | Description
+| name                      | The name of the method.
+| signature                 | The signature of the method.
+| line                      | The line of the first statement of the method.
+|====
+
+.Relations
+[options="header"]
+|====
+| Name              | Target label(s)       | Cardinality | Description
+| HAS_COUNTERS      | <<:Jacoco:Counter>>   | 0..n        | The test coverage results: missed and covered lines and branches.
+|====
+
+=== :Jacoco:Class
+Represents a Java class in the Jacoco report.
+
+.Properties
+[options="header"]
+|====
+| Name                      | Description
+| name                      | The name of the class.
+| fqn                       | The fully qualified name of the class.
+|====
+
+.Relations
+[options="header"]
+|====
+| Name              | Target label(s)       | Cardinality | Description
+| HAS_METHODS       | <<:Jacoco:Method>>    | 0..n        | A Java method for which the test coverage were recorded.
+|====
+
+=== :Jacoco:Package
+Represents a Java package containing the Java classes for which the test coverage were recorded.
+
+.Relations
+[options="header"]
+|====
+| Name              | Target label(s)       | Cardinality | Description
+| HAS_CLASSES       | <<:Jacoco:Class>>     | 0..n        | A Java class for which the test coverage were recorded.
+|====

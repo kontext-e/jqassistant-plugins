@@ -1,0 +1,111 @@
+<<FindBugsReportScanner>>
+[[FindBugsReportScanner]]
+
+== Scanner for FindBugs report files
+Accepts all files with the given file name (default: findbugs.xml) or
+being in a directory named 'findbugs' and end with '.xml'.
+
+.Configuration parameters
+[options="header"]
+|====
+| Name                                      | Description
+| jqassistant.plugin.findbugs.filename      | Optional: file name of the FindBugs XML report file. Default: findbugs.xml
+| jqassistant.plugin.findbugs.dirname       | Optional: name of the directory containing an XML. Default: Default: findbugs
+|====
+
+=== :FindBugs:File:Report
+Represents a FindBugs report file.
+
+.Properties
+[options="header"]
+|====
+| Name              | Description
+| name              | The file name.
+| fileName          | The absolute file name.
+| version           | FindBugs version number.
+| analysisTimestamp | Epoch time stamp of analysis run.
+|====
+
+.Relations
+[options="header"]
+|====
+| Name              | Target label(s)           | Cardinality | Description
+| CONTAINS          | <<:FindBugs:BugInstance>> | 0..n        | A FindBugs issue
+|====
+
+
+=== :FindBugs:BugInstance
+Represents a FindBugs issue.
+Has all fields of a <<:FindBugs:SourceLine>>.
+
+.Properties
+[options="header"]
+|====
+| Name              | Description
+| type              | FindBugs keyword for the bug type, e.g. UWF_UNWRITTEN_PUBLIC_OR_PROTECTED_FIELD
+| priority          | Bug priority, e.g. 1
+| abbrev            | Abbreviation of the keyword, e.g. UwF
+| category          | Bug category, e.g. STYLE
+|====
+
+.Relations
+[options="header"]
+|====
+| Name              | Target label(s)                   | Cardinality | Description
+| HAS_SOURCELINE    | <<:FindBugs:BugInstanceClass>>    | 0..n        | The class of a FindBugs issue
+| HAS_CLASS         | <<:FindBugs:BugInstanceClass>>    | 0..n        | The class of a FindBugs issue
+| HAS_METHOD        | <<:FindBugs:BugInstanceMethod>>   | 0..n        | The method of a FindBugs issue
+| HAS_FIELDS        | <<:FindBugs:BugInstanceField>>    | 0..n        | The field of a FindBugs issue
+|====
+
+=== :FindBugs:BugInstanceClass
+Represents the class for a FindBugs issue.
+Has all fields of a <<:FindBugs:SourceLine>>.
+
+.Properties
+[options="header"]
+|====
+| Name              | Description
+| fqn               | The class' fully qualified name.
+|====
+
+=== :FindBugs:BugInstanceMethod
+Represents the method for a FindBugs issue.
+Has all fields of a <<:FindBugs:SourceLine>>.
+
+.Properties
+[options="header"]
+|====
+| Name              | Description
+| name              | The method name.
+| signature         | Text representation of the method signature.
+| isStatic          | true if the method is static, false otherwise.
+|====
+
+=== :FindBugs:BugInstanceField
+Represents the field for a FindBugs issue.
+Has all fields of a <<:FindBugs:SourceLine>>.
+
+.Properties
+[options="header"]
+|====
+| Name              | Description
+| name              | The field name.
+| signature         | Text representation of the field signature.
+| isStatic          | true if the field is static, false otherwise.
+|====
+
+=== :FindBugs:SourceLine
+Represents the source line for a FindBugs issue.
+
+.Properties
+[options="header"]
+|====
+| Name          | Description
+| fqn           | Fully Qualified Name of the class
+| start         | Start line number
+| end           | End line number
+| sourceFile    | The source file.
+| sourcePath    | Path to source file incl. source file.
+|====
+

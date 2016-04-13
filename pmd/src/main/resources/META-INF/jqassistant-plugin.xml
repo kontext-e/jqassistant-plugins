@@ -2,11 +2,12 @@
     <description>Provides a scanner for PMD XML result files.</description>
     <model>
         <class>de.kontext_e.jqassistant.plugin.pmd.store.PmdDescriptor</class>
-        <class>de.kontext_e.jqassistant.plugin.pmd.store.ViolationDescriptor</class>
-        <class>de.kontext_e.jqassistant.plugin.pmd.store.FileDescriptor</class>
+        <class>de.kontext_e.jqassistant.plugin.pmd.store.PmdFileDescriptor</class>
+        <class>de.kontext_e.jqassistant.plugin.pmd.store.PmdReportDescriptor</class>
+        <class>de.kontext_e.jqassistant.plugin.pmd.store.PmdViolationDescriptor</class>
     </model>
     <scanner>
-        <class>de.kontext_e.jqassistant.plugin.pmd.scanner.PmdScannerPlugin</class>
+        <class>de.kontext_e.jqassistant.plugin.pmd.scanner.PmdReportScannerPlugin</class>
     </scanner>
     <rules>
         <resource>pmd.xml</resource>

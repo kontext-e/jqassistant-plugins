@@ -1,4 +1,4 @@
-project.version = '0.0.1-RC2'
+apply from: "${rootDir}/gradle/uploadArchives.gradle"
 
 jar {
   baseName = 'jqassistant.plugin.plantuml'

@@ -7,29 +7,28 @@
 [options="header"]
 |====
 | Name                           | Description
-| jqassistant.plugin.git.range   | Optional: Only commits of this history range were imported. Default: complete
-history (_WARNING_: Only 'two dot' ranges are supported!)
+| jqassistant.plugin.git.range   | Optional: Only commits of this history range were imported. Default: complete history (_WARNING_: Only 'two dot' ranges are supported!)
 |====
 
 
-=== :File:Git
+=== :Git:Repository
 Represents a git repository filesystem directory.
 
-.Relations of :Git
+.Relations of :Git:File
 [options="header"]
 |====
-| Name         | Target label(s)  | Cardinality | Description
-| HAS_COMMITS  | <<:GitCommit>>   | 0..n        | References the commits of the Git repository.
-| HAS_AUTHORS  | <<:GitAuthor>>   | 0..n        | References the authors of the Git repository.
-| HAS_FILES    | <<:GitFile>>     | 0..n        | References the files of the Git repository.
-| HAS_BRANCHES | <<:GitBranch>>   | 0..n        | References the branches of the Git repository.
-| HAS_TAGS     | <<:GitTag>>      | 0..n        | References the tags of the Git repository.
+| Name         | Target label(s)   | Cardinality | Description
+| HAS_COMMITS  | <<:Git:Commit>>   | 0..n        | References the commits of the Git repository.
+| HAS_AUTHORS  | <<:Git:Author>>   | 0..n        | References the authors of the Git repository.
+| HAS_FILES    | <<:Git:File>>     | 0..n        | References the files of the Git repository.
+| HAS_BRANCHES | <<:Git:Branch>>   | 0..n        | References the branches of the Git repository.
+| HAS_TAGS     | <<:Git:Tag>>      | 0..n        | References the tags of the Git repository.
 |====
 
-=== :GitAuthor
+=== :Git:Author
 Represents an author who commited to this repository.
 
-.Properties of :GitAuthor
+.Properties of :Git:Author
 [options="header"]
 |====
 | Name          | Description
@@ -38,17 +37,17 @@ Represents an author who commited to this repository.
 | email         | The authors email address.
 |====
 
-.Relations of :GitAuthor
+.Relations of :Git:Author
 [options="header"]
 |====
 | Name     | Target label(s)  | Cardinality | Description
-| COMMITED | <<:GitCommit>>   | 0..n        | References the commits of this author.
+| COMMITED | <<:Git:Commit>>  | 0..n        | References the commits of this author.
 |====
 
-=== :GitCommit
+=== :Git:Commit
 Represents a single commit.
 
-.Properties of :GitCommit
+.Properties of :Git:Commit
 [options="header"]
 |====
 | Name          | Description
@@ -60,32 +59,36 @@ Represents a single commit.
 | message       | The commit message
 |====
 
-.Relations of :GitCommit
+.Relations of :Git:Commit
 [options="header"]
 |====
 | Name              | Target label(s)            | Cardinality | Description
-| HAS_FILES         | <<:GitCommitFile>>         | 0..n        | References the files of this commit
-| HAS_PARENTS       | <<:GitCommit>>             | 0..n        | References to parent <<:GitCommit>>s
+| CONTAINS_CHANGE   | <<:Git:Change>>            | 0..n        | References the files of this commit
+| HAS_PARENTS       | <<:Git:Commit>>            | 0..n        | References to parent <<:Git:Commit>>s
 |====
 
-=== :GitCommitFile
-Represents a file contained in one commit.
 
-.Properties of :GitCommitFile
+=== :Git:Change
+Represents the change of one file in one commit.
+
+.Properties of :Git:Change
 [options="header"]
 |====
 | Name              | Description
-| modificationKind  | A for added, M for modified, D for deleted
-| relativePath      | Given in the commit, e.g. git/src/main/java/de/kontext_e/jqassistant/plugin/git/scanner/GitScannerPlugin.java
+| modificationKind  | Kind of modification: add, modify, remove
 |====
 
+.Relations of :Git:Change
+[options="header"]
+|====
+| Name              | Target label(s)            | Cardinality | Description
+| MODIFIES          | <<:Git:File>>              | 1           | References to one modified <<:Git:File>>
+|====
 
-=== :GitFile
+=== :Git:File
 Represents a file in the repository which was added, modified, or deleted in the given range.
-The difference to <<:GitCommitFile>> is that each file has only a single <<:GitFile>> node,
-but may have multiple <<:GitCommitFile>> nodes, one for each commit containing this file.
 
-.Properties of :GitFile
+.Properties of :Git:File
 [options="header"]
 |====
 | Name                      | Description
@@ -98,51 +101,44 @@ but may have multiple <<:GitCommitFile>> nodes, one for each commit containing t
 | lastModificationAtEpoch   | Last modification timestamp in epoch representation, e.g. 1398851290000
 |====
 
-.Relations of :GitFile
-[options="header"]
-|====
-| Name              | Target label(s)            | Cardinality | Description
-| MODIFIED_BY       | <<:GitCommitFile>>         | 0..n        | References the commit files of this file
-|====
+=== :Git:Branch
+Represents a Git branch, i.e., a named <<:Git:Commit>>, to allow for easy tracking of concurrent changes such as
+development lines. Hence, it is a reference to <<:Git:Commit>>.
 
-=== :GitBranch
-Represents a Git branch, i.e., a named GitCommit, to allow for easy tracking of concurrent changes such as
-development lines. Hence, it is a reference to <<:GitCommit>>.
-
-.Properties of :GitBranch
+.Properties of :Git:Branch
 [options="header"]
 |====
 | Name                      | Description
 | name                      | The name of the branch.
 |====
 
-.Relations of :GitBranch
+.Relations of :Git:Branch
 [options="header"]
 |====
 | Name              | Target label(s)            | Cardinality | Description
-| HEAD              | <<:GitCommit>>             | 1..1        | The reference to the <<:GitCommit>>.
+| HEAD              | <<:Git:Commit>>            | 1..1        | The reference to the <<:Git:Commit>>.
 |====
 
-_Note_: Tracking branches are currently not directly modelled: Misc. Branches may just point to the same <<:GitCommit>>
+_Note_: Tracking branches are currently not directly modelled: Misc. Branches may just point to the same <<:Git:Commit>>
 
-=== :GitTag
+=== :Git:Tag
 
-Similar to a <<:GitBranch>>, a Git tag gives a <<:GitCommit>> a name. But it is more used to mark a certain Git
+Similar to a <<:Git:Branch>>, a Git tag gives a <<:Git:Commit>> a name. But it is more used to mark a certain Git
 commit with the Tag (label), e.g., to allow to mark a Git branch when it is no longer needed or when a
 certain event happened (like a release of the software).
 
-.Properties of :GitTag
+.Properties of :Git:Tag
 [options="header"]
 |====
 | Name                      | Description
-| label                     | The name (label) of the referenced <<:GitCommit>>.
+| label                     | The name (label) of the referenced <<:Git:Commit>>.
 |====
 
-.Relations of :GitTag
+.Relations of :Git:Tag
 [options="header"]
 |====
 | Name              | Target label(s)            | Cardinality | Description
-| commit            | <<:GitCommit>>             | 1..1        | The reference to the <<:GitCommit>>.
+| commit            | <<:Git:Commit>>            | 1..1        | The reference to the <<:Git:Commit>>.
 |====
 
 
@@ -155,8 +151,8 @@ MATCH
     (git:Git)
       // Any branch
       --> (branch:GitBranch)
-      -[:HEAD]-> (branchHead:GitCommit)
-      <-[r:HAS_PARENTS*]-(developHead:GitCommit)
+      -[:HEAD]-> (branchHead:Git:Commit)
+      <-[r:HAS_PARENTS*]-(developHead:Git:Commit)
       // The develop branch
       <-[:HEAD]- (develop:GitBranch {name: "remotes/origin/develop"})
 WHERE branch.name =~ "remotes/origin/release/.*"
@@ -174,17 +170,17 @@ Playground
 MATCH
     (git:Git)
       // Any branch
-      --> (branch:GitBranch)
-      -[:HEAD]-> (branchHead:GitCommit)
-      <-[r:HAS_PARENTS*]-(developHead:GitCommit)
+      --> (branch:Git:Branch)
+      -[:HEAD]-> (branchHead:Git:Commit)
+      <-[r:HAS_PARENTS*]-(developHead:Git:Commit)
       <-[:HEAD]- (develop:GitBranch {name: "remotes/origin/develop"})
 WHERE branch.name =~ "remotes/origin/release/.*"
   AND r is NULL
 RETURN * // git, develop, branch
 //MATCH
-//    (gitD) --> (develop:GitBranch {name: "remotes/origin/develop"}) -[:HEAD]-> (developHead:GitCommit)
+//    (gitD) --> (develop:Git:Branch {name: "remotes/origin/develop"}) -[:HEAD]-> (developHead:Git:Commit)
 //OPTIONAL MATCH
-//    (developHead)<-[r:HAS_PARENTS*]-(parent:GitCommit)
+//    (developHead)<-[r:HAS_PARENTS*]-(parent:Git:Commit)
 //WHERE r is null
 RETURN git
 ----

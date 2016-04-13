@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.buschmais.jqassistant.core.store.api.Store;
-import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlDescriptor;
+import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlFileDescriptor;
 import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlPackageDescriptor;
 
 class PumlLineParser {
@@ -15,12 +15,12 @@ class PumlLineParser {
 
     private final Store store;
     private final Map<String, PlantUmlPackageDescriptor> mappingFromFqnToPackage = new HashMap<>();
-    private final PlantUmlDescriptor plantUmlDescriptor;
+    private final PlantUmlFileDescriptor plantUmlFileDescriptor;
     private ParsingState parsingState = ParsingState.ACCEPTING;
 
-    public PumlLineParser(final Store store, final PlantUmlDescriptor plantUmlDescriptor, final ParsingState parsingState) {
+    public PumlLineParser(final Store store, final PlantUmlFileDescriptor plantUmlFileDescriptor, final ParsingState parsingState) {
         this.store = store;
-        this.plantUmlDescriptor = plantUmlDescriptor;
+        this.plantUmlFileDescriptor = plantUmlFileDescriptor;
         this.parsingState = parsingState;
     }
 
@@ -42,7 +42,7 @@ class PumlLineParser {
         if(parsingState == ParsingState.ACCEPTING) {
             if (normalizedLine.startsWith("package ")) {
                 PlantUmlPackageDescriptor packageNode = createPackageNode(line);
-                plantUmlDescriptor.getPlantUmlElements().add(packageNode);
+                plantUmlFileDescriptor.getPlantUmlElements().add(packageNode);
             }
 
             if (!normalizedLine.startsWith("-") && normalizedLine.contains("-")) {

@@ -2,34 +2,53 @@
 [[PlantUMLScanner]]
 
 == Scanner for PlantUML files
+Accepts all files with the given suffix (Default: puml, adoc).
+
+.Configuration parameters
+[options="header"]
+|====
+| Name                                      | Description
+| jqassistant.plugin.plantuml.suffixes      | Optional: suffixes of files which should be scanned. Default: puml, adoc
+|====
 
 === :File:PlantUml
-Represents a PlantUML file.
+Represents a file containing PlantUML diagram descriptions.
 
-.Properties of :File:PlantUml
+.Properties
 [options="header"]
 |====
 | Name       | Description
 | fileName   | The file path relative to the given scan start directory, e.g. '/asciidoc/plantuml.adoc'.
 |====
 
+.Relations
+[options="header"]
+|====
+| Name              | Target label(s)            | Cardinality | Description
+| CONTAINS          | <<:PlantUml:Element>>      | 0..n        | PlantUML diagram descriptions contained in this file
+|====
+
+=== :PlantUml:ClassDiagram
+Represents a PlantUML class diagram description.
+
+Currently not used. (Will contain elements like packages.)
 
 [[:PlantUmlPackage]]
-=== :PlantUmlPackage:PlantUmlElement
+=== :PlantUml:Package:Element
 Represents a PlantUML class diagram package.
 
-.Properties of :PlantUmlPackage
+.Properties
 [options="header"]
 |====
 | Name       | Description
 | fqn        | Fully qualified name, e.g. 'java.lang'
 |====
 
-.Relations of :PlantUmlPackage
+.Relations
 [options="header"]
 |====
-| Name              | Target label(s)            | Cardinality | Description
-| MAY_DEPEND_ON     | <<:PlantUmlPackage>>       | 0..n        | References other packages this package is allowed to depend on
+| Name              | Target label(s)                   | Cardinality | Description
+| MAY_DEPEND_ON     | <<:PlantUml:Package:Element>>     | 0..n        | References other packages this package is allowed to depend on
 |====
 
 

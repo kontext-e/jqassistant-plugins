@@ -3,9 +3,9 @@ apply plugin: 'maven'
 apply plugin: 'org.asciidoctor.gradle.asciidoctor'
 apply plugin: 'com.github.jruby-gradle.base'
 
-project.ext["jqaversion"] = "1.1.0-RC2"
+project.ext["jqaversion"] = "1.1.2"
 project.group = 'de.kontext-e.jqassistant.plugin'
-project.version = '1.1.0-RC3-SNAPSHOT'
+project.version = '1.1.0-RC4-SNAPSHOT'
 
 buildscript {
   repositories {
@@ -150,6 +150,8 @@ dependencies {
   runtime("com.buschmais.jqassistant.core:jqassistant.core.store:${project.jqaversion}")
   runtime("com.buschmais.jqassistant.core:jqassistant.core.scanner:${project.jqaversion}")
   runtime("com.buschmais.jqassistant.core:jqassistant.core.analysis:${project.jqaversion}")
+  runtime("com.buschmais.jqassistant.core:jqassistant.core.report:${project.jqaversion}")
+  runtime("com.buschmais.jqassistant.core:jqassistant.core.plugin:${project.jqaversion}")
   runtime("com.buschmais.jqassistant.plugin:jqassistant.plugin.common:${project.jqaversion}")
   runtime("com.buschmais.jqassistant.scm:jqassistant.scm.cli:${project.jqaversion}")
 
@@ -168,7 +170,8 @@ dependencies {
   runtime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.linecount:${project.version}")
   runtime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.git:${project.version}")
   runtime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.pmd:${project.version}")
-  runtime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.plantuml:0.0.1-RC2")
+  runtime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.plantuml:${project.version}")
+  runtime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.cpp:${project.version}")
 
   runtime 'com.sun.jersey:jersey-server:1.13'
   runtime 'com.sun.jersey:jersey-core:1.13'
@@ -189,6 +192,7 @@ task(jqascan, dependsOn: 'removeJQAReport', type: JavaExec) {
   args '-p'
   args 'jqassistant/jqassistant.properties'
   args '-f'
+
   args 'checkstyle/src/main'
   args 'findbugs/src/main'
   args 'git/src/main'
@@ -196,6 +200,7 @@ task(jqascan, dependsOn: 'removeJQAReport', type: JavaExec) {
   args 'linecount/src/main'
   args 'pmd/src/main'
   args 'plantuml/src/main'
+  args 'cpp/src/main'
 
   args 'checkstyle/build/reports'
   args 'findbugs/build/reports'
@@ -204,6 +209,7 @@ task(jqascan, dependsOn: 'removeJQAReport', type: JavaExec) {
   args 'linecount/build/reports'
   args 'pmd/build/reports'
   args 'plantuml/build/reports'
+  args 'cpp/build/reports'
 //  args 'plantuml/src/test/plantuml'
   args 'plantuml/src/test/asciidoc'
   args 'java:classpath::checkstyle/build/classes'
@@ -213,6 +219,10 @@ task(jqascan, dependsOn: 'removeJQAReport', type: JavaExec) {
   args 'java:classpath::linecount/build/classes'
   args 'java:classpath::pmd/build/classes'
   args 'java:classpath::plantuml/build/classes'
+  args 'java:classpath::cpp/build/classes'
+
+  //args 'cpp/src/test/ast'
+  //args 'privatetestdata'
 
   args '.git'
 

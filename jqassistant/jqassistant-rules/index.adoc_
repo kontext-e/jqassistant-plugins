@@ -1,0 +1,28 @@
+Note: rename this file to index.adoc to make it active.
+The default rule conflicts with default.xml, so only one of both may be active.
+
+= Coding Rules
+
+The following constraints apply for modules:
+
+[[default]]
+[role=group,includesConstraints="forbidden-methods:Date(critical)"]
+- <<forbidden-methods:Date>>
+
+== java.util.Date must not be used anymore
+
+In Java 8, java.util.Date should not be used anymore. Use the new  Date & Time API instead.
+
+[[forbidden-methods:Date]]
+.Forbids the use of java.util.Date.
+[source,cypher,role=constraint,severity=critical]
+----
+MATCH
+    (dateType:Type)-[:DECLARES]->(forbiddenMethod:Method),
+    (type:Type)-[:DECLARES]->(method:Method)-[:INVOKES]->(forbiddenMethod)
+WHERE
+    dateType.fqn = 'java.util.Date'
+    AND forbiddenMethod:Constructor
+RETURN
+    method AS Method
+----

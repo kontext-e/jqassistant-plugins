@@ -2,10 +2,11 @@
     <description>Provides a scanner for JaCoCo XML test coverage result files.</description>
     <model>
         <class>de.kontext_e.jqassistant.plugin.jacoco.store.descriptor.JacocoDescriptor</class>
-        <class>de.kontext_e.jqassistant.plugin.jacoco.store.descriptor.PackageDescriptor</class>
-        <class>de.kontext_e.jqassistant.plugin.jacoco.store.descriptor.ClassDescriptor</class>
-        <class>de.kontext_e.jqassistant.plugin.jacoco.store.descriptor.MethodDescriptor</class>
-        <class>de.kontext_e.jqassistant.plugin.jacoco.store.descriptor.CounterDescriptor</class>
+        <class>de.kontext_e.jqassistant.plugin.jacoco.store.descriptor.JacocoReportDescriptor</class>
+        <class>de.kontext_e.jqassistant.plugin.jacoco.store.descriptor.JacocoPackageDescriptor</class>
+        <class>de.kontext_e.jqassistant.plugin.jacoco.store.descriptor.JacocoClassDescriptor</class>
+        <class>de.kontext_e.jqassistant.plugin.jacoco.store.descriptor.JacocoMethodDescriptor</class>
+        <class>de.kontext_e.jqassistant.plugin.jacoco.store.descriptor.JacocoCounterDescriptor</class>
     </model>
     <scanner>
         <class>de.kontext_e.jqassistant.plugin.jacoco.scanner.JacocoScannerPlugin</class>

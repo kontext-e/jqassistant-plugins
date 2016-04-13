@@ -2,8 +2,9 @@
     <description>Provides a scanner for Checkstyle XML result files.</description>
     <model>
         <class>de.kontext_e.jqassistant.plugin.checkstyle.store.descriptor.CheckstyleDescriptor</class>
-        <class>de.kontext_e.jqassistant.plugin.checkstyle.store.descriptor.ErrorDescriptor</class>
-        <class>de.kontext_e.jqassistant.plugin.checkstyle.store.descriptor.FileDescriptor</class>
+        <class>de.kontext_e.jqassistant.plugin.checkstyle.store.descriptor.CheckstyleErrorDescriptor</class>
+        <class>de.kontext_e.jqassistant.plugin.checkstyle.store.descriptor.CheckstyleFileDescriptor</class>
+        <class>de.kontext_e.jqassistant.plugin.checkstyle.store.descriptor.CheckstyleReportDescriptor</class>
     </model>
     <scanner>
         <class>de.kontext_e.jqassistant.plugin.checkstyle.scanner.CheckstyleScannerPlugin</class>
