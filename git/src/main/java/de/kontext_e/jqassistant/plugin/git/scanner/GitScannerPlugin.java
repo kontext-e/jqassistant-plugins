@@ -179,11 +179,19 @@ public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitRep
         if (null != author) {
             if(! authors.containsKey(author)) {
                 LOGGER.debug ("Adding new author '{}'", author);
-                GitAuthorDescriptor gitAutor = store.create(GitAuthorDescriptor.class);
-                gitAutor.setIdentString(author);
+                GitAuthorDescriptor gitAutor = store.find(GitAuthorDescriptor.class, author);
+                if (null == gitAutor) {
+                    LOGGER.debug ("Author '{}' does not exist, have to create a new entity", author);
+                    gitAutor = store.create(GitAuthorDescriptor.class);
+                    gitAutor.setIdentString(author);
+                //                } else {
+                //                    LOGGER.debug ("Author '{}' was found already in store", author);
+                }
                 gitAutor.setName(author.substring(0, author.indexOf("<")).trim());
                 gitAutor.setEmail(author.substring(author.indexOf("<")+1, author.indexOf(">")).trim());
                 authors.put(author, gitAutor);
+                //            } else {
+                //                LOGGER.debug ("Author '{}' already cached", author);
             }
             authors.get(author).getCommits().add(gitCommit);
         }
