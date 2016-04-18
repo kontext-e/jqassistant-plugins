@@ -2,15 +2,13 @@ package de.kontext_e.jqassistant.plugin.git.scanner;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.DateFormat;
 import java.nio.file.Path;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitTagDescriptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,10 +19,11 @@ import com.buschmais.jqassistant.plugin.common.api.scanner.AbstractScannerPlugin
 import com.buschmais.jqassistant.plugin.common.api.scanner.filesystem.FileResource;
 import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitAuthorDescriptor;
 import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitBranchDescriptor;
-import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitCommitDescriptor;
 import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitChangeDescriptor;
-import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitRepositoryDescriptor;
+import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitCommitDescriptor;
 import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitFileDescriptor;
+import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitRepositoryDescriptor;
+import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitTagDescriptor;
 
 /**
  * @author jn4, Kontext E GmbH
@@ -184,14 +183,10 @@ public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitRep
                     LOGGER.debug ("Author '{}' does not exist, have to create a new entity", author);
                     gitAutor = store.create(GitAuthorDescriptor.class);
                     gitAutor.setIdentString(author);
-                //                } else {
-                //                    LOGGER.debug ("Author '{}' was found already in store", author);
                 }
                 gitAutor.setName(author.substring(0, author.indexOf("<")).trim());
                 gitAutor.setEmail(author.substring(author.indexOf("<")+1, author.indexOf(">")).trim());
                 authors.put(author, gitAutor);
-                //            } else {
-                //                LOGGER.debug ("Author '{}' already cached", author);
             }
             authors.get(author).getCommits().add(gitCommit);
         }
