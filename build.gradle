@@ -193,39 +193,19 @@ task(jqascan, dependsOn: 'removeJQAReport', type: JavaExec) {
   args 'jqassistant/jqassistant.properties'
   args '-f'
 
-  args 'checkstyle/src/main'
-  args 'findbugs/src/main'
-  args 'git/src/main'
-  args 'jacoco/src/main'
-  args 'linecount/src/main'
-  args 'pmd/src/main'
-  args 'plantuml/src/main'
-  args 'cpp/src/main'
+  rootProject.subprojects {
+    args 'java:classpath::'+it.name+'/build/classes/main'
+    args 'java:classpath::'+it.name+'/build/classes/test'
+    args it.name+'/build/reports'
+    args it.name+'/src/main'
+    args it.name+'/src/test'
+  }
 
-  args 'checkstyle/build/reports'
-  args 'findbugs/build/reports'
-  args 'git/build/reports'
-  args 'jacoco/build/reports'
-  args 'linecount/build/reports'
-  args 'pmd/build/reports'
-  args 'plantuml/build/reports'
-  args 'cpp/build/reports'
-//  args 'plantuml/src/test/plantuml'
   args 'plantuml/src/test/asciidoc'
-  args 'java:classpath::checkstyle/build/classes'
-  args 'java:classpath::findbugs/build/classes'
-  args 'java:classpath::git/build/classes'
-  args 'java:classpath::jacoco/build/classes'
-  args 'java:classpath::linecount/build/classes'
-  args 'java:classpath::pmd/build/classes'
-  args 'java:classpath::plantuml/build/classes'
-  args 'java:classpath::cpp/build/classes'
+  args '.git'
 
   //args 'cpp/src/test/ast'
   //args 'privatetestdata'
-
-  args '.git'
-
 }
 
 task(jqaanalyze, type: JavaExec) {
@@ -248,3 +228,14 @@ task(jqs, type: JavaExec) {
   standardInput = System.in
 }
 
+task install2jqa(type: Copy) {
+  def jqahome = "$System.env.JQASSISTANT_HOME"
+  println 'jqahome = ' + jqahome;
+
+  mkdir "$projectDir/install"
+  into "$projectDir/install"
+  from configurations.runtime
+  exclude { details ->
+    details.file.name.contains('asm-3.1')
+  }
+}
