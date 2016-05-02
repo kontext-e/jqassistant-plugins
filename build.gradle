@@ -90,7 +90,7 @@ subprojects {
   }
 
   jacoco {
-    toolVersion = "0.7.1.201405082137"
+    toolVersion = "0.7.6.201602180812"
   }
 
   jacocoTestReport {
@@ -104,13 +104,14 @@ subprojects {
       configFile = new File(rootDir, 'config/checkstyle/checks.xml')
       ignoreFailures = true
       showViolations = false
-      toolVersion = '5.7'
+      toolVersion = '6.18'
     }
 
     findbugs {
       ignoreFailures = true
       effort = "max"
       reportLevel = "medium"
+      toolVersion = '3.0.1'
     }
 
     pmd {
@@ -119,7 +120,7 @@ subprojects {
       sourceSets = [sourceSets.main]
     }
 
-    install {
+  install {
         repositories.mavenInstaller {
             pom.groupId = 'de.kontext-e.jqassistant.plugin'
         }
@@ -171,7 +172,7 @@ dependencies {
   runtime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.git:${project.version}")
   runtime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.pmd:${project.version}")
   runtime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.plantuml:${project.version}")
-  runtime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.cpp:${project.version}")
+//  runtime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.cpp:${project.version}")
 
   runtime 'com.sun.jersey:jersey-server:1.13'
   runtime 'com.sun.jersey:jersey-core:1.13'
