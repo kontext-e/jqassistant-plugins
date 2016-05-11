@@ -242,3 +242,5 @@ task install2jqa(type: Copy) {
     details.file.name.contains('asm-3.1')
   }
 }
+
+build.dependsOn jqa
