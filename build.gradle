@@ -244,4 +244,3 @@ task install2jqa(type: Copy) {
 }
 
 build.dependsOn jqa
-check.finalizedBy jqa
