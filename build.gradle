@@ -45,7 +45,9 @@ subprojects {
     project.version = project.parent.version
     sourceCompatibility = 1.7
 
-    repositories {
+	check.finalizedBy jacocoTestReport
+
+	repositories {
         mavenCentral()
         mavenLocal()
     }
