@@ -116,7 +116,7 @@ development lines. Hence, it is a reference to <<:Git:Commit>>.
 [options="header"]
 |====
 | Name              | Target label(s)            | Cardinality | Description
-| HEAD              | <<:Git:Commit>>            | 1..1        | The reference to the <<:Git:Commit>>.
+| HAS_HEAD          | <<:Git:Commit>>            | 1..1        | The reference to the <<:Git:Commit>>.
 |====
 
 _Note_: Tracking branches are currently not directly modelled: Misc. Branches may just point to the same <<:Git:Commit>>
