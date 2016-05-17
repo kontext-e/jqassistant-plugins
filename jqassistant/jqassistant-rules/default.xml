@@ -26,18 +26,56 @@
         ]]></cypher>
     </constraint>
 
+
+	<concept id="visibility:PublicMethods">
+		<description>Labels public methods with Public</description>
+		<cypher><![CDATA[
+			MATCH
+				(m:Method)
+			WHERE
+				m.visibility='public'
+			SET
+				m:Public
+			RETURN
+				m.name;
+        ]]></cypher>
+	</concept>
+
+    <constraint id="visibility:PublicMethodsOnlyCalledFromLocalPackage" severity="info">
+        <requiresConcept refId="visibility:PublicMethods"/>
+        <description>Finds methods declared public but only called from local package.</description>
+        <cypher><![CDATA[
+			MATCH
+				(t1:Type)-[:DECLARES]->(m:Method),
+				(t2:Type)-[:DECLARES]->(p:Method:Public),
+				(package1:Package)-[:CONTAINS]->(t1),
+				(package2:Package:Java)-[:CONTAINS]->(t2),
+				(m)-[:INVOKES]->(p)
+			WHERE
+				package1.fqn <> package2.fqn
+			WITH
+				count(m) as calls, t2.fqn as typename, p.name as methodname
+			WHERE
+				calls = 0
+			RETURN
+				calls, typename, methodname;
+        ]]></cypher>
+    </constraint>
+
     <!-- make a concept out of this:
-        match (l:Linecount), (g:GitFile) where g.relativePath =~ ('.*'+l.name) return distinct g.relativePath, l.linecount order by l.linecount desc;
+        match (l:Linecount), (g:Git:File) where g.relativePath =~ ('.*'+l.name) return distinct g.relativePath, l.linecount order by l.linecount desc;
     -->
     <!-- make a concept out of this:
-        match (l:Linecount), (g:GitFile) where g.relativePath =~ ('.*'+l.name)
+        match (l:Linecount), (g:Git:File) where g.relativePath =~ ('.*'+l.name)
         with distinct g, l.linecount as linecount
-        match (g)-(cf:GitCommitFile)
+        match (g)-(cf:Git:Commit:File)
         return g.relativePath, count(cf) as modifications, linecount
         order by modifications desc, linecount desc;
     -->
 
     <group id="default">
+
+        <includeConstraint refId="visibility:PublicMethodsOnlyCalledFromLocalPackage" severity="critical"/>
         <includeConstraint refId="dependency:WrongDirection" severity="critical"/>
         <includeConstraint refId="debug:rule" severity="info"/>
         <!--
