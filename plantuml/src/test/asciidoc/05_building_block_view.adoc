@@ -11,10 +11,10 @@ The following diagram shows the main building blocks of the system and their int
 
 ["plantuml","MainBuildingBlocks.png","png"]
 ----
-package main.de.kontext_e.jqassistant.plugin.plantuml.scanner {}
-package main.de.kontext_e.jqassistant.plugin.plantuml.store.descriptor {}
+package de.kontext_e.jqassistant.plugin.plantuml.scanner {}
+package de.kontext_e.jqassistant.plugin.plantuml.store.descriptor {}
 
-main.de.kontext_e.jqassistant.plugin.plantuml.scanner --> main.de.kontext_e.jqassistant.plugin.plantuml.store.descriptor
+de.kontext_e.jqassistant.plugin.plantuml.scanner --> de.kontext_e.jqassistant.plugin.plantuml.store.descriptor
 
 -----
 
