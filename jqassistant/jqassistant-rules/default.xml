@@ -27,6 +27,20 @@
     </constraint>
 
 
+	<concept id="package:PackageLevel">
+		<description>Set the level property of a package, e.g. 1 for de, 2 for de.kontext_e and so on</description>
+		<cypher><![CDATA[
+			MATCH
+				(p:Package)
+			WITH
+				SPLIT(p.fqn,".") AS splitted, p
+			SET
+				p.level=SIZE(splitted)
+			RETURN
+				splitted, SIZE(splitted);
+		]]></cypher>
+	</concept>
+
 	<concept id="visibility:PublicMethods">
 		<description>Labels public methods with Public</description>
 		<cypher><![CDATA[
@@ -74,7 +88,7 @@
     -->
 
     <group id="default">
-
+        <includeConcept refId="package:PackageLevel"/>
         <includeConstraint refId="visibility:PublicMethodsOnlyCalledFromLocalPackage" severity="critical"/>
         <includeConstraint refId="dependency:WrongDirection" severity="critical"/>
         <includeConstraint refId="debug:rule" severity="info"/>
