@@ -52,13 +52,13 @@ public class ViolationType {
     @XmlValue
     protected String value;
     @XmlAttribute(name = "beginline")
-    protected Short beginline;
+    protected Integer beginline;
     @XmlAttribute(name = "endline")
-    protected Short endline;
+    protected Integer endline;
     @XmlAttribute(name = "begincolumn")
-    protected Byte begincolumn;
+    protected Integer begincolumn;
     @XmlAttribute(name = "endcolumn")
-    protected Short endcolumn;
+    protected Integer endcolumn;
     @XmlAttribute(name = "rule")
     protected String rule;
     @XmlAttribute(name = "ruleset")
@@ -75,7 +75,7 @@ public class ViolationType {
     @XmlSchemaType(name = "anyURI")
     protected String externalInfoUrl;
     @XmlAttribute(name = "priority")
-    protected Byte priority;
+    protected Integer priority;
 
     /**
      * Ruft den Wert der value-Eigenschaft ab.
@@ -109,7 +109,7 @@ public class ViolationType {
      *     {@link Short }
      *     
      */
-    public Short getBeginline() {
+    public Integer getBeginline() {
         return beginline;
     }
 
@@ -121,7 +121,7 @@ public class ViolationType {
      *     {@link Short }
      *     
      */
-    public void setBeginline(Short value) {
+    public void setBeginline(Integer value) {
         this.beginline = value;
     }
 
@@ -133,7 +133,7 @@ public class ViolationType {
      *     {@link Short }
      *     
      */
-    public Short getEndline() {
+    public Integer getEndline() {
         return endline;
     }
 
@@ -145,7 +145,7 @@ public class ViolationType {
      *     {@link Short }
      *     
      */
-    public void setEndline(Short value) {
+    public void setEndline(Integer value) {
         this.endline = value;
     }
 
@@ -157,7 +157,7 @@ public class ViolationType {
      *     {@link Byte }
      *     
      */
-    public Byte getBegincolumn() {
+    public Integer getBegincolumn() {
         return begincolumn;
     }
 
@@ -169,7 +169,7 @@ public class ViolationType {
      *     {@link Byte }
      *     
      */
-    public void setBegincolumn(Byte value) {
+    public void setBegincolumn(Integer value) {
         this.begincolumn = value;
     }
 
@@ -181,7 +181,7 @@ public class ViolationType {
      *     {@link Short }
      *     
      */
-    public Short getEndcolumn() {
+    public Integer getEndcolumn() {
         return endcolumn;
     }
 
@@ -193,7 +193,7 @@ public class ViolationType {
      *     {@link Short }
      *     
      */
-    public void setEndcolumn(Short value) {
+    public void setEndcolumn(Integer value) {
         this.endcolumn = value;
     }
 
@@ -365,7 +365,7 @@ public class ViolationType {
      *     {@link Byte }
      *     
      */
-    public Byte getPriority() {
+    public Integer getPriority() {
         return priority;
     }
 
@@ -377,7 +377,7 @@ public class ViolationType {
      *     {@link Byte }
      *     
      */
-    public void setPriority(Byte value) {
+    public void setPriority(Integer value) {
         this.priority = value;
     }
 

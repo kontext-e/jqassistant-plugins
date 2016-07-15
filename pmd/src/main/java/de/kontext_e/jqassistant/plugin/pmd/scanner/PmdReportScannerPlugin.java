@@ -111,7 +111,7 @@ public class PmdReportScannerPlugin extends AbstractScannerPlugin<FileResource, 
             vioDescriptor.setRule(vioType.getRule());
             vioDescriptor.setRuleSet(vioType.getRuleset());
             vioDescriptor.setPackage(vioType.get_package());
-            vioDescriptor.setClass(vioType.getClazz());
+            vioDescriptor.setClassName(vioType.getClazz());
 			vioDescriptor.setMethod(vioType.getMethod());
 			vioDescriptor.setVariable(vioType.getVariable());
 			vioDescriptor.setExternalInfoUrl(vioType.getExternalInfoUrl());

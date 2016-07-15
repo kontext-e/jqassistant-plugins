@@ -9,42 +9,54 @@ import com.buschmais.xo.neo4j.api.annotation.Property;
 @Label("Violation")
 public interface PmdViolationDescriptor extends PmdDescriptor {
     @Property("beginline")
-    void setBeginLine(Short beginLine);
+    void setBeginLine(Integer beginLine);
+	Integer getBeginLine();
 
     @Property("endline")
-    void setEndLine(Short endLine);
+    void setEndLine(Integer endLine);
+	Integer getEndLine();
 
     @Property("begincolumn")
-    void setBeginColumn(Byte beginColumn);
+    void setBeginColumn(Integer beginColumn);
+	Integer getBeginColumn();
 
     @Property("endcolumn")
-    void setEndColumn(Short endColumn);
+    void setEndColumn(Integer endColumn);
+	Integer getEndColumn();
 
     @Property("rule")
     void setRule(String rule);
+    String getRule();
 
 	@Property("ruleset")
 	void setRuleSet(String ruleset);
+	String getRuleSet();
 
     @Property("package")
     void setPackage(String aPackage);
+	String getPackage();
 
-    @Property("class")
-    void setClass(String clazz);
+    @Property("className")
+    void setClassName(String className);
+	String getClassName();
 
     @Property("method")
     void setMethod(String method);
+	String getMethod();
 
     @Property("variable")
     void setVariable(String variable);
+	String getVariable();
 
     @Property("externalInfoUrl")
     void setExternalInfoUrl(String externalInfoUrl);
+	String getExternalInfoUrl();
 
 	@Property("priority")
-	void setPriority(Byte priority);
+	void setPriority(Integer priority);
+	Integer getPriority();
 
 	@Property("message")
 	void setMessage(String message);
-
+	String getMessage();
 }
