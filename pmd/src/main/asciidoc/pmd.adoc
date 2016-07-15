@@ -54,7 +54,7 @@ Represents a PMD violation.
 | rule              | PMD rule name.
 | ruleset           | Name of PMD rule set, e.g. 'Unnecessary'.
 | package           | Name of the Java package where the violation was found.
-| class             | Name of the Java class where the violation was found.
+| className         | Name of the Java class where the violation was found.
 | method            | Name of the Java method where the violation was found.
 | variable          | Name of the Java variable where the violation was found.
 | externalInfoUrl   | Link to PMD homepage where to find more information about the PMD rule.
