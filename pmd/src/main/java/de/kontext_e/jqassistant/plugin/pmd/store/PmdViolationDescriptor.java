@@ -8,20 +8,43 @@ import com.buschmais.xo.neo4j.api.annotation.Property;
  */
 @Label("Violation")
 public interface PmdViolationDescriptor extends PmdDescriptor {
+    @Property("beginline")
+    void setBeginLine(Short beginLine);
+
+    @Property("endline")
+    void setEndLine(Short endLine);
+
+    @Property("begincolumn")
+    void setBeginColumn(Byte beginColumn);
+
+    @Property("endcolumn")
+    void setEndColumn(Short endColumn);
+
     @Property("rule")
-    String getRule();
     void setRule(String rule);
 
-    @Property("priority")
-    Byte getPriority();
-    void setPriority(Byte priority);
+	@Property("ruleset")
+	void setRuleSet(String ruleset);
 
-    @Property("ruleset")
-    String getRuleSet();
-    void setRuleSet(String ruleset);
+    @Property("package")
+    void setPackage(String aPackage);
+
+    @Property("class")
+    void setClass(String clazz);
 
     @Property("method")
-    String getMethod();
     void setMethod(String method);
+
+    @Property("variable")
+    void setVariable(String variable);
+
+    @Property("externalInfoUrl")
+    void setExternalInfoUrl(String externalInfoUrl);
+
+	@Property("priority")
+	void setPriority(Byte priority);
+
+	@Property("message")
+	void setMessage(String message);
 
 }

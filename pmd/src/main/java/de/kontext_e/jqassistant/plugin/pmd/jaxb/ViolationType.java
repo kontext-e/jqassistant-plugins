@@ -69,6 +69,8 @@ public class ViolationType {
     protected String clazz;
     @XmlAttribute(name = "method")
     protected String method;
+    @XmlAttribute(name = "variable")
+    protected String variable;
     @XmlAttribute(name = "externalInfoUrl")
     @XmlSchemaType(name = "anyURI")
     protected String externalInfoUrl;
@@ -315,7 +317,23 @@ public class ViolationType {
         this.method = value;
     }
 
-    /**
+	public String get_package() {
+		return _package;
+	}
+
+	public void set_package(String _package) {
+		this._package = _package;
+	}
+
+	public String getVariable() {
+		return variable;
+	}
+
+	public void setVariable(String variable) {
+		this.variable = variable;
+	}
+
+	/**
      * Ruft den Wert der externalInfoUrl-Eigenschaft ab.
      * 
      * @return

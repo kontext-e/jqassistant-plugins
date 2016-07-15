@@ -47,8 +47,17 @@ Represents a PMD violation.
 [options="header"]
 |====
 | Name              | Description
+| beginline         | Source file begin line
+| endline           | Source file end line
+| begincolumn       | Source file begin column
+| endcolumn         | Source file end column
 | rule              | PMD rule name.
-| priority          | Violation priority, e.g. 4.
 | ruleset           | Name of PMD rule set, e.g. 'Unnecessary'.
+| package           | Name of the Java package where the violation was found.
+| class             | Name of the Java class where the violation was found.
 | method            | Name of the Java method where the violation was found.
+| variable          | Name of the Java variable where the violation was found.
+| externalInfoUrl   | Link to PMD homepage where to find more information about the PMD rule.
+| priority          | Violation priority, e.g. 4.
+| message           | Rule violation message.
 |====

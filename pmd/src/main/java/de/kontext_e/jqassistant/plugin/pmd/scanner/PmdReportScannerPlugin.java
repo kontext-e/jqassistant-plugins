@@ -104,10 +104,19 @@ public class PmdReportScannerPlugin extends AbstractScannerPlugin<FileResource, 
     private void readViolations(final Store store, final FileType fileType, final PmdFileDescriptor pmdFileDescriptor) {
         for (ViolationType vioType : fileType.getViolation()) {
             final PmdViolationDescriptor vioDescriptor = store.create(PmdViolationDescriptor.class);
+			vioDescriptor.setBeginLine(vioType.getBeginline());
+			vioDescriptor.setEndLine(vioType.getEndline());
+			vioDescriptor.setBeginColumn(vioType.getBegincolumn());
+			vioDescriptor.setEndColumn(vioType.getEndcolumn());
             vioDescriptor.setRule(vioType.getRule());
             vioDescriptor.setRuleSet(vioType.getRuleset());
-            vioDescriptor.setPriority(vioType.getPriority());
-            vioDescriptor.setMethod(vioType.getMethod());
+            vioDescriptor.setPackage(vioType.get_package());
+            vioDescriptor.setClass(vioType.getClazz());
+			vioDescriptor.setMethod(vioType.getMethod());
+			vioDescriptor.setVariable(vioType.getVariable());
+			vioDescriptor.setExternalInfoUrl(vioType.getExternalInfoUrl());
+			vioDescriptor.setPriority(vioType.getPriority());
+			vioDescriptor.setMessage(vioType.getValue());
             pmdFileDescriptor.getViolations().add(vioDescriptor);
         }
     }
@@ -129,6 +138,4 @@ public class PmdReportScannerPlugin extends AbstractScannerPlugin<FileResource, 
         }
         return pmdType;
     }
-
-   
 }
