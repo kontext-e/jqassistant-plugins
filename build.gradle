@@ -148,39 +148,35 @@ repositories {
   mavenCentral()
 }
 
+configurations {
+	jqaRuntime
+}
+
 dependencies {
 
-  runtime("com.buschmais.jqassistant.core:jqassistant.core.store:${project.jqaversion}")
-  runtime("com.buschmais.jqassistant.core:jqassistant.core.scanner:${project.jqaversion}")
-  runtime("com.buschmais.jqassistant.core:jqassistant.core.analysis:${project.jqaversion}")
-  runtime("com.buschmais.jqassistant.core:jqassistant.core.report:${project.jqaversion}")
-  runtime("com.buschmais.jqassistant.core:jqassistant.core.plugin:${project.jqaversion}")
-  runtime("com.buschmais.jqassistant.plugin:jqassistant.plugin.common:${project.jqaversion}")
-  runtime("com.buschmais.jqassistant.scm:jqassistant.scm.cli:${project.jqaversion}")
+	jqaRuntime("com.buschmais.jqassistant.core:jqassistant.core.store:${project.jqaversion}")
+	jqaRuntime("com.buschmais.jqassistant.core:jqassistant.core.scanner:${project.jqaversion}")
+	jqaRuntime("com.buschmais.jqassistant.core:jqassistant.core.analysis:${project.jqaversion}")
+	jqaRuntime("com.buschmais.jqassistant.core:jqassistant.core.report:${project.jqaversion}")
+	jqaRuntime("com.buschmais.jqassistant.core:jqassistant.core.plugin:${project.jqaversion}")
+	jqaRuntime("com.buschmais.jqassistant.plugin:jqassistant.plugin.common:${project.jqaversion}")
+	jqaRuntime("com.buschmais.jqassistant.scm:jqassistant.scm.cli:${project.jqaversion}")
 
-  runtime("com.buschmais.jqassistant.plugin:jqassistant.plugin.cdi:${project.jqaversion}")
-  runtime("com.buschmais.jqassistant.plugin:jqassistant.plugin.ejb3:${project.jqaversion}")
-  runtime("com.buschmais.jqassistant.plugin:jqassistant.plugin.java:${project.jqaversion}")
-  runtime("com.buschmais.jqassistant.plugin:jqassistant.plugin.java8:${project.jqaversion}")
-  runtime("com.buschmais.jqassistant.plugin:jqassistant.plugin.javaee6:${project.jqaversion}")
-  runtime("com.buschmais.jqassistant.plugin:jqassistant.plugin.jaxrs:${project.jqaversion}")
-  runtime("com.buschmais.jqassistant.plugin:jqassistant.plugin.jpa2:${project.jqaversion}")
-  runtime("com.buschmais.jqassistant.plugin:jqassistant.plugin.junit:${project.jqaversion}")
+	jqaRuntime("com.buschmais.jqassistant.plugin:jqassistant.plugin.java:${project.jqaversion}")
+	jqaRuntime("com.buschmais.jqassistant.plugin:jqassistant.plugin.java8:${project.jqaversion}")
+	jqaRuntime("com.buschmais.jqassistant.plugin:jqassistant.plugin.junit:${project.jqaversion}")
 
-  runtime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.checkstyle:${project.version}")
-  runtime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.findbugs:${project.version}")
-  runtime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.jacoco:${project.version}")
-  runtime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.linecount:${project.version}")
-  runtime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.git:${project.version}")
-  runtime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.pmd:${project.version}")
-  runtime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.plantuml:${project.version}")
-//  runtime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.cpp:${project.version}")
+	jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.checkstyle:${project.version}")
+	jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.findbugs:${project.version}")
+	jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.jacoco:${project.version}")
+	jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.linecount:${project.version}")
+	jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.git:${project.version}")
+	jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.pmd:${project.version}")
+	jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.plantuml:${project.version}")
+	//  jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.cpp:${project.version}")
 
-  runtime 'com.sun.jersey:jersey-server:1.13'
-  runtime 'com.sun.jersey:jersey-core:1.13'
-  runtime 'com.sun.jersey:jersey-servlet:1.13'
 
-  gems 'rubygems:asciidoctor-diagram:1.2.1'
+  	gems 'rubygems:asciidoctor-diagram:1.2.1'
 }
 
 task removeJQAReport(type: Delete) {
@@ -190,7 +186,7 @@ task removeJQAReport(type: Delete) {
 
 task(jqascan, dependsOn: 'removeJQAReport', type: JavaExec) {
   main = 'com.buschmais.jqassistant.scm.cli.Main'
-  classpath = sourceSets.main.runtimeClasspath
+  classpath = configurations.jqaRuntime
   args 'scan'
   args '-p'
   args 'jqassistant/jqassistant.properties'
@@ -213,7 +209,7 @@ task(jqascan, dependsOn: 'removeJQAReport', type: JavaExec) {
 
 task(jqaanalyze, type: JavaExec) {
   main = 'com.buschmais.jqassistant.scm.cli.Main'
-  classpath = sourceSets.main.runtimeClasspath
+  classpath = configurations.jqaRuntime
   args 'analyze'
   args '-r'
   // args 'doc/architecture'
@@ -226,7 +222,7 @@ task(jqa, dependsOn: ['jqascan','jqaanalyze']) {
 
 task(jqs, type: JavaExec) {
   main = 'com.buschmais.jqassistant.scm.cli.Main'
-  classpath = sourceSets.test.runtimeClasspath
+  classpath = configurations.jqaRuntime
   args 'server'
   standardInput = System.in
 }
