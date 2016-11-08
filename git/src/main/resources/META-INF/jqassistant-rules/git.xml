@@ -9,6 +9,8 @@
               (repository)-[:HAS_HEAD]->(head:Git:Commit),
               (repository)-[:HAS_BRANCH]->(branch:Git:Branch)-[:HAS_HEAD]->(branchHead:Git:Commit),
                p=shortestPath((branchHead)-[:HAS_PARENT*0..]->(head))
+            SET
+              branch:Current
             RETURN
               branch.name as CurrentBranch, length(p) as Offset
             ]]></cypher>
