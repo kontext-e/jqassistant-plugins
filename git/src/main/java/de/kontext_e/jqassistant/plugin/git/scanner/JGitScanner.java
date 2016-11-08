@@ -47,13 +47,6 @@ class JGitScanner {
     private String range = null;
     private Map<String,GitCommit> commits = new HashMap<>();
 
-    private GitCommit retrieveCommit (String sha) {
-        if (!commits.containsKey(sha)) {
-            commits.put(sha, new GitCommit (sha));
-        }
-        return commits.get(sha);
-    }
-
     JGitScanner(final String path, String range) {
         this.path = path;
         this.range = range;
@@ -133,6 +126,13 @@ class JGitScanner {
 
         logger.debug("Found #{} commits", result.size());
         return result;
+    }
+
+    private GitCommit retrieveCommit (String sha) {
+        if (!commits.containsKey(sha)) {
+            commits.put(sha, new GitCommit (sha));
+        }
+        return commits.get(sha);
     }
 
     private void addCommitParents(final RevWalk rw, final DiffFormatter df, final RevCommit revCommit, final GitCommit gitCommit) throws IOException {
