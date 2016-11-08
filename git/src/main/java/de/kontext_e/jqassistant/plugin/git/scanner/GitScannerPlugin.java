@@ -87,14 +87,15 @@ public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitRep
         List<GitCommit> commits = jGitScanner.findCommits();
         List<GitBranch> branches = jGitScanner.findBranches();
         List<GitTag> tags = jGitScanner.findTags();
+        GitBranch head = jGitScanner.findHead();
 
-        addCommits(store, gitRepositoryDescriptor, commits, branches, tags);
+        addCommits(store, gitRepositoryDescriptor, commits, branches, tags, head);
 
         return gitRepositoryDescriptor;
     }
 
     private void addCommits(final Store store, final GitRepositoryDescriptor gitRepositoryDescriptor,
-                            final List<GitCommit> gitCommits, final  List<GitBranch> branches, final List<GitTag> tags) {
+                            final List<GitCommit> gitCommits, final  List<GitBranch> branches, final List<GitTag> tags, final GitBranch head) {
         Map<String, GitAuthorDescriptor> authors = new HashMap<>();
         Map<String, GitFileDescriptor> files = new HashMap<>();
         Map<String, GitCommitDescriptor> commits = new HashMap<>();
@@ -172,6 +173,9 @@ public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitRep
             gitTagDescriptor.setCommit(gitCommitDescriptor);
             gitRepositoryDescriptor.getTags().add(gitTagDescriptor);
         }
+
+        GitCommitDescriptor headDescriptor = commits.get(head.getCommitSha());
+        gitRepositoryDescriptor.setHead(headDescriptor);
     }
 
     private void addCommitForAuthor(final Map<String, GitAuthorDescriptor> authors, final String author, final Store store, final GitCommitDescriptor gitCommit) {
