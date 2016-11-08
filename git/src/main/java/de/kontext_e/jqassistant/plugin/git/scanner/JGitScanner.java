@@ -39,7 +39,7 @@ import org.slf4j.LoggerFactory;
  * @since 1.1.0
  */
 // TODO: Rename this! In fact it is not a Scanner but a Repository!
-public class JGitScanner {
+class JGitScanner {
 
     private static final Logger logger = LoggerFactory.getLogger(JGitScanner.class);
 
@@ -54,12 +54,12 @@ public class JGitScanner {
         return commits.get(sha);
     }
 
-    public JGitScanner (final String path, String range) {
+    JGitScanner(final String path, String range) {
         this.path = path;
         this.range = range;
     }
 
-    protected static LogCommand getLogWithOrWithOutRange (Git git, String range) throws IOException {
+    static LogCommand getLogWithOrWithOutRange(Git git, String range) throws IOException {
         LogCommand result = git.log();
 
         if (null == range) {
@@ -90,7 +90,7 @@ public class JGitScanner {
         return result;
     }
 
-    public List<GitCommit> findCommits() throws IOException {
+    List<GitCommit> findCommits() throws IOException {
         Repository repository = getRepository();
 
         List<GitCommit> result = new LinkedList<>();
@@ -164,12 +164,12 @@ public class JGitScanner {
         return repository;
     }
 
-    public GitBranch findHead () throws IOException {
+    GitBranch findHead() throws IOException {
         ObjectId head = getRepository().resolve(Constants.HEAD);
         return new GitBranch (Constants.HEAD, ObjectId.toString(head));
     }
 
-    public List<GitBranch> findBranches () throws IOException {
+    List<GitBranch> findBranches() throws IOException {
         Repository repository = getRepository();
 
         List<GitBranch> result = new LinkedList<>();
@@ -202,7 +202,7 @@ public class JGitScanner {
         return logs.iterator().next();
     }
 
-    public List<GitTag> findTags () throws IOException {
+    List<GitTag> findTags() throws IOException {
         Repository repository = getRepository();
 
         List<GitTag> result = new LinkedList<>();
