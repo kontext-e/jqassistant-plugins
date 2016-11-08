@@ -7,10 +7,7 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffFormatter;
 import org.eclipse.jgit.diff.RawTextComparator;
-import org.eclipse.jgit.lib.AnyObjectId;
-import org.eclipse.jgit.lib.ObjectId;
-import org.eclipse.jgit.lib.Ref;
-import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.lib.*;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
@@ -160,11 +157,15 @@ public class JGitScanner {
         return repository;
     }
 
+    public GitBranch findHead () throws IOException {
+        ObjectId head = getRepository().resolve(Constants.HEAD);
+        return new GitBranch (Constants.HEAD, ObjectId.toString(head));
+    }
+
     public List<GitBranch> findBranches () throws IOException {
         Repository repository = getRepository();
 
         List<GitBranch> result = new LinkedList<>();
-
         try (Git git = new Git(repository)) {
             List<Ref> branches = git.branchList().setListMode(ListBranchCommand.ListMode.ALL).call();
             for (Ref branchRef : branches) {
