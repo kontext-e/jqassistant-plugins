@@ -120,25 +120,7 @@ class JGitScanner {
                 gitCommit.setDate(date);
                 gitCommit.setMessage(commit.getFullMessage());
 
-                for (int i = 0; i < commit.getParentCount(); i++) {
-                    ObjectId parentId = commit.getParent(i).getId();
-                    RevCommit parent = rw.parseCommit(parentId);
-
-                    List<DiffEntry> diffs = df.scan(parent.getTree(), commit.getTree());
-                    for (DiffEntry diff : diffs) {
-                        final String changeType = diff.getChangeType().toString().substring(0, 1);
-                        final String oldPath = diff.getOldPath();
-                        final String newPath = diff.getNewPath();
-                        final String path = "D".equalsIgnoreCase(changeType) ? oldPath : newPath;
-                        logger.debug("changeType={}, path={}", changeType, path);
-                        final GitChange gitChange = new GitChange(changeType, path);
-                        gitCommit.getGitChanges().add(gitChange);
-                    }
-
-                    String parentSha = ObjectId.toString(parentId);
-                    final GitCommit parentCommit = retrieveCommit(parentSha);
-                    gitCommit.getParents().add(parentCommit);
-                }
+                addCommitParents(rw, df, commit, gitCommit);
 
                 result.add(gitCommit);
             }
@@ -151,6 +133,28 @@ class JGitScanner {
 
         logger.debug("Found #{} commits", result.size());
         return result;
+    }
+
+    private void addCommitParents(final RevWalk rw, final DiffFormatter df, final RevCommit revCommit, final GitCommit gitCommit) throws IOException {
+        for (int i = 0; i < revCommit.getParentCount(); i++) {
+            ObjectId parentId = revCommit.getParent(i).getId();
+            RevCommit parent = rw.parseCommit(parentId);
+
+            List<DiffEntry> diffs = df.scan(parent.getTree(), revCommit.getTree());
+            for (DiffEntry diff : diffs) {
+                final String changeType = diff.getChangeType().toString().substring(0, 1);
+                final String oldPath = diff.getOldPath();
+                final String newPath = diff.getNewPath();
+                final String diffPath = "D".equalsIgnoreCase(changeType) ? oldPath : newPath;
+                logger.debug("changeType={}, path={}", changeType, diffPath);
+                final GitChange gitChange = new GitChange(changeType, diffPath);
+                gitCommit.getGitChanges().add(gitChange);
+            }
+
+            String parentSha = ObjectId.toString(parentId);
+            final GitCommit parentCommit = retrieveCommit(parentSha);
+            gitCommit.getParents().add(parentCommit);
+        }
     }
 
     private Repository getRepository() throws IOException {
