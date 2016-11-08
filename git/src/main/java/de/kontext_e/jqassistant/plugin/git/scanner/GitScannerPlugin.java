@@ -41,7 +41,7 @@ public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitRep
 
     @Override
     /**
-     * Check whether this is the start of a git repository?
+     * Check whether this is the start of a git repository.
      *
      * If the path is "/HEAD" and the file (behind item) lives in a directory called ".git" this must be a git
      * repository and the scanner may perform it's work on it (call to "scan" method).
@@ -82,23 +82,22 @@ public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitRep
         final GitRepositoryDescriptor gitRepositoryDescriptor = store.create(GitRepositoryDescriptor.class);
         initGitDescriptor(gitRepositoryDescriptor, item.getFile());
 
-        JGitScanner jGitScanner = new JGitScanner(gitRepositoryDescriptor.getFileName(), range);
-
-        List<GitCommit> commits = jGitScanner.findCommits();
-        List<GitBranch> branches = jGitScanner.findBranches();
-        List<GitTag> tags = jGitScanner.findTags();
-        GitBranch head = jGitScanner.findHead();
-
-        addCommits(store, gitRepositoryDescriptor, commits, branches, tags, head);
+        addCommits(store, gitRepositoryDescriptor);
 
         return gitRepositoryDescriptor;
     }
 
-    private void addCommits(final Store store, final GitRepositoryDescriptor gitRepositoryDescriptor,
-                            final List<GitCommit> gitCommits, final  List<GitBranch> branches, final List<GitTag> tags, final GitBranch head) {
+    private void addCommits(final Store store, final GitRepositoryDescriptor gitRepositoryDescriptor) throws IOException {
         Map<String, GitAuthorDescriptor> authors = new HashMap<>();
         Map<String, GitFileDescriptor> files = new HashMap<>();
         Map<String, GitCommitDescriptor> commits = new HashMap<>();
+
+        JGitScanner jGitScanner = new JGitScanner(gitRepositoryDescriptor.getFileName(), range);
+
+        List<GitCommit> gitCommits = jGitScanner.findCommits();
+        List<GitBranch> branches = jGitScanner.findBranches();
+        List<GitTag> tags = jGitScanner.findTags();
+        GitBranch head = jGitScanner.findHead();
 
         // First pass: Add the commits to the graph
         for (GitCommit gitCommit : gitCommits) {
