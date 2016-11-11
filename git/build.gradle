@@ -7,6 +7,8 @@ jar {
 }
 
 dependencies {
+  compile 'org.eclipse.jgit:org.eclipse.jgit:4.1.1.201511131810-r'
+
   testCompile 'org.codehaus.groovy:groovy-all:2.4.6'
   testCompile 'org.ajoberstar:grgit:1.6.0'
 }
