@@ -5,9 +5,9 @@
         <description>For debugging purposes</description>
         <cypher><![CDATA[
                 match
-                    (g:Cpp)
+                    (g:Plaintext:Line)
                 return
-                    g.name
+                    g.lineNumber, g.text
         ]]></cypher>
     </constraint>
 
@@ -91,7 +91,7 @@
         <includeConcept refId="package:PackageLevel"/>
         <includeConstraint refId="visibility:PublicMethodsOnlyCalledFromLocalPackage" severity="critical"/>
         <includeConstraint refId="dependency:WrongDirection" severity="critical"/>
-        <includeConstraint refId="debug:rule" severity="info"/>
+        <includeConstraint refId="debug:rule" severity="critical"/>
         <!--
         -->
     </group>
