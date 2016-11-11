@@ -3,9 +3,9 @@ apply plugin: 'maven'
 apply plugin: 'org.asciidoctor.gradle.asciidoctor'
 apply plugin: 'com.github.jruby-gradle.base'
 
-project.ext["jqaversion"] = "1.1.3"
+project.ext["jqaversion"] = "1.1.4"
 project.group = 'de.kontext-e.jqassistant.plugin'
-project.version = '1.1.2'
+project.version = '1.1.3'
 
 buildscript {
   repositories {
@@ -53,12 +53,14 @@ subprojects {
     }
 
     dependencies {
-        compile 'com.buschmais.jqassistant.core:jqassistant.core.scanner:'+project.jqaversion
-        compile 'com.buschmais.jqassistant.core:jqassistant.core.store:'+project.jqaversion
-        compile 'com.buschmais.jqassistant.plugin:jqassistant.plugin.common:'+project.jqaversion
+        compileOnly  'com.buschmais.jqassistant.core:jqassistant.core.scanner:'+project.jqaversion
+        compileOnly  'com.buschmais.jqassistant.core:jqassistant.core.store:'+project.jqaversion
+        compileOnly  'com.buschmais.jqassistant.plugin:jqassistant.plugin.common:'+project.jqaversion
         compile 'org.ow2.asm:asm:5.0.3'
-        compile 'org.eclipse.jgit:org.eclipse.jgit:4.1.1.201511131810-r'
 
+        testCompile  'com.buschmais.jqassistant.core:jqassistant.core.scanner:'+project.jqaversion
+        testCompile  'com.buschmais.jqassistant.core:jqassistant.core.store:'+project.jqaversion
+        testCompile  'com.buschmais.jqassistant.plugin:jqassistant.plugin.common:'+project.jqaversion
         testCompile group: 'junit', name: 'junit', version: '4.11'
         testCompile group: 'org.hamcrest', name: 'hamcrest-all', version: '1.3'
         testCompile group: 'org.mockito', name: 'mockito-all', version: '1.9.5'
@@ -156,8 +158,8 @@ dependencies {
 
 	jqaRuntime("com.buschmais.jqassistant.core:jqassistant.core.store:${project.jqaversion}")
 	jqaRuntime("com.buschmais.jqassistant.core:jqassistant.core.scanner:${project.jqaversion}")
-	jqaRuntime("com.buschmais.jqassistant.core:jqassistant.core.analysis:${project.jqaversion}")
-	jqaRuntime("com.buschmais.jqassistant.core:jqassistant.core.report:${project.jqaversion}")
+	// not needed anymore? jqaRuntime("com.buschmais.jqassistant.core:jqassistant.core.analysis:${project.jqaversion}")
+	// not needed anymore? jqaRuntime("com.buschmais.jqassistant.core:jqassistant.core.report:${project.jqaversion}")
 	jqaRuntime("com.buschmais.jqassistant.core:jqassistant.core.plugin:${project.jqaversion}")
 	jqaRuntime("com.buschmais.jqassistant.plugin:jqassistant.plugin.common:${project.jqaversion}")
 	jqaRuntime("com.buschmais.jqassistant.scm:jqassistant.scm.cli:${project.jqaversion}")
@@ -173,6 +175,7 @@ dependencies {
 	jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.git:${project.version}")
 	jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.pmd:${project.version}")
 	jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.plantuml:${project.version}")
+	//jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.plaintext:${project.version}")
 	//  jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.cpp:${project.version}")
 
 
@@ -192,6 +195,7 @@ task(jqascan, dependsOn: 'removeJQAReport', type: JavaExec) {
   args 'jqassistant/jqassistant.properties'
   args '-f'
 
+
   rootProject.subprojects {
     args 'java:classpath::'+it.name+'/build/classes/main'
     args 'java:classpath::'+it.name+'/build/classes/test'
@@ -203,6 +207,8 @@ task(jqascan, dependsOn: 'removeJQAReport', type: JavaExec) {
   args 'plantuml/src/test/asciidoc'
   args '.git'
 
+
+//  args 'plaintext/src/test/testfiles'
   //args 'cpp/src/test/ast'
   //args 'privatetestdata'
 }
