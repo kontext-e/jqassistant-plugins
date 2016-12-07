@@ -11,4 +11,7 @@ public interface PlantUmlPackageDescriptor extends PlantUmlDescriptor, FullQuali
 
     @Relation("MAY_DEPEND_ON")
     Set<PlantUmlPackageDescriptor> getMayDependOnPackages();
+
+    @Relation("CONTAINS")
+    Set<PlantUmlPackageDescriptor> getContainedPackages();
 }
