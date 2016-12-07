@@ -81,7 +81,14 @@ class PumlLineParser {
 
     protected PlantUmlPackageDescriptor createPackageNode(final String line) {
         int lengthOfPackageLiteral = "package ".length();
-        final String name = line.substring(lengthOfPackageLiteral, line.indexOf(" ", lengthOfPackageLiteral)).trim();
+        int endIndex = line.indexOf(" ", lengthOfPackageLiteral);
+        if(endIndex < 0) {
+            endIndex = line.indexOf("{", lengthOfPackageLiteral);
+        }
+        if(endIndex < 0) {
+            endIndex = line.length();
+        }
+        final String name = line.substring(lengthOfPackageLiteral, endIndex).trim();
         PlantUmlPackageDescriptor packageDescriptor = store.create(PlantUmlPackageDescriptor.class);
         packageDescriptor.setFullQualifiedName(name);
         mappingFromFqnToPackage.put(name, packageDescriptor);
