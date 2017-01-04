@@ -2,6 +2,7 @@ package de.kontext_e.jqassistant.plugin.plantuml.scanner;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Stack;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +18,7 @@ class PumlLineParser {
     private final Map<String, PlantUmlPackageDescriptor> mappingFromFqnToPackage = new HashMap<>();
     private final PlantUmlFileDescriptor plantUmlFileDescriptor;
     private ParsingState parsingState = ParsingState.ACCEPTING;
+    private final Stack<PlantUmlPackageDescriptor> nestedPackages = new Stack<>();
 
     public PumlLineParser(final Store store, final PlantUmlFileDescriptor plantUmlFileDescriptor, final ParsingState parsingState) {
         this.store = store;
@@ -43,6 +45,11 @@ class PumlLineParser {
             if (normalizedLine.startsWith("package ")) {
                 PlantUmlPackageDescriptor packageNode = createPackageNode(line);
                 plantUmlFileDescriptor.getPlantUmlElements().add(packageNode);
+                if (!nestedPackages.empty()) {
+                    PlantUmlPackageDescriptor parent = nestedPackages.get(0);
+                    parent.getContainedPackages().add(packageNode);
+                }
+                nestedPackages.push(packageNode);
             }
 
             if (!normalizedLine.startsWith("-") && normalizedLine.contains("-")) {
