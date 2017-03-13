@@ -40,13 +40,14 @@ From master branch. Note: most recent versions from branches may differ.
 
 Work in progress
 ================
-* PlantUML class diagram packages; please note: although the plantuml plugin is version 1.1.0, it is
+* PlantUML class diagram packages; please note: although the plantuml plugin is version 1.1.x, it is
   far from a complete PlantUML import; in fact, only the packages of class diagrams were imported for now
   because this is the only thing that is currently needed for architecture rules
 
 Coming later
 ============
 * Jenkins
+* More ideas? Feel free to add Issues
 
 ## Continuous Build
 
