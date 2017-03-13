@@ -60,10 +60,22 @@ class PumlLineParser {
                 packageNode.setFullQualifiedName(iGroup.getCode().getFullName());
                 plantUmlFileDescriptor.getPlantUmlElements().add(packageNode);
                 mappingFromFqnToPackage.put(iGroup.getCode().getFullName(), packageNode);
+                if(iGroup.getParentContainer().getCode() != null) {
+                    PlantUmlPackageDescriptor parent = mappingFromFqnToPackage.get(iGroup.getParentContainer().getCode().getFullName());
+                    if(parent != null) {
+                        parent.getContainedPackages().add(packageNode);
+                    }
+                }
             }
             for (Link link : entityFactory.getLinks()) {
                 String lhs = link.getEntity1().getCode().getFullName();
                 String rhs = link.getEntity2().getCode().getFullName();
+                if("ARROW".equalsIgnoreCase(link.getType().getDecor2().name())) {
+                    String swap = rhs;
+                    rhs = lhs;
+                    lhs = swap;
+                }
+
                 mappingFromFqnToPackage.get(lhs).getMayDependOnPackages().add(mappingFromFqnToPackage.get(rhs));
             }
 
