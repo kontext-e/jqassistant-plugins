@@ -16,7 +16,7 @@ package de.kontext_e.jqassistant.plugin.plantuml.store {
     package de.kontext_e.jqassistant.plugin.plantuml.store.descriptor{}
 }
 
-de.kontext_e.jqassistant.plugin.plantuml.scanner ---> de.kontext_e.jqassistant.plugin.plantuml.store
+de.kontext_e.jqassistant.plugin.plantuml.scanner <--- de.kontext_e.jqassistant.plugin.plantuml.store
 
 -----
 

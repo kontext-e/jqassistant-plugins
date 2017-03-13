@@ -11,8 +11,40 @@
         ]]></cypher>
     </constraint>
 
+    <concept id="package:PackageLevel">
+        <description>Set the level property of a package, e.g. 1 for de, 2 for de.kontext_e and so on</description>
+        <cypher><![CDATA[
+			MATCH
+				(p:Java:Package)
+			WITH
+				SPLIT(p.fqn,".") AS splitted, p
+			SET
+				p.level=SIZE(splitted)
+			RETURN
+				splitted, SIZE(splitted);
+		]]></cypher>
+    </concept>
+
+    <concept id="dependency:TransitivePackageDependencies">
+        <requiresConcept refId="package:PackageLevel"/>
+        <requiresConcept refId="dependency:Package"/>
+        <description>Add a DEPENDS_ON relationship to parents of a package P from other packages up to the same level of the source package.</description>
+        <cypher><![CDATA[
+            MATCH
+                (p:Java:Package)-[:DEPENDS_ON]->(p2:Java:Package),
+                (parent:Java:Package)-[:CONTAINS*]->(p2:Java:Package)
+            WHERE
+                p.level <= parent.level
+            CREATE UNIQUE
+                (p)-[:DEPENDS_ON]->(parent)
+            RETURN
+                p.fqn, parent.fqn;
+        ]]></cypher>
+    </concept>
+
     <constraint id="dependency:WrongDirection" severity="critical">
         <requiresConcept refId="dependency:Package"/>
+        <requiresConcept refId="dependency:TransitivePackageDependencies"/>
         <description>Finds package dependencies which are in the wrong direction according to the documentation.</description>
         <cypher><![CDATA[
             MATCH
@@ -25,21 +57,6 @@
                 p3.fqn + "-->" + p4.fqn AS WrongDirection;
         ]]></cypher>
     </constraint>
-
-
-	<concept id="package:PackageLevel">
-		<description>Set the level property of a package, e.g. 1 for de, 2 for de.kontext_e and so on</description>
-		<cypher><![CDATA[
-			MATCH
-				(p:Java:Package)
-			WITH
-				SPLIT(p.fqn,".") AS splitted, p
-			SET
-				p.level=SIZE(splitted)
-			RETURN
-				splitted, SIZE(splitted);
-		]]></cypher>
-	</concept>
 
 	<concept id="visibility:PublicMethods">
 		<description>Labels public methods with Public</description>
@@ -89,10 +106,11 @@
 
     <group id="default">
         <includeConcept refId="package:PackageLevel"/>
+        <includeConcept refId="dependency:TransitivePackageDependencies"/>
         <includeConstraint refId="visibility:PublicMethodsOnlyCalledFromLocalPackage" severity="critical"/>
         <includeConstraint refId="dependency:WrongDirection" severity="critical"/>
-        <includeConstraint refId="debug:rule" severity="critical"/>
         <!--
+        <includeConstraint refId="debug:rule" severity="critical"/>
         -->
     </group>
 

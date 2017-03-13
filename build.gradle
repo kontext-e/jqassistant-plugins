@@ -196,7 +196,6 @@ task(jqascan, dependsOn: 'removeJQAReport', type: JavaExec) {
   args '-f'
 
 
-/*
   rootProject.subprojects {
     args 'java:classpath::'+it.name+'/build/classes/main'
     args 'java:classpath::'+it.name+'/build/classes/test'
@@ -207,9 +206,6 @@ task(jqascan, dependsOn: 'removeJQAReport', type: JavaExec) {
 
   args 'plantuml/src/test/asciidoc'
   args '.git'
-*/
-
-  args 'plantuml/src/test/asciidoc'
 
 //  args 'plaintext/src/test/testfiles'
   //args 'cpp/src/test/ast'
