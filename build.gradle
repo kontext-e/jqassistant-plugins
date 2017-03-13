@@ -158,8 +158,6 @@ dependencies {
 
 	jqaRuntime("com.buschmais.jqassistant.core:jqassistant.core.store:${project.jqaversion}")
 	jqaRuntime("com.buschmais.jqassistant.core:jqassistant.core.scanner:${project.jqaversion}")
-	// not needed anymore? jqaRuntime("com.buschmais.jqassistant.core:jqassistant.core.analysis:${project.jqaversion}")
-	// not needed anymore? jqaRuntime("com.buschmais.jqassistant.core:jqassistant.core.report:${project.jqaversion}")
 	jqaRuntime("com.buschmais.jqassistant.core:jqassistant.core.plugin:${project.jqaversion}")
 	jqaRuntime("com.buschmais.jqassistant.plugin:jqassistant.plugin.common:${project.jqaversion}")
 	jqaRuntime("com.buschmais.jqassistant.scm:jqassistant.scm.cli:${project.jqaversion}")
