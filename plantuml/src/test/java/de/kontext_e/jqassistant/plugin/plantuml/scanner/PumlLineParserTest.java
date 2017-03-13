@@ -25,40 +25,6 @@ public class PumlLineParserTest {
     }
 
     @Test
-    public void thatAPackagesIsRecognized() throws Exception {
-        final PlantUmlPackageDescriptor mockDescriptor = mock(PlantUmlPackageDescriptor.class);
-        when(mockStore.create(PlantUmlPackageDescriptor.class)).thenReturn(mockDescriptor);
-
-        pumlLineParser.parseLine("package de.kontext_e.jqassistant.plugin.plantuml.scanner {}");
-        verify(mockDescriptor).setFullQualifiedName("de.kontext_e.jqassistant.plugin.plantuml.scanner");
-
-        pumlLineParser.parseLine("package root {}");
-        verify(mockDescriptor).setFullQualifiedName("root");
-
-        pumlLineParser.parseLine("package without.space{}");
-        verify(mockDescriptor).setFullQualifiedName("without.space");
-
-        pumlLineParser.parseLine("package next.line");
-        verify(mockDescriptor).setFullQualifiedName("next.line");
-    }
-
-    @Test
-    public void thatAPackageDependencyIsRecognized() throws Exception {
-        final String line = "de.kontext_e.jqassistant.plugin.plantuml.scanner --> de.kontext_e.jqassistant.plugin.plantuml.store.descriptor";
-        final PlantUmlPackageDescriptor mockDescriptor = mock(PlantUmlPackageDescriptor.class);
-        when(mockStore.create(PlantUmlPackageDescriptor.class)).thenReturn(mockDescriptor);
-        final Set<PlantUmlPackageDescriptor> mockSet = mock(Set.class);
-        when(mockDescriptor.getMayDependOnPackages()).thenReturn(mockSet);
-        pumlLineParser.parseLine("package de.kontext_e.jqassistant.plugin.plantuml.scanner {");
-        pumlLineParser.parseLine("package de.kontext_e.jqassistant.plugin.plantuml.store.descriptor {");
-
-        pumlLineParser.parseLine(line);
-
-        verify(mockSet).add(mockDescriptor);
-    }
-
-
-    @Test
     public void thatEmbeddedPlantUMLInAsciidocIsRead() throws Exception {
         final String asciidoc = "=== Level 1\n" +
                                 "\n" +

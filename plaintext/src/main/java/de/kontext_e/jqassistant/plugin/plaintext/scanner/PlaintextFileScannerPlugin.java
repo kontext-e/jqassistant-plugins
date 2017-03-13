@@ -21,7 +21,7 @@ public class PlaintextFileScannerPlugin extends AbstractScannerPlugin<FileResour
     private static final Logger LOGGER = LoggerFactory.getLogger(PlaintextFileScannerPlugin.class);
     public static final String JQASSISTANT_PLUGIN_PLAINTEXT_SUFFIXES = "jqassistant.plugin.plaintext.suffixes";
 
-    private static List<String> suffixes = asList("puml", "adoc", "txt", "hpp", "cpp");
+    private static List<String> suffixes = asList("puml", "adoc", "txt", "hpp", "cpp", "c", "h");
 
 
     @Override

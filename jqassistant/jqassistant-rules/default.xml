@@ -16,8 +16,8 @@
         <description>Finds package dependencies which are in the wrong direction according to the documentation.</description>
         <cypher><![CDATA[
             MATCH
-                (p1:PlantUmlPackage)-[:MAY_DEPEND_ON]->(p2:PlantUmlPackage),
-                (p3:Package)-[:DEPENDS_ON]->(p4:Package)
+                (p1:PlantUml:Package)-[:MAY_DEPEND_ON]->(p2:PlantUml:Package),
+                (p3:Java:Package)-[:DEPENDS_ON]->(p4:Java:Package)
             WHERE
                 p1.fqn = p4.fqn
                 AND p2.fqn = p3.fqn
@@ -31,7 +31,7 @@
 		<description>Set the level property of a package, e.g. 1 for de, 2 for de.kontext_e and so on</description>
 		<cypher><![CDATA[
 			MATCH
-				(p:Package)
+				(p:Java:Package)
 			WITH
 				SPLIT(p.fqn,".") AS splitted, p
 			SET

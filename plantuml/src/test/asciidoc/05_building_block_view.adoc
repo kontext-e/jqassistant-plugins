@@ -10,7 +10,7 @@
 The following diagram shows the main building blocks of the system and their interdependencies:
 
 ["plantuml","MainBuildingBlocks.png","png"]
-----
+----s
 package de.kontext_e.jqassistant.plugin.plantuml.scanner {}
 package de.kontext_e.jqassistant.plugin.plantuml.store.descriptor {}
 

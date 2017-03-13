@@ -1,15 +1,22 @@
 package de.kontext_e.jqassistant.plugin.plantuml.scanner;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Stack;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.buschmais.jqassistant.core.store.api.Store;
 import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlFileDescriptor;
 import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlPackageDescriptor;
+import net.sourceforge.plantuml.BlockUml;
+import net.sourceforge.plantuml.SourceStringReader;
+import net.sourceforge.plantuml.classdiagram.AbstractEntityDiagram;
+import net.sourceforge.plantuml.core.Diagram;
+import net.sourceforge.plantuml.cucadiagram.Code;
+import net.sourceforge.plantuml.cucadiagram.IGroup;
+import net.sourceforge.plantuml.cucadiagram.Link;
+import net.sourceforge.plantuml.cucadiagram.entity.EntityFactory;
 
 class PumlLineParser {
     private static final Logger LOGGER = LoggerFactory.getLogger(PumlLineParser.class);
@@ -18,7 +25,7 @@ class PumlLineParser {
     private final Map<String, PlantUmlPackageDescriptor> mappingFromFqnToPackage = new HashMap<>();
     private final PlantUmlFileDescriptor plantUmlFileDescriptor;
     private ParsingState parsingState = ParsingState.ACCEPTING;
-    private final Stack<PlantUmlPackageDescriptor> nestedPackages = new Stack<>();
+    private StringBuilder lineBuffer = new StringBuilder();
 
     public PumlLineParser(final Store store, final PlantUmlFileDescriptor plantUmlFileDescriptor, final ParsingState parsingState) {
         this.store = store;
@@ -36,69 +43,42 @@ class PumlLineParser {
         }
         if(parsingState == ParsingState.ACCEPTING && normalizedLine.startsWith("----")) {
             parsingState = ParsingState.IGNORING;
+            lineBuffer.append("\n");
+            lineBuffer.append("@enduml");
+
+            SourceStringReader reader = new SourceStringReader(lineBuffer.toString());
+            List<BlockUml> blocks = reader.getBlocks();
+            if(blocks.isEmpty()) return; // something is wrong with the syntax?
+
+            Diagram diagram = blocks.get(0).getDiagram();
+            AbstractEntityDiagram descriptionDiagram = (AbstractEntityDiagram) diagram;
+            EntityFactory entityFactory = descriptionDiagram.getEntityFactory();
+            Map<Code, IGroup> groups = entityFactory.getGroups();
+            for (Map.Entry<Code, IGroup> codeIGroupEntry : groups.entrySet()) {
+                IGroup iGroup = codeIGroupEntry.getValue();
+                PlantUmlPackageDescriptor packageNode = store.create(PlantUmlPackageDescriptor.class);
+                packageNode.setFullQualifiedName(iGroup.getCode().getFullName());
+                plantUmlFileDescriptor.getPlantUmlElements().add(packageNode);
+                mappingFromFqnToPackage.put(iGroup.getCode().getFullName(), packageNode);
+            }
+            for (Link link : entityFactory.getLinks()) {
+                String lhs = link.getEntity1().getCode().getFullName();
+                String rhs = link.getEntity2().getCode().getFullName();
+                mappingFromFqnToPackage.get(lhs).getMayDependOnPackages().add(mappingFromFqnToPackage.get(rhs));
+            }
+
         }
         if(parsingState == ParsingState.PLANTUMLFOUND && normalizedLine.startsWith("----")) {
             parsingState = ParsingState.ACCEPTING;
+            lineBuffer = new StringBuilder();
+            lineBuffer.append("@startuml");
+            lineBuffer.append("\n");
+            return;
         }
 
         if(parsingState == ParsingState.ACCEPTING) {
-            if (normalizedLine.startsWith("package ")) {
-                PlantUmlPackageDescriptor packageNode = createPackageNode(line);
-                plantUmlFileDescriptor.getPlantUmlElements().add(packageNode);
-                if (!nestedPackages.empty()) {
-                    PlantUmlPackageDescriptor parent = nestedPackages.get(0);
-                    parent.getContainedPackages().add(packageNode);
-                }
-                nestedPackages.push(packageNode);
-            }
-
-            if (!normalizedLine.startsWith("-") && normalizedLine.contains("-")) {
-                createRelation(line);
-            }
+            lineBuffer.append(normalizedLine);
+            lineBuffer.append("\n");
         }
-    }
-
-    private void createRelation(final String line) {
-        boolean swap = false;
-        if(line.contains("<")) {
-            swap = true;
-        }
-
-        String packageNamesOnly = line.replaceAll("[-<>]", " ");
-        String lhs = packageNamesOnly.substring(0, packageNamesOnly.indexOf(" ")).trim();
-        String rhs = packageNamesOnly.substring(packageNamesOnly.indexOf(" ")).trim();
-
-        if(swap) {
-            String tmp = lhs;
-            lhs = rhs;
-            rhs = tmp;
-        }
-
-        if(!mappingFromFqnToPackage.containsKey(lhs)) {
-            LOGGER.warn("Syntax error: unknown lhs package "+lhs+ " of line "+line);
-            return;
-        }
-        if(!mappingFromFqnToPackage.containsKey(rhs)) {
-            LOGGER.warn("Syntax error: unknown rhs package "+rhs+ " of line "+line);
-            return;
-        }
-
-        mappingFromFqnToPackage.get(lhs).getMayDependOnPackages().add(mappingFromFqnToPackage.get(rhs));
-    }
-
-    protected PlantUmlPackageDescriptor createPackageNode(final String line) {
-        int lengthOfPackageLiteral = "package ".length();
-        int endIndex = line.indexOf(" ", lengthOfPackageLiteral);
-        if(endIndex < 0) {
-            endIndex = line.indexOf("{", lengthOfPackageLiteral);
-        }
-        if(endIndex < 0) {
-            endIndex = line.length();
-        }
-        final String name = line.substring(lengthOfPackageLiteral, endIndex).trim();
-        PlantUmlPackageDescriptor packageDescriptor = store.create(PlantUmlPackageDescriptor.class);
-        packageDescriptor.setFullQualifiedName(name);
-        mappingFromFqnToPackage.put(name, packageDescriptor);
-        return packageDescriptor;
     }
 }
