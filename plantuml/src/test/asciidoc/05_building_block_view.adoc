@@ -13,26 +13,20 @@ The following UML package diagram shows the main building blocks of the system a
 -----
 package de.kontext_e.jqassistant.plugin.plantuml.scanner {}
 package de.kontext_e.jqassistant.plugin.plantuml.store {
-    package de.kontext_e.jqassistant.plugin.plantuml.store.descriptor{}
+    package descriptor {}
 }
 
-de.kontext_e.jqassistant.plugin.plantuml.scanner ---> de.kontext_e.jqassistant.plugin.plantuml.store
+de.kontext_e.jqassistant.plugin.plantuml.scanner -up-> de.kontext_e.jqassistant.plugin.plantuml.store
 
 -----
 
-Comments regarding structure and interdependencies at Level 1:
-
-==== scanner (Black Box Description)
-
-*Purpose:* Scan a text file and create Neo4j nodes for packages and relationships for links.
-
-*Related Locations/Files:* Java package de.kontext_e.jqassistant.plugin.plantuml.scanner
-
-==== store (Black Box Description)
-
-*Purpose:* contains jQAssistant compliant descriptors for Neo4j nodes.
-
-*Related Locations/Files:* Java package de.kontext_e.jqassistant.plugin.plantuml.store
+.Description of de.kontext_e.jqassistant.plugin.plantuml packages
+[options="header"]
+|====
+| Package       | Purpose
+| scanner       | Scan a text file and create Neo4j nodes for packages and relationships for links.
+| store         | contains jQAssistant compliant descriptors for Neo4j nodes.
+|====
 
 
 ==== Open Issues
