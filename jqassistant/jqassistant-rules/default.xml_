@@ -12,6 +12,7 @@
     </constraint>
 
     <concept id="package:PackageLevel">
+        <requiresConcept refId="dependency:Package"/>
         <description>Set the level property of a package, e.g. 1 for de, 2 for de.kontext_e and so on</description>
         <cypher><![CDATA[
 			MATCH

@@ -1,0 +1,73 @@
+Note: rename this file to index.adoc to make it active.
+The default rule conflicts with default.xml, so only one of both may be active.
+
+= Coding Rules
+
+The following constraints apply for modules:
+
+[[default]]
+[role=group,includesConstraints="debug:rule(critical)"]
+- <<debug:rule>>
+- <<package:PackageLevel>>
+- <<dependency:TransitivePackageDependencies>>
+- <<dependency:WrongDirection>>
+
+[[debug:rule]]
+.For testing and debugging purposes.
+[source,cypher,role=constraint]
+----
+MATCH
+    (p:Asciidoc)
+RETURN
+    count(p);
+----
+
+== Find package dependencies in the wrong direction
+
+The desired package dependencies are described in an Asciidoc document
+which also contains PlantUML package diagrams. These diagrams were
+imported into the jQAssistant database. The following Concepts and
+Constraints were neede to find dependencies in the wrong direction.
+
+[[package:PackageLevel]]
+.Set the level property of a package, e.g. 1 for de, 2 for de.kontext_e and so on.
+[source,cypher,role=concept,requiresConcepts="dependency:Package"]
+----
+MATCH
+    (p:Java:Package)
+WITH
+    SPLIT(p.fqn,".") AS splitted, p
+SET
+    p.level=SIZE(splitted)
+RETURN
+    splitted, SIZE(splitted);
+----
+
+[[dependency:TransitivePackageDependencies]]
+.Add a DEPENDS_ON relationship to parents of a package P from other packages up to the same level of the source package.
+[source,cypher,role=concept,requiresConcepts="package:PackageLevel"]
+----
+MATCH
+    (p:Java:Package)-[:DEPENDS_ON]->(p2:Java:Package),
+    (parent:Java:Package)-[:CONTAINS*]->(p2:Java:Package)
+WHERE
+    p.level <= parent.level
+CREATE UNIQUE
+    (p)-[:DEPENDS_ON]->(parent)
+RETURN
+    p.fqn, parent.fqn;
+----
+
+[[dependency:WrongDirection]]
+.Finds package dependencies which are in the wrong direction according to the documentation.
+[source,cypher,role=constraint,requiresConcepts="dependency:TransitivePackageDependencies",severity=critical]
+----
+MATCH
+    (p1:PlantUml:Package)-[:MAY_DEPEND_ON]->(p2:PlantUml:Package),
+    (p3:Java:Package)-[:DEPENDS_ON]->(p4:Java:Package)
+WHERE
+    p1.fqn = p4.fqn
+    AND p2.fqn = p3.fqn
+RETURN
+    p3.fqn + "-->" + p4.fqn AS WrongDirection;
+----
