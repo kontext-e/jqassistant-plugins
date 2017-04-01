@@ -22,6 +22,28 @@ RETURN
     count(p);
 ----
 
+[[documented:TechnicalDebt]]
+.Creates a relationship between two Packages for Technical Debt.
+[source,cypher,role=concept]
+----
+match (a:Asciidoc:Table)-[:BODY]->(body)
+where a.title='Unwantend Module Dependencies'
+with body
+match (c1:Asciidoc:Cell {colnumber: 0})<-[:CONTAINS_CELLS]-(body)-[:CONTAINS_CELLS]->(c2:Asciidoc:Cell {colnumber: 1})
+with c1, c2
+			MATCH
+				(m1:Java:Package), (m2:Java:Package)
+			WHERE
+				m1.fqn CONTAINS trim(c1.text)
+			AND
+				m2.fqn CONTAINS trim(c2.text)
+			MERGE
+				(m1)-[:TECHNICAL_DEBT]->(m2)
+			RETURN
+				m1, m2;
+
+----
+
 == Find package dependencies in the wrong direction
 
 The desired package dependencies are described in an Asciidoc document

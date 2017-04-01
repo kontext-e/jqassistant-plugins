@@ -46,6 +46,7 @@ resolve dependency circles, move responsibilities etc. Open tasks are:
 |===
 | From                      | To                    | What should be done
 | de.kontext_e.demo.one     | de.kontext_e.demo.two | Because one makes StatusDTO out of ReceivedMessage from two to hold a list of Sensor stati; Todo: let the ProcessSensorStatusCommand convert the ReceivedMessage into StatusDTO
+| de.kontext_e.demo.three   | de.kontext_e.demo.four| Because one makes StatusDTO out of ReceivedMessage from two to hold a list of Sensor stati; Todo: let the ProcessSensorStatusCommand convert the ReceivedMessage into StatusDTO
 |===
 
 

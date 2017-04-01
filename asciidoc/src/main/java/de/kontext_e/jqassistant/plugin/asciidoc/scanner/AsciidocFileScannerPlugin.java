@@ -15,7 +15,6 @@ import de.kontext_e.jqassistant.plugin.asciidoc.store.descriptor.AsciidocFileDes
 
 import static java.util.Arrays.asList;
 
-// match (a:Asciidoc:Table)-[:BODY]->(body)-[:CONTAINS_CELLS]->(cell) where a.title='Unwantend Module Dependencies' return cell.colnumber, cell.text order by cell.colnumber;
 public class AsciidocFileScannerPlugin extends AbstractScannerPlugin<FileResource, AsciidocFileDescriptor> {
     private static final Logger LOGGER = LoggerFactory.getLogger(AsciidocFileScannerPlugin.class);
     private static final String JQASSISTANT_PLUGIN_ASCIIDOC_SUFFIXES = "jqassistant.plugin.asciidoc.suffixes";
