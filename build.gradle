@@ -3,9 +3,10 @@ apply plugin: 'maven'
 apply plugin: 'org.asciidoctor.gradle.asciidoctor'
 apply plugin: 'com.github.jruby-gradle.base'
 
-project.ext["jqaversion"] = "1.1.4"
+project.ext["jqaversion"] = "1.2.0"
+project.ext["jqacoreversion"] = "1.2"
 project.group = 'de.kontext-e.jqassistant.plugin'
-project.version = '1.1.4'
+project.version = '1.2.0-SNAPSHOT'
 
 buildscript {
   repositories {
@@ -53,19 +54,15 @@ subprojects {
     }
 
     dependencies {
-        compileOnly  'com.buschmais.jqassistant.core:jqassistant.core.scanner:'+project.jqaversion
-        compileOnly  'com.buschmais.jqassistant.core:jqassistant.core.store:'+project.jqaversion
-        compileOnly  'com.buschmais.jqassistant.plugin:jqassistant.plugin.common:'+project.jqaversion
-        compile 'org.ow2.asm:asm:5.0.3'
-
-        testCompile  'com.buschmais.jqassistant.core:jqassistant.core.scanner:'+project.jqaversion
-        testCompile  'com.buschmais.jqassistant.core:jqassistant.core.store:'+project.jqaversion
-        testCompile  'com.buschmais.jqassistant.plugin:jqassistant.plugin.common:'+project.jqaversion
-        testCompile group: 'junit', name: 'junit', version: '4.11'
-        testCompile group: 'org.hamcrest', name: 'hamcrest-all', version: '1.3'
-        testCompile group: 'org.mockito', name: 'mockito-all', version: '1.9.5'
-
-        testCompile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.13'
+        compileOnly  'com.buschmais.jqassistant:jqa-uber-parent:'+project.jqaversion
+        compileOnly  'com.buschmais.jqassistant:jqassistant.plugin.plugin-parent:'+project.jqaversion
+        compileOnly  'com.buschmais.jqassistant:neo4jserver:'+project.jqaversion
+        compileOnly  'com.buschmais.jqassistant.core:plugin:'+project.jqaversion
+        compileOnly  'com.buschmais.jqassistant.core:scanner:'+project.jqaversion
+        compileOnly  'com.buschmais.jqassistant.plugin:common:'+project.jqaversion
+        compileOnly  'com.buschmais.jqassistant.core:report:'+project.jqaversion
+        compileOnly  'com.buschmais.jqassistant.core:store:'+project.jqaversion
+        compileOnly  'com.buschmais.jqassistant.core:shared:'+project.jqaversion
 
         gems 'rubygems:asciidoctor-diagram:1.2.1'
     }
@@ -156,15 +153,18 @@ configurations {
 
 dependencies {
 
-	jqaRuntime("com.buschmais.jqassistant.core:jqassistant.core.store:${project.jqaversion}")
-	jqaRuntime("com.buschmais.jqassistant.core:jqassistant.core.scanner:${project.jqaversion}")
-	jqaRuntime("com.buschmais.jqassistant.core:jqassistant.core.plugin:${project.jqaversion}")
-	jqaRuntime("com.buschmais.jqassistant.plugin:jqassistant.plugin.common:${project.jqaversion}")
-	jqaRuntime("com.buschmais.jqassistant.scm:jqassistant.scm.cli:${project.jqaversion}")
-
-	jqaRuntime("com.buschmais.jqassistant.plugin:jqassistant.plugin.java:${project.jqaversion}")
-	jqaRuntime("com.buschmais.jqassistant.plugin:jqassistant.plugin.java8:${project.jqaversion}")
-	jqaRuntime("com.buschmais.jqassistant.plugin:jqassistant.plugin.junit:${project.jqaversion}")
+  jqaRuntime  'com.buschmais.jqassistant:jqa-uber-parent:'+project.jqaversion
+  jqaRuntime  'com.buschmais.jqassistant:jqassistant.plugin.plugin-parent:'+project.jqaversion
+  jqaRuntime  'com.buschmais.jqassistant:neo4jserver:'+project.jqaversion
+  jqaRuntime  'com.buschmais.jqassistant.core:plugin:'+project.jqaversion
+  jqaRuntime  'com.buschmais.jqassistant.core:scanner:'+project.jqaversion
+  jqaRuntime  'com.buschmais.jqassistant.plugin:common:'+project.jqaversion
+  jqaRuntime  'com.buschmais.jqassistant.core:report:'+project.jqaversion
+  jqaRuntime  'com.buschmais.jqassistant.core:store:'+project.jqaversion
+  jqaRuntime  'com.buschmais.jqassistant.core:shared:'+project.jqaversion
+  jqaRuntime  'com.buschmais.jqassistant:commandline:'+project.jqaversion
+  jqaRuntime("com.buschmais.jqassistant.plugin:java:${project.jqacoreversion}")
+  jqaRuntime("com.buschmais.jqassistant.plugin:junit:${project.jqacoreversion}")
 
 	jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.checkstyle:${project.version}")
 	jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.findbugs:${project.version}")
@@ -174,8 +174,9 @@ dependencies {
 	jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.pmd:${project.version}")
 	jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.plantuml:${project.version}")
 	jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.plaintext:${project.version}")
-	//  jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.cpp:${project.version}")
 
+	jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.asciidoc:${project.version}")
+	//  jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.cpp:${project.version}")
 
   	gems 'rubygems:asciidoctor-diagram:1.2.1'
 }
@@ -186,13 +187,12 @@ task removeJQAReport(type: Delete) {
 }
 
 task(jqascan, dependsOn: 'removeJQAReport', type: JavaExec) {
-  main = 'com.buschmais.jqassistant.scm.cli.Main'
+  main = 'com.buschmais.jqassistant.commandline.Main'
   classpath = configurations.jqaRuntime
   args 'scan'
   args '-p'
   args 'jqassistant/jqassistant.properties'
   args '-f'
-
 
   rootProject.subprojects {
     args 'java:classpath::'+it.name+'/build/classes/main'
@@ -205,13 +205,14 @@ task(jqascan, dependsOn: 'removeJQAReport', type: JavaExec) {
   args 'plantuml/src/test/asciidoc'
   args '.git'
 
-//  args 'plaintext/src/test/testfiles'
+  args 'asciidoc/src/test/asciidoc'
+  args 'plaintext/src/test/testfiles'
   //args 'cpp/src/test/ast'
   //args 'privatetestdata'
 }
 
 task(jqaanalyze, type: JavaExec) {
-  main = 'com.buschmais.jqassistant.scm.cli.Main'
+  main = 'com.buschmais.jqassistant.commandline.Main'
   classpath = configurations.jqaRuntime
   args 'analyze'
   args '-r'
@@ -224,7 +225,7 @@ task(jqa, dependsOn: ['jqascan','jqaanalyze']) {
 }
 
 task(jqs, type: JavaExec) {
-  main = 'com.buschmais.jqassistant.scm.cli.Main'
+  main = 'com.buschmais.jqassistant.commandline.Main'
   classpath = configurations.jqaRuntime
   args 'server'
   standardInput = System.in
