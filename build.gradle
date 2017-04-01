@@ -56,7 +56,6 @@ subprojects {
     dependencies {
         compileOnly  'com.buschmais.jqassistant:jqa-uber-parent:'+project.jqaversion
         compileOnly  'com.buschmais.jqassistant:jqassistant.plugin.plugin-parent:'+project.jqaversion
-        compileOnly  'com.buschmais.jqassistant:neo4jserver:'+project.jqaversion
         compileOnly  'com.buschmais.jqassistant.core:plugin:'+project.jqaversion
         compileOnly  'com.buschmais.jqassistant.core:scanner:'+project.jqaversion
         compileOnly  'com.buschmais.jqassistant.plugin:common:'+project.jqaversion
