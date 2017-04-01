@@ -1,0 +1,21 @@
+apply from: "${rootDir}/gradle/uploadArchives.gradle"
+
+jar {
+    baseName = 'jqassistant.plugin.asciidoc'
+}
+
+dependencies {
+/*
+dont declare own dependencies here
+because jQA also comes with Asciidoc
+so versions could mismatch
+
+    compile 'com.github.jnr:jnr-constants:0.9.9'
+    compile ('org.asciidoctor:asciidoctorj:1.5.5') {
+        exclude group: 'org.jruby'
+    }
+    compile ('org.jruby:jruby-core:9.1.8.0')
+    compile 'org.jruby:jruby-stdlib:9.1.8.0'
+*/
+}
+

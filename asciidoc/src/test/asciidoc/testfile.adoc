@@ -1,13 +1,11 @@
-[[section-building-block-view]]
-== Building Block View
+[[section-with-name]]
+== Second level headline
 
-This section describes the PlantUML Plugin modules which you will also find in the
-Java package structure.
+Some text here.
 
-=== Level 1
+=== Third level headline
 
-
-The following UML package diagram shows the main building blocks of the system and their interdependencies:
+Here follows an embedded diagram
 
 ["plantuml","MainBuildingBlocks","png"]
 -----
@@ -45,7 +43,3 @@ resolve dependency circles, move responsibilities etc. Open tasks are:
 |===
 
 
-==== Open Issues
-* only basic package diagrams are tested
-* no support for classes
-* no support for other diagrams

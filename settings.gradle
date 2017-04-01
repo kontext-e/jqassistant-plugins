@@ -18,3 +18,5 @@ include 'linecount'
 
 include 'cpp'
 
+include 'asciidoc'
+
