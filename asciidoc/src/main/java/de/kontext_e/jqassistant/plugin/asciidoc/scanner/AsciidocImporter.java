@@ -6,19 +6,29 @@ import java.util.List;
 import java.util.Map;
 import org.asciidoctor.Asciidoctor;
 import org.asciidoctor.ast.AbstractBlock;
+import org.asciidoctor.ast.Block;
 import org.asciidoctor.ast.Cell;
 import org.asciidoctor.ast.Document;
+import org.asciidoctor.ast.ListItem;
+import org.asciidoctor.ast.ListNode;
 import org.asciidoctor.ast.Row;
+import org.asciidoctor.ast.Section;
 import org.asciidoctor.ast.Table;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.buschmais.jqassistant.core.store.api.Store;
 import de.kontext_e.jqassistant.plugin.asciidoc.store.descriptor.AsciidocBlockDescriptor;
+import de.kontext_e.jqassistant.plugin.asciidoc.store.descriptor.AsciidocListDescriptor;
+import de.kontext_e.jqassistant.plugin.asciidoc.store.descriptor.AsciidocListItemDescriptor;
+import de.kontext_e.jqassistant.plugin.asciidoc.store.descriptor.AsciidocSectionDescriptor;
 import de.kontext_e.jqassistant.plugin.asciidoc.store.descriptor.AsciidocTableCellDescriptor;
 import de.kontext_e.jqassistant.plugin.asciidoc.store.descriptor.AsciidocTableDescriptor;
 import de.kontext_e.jqassistant.plugin.asciidoc.store.descriptor.AsciidocTableRowDescriptor;
 import de.kontext_e.jqassistant.plugin.asciidoc.store.descriptor.BlockContainer;
 
 class AsciidocImporter {
+    private static final Logger LOGGER = LoggerFactory.getLogger(AsciidocImporter.class);
     private static final Asciidoctor asciidoctor = Asciidoctor.Factory.create();
 
     private final File file;
@@ -38,26 +48,62 @@ class AsciidocImporter {
 
     private void scanBlocks(List<AbstractBlock> blocks, BlockContainer blockContainer) {
         for (AbstractBlock block : blocks) {
-            AsciidocBlockDescriptor blockDescriptor;
-            if(block instanceof Table) {
-                blockDescriptor = scanTableBlock((Table)block);
-            } else {
-                blockDescriptor = store.create(AsciidocBlockDescriptor.class);
-            }
+            // ListItem is reported twice: as first class and as part of ListNode
+            if(block instanceof ListItem) continue;
 
-            setCommonBlockProperties(block, blockDescriptor);
+            AsciidocBlockDescriptor blockDescriptor = scanOneBlock(block);
             blockContainer.getAsciidocBlocks().add(blockDescriptor);
             scanBlocks(block.getBlocks(), blockDescriptor);
         }
     }
 
-    private void setCommonBlockProperties(final AbstractBlock block, final AsciidocBlockDescriptor blockDescriptor) {
-        blockDescriptor.setContext(block.getContext());
-        blockDescriptor.setLevel(block.getLevel());
-        blockDescriptor.setRole(block.getRole());
-        blockDescriptor.setStyle(block.getStyle());
-        blockDescriptor.setTitle(block.getTitle());
-        blockDescriptor.setReftext(block.getReftext());
+    private AsciidocBlockDescriptor scanOneBlock(final AbstractBlock block) {
+        AsciidocBlockDescriptor blockDescriptor;
+        if(block instanceof Table) {
+            blockDescriptor = scanTableBlock((Table) block);
+        } else if(block instanceof ListNode) {
+            blockDescriptor = scanListBlock((ListNode) block);
+        } else if(block instanceof ListItem) {
+            blockDescriptor = scanListItemBlock((ListItem) block);
+        } else if(block instanceof Section) {
+            blockDescriptor = scanSectionBlock((Section) block);
+        } else if(block instanceof Block) {
+            blockDescriptor = store.create(AsciidocBlockDescriptor.class);
+        } else {
+            blockDescriptor = store.create(AsciidocBlockDescriptor.class);
+        }
+
+        setCommonBlockProperties(block, blockDescriptor);
+        return blockDescriptor;
+    }
+
+    private AsciidocBlockDescriptor scanListItemBlock(final ListItem listItem) {
+        final AsciidocListItemDescriptor listItemDescriptor = store.create(AsciidocListItemDescriptor.class);
+        listItemDescriptor.setMarker(listItem.getMarker());
+        listItemDescriptor.setText(listItem.getText());
+        // currently disabled because of
+        // org.jruby.exceptions.RaiseException: (NoMethodError) undefined method `hasText' for #<Asciidoctor::ListItem:0x3e592f7f>
+        // listItemDescriptor.setHasText(listItem.hasText());
+        return listItemDescriptor;
+    }
+
+    private AsciidocBlockDescriptor scanListBlock(final ListNode list) {
+        final AsciidocListDescriptor listDescriptor = store.create(AsciidocListDescriptor.class);
+        listDescriptor.setIsItem(list.isItem());
+        for (AbstractBlock abstractBlock : list.getItems()) {
+            listDescriptor.getListItems().add(scanOneBlock(abstractBlock));
+        }
+        return listDescriptor;
+    }
+
+    private AsciidocBlockDescriptor scanSectionBlock(final Section section) {
+        final AsciidocSectionDescriptor sectionDescriptor = store.create(AsciidocSectionDescriptor.class);
+        sectionDescriptor.setIndex(section.index());
+        sectionDescriptor.setNumber(section.number());
+        sectionDescriptor.setNumbered(section.numbered());
+        sectionDescriptor.setSectname(section.sectname());
+        sectionDescriptor.setSpecial(section.special());
+        return sectionDescriptor;
     }
 
     private AsciidocTableDescriptor scanTableBlock(final Table table) {
@@ -78,6 +124,15 @@ class AsciidocImporter {
         }
 
         return tableDescriptor;
+    }
+
+    private void setCommonBlockProperties(final AbstractBlock block, final AsciidocBlockDescriptor blockDescriptor) {
+        blockDescriptor.setContext(block.getContext());
+        blockDescriptor.setLevel(block.getLevel());
+        blockDescriptor.setRole(block.getRole());
+        blockDescriptor.setStyle(block.getStyle());
+        blockDescriptor.setTitle(block.getTitle());
+        blockDescriptor.setReftext(block.getReftext());
     }
 
     private AsciidocTableRowDescriptor scanTableRow(final Row row) {

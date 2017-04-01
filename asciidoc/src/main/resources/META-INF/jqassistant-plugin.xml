@@ -8,6 +8,9 @@
         <class>de.kontext_e.jqassistant.plugin.asciidoc.store.descriptor.AsciidocTableDescriptor</class>
         <class>de.kontext_e.jqassistant.plugin.asciidoc.store.descriptor.AsciidocTableRowDescriptor</class>
         <class>de.kontext_e.jqassistant.plugin.asciidoc.store.descriptor.AsciidocTableCellDescriptor</class>
+        <class>de.kontext_e.jqassistant.plugin.asciidoc.store.descriptor.AsciidocSectionDescriptor</class>
+        <class>de.kontext_e.jqassistant.plugin.asciidoc.store.descriptor.AsciidocListDescriptor</class>
+        <class>de.kontext_e.jqassistant.plugin.asciidoc.store.descriptor.AsciidocListItemDescriptor</class>
     </model>
     <scanner>
         <class>de.kontext_e.jqassistant.plugin.asciidoc.scanner.AsciidocFileScannerPlugin</class>

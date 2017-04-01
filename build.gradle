@@ -162,6 +162,8 @@ dependencies {
   jqaRuntime  'com.buschmais.jqassistant.core:store:'+project.jqaversion
   jqaRuntime  'com.buschmais.jqassistant.core:shared:'+project.jqaversion
   jqaRuntime  'com.buschmais.jqassistant:commandline:'+project.jqaversion
+
+/*
   jqaRuntime("com.buschmais.jqassistant.plugin:java:${project.jqacoreversion}")
   jqaRuntime("com.buschmais.jqassistant.plugin:junit:${project.jqacoreversion}")
 
@@ -173,11 +175,12 @@ dependencies {
 	jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.pmd:${project.version}")
 	jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.plantuml:${project.version}")
 	jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.plaintext:${project.version}")
+*/
 
 	jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.asciidoc:${project.version}")
 	//  jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.cpp:${project.version}")
 
-  	gems 'rubygems:asciidoctor-diagram:1.2.1'
+//  	gems 'rubygems:asciidoctor-diagram:1.2.1'
 }
 
 task removeJQAReport(type: Delete) {
@@ -193,6 +196,7 @@ task(jqascan, dependsOn: 'removeJQAReport', type: JavaExec) {
   args 'jqassistant/jqassistant.properties'
   args '-f'
 
+/*
   rootProject.subprojects {
     args 'java:classpath::'+it.name+'/build/classes/main'
     args 'java:classpath::'+it.name+'/build/classes/test'
@@ -203,6 +207,7 @@ task(jqascan, dependsOn: 'removeJQAReport', type: JavaExec) {
 
   args 'plantuml/src/test/asciidoc'
   args '.git'
+*/
 
   args 'asciidoc/src/test/asciidoc'
   args 'plaintext/src/test/testfiles'

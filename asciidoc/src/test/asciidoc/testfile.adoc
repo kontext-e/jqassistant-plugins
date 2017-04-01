@@ -3,6 +3,13 @@
 
 Some text here.
 
+And a list:
+
+* list item one
+* list item two
+* list item three
+
+
 === Third level headline
 
 Here follows an embedded diagram
@@ -15,7 +22,6 @@ package de.kontext_e.jqassistant.plugin.plantuml.store {
 }
 
 de.kontext_e.jqassistant.plugin.plantuml.scanner -up-> de.kontext_e.jqassistant.plugin.plantuml.store
-
 -----
 
 .Description of de.kontext_e.jqassistant.plugin.plantuml packages
