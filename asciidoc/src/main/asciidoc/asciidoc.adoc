@@ -1,0 +1,161 @@
+<<AsciidocScanner>>
+[[AsciidocScanner]]
+
+== Scanner for Asciidoc files
+
+Accepts files with ".adoc" suffix and puts the https://github.com/asciidoctor/asciidoctorj[AsciidoctorJ] AST into
+the jQAssistant database. Note: needs a recent version of AsciidoctorJ and re-uses the jQAssistant dependency
+to prevent runtime version conflicts. This means, only jQAssistant 1.2+ will work with this plugin.
+
+.Configuration parameters
+[options="header"]
+|====
+| Name                                      | Description
+| jqassistant.plugin.asciidoc.suffixes      | *Optional:* comma separated list of suffixes of files to be accepted, e.g. "adoc, asciidoc". *Default:* "adoc, asciidoc"
+|====
+
+=== :Asciidoc:File
+
+.Properties
+[options="header"]
+|====
+| Name              | Description
+| name              | The file name.
+| fileName          | The absolute file name.
+|====
+
+.Relations
+[options="header"]
+|====
+| Name              | Target label(s)           | Cardinality | Description
+| CONTAINS          | <<:Asciidoc:Block>>       | 0..n        | References contained Asciidoc blocks.
+|====
+
+
+=== :Asciidoc:Block
+
+Properties and relations common to all Asciidoc blocks are described here.
+Blocks can be specialized as described below or also be standalone nodes.
+
+.Properties
+[options="header"]
+|====
+| Name      | Description
+| context   | The Asciidoctor AST property
+| role      | The Asciidoctor AST property
+| style     | The Asciidoctor AST property
+| titel     | The Asciidoctor AST property
+| reftext   | The Asciidoctor AST property
+| level     | The Asciidoctor AST property
+|====
+
+.Relations
+[options="header"]
+|====
+| Name              | Target label(s)           | Cardinality | Description
+| CONTAINS          | <<:Asciidoc:Block>>       | 0..n        | References contained Asciidoc blocks.
+|====
+
+
+
+=== :Asciidoc:Block:Section
+
+Represents an Asciidoc section.
+
+Is a <<:Asciidoc:Block>>.
+
+.Properties
+[options="header"]
+|====
+| Name              | Description
+| index             | The Asciidoctor AST property
+| number            | The Asciidoctor AST property
+| numbered          | The Asciidoctor AST property
+| sectname          | The Asciidoctor AST property
+| special           | The Asciidoctor AST property
+|====
+
+=== :Asciidoc:Block:List
+
+Represents an Asciidoc list.
+
+Is a <<:Asciidoc:Block>>.
+
+.Properties
+[options="header"]
+|====
+| Name      | Description
+| isItem    | The Asciidoctor AST property
+|====
+
+.Relations
+[options="header"]
+|====
+| Name              | Target label(s)           | Cardinality | Description
+| HAS_ITEMS         | <<:Asciidoc:Block>>       | 0..n        | References the blocks contained in this list.
+|====
+
+
+=== :Asciidoc:Block:ListItem
+
+Represents an Asciidoc list item.
+
+Is a <<:Asciidoc:Block>>.
+
+.Properties
+[options="header"]
+|====
+| Name      | Description
+| marker    | The Asciidoctor AST property
+| text      | The Asciidoctor AST property
+| hasTtext  | The Asciidoctor AST property
+|====
+
+=== :Asciidoc:Block:Table
+
+Represents an Asciidoc table.
+
+Is a <<:Asciidoc:Block>>.
+
+.Properties
+[options="header"]
+|====
+| Name  | Description
+| frame | The Asciidoctor AST property
+| grid  | The Asciidoctor AST property
+|====
+
+.Relations
+[options="header"]
+|====
+| Name              | Target label(s)           | Cardinality | Description
+| HEADER            | <<:Asciidoc:Row>>         | 0..n        | References the tables header rows.
+| BODY              | <<:Asciidoc:Row>>         | 0..n        | References the tables body rows.
+| FOOTER            | <<:Asciidoc:Row>>         | 0..n        | References the tables footer rows.
+|====
+
+
+=== :Asciidoc:Row
+
+Represents an Asciidoc table row.
+
+.Relations
+[options="header"]
+|====
+| Name              | Target label(s)           | Cardinality | Description
+| CONTAINS_CELLS    | <<:Asciidoc:Cell>>        | 0..n        | References the cells of this row.
+|====
+
+
+=== :Asciidoc:Cell
+
+Represents an Asciidoc table row cell.
+
+.Properties
+[options="header"]
+|====
+| Name      | Description
+| colnumber | The column number of this cell (no AST property).
+| style     | The Asciidoctor AST property
+| text      | The Asciidoctor AST property
+|====
