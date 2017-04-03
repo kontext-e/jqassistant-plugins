@@ -31,6 +31,7 @@ Some docs
 =========
 From master branch. Note: most recent versions from branches may differ.
 
+* [Asciidoc Plugin](https://github.com/kontext-e/jqassistant-plugins/blob/master/asciidoc/src/main/asciidoc/asciidoc.adoc)
 * [Checkstyle Plugin](https://github.com/kontext-e/jqassistant-plugins/blob/master/checkstyle/src/main/asciidoc/checkstyle.adoc)
 * [FindBugs Plugin](https://github.com/kontext-e/jqassistant-plugins/blob/master/findbugs/src/main/asciidoc/findbugs.adoc)
 * [Git Plugin](https://github.com/kontext-e/jqassistant-plugins/blob/master/git/src/main/asciidoc/git.adoc)

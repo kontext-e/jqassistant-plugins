@@ -31,11 +31,9 @@ to prevent runtime version conflicts. This means, only jQAssistant 1.2+ will wor
 | CONTAINS          | <<:Asciidoc:Block>>       | 0..n        | References contained Asciidoc blocks.
 |====
 
+=== Asciidoc Common Properties
 
-=== :Asciidoc:Block
-
-Properties and relations common to all Asciidoc blocks are described here.
-Blocks can be specialized as described below or also be standalone nodes.
+Properties common to many Asciidoc nodes.
 
 .Properties
 [options="header"]
@@ -44,8 +42,21 @@ Blocks can be specialized as described below or also be standalone nodes.
 | context   | The Asciidoctor AST property
 | role      | The Asciidoctor AST property
 | style     | The Asciidoctor AST property
-| titel     | The Asciidoctor AST property
 | reftext   | The Asciidoctor AST property
+|====
+
+=== :Asciidoc:Block
+
+Properties and relations common to all Asciidoc blocks are described here.
+Blocks can be specialized as described below or also be standalone nodes.
+
+Has also <<Asciidoc Common Properties>>.
+
+.Properties
+[options="header"]
+|====
+| Name      | Description
+| titel     | The Asciidoctor AST property
 | level     | The Asciidoctor AST property
 |====
 
@@ -135,6 +146,19 @@ Is a <<:Asciidoc:Block>>.
 |====
 
 
+=== :Asciidoc:Column
+
+Represents an Asciidoc table column.
+
+Has also <<Asciidoc Common Properties>>.
+
+.Properties
+[options="header"]
+|====
+| Name      | Description
+| colnumber | The column number of this cell (no AST property).
+|====
+
 === :Asciidoc:Row
 
 Represents an Asciidoc table row.
@@ -150,6 +174,8 @@ Represents an Asciidoc table row.
 === :Asciidoc:Cell
 
 Represents an Asciidoc table row cell.
+
+Has also <<Asciidoc Common Properties>>.
 
 .Properties
 [options="header"]

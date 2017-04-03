@@ -9,6 +9,9 @@ import com.buschmais.xo.neo4j.api.annotation.Relation;
 @Label("Table")
 public interface AsciidocTableDescriptor extends AsciidocBlockDescriptor {
 
+    @Relation("COLUMNS")
+    Set<AsciidocTableColumnDescriptor> getAsciidocTableColumns();
+
     @Relation("HEADER")
     Set<AsciidocTableRowDescriptor> getAsciidocTableHeaderRows();
 

@@ -6,6 +6,7 @@
         <class>de.kontext_e.jqassistant.plugin.asciidoc.store.descriptor.AsciidocFileDescriptor</class>
         <class>de.kontext_e.jqassistant.plugin.asciidoc.store.descriptor.AsciidocBlockDescriptor</class>
         <class>de.kontext_e.jqassistant.plugin.asciidoc.store.descriptor.AsciidocTableDescriptor</class>
+        <class>de.kontext_e.jqassistant.plugin.asciidoc.store.descriptor.AsciidocTableColumnDescriptor</class>
         <class>de.kontext_e.jqassistant.plugin.asciidoc.store.descriptor.AsciidocTableRowDescriptor</class>
         <class>de.kontext_e.jqassistant.plugin.asciidoc.store.descriptor.AsciidocTableCellDescriptor</class>
         <class>de.kontext_e.jqassistant.plugin.asciidoc.store.descriptor.AsciidocSectionDescriptor</class>

@@ -6,8 +6,10 @@ import java.util.List;
 import java.util.Map;
 import org.asciidoctor.Asciidoctor;
 import org.asciidoctor.ast.AbstractBlock;
+import org.asciidoctor.ast.AbstractNode;
 import org.asciidoctor.ast.Block;
 import org.asciidoctor.ast.Cell;
+import org.asciidoctor.ast.Column;
 import org.asciidoctor.ast.Document;
 import org.asciidoctor.ast.ListItem;
 import org.asciidoctor.ast.ListNode;
@@ -19,10 +21,12 @@ import org.slf4j.LoggerFactory;
 
 import com.buschmais.jqassistant.core.store.api.Store;
 import de.kontext_e.jqassistant.plugin.asciidoc.store.descriptor.AsciidocBlockDescriptor;
+import de.kontext_e.jqassistant.plugin.asciidoc.store.descriptor.AsciidocCommonProperties;
 import de.kontext_e.jqassistant.plugin.asciidoc.store.descriptor.AsciidocListDescriptor;
 import de.kontext_e.jqassistant.plugin.asciidoc.store.descriptor.AsciidocListItemDescriptor;
 import de.kontext_e.jqassistant.plugin.asciidoc.store.descriptor.AsciidocSectionDescriptor;
 import de.kontext_e.jqassistant.plugin.asciidoc.store.descriptor.AsciidocTableCellDescriptor;
+import de.kontext_e.jqassistant.plugin.asciidoc.store.descriptor.AsciidocTableColumnDescriptor;
 import de.kontext_e.jqassistant.plugin.asciidoc.store.descriptor.AsciidocTableDescriptor;
 import de.kontext_e.jqassistant.plugin.asciidoc.store.descriptor.AsciidocTableRowDescriptor;
 import de.kontext_e.jqassistant.plugin.asciidoc.store.descriptor.BlockContainer;
@@ -35,10 +39,10 @@ class AsciidocImporter {
     private final Store store;
     private final Map<String, Object> parameters = new HashMap<>();
 
-    AsciidocImporter(final File file, final Store store) {
+    AsciidocImporter(final File file, final Store store, int structureMaxLevel) {
         this.file = file;
         this.store = store;
-        parameters.put(Asciidoctor.STRUCTURE_MAX_LEVEL, 20);
+        parameters.put(Asciidoctor.STRUCTURE_MAX_LEVEL, structureMaxLevel);
     }
 
     void importDocument(BlockContainer asciidocFile) {
@@ -51,9 +55,13 @@ class AsciidocImporter {
             // ListItem is reported twice: as first class and as part of ListNode
             if(block instanceof ListItem) continue;
 
-            AsciidocBlockDescriptor blockDescriptor = scanOneBlock(block);
-            blockContainer.getAsciidocBlocks().add(blockDescriptor);
-            scanBlocks(block.getBlocks(), blockDescriptor);
+            try {
+                AsciidocBlockDescriptor blockDescriptor = scanOneBlock(block);
+                blockContainer.getAsciidocBlocks().add(blockDescriptor);
+                scanBlocks(block.getBlocks(), blockDescriptor);
+            } catch (Exception e) {
+                LOGGER.warn("Error while scanning Asciidoc block "+block.getNodeName()+"; reason is: "+e);
+            }
         }
     }
 
@@ -111,6 +119,11 @@ class AsciidocImporter {
         tableDescriptor.setFrame(table.getFrame());
         tableDescriptor.setGrid(table.getGrid());
 
+        int colnumber = 0;
+        for (Column column : table.getColumns()) {
+            tableDescriptor.getAsciidocTableColumns().add(scanTableColumn(column, colnumber++));
+        }
+
         for (Row row : table.getHeader()) {
             tableDescriptor.getAsciidocTableHeaderRows().add(scanTableRow(row));
         }
@@ -126,6 +139,15 @@ class AsciidocImporter {
         return tableDescriptor;
     }
 
+    private AsciidocTableColumnDescriptor scanTableColumn(final Column column, final int colnumber) {
+        final AsciidocTableColumnDescriptor columnDescriptor = store.create(AsciidocTableColumnDescriptor.class);
+        // not yet implemented in Asciidoctor columnDescriptor.setColnumber(column.getColnumber());
+        // use this workaround:
+        columnDescriptor.setColnumber(colnumber);
+        addCommonProperties(column, columnDescriptor);
+        return columnDescriptor;
+    }
+
     private void setCommonBlockProperties(final AbstractBlock block, final AsciidocBlockDescriptor blockDescriptor) {
         blockDescriptor.setContext(block.getContext());
         blockDescriptor.setLevel(block.getLevel());
@@ -133,6 +155,7 @@ class AsciidocImporter {
         blockDescriptor.setStyle(block.getStyle());
         blockDescriptor.setTitle(block.getTitle());
         blockDescriptor.setReftext(block.getReftext());
+        addCommonProperties(block, blockDescriptor);
     }
 
     private AsciidocTableRowDescriptor scanTableRow(final Row row) {
@@ -142,7 +165,6 @@ class AsciidocImporter {
             AsciidocTableCellDescriptor cellDescriptor = store.create(AsciidocTableCellDescriptor.class);
             rowDescriptor.getAsciidocTableCells().add(cellDescriptor);
             cellDescriptor.setText(cell.getText());
-            cellDescriptor.setStyle(cell.getStyle());
 // does not work because of
 // java.lang.ClassCastException: org.jruby.gen.InterfaceImpl1670529912 cannot be cast to org.asciidoctor.ast.Column
 // try again with later asciidoctorj version
@@ -151,11 +173,19 @@ class AsciidocImporter {
             // instead this workaround is used
             cellDescriptor.setColnumber(colNumber++);
 
+            addCommonProperties(cell, cellDescriptor);
         }
         return rowDescriptor;
     }
 
+    private void addCommonProperties(final AbstractNode abstractNode, final AsciidocCommonProperties descriptor) {
+        descriptor.setContext(abstractNode.getContext());
+        descriptor.setReftext(abstractNode.getReftext());
+        descriptor.setRole(abstractNode.getRole());
+        descriptor.setStyle(abstractNode.getStyle());
+    }
+
     public static void main(String[] args) {
-        new AsciidocImporter(new File("asciidoc/src/test/asciidoc/testfile.adoc"), null).importDocument(null);
+        new AsciidocImporter(new File("asciidoc/src/test/asciidoc/testfile.adoc"), null, 20).importDocument(null);
     }
 }
