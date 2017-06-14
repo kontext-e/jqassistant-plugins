@@ -49,4 +49,4 @@ resolve dependency circles, move responsibilities etc. Open tasks are:
 | de.kontext_e.demo.three   | de.kontext_e.demo.four| Because one makes StatusDTO out of ReceivedMessage from two to hold a list of Sensor stati; Todo: let the ProcessSensorStatusCommand convert the ReceivedMessage into StatusDTO
 |===
 
-
+MyTerm:: The definition of my term

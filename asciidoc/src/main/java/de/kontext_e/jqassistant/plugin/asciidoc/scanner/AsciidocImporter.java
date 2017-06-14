@@ -51,16 +51,24 @@ class AsciidocImporter {
     }
 
     private void scanBlocks(List<AbstractBlock> blocks, BlockContainer blockContainer) {
-        for (AbstractBlock block : blocks) {
-            // ListItem is reported twice: as first class and as part of ListNode
-            if(block instanceof ListItem) continue;
+        LOGGER.info("enter scanBlocks");
 
-            try {
-                AsciidocBlockDescriptor blockDescriptor = scanOneBlock(block);
-                blockContainer.getAsciidocBlocks().add(blockDescriptor);
-                scanBlocks(block.getBlocks(), blockDescriptor);
-            } catch (Exception e) {
-                LOGGER.warn("Error while scanning Asciidoc block "+block.getNodeName()+"; reason is: "+e);
+        // was for(AbstractBlock block : blocks) but there is a but in Asciidoctor 1.5.4.1
+        // which causes a ClassCastException
+        // so check first if it is really an AbstractBlock
+        for (Object o: blocks) {
+            if(o instanceof AbstractBlock) {
+                AbstractBlock block = (AbstractBlock) o;
+                // ListItem is reported twice: as first class and as part of ListNode
+                if (block instanceof ListItem) continue;
+
+                try {
+                    AsciidocBlockDescriptor blockDescriptor = scanOneBlock(block);
+                    blockContainer.getAsciidocBlocks().add(blockDescriptor);
+                    scanBlocks(block.getBlocks(), blockDescriptor);
+                } catch (Exception e) {
+                    LOGGER.warn("Error while scanning Asciidoc block " + block.getNodeName() + "; reason is: " + e, e);
+                }
             }
         }
     }
@@ -98,8 +106,11 @@ class AsciidocImporter {
     private AsciidocBlockDescriptor scanListBlock(final ListNode list) {
         final AsciidocListDescriptor listDescriptor = store.create(AsciidocListDescriptor.class);
         listDescriptor.setIsItem(list.isItem());
-        for (AbstractBlock abstractBlock : list.getItems()) {
-            listDescriptor.getListItems().add(scanOneBlock(abstractBlock));
+        for (Object o: list.getItems()) {
+            if(o instanceof AbstractBlock) {
+                AbstractBlock abstractBlock = (AbstractBlock) o;
+                listDescriptor.getListItems().add(scanOneBlock(abstractBlock));
+            }
         }
         return listDescriptor;
     }
