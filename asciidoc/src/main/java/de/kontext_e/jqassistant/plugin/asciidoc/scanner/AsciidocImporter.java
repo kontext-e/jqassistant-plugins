@@ -51,8 +51,6 @@ class AsciidocImporter {
     }
 
     private void scanBlocks(List<AbstractBlock> blocks, BlockContainer blockContainer) {
-        LOGGER.info("enter scanBlocks");
-
         // was for(AbstractBlock block : blocks) but there is a but in Asciidoctor 1.5.4.1
         // which causes a ClassCastException
         // so check first if it is really an AbstractBlock
@@ -67,7 +65,7 @@ class AsciidocImporter {
                     blockContainer.getAsciidocBlocks().add(blockDescriptor);
                     scanBlocks(block.getBlocks(), blockDescriptor);
                 } catch (Exception e) {
-                    LOGGER.warn("Error while scanning Asciidoc block " + block.getNodeName() + "; reason is: " + e, e);
+                    LOGGER.warn("Error while scanning Asciidoc block " + block.getNodeName() + "; reason is: " + e);
                 }
             }
         }
