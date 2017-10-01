@@ -4,10 +4,6 @@ This repository contains plugins for buschmais' [jQAssistant](http://jqassistant
 
 How to install
 ==============
-* If you want to add the git plugins to your [jQAssistant](http://jqassistant.org) installation you currently have to
-  manually add the an org.eclipse.jgit jar file to the plugins directory of jqassistant: Use at least version 
-  [4.1.1 from Maven Central](http://search.maven.org/remotecontent?filepath=org/eclipse/jgit/org.eclipse.jgit/4.1.1.201511131810-r/org.eclipse.jgit-4.1.1.201511131810-r.jar).
-
 * add [jQAssistant](http://jqassistant.org) to dependencies in your project (and jgit if git processing is desired).
 
 * declare additional dependencies in your project:
@@ -27,6 +23,10 @@ How to install
 
 * execute jQAssistant tasks
 
+* If you want to add the git plugins to your [jQAssistant](http://jqassistant.org) downloaded commandline installation you currently have to
+  manually add the an org.eclipse.jgit jar file to the plugins directory of jqassistant: Use at least version 
+  [4.8.0.201706111038-r from Maven Central](https://repo1.maven.org/maven2/org/eclipse/jgit/org.eclipse.jgit/4.8.0.201706111038-r/org.eclipse.jgit-4.8.0.201706111038-r.jar).
+
 Some docs
 =========
 From master branch. Note: most recent versions from branches may differ.
@@ -38,6 +38,16 @@ From master branch. Note: most recent versions from branches may differ.
 * [JaCoCo Plugin](https://github.com/kontext-e/jqassistant-plugins/blob/master/jacoco/src/main/asciidoc/jacoco.adoc)
 * [PlantUML Plugin](https://github.com/kontext-e/jqassistant-plugins/blob/master/plantuml/src/main/asciidoc/plantuml.adoc)
 * [PMD Plugin](https://github.com/kontext-e/jqassistant-plugins/blob/master/pmd/src/main/asciidoc/pmd.adoc)
+
+Latest Changes
+==============
+
+Release 1.3.0
+-------------
+* Update to jQAssistant 1.3.0
+* Update to jgit 4.8.0.201706111038-r
+* Speedup Git "git:CurrentBranch" (thanks Dirk Mahler)
+* Added label "Git" to git repository node (thanks Dirk Mahler)
 
 Work in progress
 ================
