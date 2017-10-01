@@ -9,7 +9,7 @@ import com.buschmais.xo.neo4j.api.annotation.Label;
 import com.buschmais.xo.neo4j.api.annotation.Relation;
 
 @Label("Repository")
-public interface GitRepositoryDescriptor extends Descriptor, NamedDescriptor, FileDescriptor {
+public interface GitRepositoryDescriptor extends GitDescriptor, NamedDescriptor, FileDescriptor {
 
     @Relation("HAS_COMMIT")
     List<GitCommitDescriptor> getCommits();

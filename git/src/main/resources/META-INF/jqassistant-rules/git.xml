@@ -1,23 +1,26 @@
 <jqa:jqassistant-rules xmlns:jqa="http://www.buschmais.com/jqassistant/core/analysis/rules/schema/v1.0">
 
     <concept id="git:CurrentBranch">
-        <description>Determines the current branch by evaluating the HEAD ref and sets a label "Current".
+        <description>Determines the current branch by evaluating the HEAD ref and sets a label `Current`.
         </description>
         <cypher><![CDATA[
             MATCH
-              (repository:Git:Repository),
+              (repository:Git:Repository)-[:HAS_BRANCH]->(branch:Git:Branch)
+            WHERE
+              branch.name starts with "heads/"
+            MATCH
               (repository)-[:HAS_HEAD]->(head:Git:Commit),
-              (repository)-[:HAS_BRANCH]->(branch:Git:Branch)-[:HAS_HEAD]->(branchHead:Git:Commit),
+			  (branch)-[:HAS_HEAD]->(branchHead:Git:Commit),
                p=shortestPath((branchHead)-[:HAS_PARENT*0..]->(head))
             SET
               branch:Current
             RETURN
               branch.name as CurrentBranch, length(p) as Offset
-            ]]></cypher>
+        ]]></cypher>
     </concept>
 
     <concept id="git:MergeCommit">
-        <description>Determines all commits with more than one parent commit and sets a label "Merge".
+        <description>Determines all commits with more than one parent commit and sets a label `Merge`.
         </description>
         <cypher><![CDATA[
             MATCH
