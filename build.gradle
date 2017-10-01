@@ -6,7 +6,7 @@ apply plugin: 'com.github.jruby-gradle.base'
 project.ext["jqaversion"] = "1.3.0"
 project.ext["jqacoreversion"] = "1.3"
 project.group = 'de.kontext-e.jqassistant.plugin'
-project.version = '1.3.0-SNAPSHOT'
+project.version = '1.3.0'
 
 buildscript {
   repositories {
@@ -53,24 +53,25 @@ subprojects {
         mavenLocal()
     }
 
-    dependencies {
-        compileOnly  'com.buschmais.jqassistant:jqa-uber-parent:'+project.jqaversion
-        compileOnly  'com.buschmais.jqassistant:jqassistant.plugin.plugin-parent:'+project.jqaversion
-        compileOnly  'com.buschmais.jqassistant.core:plugin:'+project.jqaversion
-        compileOnly  'com.buschmais.jqassistant.core:scanner:'+project.jqaversion
-        compileOnly  'com.buschmais.jqassistant.plugin:common:'+project.jqaversion
-        compileOnly  'com.buschmais.jqassistant.core:report:'+project.jqaversion
-      compileOnly  'com.buschmais.jqassistant.core:store:'+project.jqaversion
-      compileOnly  'com.buschmais.jqassistant.core:shared:'+project.jqaversion
+  dependencies {
+    compileOnly  'com.buschmais.jqassistant:jqa-uber-parent:'+project.jqaversion
+    compileOnly  'com.buschmais.jqassistant:jqassistant.plugin.plugin-parent:'+project.jqaversion
+    compileOnly  'com.buschmais.jqassistant.core:plugin:'+project.jqaversion
+    compileOnly  'com.buschmais.jqassistant.core:scanner:'+project.jqaversion
+    compileOnly  'com.buschmais.jqassistant.plugin:common:'+project.jqacoreversion
+    compileOnly  'com.buschmais.jqassistant.core:report:'+project.jqaversion
+    compileOnly  'com.buschmais.jqassistant.core:store:'+project.jqaversion
+    compileOnly  'com.buschmais.jqassistant.core:shared:'+project.jqaversion
 
-      testCompile  'com.buschmais.jqassistant.core:store:'+project.jqaversion
-      testCompile  'com.buschmais.jqassistant.plugin:common:'+project.jqaversion
-      testCompile group: 'junit', name: 'junit', version: '4.11'
-      testCompile group: 'org.hamcrest', name: 'hamcrest-all', version: '1.3'
-      testCompile group: 'org.mockito', name: 'mockito-all', version: '1.9.5'
+    testCompile  'org.neo4j:neo4j:2.3.10'
+    testCompile  'com.buschmais.jqassistant.core:store:'+project.jqaversion
+    testCompile  'com.buschmais.jqassistant.plugin:common:'+project.jqacoreversion
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile group: 'org.hamcrest', name: 'hamcrest-all', version: '1.3'
+    testCompile group: 'org.mockito', name: 'mockito-all', version: '1.9.5'
 
-      gems 'rubygems:asciidoctor-diagram:1.2.1'
-    }
+    gems 'rubygems:asciidoctor-diagram:1.2.1'
+  }
 
     task javadocJar(type: Jar, dependsOn: javadoc) {
       classifier = 'javadoc'
@@ -157,17 +158,9 @@ configurations {
 }
 
 dependencies {
-
-  jqaRuntime("com.buschmais.jqassistant:jqa-uber-parent:${project.jqaversion}")
-  jqaRuntime("com.buschmais.jqassistant:jqassistant.plugin.plugin-parent:${project.jqaversion}")
-  jqaRuntime("com.buschmais.jqassistant:neo4jserver:${project.jqaversion}")
-  jqaRuntime("com.buschmais.jqassistant.core:plugin:${project.jqaversion}")
-  jqaRuntime("com.buschmais.jqassistant.core:scanner:${project.jqaversion}")
-  jqaRuntime("com.buschmais.jqassistant.plugin:common:${project.jqaversion}")
-  jqaRuntime("com.buschmais.jqassistant.core:report:${project.jqaversion}")
-  jqaRuntime("com.buschmais.jqassistant.core:store:${project.jqaversion}")
-  jqaRuntime("com.buschmais.jqassistant.core:shared:${project.jqaversion}")
-  jqaRuntime("com.buschmais.jqassistant:commandline:${project.jqaversion}")
+  jqaRuntime("com.buschmais.jqassistant:jqassistant-commandline:${project.jqaversion}") {
+    exclude module: 'neo4j'
+  }
 
   jqaRuntime("com.buschmais.jqassistant.plugin:java:${project.jqacoreversion}")
   jqaRuntime("com.buschmais.jqassistant.plugin:junit:${project.jqacoreversion}")
