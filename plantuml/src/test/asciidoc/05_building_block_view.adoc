@@ -23,10 +23,39 @@ de.kontext_e.jqassistant.plugin.plantuml.scanner -up-> de.kontext_e.jqassistant.
 .Description of de.kontext_e.jqassistant.plugin.plantuml packages
 [options="header"]
 |====
-| Package       | Purpose
-| scanner       | Scan a text file and create Neo4j nodes for packages and relationships for links.
-| store         | contains jQAssistant compliant descriptors for Neo4j nodes.
+| Package | Package                                             | Purpose
+| scanner | de.kontext_e.jqassistant.plugin.plantuml.scanner    | Scan a text file and create Neo4j nodes for packages and relationships for links.
+| store   | de.kontext_e.jqassistant.plugin.plantuml.store      | contains jQAssistant compliant descriptors for Neo4j nodes.
 |====
+
+
+And here is an example of a component diagram:
+
+["plantuml","Components","png"]
+-----
+component Domain
+component Entities
+component Infrastructure
+component Restful
+component [JSF UI]
+
+Domain --> Entities
+Domain --> Infrastructure
+Restful --> Domain
+[JSF UI] --> Domain
+-----
+
+.Level 1 Components
+[options="header"]
+|===
+| Name              | Location                          | Purpose
+| Domain            | some.example.project.domain           | Contains the domain logic, mostly services
+| Entities          | some.example.project.entities         | Contains Entities, structured in Aggregates
+| Infrastructure    | some.example.project.infrastructure   | Contains number converters, access to external systems, ...
+| Restful           | some.example.project.rest             | Contains classes for REST interface
+| JSF UI            | some.example.project.jsf_ui           | Contains classes for JSF UI
+|===
+
 
 ==== Known Technical Debt
 
