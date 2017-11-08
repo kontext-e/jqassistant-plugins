@@ -59,4 +59,36 @@ public class PumlLineParserTest {
         verify(mockSet).add(mockDescriptor);
     }
 
+    @Test
+    public void thatEmbeddedPlantUMLInAsciidocIsRead2() throws Exception {
+        final String asciidoc = "=== Level 1\n" +
+                                "\n" +
+                                "\n" +
+                                "The following diagram shows the main building blocks of the system and their interdependencies:\n" +
+                                "\n" +
+                                "[\"plantuml\",\"MainBuildingBlocks\",\"png\"]\n" +
+                                "-----\n" +
+                                "component Domain\n" +
+                                "component [JSF UI]\n" +
+                                "\n" +
+                                "[JSF UI] --> Domain\n" +
+                                "-----\n" +
+                                "\n" +
+                                "Comments regarding structure and interdependencies at Level 1:\n";
+        String[] lines = asciidoc.split("\\n");
+        Assert.assertThat(lines.length, Matchers.greaterThan(1));
+        pumlLineParser = new PumlLineParser(mockStore, plantUmlFileDescriptor, ParsingState.IGNORING);
+        final PlantUmlPackageDescriptor mockDescriptor = mock(PlantUmlPackageDescriptor.class);
+        when(mockStore.create(PlantUmlPackageDescriptor.class)).thenReturn(mockDescriptor);
+        final Set<PlantUmlPackageDescriptor> mockSet = mock(Set.class);
+        when(mockDescriptor.getMayDependOnPackages()).thenReturn(mockSet);
+
+        for (String line : lines) {
+            pumlLineParser.parseLine(line);
+        }
+
+
+        verify(mockSet).add(mockDescriptor);
+    }
+
 }

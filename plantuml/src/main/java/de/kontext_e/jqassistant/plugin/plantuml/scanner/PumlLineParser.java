@@ -15,6 +15,7 @@ import net.sourceforge.plantuml.classdiagram.AbstractEntityDiagram;
 import net.sourceforge.plantuml.core.Diagram;
 import net.sourceforge.plantuml.cucadiagram.Code;
 import net.sourceforge.plantuml.cucadiagram.IGroup;
+import net.sourceforge.plantuml.cucadiagram.ILeaf;
 import net.sourceforge.plantuml.cucadiagram.Link;
 import net.sourceforge.plantuml.cucadiagram.entity.EntityFactory;
 
@@ -50,10 +51,14 @@ class PumlLineParser {
             List<BlockUml> blocks = reader.getBlocks();
             if(blocks.isEmpty()) return; // something is wrong with the syntax?
 
-            Diagram diagram = blocks.get(0).getDiagram();
+            final Diagram diagram = blocks.get(0).getDiagram();
+            if(!(diagram instanceof AbstractEntityDiagram)) {
+                return;
+            }
+
             AbstractEntityDiagram descriptionDiagram = (AbstractEntityDiagram) diagram;
             EntityFactory entityFactory = descriptionDiagram.getEntityFactory();
-            Map<Code, IGroup> groups = entityFactory.getGroups();
+            final Map<Code, IGroup> groups = entityFactory.getGroups();
             for (Map.Entry<Code, IGroup> codeIGroupEntry : groups.entrySet()) {
                 IGroup iGroup = codeIGroupEntry.getValue();
                 PlantUmlPackageDescriptor packageNode = store.create(PlantUmlPackageDescriptor.class);
@@ -67,6 +72,17 @@ class PumlLineParser {
                     }
                 }
             }
+
+            for (Map.Entry<Code, ILeaf> leafEntry : entityFactory.getLeafs().entrySet()) {
+                final ILeaf iLeaf = leafEntry.getValue();
+                final String fullName = iLeaf.getCode().getFullName();
+                PlantUmlPackageDescriptor packageNode = store.create(PlantUmlPackageDescriptor.class);
+                packageNode.setFullQualifiedName(fullName);
+                plantUmlFileDescriptor.getPlantUmlElements().add(packageNode);
+                mappingFromFqnToPackage.put(fullName, packageNode);
+            }
+
+
             for (Link link : entityFactory.getLinks()) {
                 String lhs = link.getEntity1().getCode().getFullName();
                 String rhs = link.getEntity2().getCode().getFullName();
@@ -76,7 +92,19 @@ class PumlLineParser {
                     lhs = swap;
                 }
 
-                mappingFromFqnToPackage.get(lhs).getMayDependOnPackages().add(mappingFromFqnToPackage.get(rhs));
+                final PlantUmlPackageDescriptor lhsDescriptor = mappingFromFqnToPackage.get(lhs);
+                if(lhsDescriptor == null) {
+                    LOGGER.warn("No jQAssistant node created for left side of link from "+lhs+" to "+rhs);
+                    continue;
+                }
+
+                final PlantUmlPackageDescriptor rhsDescriptor = mappingFromFqnToPackage.get(rhs);
+                if(rhsDescriptor == null) {
+                    LOGGER.warn("No jQAssistant node created for right side of link from "+lhs+" to "+rhs);
+                    continue;
+                }
+
+                lhsDescriptor.getMayDependOnPackages().add(rhsDescriptor);
             }
 
         }
