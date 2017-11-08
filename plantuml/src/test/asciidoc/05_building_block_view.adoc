@@ -33,16 +33,57 @@ And here is an example of a component diagram:
 
 ["plantuml","Components","png"]
 -----
-component Domain
-component Entities
-component Infrastructure
-component Restful
-component [JSF UI]
+skinparam componentStyle uml2
+skinparam component {
+  FontSize 13
+  FontName Arial
+  FontColor #99c0d0
+  BorderColor black
+  BackgroundColor #42788e
+  ArrowFontName Impact
+  ArrowColor #42788e
+  ArrowFontColor #42788e
+
+
+  BackgroundColor<<UI>> Red
+  BorderColor<<UI>> #FF6655
+}
+
+component Restful [
+     <size:20><b><u>Restful</u></b></size>
+
+     RESTful interface
+]
+component JSF_UI [
+     <size:20><b><u>JSF UI</u></b></size>
+
+     Contains Entities
+]
+
+component Domain [
+    <size:20><b><u>Domain</u></b></size>
+
+    Contains the domain logic,
+    mostly services
+]
+component Entities [
+    <size:20><b><u>Entities</u></b></size>
+
+    Contains Entities,
+    structured in Aggregates
+]
+component Infrastructure [
+     <size:20><b><u>Infrastructure</u></b></size>
+
+    Contains number converters,
+    repositories, …​
+]
+
 
 Domain --> Entities
 Domain --> Infrastructure
 Restful --> Domain
-[JSF UI] --> Domain
+JSF_UI --> Domain
 -----
 
 .Level 1 Components
@@ -53,7 +94,7 @@ Restful --> Domain
 | Entities          | some.example.project.entities         | Contains Entities, structured in Aggregates
 | Infrastructure    | some.example.project.infrastructure   | Contains number converters, access to external systems, ...
 | Restful           | some.example.project.rest             | Contains classes for REST interface
-| JSF UI            | some.example.project.jsf_ui           | Contains classes for JSF UI
+| JSF_UI            | some.example.project.jsf_ui           | Contains classes for JSF UI
 |===
 
 
