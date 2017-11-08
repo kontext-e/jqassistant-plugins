@@ -42,6 +42,10 @@ From master branch. Note: most recent versions from branches may differ.
 Latest Changes
 ==============
 
+Release 1.3.1
+-------------
+* PlantUML plugin supports Component Diagrams
+
 Release 1.3.0
 -------------
 * Update to jQAssistant 1.3.0
