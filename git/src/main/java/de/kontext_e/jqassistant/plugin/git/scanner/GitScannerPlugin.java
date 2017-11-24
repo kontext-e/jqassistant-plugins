@@ -243,7 +243,7 @@ public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitRep
         } else if("C".equals(gitChangeDescriptor.getModificationKind().toUpperCase())) {
             final GitFileDescriptor oldFile = getOrCreateGitFileDescriptor(files, store, gitChange.getOldPath());
             final GitFileDescriptor newFile = getOrCreateGitFileDescriptor(files, store, gitChange.getNewPath());
-            newFile.setCopiedFrom(oldFile);
+            newFile.setCopyOf(oldFile);
             gitChangeDescriptor.setCopies(oldFile);
             gitChangeDescriptor.setCreates(newFile);
         }

@@ -46,6 +46,7 @@ Release 1.3.2
 -------------
 * #47 guarded item.getFile() by path.endsWith("/HEAD") to speed up scanning
 * #48 For contributors: raised language level to 1.8
+* #46 Git Plugin: enhanced the graph of a git repository
 
 Release 1.3.1
 -------------

@@ -39,7 +39,7 @@ public interface GitFileDescriptor extends GitDescriptor {
     GitFileDescriptor getHasNewName();
     void setHasNewName(GitFileDescriptor gitFileDescriptor);
 
-    @Relation("COPIED_FROM")
-    GitFileDescriptor getCopiedFrom();
-    void setCopiedFrom(GitFileDescriptor oldFile);
+    @Relation("COPY_OF")
+    GitFileDescriptor getCopyOf();
+    void setCopyOf(GitFileDescriptor oldFile);
 }
