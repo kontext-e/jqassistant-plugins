@@ -49,7 +49,7 @@ public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitRep
     public boolean accepts(final FileResource item, final String path, final Scope scope) throws IOException {
         if(path.endsWith("/HEAD")) {
             final File gitDirectory = item.getFile();
-            LOGGER.info("Checking path {} / dir {}", path, gitDirectory);
+            LOGGER.debug("Checking path {} / dir {}", path, gitDirectory);
             boolean isGitDir = ".git".equals(gitDirectory.toPath().toAbsolutePath().getParent().toFile().getName());
             if (!isGitDir) {
                 return false;
@@ -200,44 +200,63 @@ public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitRep
         }
     }
 
-    /* Modification Kinds
-     * Added (A),
-     * Copied (C),
-     * Deleted (D),
-     * Modified (M),
-     * Renamed (R),
-     * have their type (i.e. regular file, symlink, submodule, …) changed (T),
-     * are Unmerged (U),
-     * are Unknown (X),
-     * or have had their pairing Broken (B)
-     */
     private void addCommitFiles(final Store store, final GitCommit gitCommit, final GitCommitDescriptor gitCommitDescriptor, final Map<String, GitFileDescriptor> files) {
         for (GitChange gitChange : gitCommit.getGitChanges()) {
             GitChangeDescriptor gitCommitFile = store.create(GitChangeDescriptor.class);
             gitCommitFile.setModificationKind(gitChange.getModificationKind());
             gitCommitDescriptor.getFiles().add(gitCommitFile);
-            addAsGitFile(files, gitChange.getRelativePath(), gitCommitFile, store, gitCommit.getDate());
+            addAsGitFile(files, gitChange, gitCommitFile, store, gitCommit.getDate());
         }
     }
 
-    private void addAsGitFile(final Map<String, GitFileDescriptor> files, String relativePath, final GitChangeDescriptor change, final Store store, final Date date) {
+    private void addAsGitFile(final Map<String, GitFileDescriptor> files, GitChange gitChange, final GitChangeDescriptor gitChangeDescriptor, final Store store, final Date date) {
+        final GitFileDescriptor gitFileDescriptor = getOrCreateGitFileDescriptor(files, store, gitChange.getRelativePath());
+
+        gitChangeDescriptor.setModifies(gitFileDescriptor);
+
+    /* Modification Kinds
+     * Added (A),
+     * Copied (C),
+     * Deleted (D),
+     * Modified (M),
+     * Renamed (R)
+     */
+        if("A".equals(gitChangeDescriptor.getModificationKind().toUpperCase())) {
+            gitFileDescriptor.setCreatedAt(DATE_TIME_FORMAT.format(date));
+            gitFileDescriptor.setCreatedAtEpoch(date.getTime());
+            gitChangeDescriptor.setCreates(gitFileDescriptor);
+        } else if("M".equals(gitChangeDescriptor.getModificationKind().toUpperCase())) {
+            gitFileDescriptor.setLastModificationAt(DATE_TIME_FORMAT.format(date));
+            gitFileDescriptor.setLastModificationAtEpoch(date.getTime());
+            gitChangeDescriptor.setUpdates(gitFileDescriptor);
+        } else if("D".equals(gitChangeDescriptor.getModificationKind().toUpperCase())) {
+            gitFileDescriptor.setDeletedAt(DATE_TIME_FORMAT.format(date));
+            gitFileDescriptor.setDeletedAtEpoch(date.getTime());
+            gitChangeDescriptor.setDeletes(gitFileDescriptor);
+        } else if("R".equals(gitChangeDescriptor.getModificationKind().toUpperCase())) {
+            final GitFileDescriptor oldFile = getOrCreateGitFileDescriptor(files, store, gitChange.getOldPath());
+            final GitFileDescriptor newFile = getOrCreateGitFileDescriptor(files, store, gitChange.getNewPath());
+            oldFile.setHasNewName(newFile);
+            gitChangeDescriptor.setRenames(oldFile);
+            gitChangeDescriptor.setDeletes(oldFile);
+            gitChangeDescriptor.setCreates(newFile);
+        } else if("C".equals(gitChangeDescriptor.getModificationKind().toUpperCase())) {
+            final GitFileDescriptor oldFile = getOrCreateGitFileDescriptor(files, store, gitChange.getOldPath());
+            final GitFileDescriptor newFile = getOrCreateGitFileDescriptor(files, store, gitChange.getNewPath());
+            newFile.setCopiedFrom(oldFile);
+            gitChangeDescriptor.setCopies(oldFile);
+            gitChangeDescriptor.setCreates(newFile);
+        }
+    }
+
+    private GitFileDescriptor getOrCreateGitFileDescriptor(final Map<String, GitFileDescriptor> files, final Store store, String relativePath) {
         GitFileDescriptor gitFileDescriptor = files.get(relativePath);
         if(gitFileDescriptor == null) {
             gitFileDescriptor = store.create(GitFileDescriptor.class);
             gitFileDescriptor.setRelativePath(relativePath);
             files.put(relativePath, gitFileDescriptor);
         }
-        change.setModifies(gitFileDescriptor);
-        if("A".equals(change.getModificationKind().toUpperCase())) {
-            gitFileDescriptor.setCreatedAt(DATE_TIME_FORMAT.format(date));
-            gitFileDescriptor.setCreatedAtEpoch(date.getTime());
-        } else if("M".equals(change.getModificationKind().toUpperCase())) {
-            gitFileDescriptor.setLastModificationAt(DATE_TIME_FORMAT.format(date));
-            gitFileDescriptor.setLastModificationAtEpoch(date.getTime());
-        } else if("D".equals(change.getModificationKind().toUpperCase())) {
-            gitFileDescriptor.setDeletedAt(DATE_TIME_FORMAT.format(date));
-            gitFileDescriptor.setDeletedAtEpoch(date.getTime());
-        }
+        return gitFileDescriptor;
     }
 
     private void setRange (String range) {
