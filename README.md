@@ -44,9 +44,10 @@ Latest Changes
 
 Release 1.3.2
 -------------
+* #46 Git Plugin: enhanced the graph of a git repository
 * #47 guarded item.getFile() by path.endsWith("/HEAD") to speed up scanning
 * #48 For contributors: raised language level to 1.8
-* #46 Git Plugin: enhanced the graph of a git repository
+* #49 Git Plugin: Add also properties committer, shortMessage, and encoding to GitCommit
 
 Release 1.3.1
 -------------
