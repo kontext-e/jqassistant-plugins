@@ -44,7 +44,7 @@ subprojects {
     apply plugin: 'com.github.jruby-gradle.base'
 
     project.version = project.parent.version
-    sourceCompatibility = 1.7
+    sourceCompatibility = 1.8
 
 	check.finalizedBy jacocoTestReport
 
