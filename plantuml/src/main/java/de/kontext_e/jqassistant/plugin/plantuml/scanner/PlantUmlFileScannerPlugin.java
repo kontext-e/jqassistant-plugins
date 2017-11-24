@@ -19,7 +19,7 @@ import static java.util.Arrays.asList;
 
 public class PlantUmlFileScannerPlugin extends AbstractScannerPlugin<FileResource, PlantUmlFileDescriptor> {
     private static final Logger LOGGER = LoggerFactory.getLogger(PlantUmlFileScannerPlugin.class);
-    public static final String JQASSISTANT_PLUGIN_PLANTUML_SUFFIXES = "jqassistant.plugin.plantuml.suffixes";
+    private static final String JQASSISTANT_PLUGIN_PLANTUML_SUFFIXES = "jqassistant.plugin.plantuml.suffixes";
 
     private static List<String> suffixes = asList("puml", "adoc");
 

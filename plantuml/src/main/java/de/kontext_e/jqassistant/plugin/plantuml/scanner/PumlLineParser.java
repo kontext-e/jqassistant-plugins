@@ -42,7 +42,8 @@ class PumlLineParser {
         if(parsingState == ParsingState.IGNORING && normalizedLine.startsWith("[\"plantuml\"")) {
             parsingState = ParsingState.PLANTUMLFOUND;
         }
-        if(parsingState == ParsingState.ACCEPTING && normalizedLine.startsWith("----")) {
+
+        if(parsingState == ParsingState.ACCEPTING && (normalizedLine.startsWith("----") || normalizedLine.startsWith("@enduml"))) {
             parsingState = ParsingState.IGNORING;
             lineBuffer.append("\n");
             lineBuffer.append("@enduml");

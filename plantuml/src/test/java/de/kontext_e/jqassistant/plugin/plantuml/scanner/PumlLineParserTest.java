@@ -25,6 +25,35 @@ public class PumlLineParserTest {
     }
 
     @Test
+    public void thatPumlFileIsRead() throws Exception {
+        final String puml = "@startuml\n" +
+                            "\n" +
+                            "skinparam packageStyle rect\n" +
+                            "\n" +
+                            "package scanner {}\n" +
+                            "package store {\n" +
+                            "    package descriptor {}\n" +
+                            "}\n" +
+                            "\n" +
+                            "scanner --> descriptor\n" +
+                            "\n" +
+                            "@enduml\n";
+        String[] lines = puml.split("\\n");
+        pumlLineParser = new PumlLineParser(mockStore, plantUmlFileDescriptor, ParsingState.ACCEPTING);
+        final PlantUmlPackageDescriptor mockDescriptor = mock(PlantUmlPackageDescriptor.class);
+        when(mockStore.create(PlantUmlPackageDescriptor.class)).thenReturn(mockDescriptor);
+        final Set<PlantUmlPackageDescriptor> mockSet = mock(Set.class);
+        when(mockDescriptor.getMayDependOnPackages()).thenReturn(mockSet);
+
+        for (String line : lines) {
+            pumlLineParser.parseLine(line);
+        }
+
+        verify(mockSet).add(mockDescriptor);
+    }
+
+
+    @Test
     public void thatEmbeddedPlantUMLInAsciidocIsRead() throws Exception {
         final String asciidoc = "=== Level 1\n" +
                                 "\n" +
@@ -44,7 +73,6 @@ public class PumlLineParserTest {
                                 "\n" +
                                 "Comments regarding structure and interdependencies at Level 1:\n";
         String[] lines = asciidoc.split("\\n");
-        Assert.assertThat(lines.length, Matchers.greaterThan(1));
         pumlLineParser = new PumlLineParser(mockStore, plantUmlFileDescriptor, ParsingState.IGNORING);
         final PlantUmlPackageDescriptor mockDescriptor = mock(PlantUmlPackageDescriptor.class);
         when(mockStore.create(PlantUmlPackageDescriptor.class)).thenReturn(mockDescriptor);

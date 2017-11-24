@@ -203,8 +203,9 @@ task(jqascan, dependsOn: 'removeJQAReport', type: JavaExec) {
   }
 */
 
-//  args 'plantuml/src/test/asciidoc'
-  args '.git'
+  args 'plantuml/src/test/asciidoc'
+  args 'plantuml/src/test/plantuml'
+//  args '.git'
 
 //  args 'asciidoc/src/test/asciidoc'
 //  args 'plaintext/src/test/testfiles'
