@@ -2,11 +2,15 @@
 
 skinparam packageStyle rect
 
+class SomeClass
 package scanner {}
 package store {
-    package descriptor {}
+    package descriptor {
+        interface PlantUmlDescriptor
+    }
 }
 
 scanner --> descriptor
+SomeClass --> PlantUmlDescriptor
 
 @enduml

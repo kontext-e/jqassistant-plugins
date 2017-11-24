@@ -11,21 +11,22 @@ The following UML package diagram shows the main building blocks of the system a
 
 ["plantuml","MainBuildingBlocks","png"]
 -----
-package de.kontext_e.jqassistant.plugin.plantuml.scanner {}
-package de.kontext_e.jqassistant.plugin.plantuml.store {
+package scanner {}
+package store {
     package descriptor {}
 }
 
-de.kontext_e.jqassistant.plugin.plantuml.scanner -up-> de.kontext_e.jqassistant.plugin.plantuml.store
+scanner --> store
 
 -----
 
 .Description of de.kontext_e.jqassistant.plugin.plantuml packages
 [options="header"]
 |====
-| Package | Package                                             | Purpose
-| scanner | de.kontext_e.jqassistant.plugin.plantuml.scanner    | Scan a text file and create Neo4j nodes for packages and relationships for links.
-| store   | de.kontext_e.jqassistant.plugin.plantuml.store      | contains jQAssistant compliant descriptors for Neo4j nodes.
+| Name          | Package                                                       | Purpose
+| scanner       | de.kontext_e.jqassistant.plugin.plantuml.scanner              | Scan a text file and create Neo4j nodes for packages and relationships for links.
+| store         | de.kontext_e.jqassistant.plugin.plantuml.store                | contains jQAssistant store interfaces.
+| descriptor    | de.kontext_e.jqassistant.plugin.plantuml.store.descriptor     | contains jQAssistant compliant descriptors for Neo4j nodes.
 |====
 
 

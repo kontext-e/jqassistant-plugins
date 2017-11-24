@@ -10,4 +10,7 @@ public interface PlantUmlFileDescriptor extends PlantUmlDescriptor, NamedDescrip
 
     @Relation("CONTAINS")
     Set<PlantUmlElement> getPlantUmlElements();
+
+    @Relation("CONTAINS_DIAGRAMS")
+    Set<PlantUmlDiagramDescriptor> getPlantUmlDiagrams();
 }
