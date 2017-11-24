@@ -17,6 +17,10 @@ public interface GitCommitDescriptor extends GitDescriptor {
     String getAuthor();
     void setAuthor(String author);
 
+    @Property("committer")
+    String getCommitter();
+    void setCommitter(String committer);
+
     @Property("date")
     String getDate();
     void setDate(String date);
@@ -33,10 +37,17 @@ public interface GitCommitDescriptor extends GitDescriptor {
     String getMessage();
     void setMessage(String message);
 
+    @Property("shortMessage")
+    String getShortMessage();
+    void setShortMessage(String message);
+
+    @Property("encoding")
+    String getEncoding();
+    void setEncoding(String encoding);
+
     @Relation("CONTAINS_CHANGE")
     List<GitChangeDescriptor> getFiles();
 
     @Relation("HAS_PARENT")
     List<GitCommitDescriptor> getParents();
-
 }

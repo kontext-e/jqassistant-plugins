@@ -68,11 +68,13 @@ class GitRepositoryScanner {
 
             gitCommitDescriptor.setSha(gitCommit.getSha());
             gitCommitDescriptor.setAuthor(gitCommit.getAuthor());
+            gitCommitDescriptor.setCommitter(gitCommit.getCommitter());
             gitCommitDescriptor.setDate(DATE_FORMAT.format(gitCommit.getDate()));
             gitCommitDescriptor.setMessage(gitCommit.getMessage());
+            gitCommitDescriptor.setShortMessage(gitCommit.getShortMessage());
             gitCommitDescriptor.setEpoch(gitCommit.getDate().getTime());
             gitCommitDescriptor.setTime(TIME_FORMAT.format(gitCommit.getDate()));
-
+            gitCommitDescriptor.setEncoding(gitCommit.getEncoding());
             gitRepositoryDescriptor.getCommits().add(gitCommitDescriptor);
 
             addCommitForAuthor(authors, gitCommit.getAuthor(), gitCommitDescriptor);
@@ -143,7 +145,6 @@ class GitRepositoryScanner {
                 gitAuthor.setName(author.substring(0, author.indexOf("<")).trim());
                 gitAuthor.setEmail(author.substring(author.indexOf("<")+1, author.indexOf(">")).trim());
                 authors.put(author, gitAuthor);
-
             }
             authors.get(author).getCommits().add(gitCommit);
         }
@@ -163,13 +164,6 @@ class GitRepositoryScanner {
 
         gitChangeDescriptor.setModifies(gitFileDescriptor);
 
-        /* Modification Kinds
-         * Added (A),
-         * Copied (C),
-         * Deleted (D),
-         * Modified (M),
-         * Renamed (R)
-         */
         if(isAddChange(gitChangeDescriptor)) {
             gitFileDescriptor.setCreatedAt(DATE_TIME_FORMAT.format(date));
             gitFileDescriptor.setCreatedAtEpoch(date.getTime());

@@ -7,10 +7,13 @@ import java.util.List;
 public class GitCommit {
     private final String sha;
     private String author;
+    private String committer;
     private Date date;
     private String message;
+    private String shortMessage;
     private final List<GitChange> gitChanges = new LinkedList<GitChange>();
     private final List<GitCommit> parents = new LinkedList<GitCommit>();
+    private String encoding;
 
     public GitCommit(final String sha) {
         this.sha = sha;
@@ -33,6 +36,14 @@ public class GitCommit {
     }
     protected void setAuthor (final String author) {this.author = author;}
 
+    public String getCommitter() {
+        return committer;
+    }
+
+    public void setCommitter(final String committer) {
+        this.committer = committer;
+    }
+
     public Date getDate() {
         return date;
     }
@@ -43,6 +54,14 @@ public class GitCommit {
     }
     protected void setMessage (String message) {this.message = message;}
 
+    public String getShortMessage() {
+        return shortMessage;
+    }
+
+    public void setShortMessage(final String shortMessage) {
+        this.shortMessage = shortMessage;
+    }
+
     public List<GitChange> getGitChanges() {
         return gitChanges;
     }
@@ -51,14 +70,12 @@ public class GitCommit {
         return parents;
     }
 
-    @Override
-    public String toString() {
-        return "GitLogEntry{" +
-                "sha='" + sha + '\'' +
-                ", author='" + author + '\'' +
-                ", date='" + date + '\'' +
-                ", message=" + message +
-                '}';
+    public void setEncoding(final String encoding) {
+        this.encoding = encoding;
+    }
+
+    public String getEncoding() {
+        return encoding;
     }
 
     @Override
@@ -76,4 +93,20 @@ public class GitCommit {
     public int hashCode() {
         return sha.hashCode();
     }
+
+    @Override
+    public String toString() {
+        return "GitCommit{" +
+               "sha='" + sha + '\'' +
+               ", author='" + author + '\'' +
+               ", committer='" + committer + '\'' +
+               ", date=" + date +
+               ", message='" + message + '\'' +
+               ", shortMessage='" + shortMessage + '\'' +
+               ", gitChanges=" + gitChanges +
+               ", parents=" + parents +
+               ", encoding='" + encoding + '\'' +
+               '}';
+    }
+
 }
