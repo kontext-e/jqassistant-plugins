@@ -3,14 +3,18 @@
 skinparam packageStyle rect
 
 class SomeClass
-package scanner {}
+package scanner as myscanner {}
 package store {
     package descriptor {
         interface PlantUmlDescriptor
     }
 }
+note left of myscanner
+  this is my
+  note on this package
+end note
 
-scanner --> descriptor
+myscanner --> descriptor
 SomeClass --> PlantUmlDescriptor
 
 @enduml
