@@ -142,12 +142,12 @@ class JGitScanner {
 
             List<DiffEntry> diffs = df.scan(parent.getTree(), revCommit.getTree());
             for (DiffEntry diff : diffs) {
-                final String changeType = diff.getChangeType().toString().substring(0, 1);
-                final String oldPath = diff.getOldPath();
-                final String newPath = diff.getNewPath();
-                final String diffPath = "D".equalsIgnoreCase(changeType) ? oldPath : newPath;
-                logger.debug("changeType={}, path={}", changeType, diffPath);
-                final GitChange gitChange = new GitChange(changeType, diffPath);
+                final GitChange gitChange = new GitChange(
+                        diff.getChangeType().name(),
+                        diff.getOldPath(),
+                        diff.getNewPath()
+                );
+                logger.debug(gitChange.toString());
                 gitCommit.getGitChanges().add(gitChange);
             }
 
@@ -230,4 +230,7 @@ class JGitScanner {
         return result;
     }
 
+    public static void main(String[] args) throws IOException {
+        final List<GitCommit> commits = new JGitScanner(".git", null).findCommits();
+    }
 }

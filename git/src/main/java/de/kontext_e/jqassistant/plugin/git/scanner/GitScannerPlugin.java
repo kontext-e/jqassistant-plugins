@@ -200,6 +200,17 @@ public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitRep
         }
     }
 
+    /* Modification Kinds
+     * Added (A),
+     * Copied (C),
+     * Deleted (D),
+     * Modified (M),
+     * Renamed (R),
+     * have their type (i.e. regular file, symlink, submodule, …) changed (T),
+     * are Unmerged (U),
+     * are Unknown (X),
+     * or have had their pairing Broken (B)
+     */
     private void addCommitFiles(final Store store, final GitCommit gitCommit, final GitCommitDescriptor gitCommitDescriptor, final Map<String, GitFileDescriptor> files) {
         for (GitChange gitChange : gitCommit.getGitChanges()) {
             GitChangeDescriptor gitCommitFile = store.create(GitChangeDescriptor.class);

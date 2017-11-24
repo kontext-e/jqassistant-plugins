@@ -42,6 +42,10 @@ From master branch. Note: most recent versions from branches may differ.
 Latest Changes
 ==============
 
+Release 1.3.2
+-------------
+* #47 guarded item.getFile() by path.endsWith("/HEAD") to speed up scanning
+
 Release 1.3.1
 -------------
 * PlantUML plugin supports Component Diagrams
