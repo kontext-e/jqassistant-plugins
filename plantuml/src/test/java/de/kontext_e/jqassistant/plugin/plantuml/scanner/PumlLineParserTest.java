@@ -52,6 +52,50 @@ public class PumlLineParserTest {
         verify(mockSet).add(mockDescriptor);
     }
 
+    @Test
+    public void thatComponentPumlFileIsRead() throws Exception {
+        final String puml = "@startuml\n" +
+                            "\n" +
+                            "skinparam componentStyle uml2\n" +
+                            "skinparam component {\n" +
+                            "  FontSize 13\n" +
+                            "  FontName Arial\n" +
+                            "  FontColor #99c0d0\n" +
+                            "  BorderColor black\n" +
+                            "  BackgroundColor #42788e\n" +
+                            "  ArrowFontName Impact\n" +
+                            "  ArrowColor #42788e\n" +
+                            "  ArrowFontColor #42788e\n" +
+                            "\n" +
+                            "\n" +
+                            "  BackgroundColor<<UI>> Red\n" +
+                            "  BorderColor<<UI>> #FF6655\n" +
+                            "}\n" +
+                            "\n" +
+                            "component TestComponent1 [\n" +
+                            "     <size:20><b><u>TestComponent1</u></b></size>\n" +
+                            "]\n" +
+                            "component TestComponent2 [\n" +
+                            "     <size:20><b><u>TestComponent2</u></b></size>\n" +
+                            "]\n" +
+                            "\n" +
+                            "TestComponent1 --> TestComponent2\n" +
+                            "\n" +
+                            "@enduml\n";
+        String[] lines = puml.split("\\n");
+        pumlLineParser = new PumlLineParser(mockStore, plantUmlFileDescriptor, ParsingState.ACCEPTING);
+        final PlantUmlPackageDescriptor mockDescriptor = mock(PlantUmlPackageDescriptor.class);
+        when(mockStore.create(PlantUmlPackageDescriptor.class)).thenReturn(mockDescriptor);
+        final Set<PlantUmlPackageDescriptor> mockSet = mock(Set.class);
+        when(mockDescriptor.getMayDependOnPackages()).thenReturn(mockSet);
+
+        for (String line : lines) {
+            pumlLineParser.parseLine(line);
+        }
+
+        verify(mockSet).add(mockDescriptor);
+    }
+
 
     @Test
     public void thatEmbeddedPlantUMLInAsciidocIsRead() throws Exception {
