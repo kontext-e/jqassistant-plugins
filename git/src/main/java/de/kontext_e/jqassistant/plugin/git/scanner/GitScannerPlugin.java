@@ -40,7 +40,7 @@ public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitRep
     private String range = null;
 
     @Override
-    /**
+    /*
      * Check whether this is the start of a git repository.
      *
      * If the path is "/HEAD" and the file (behind item) lives in a directory called ".git" this must be a git
@@ -63,6 +63,19 @@ public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitRep
         return false;
     }
 
+    @Override
+    public GitRepositoryDescriptor scan(final FileResource item, final String path, final Scope scope, final Scanner scanner) throws IOException {
+        // This is called with path = "/HEAD" since this is the only "accepted" file
+        LOGGER.debug ("Scanning Git directory '{}' (call with path: '{}')", item.getFile(), path);
+        Store store = scanner.getContext().getStore();
+        final GitRepositoryDescriptor gitRepositoryDescriptor = store.create(GitRepositoryDescriptor.class);
+        initGitDescriptor(gitRepositoryDescriptor, item.getFile());
+
+        addCommits(store, gitRepositoryDescriptor);
+
+        return gitRepositoryDescriptor;
+    }
+
     protected static void initGitDescriptor (final GitRepositoryDescriptor gitRepositoryDescriptor, final File file) throws IOException {
         final Path headPath = file.toPath().toAbsolutePath().normalize();
         LOGGER.debug ("Full path to Git directory HEAD is '{}'", headPath);
@@ -78,19 +91,6 @@ public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitRep
         gitRepositoryDescriptor.setFileName(pathToGitProject);
     }
 
-    @Override
-    public GitRepositoryDescriptor scan(final FileResource item, final String path, final Scope scope, final Scanner scanner) throws IOException {
-        // This is called with path = "/HEAD" since this is the only "accepted" file
-        LOGGER.debug ("Scanning Git directory '{}' (call with path: '{}')", item.getFile(), path);
-        Store store = scanner.getContext().getStore();
-        final GitRepositoryDescriptor gitRepositoryDescriptor = store.create(GitRepositoryDescriptor.class);
-        initGitDescriptor(gitRepositoryDescriptor, item.getFile());
-
-        addCommits(store, gitRepositoryDescriptor);
-
-        return gitRepositoryDescriptor;
-    }
-
     private void addCommits(final Store store, final GitRepositoryDescriptor gitRepositoryDescriptor) throws IOException {
         Map<String, GitAuthorDescriptor> authors = new HashMap<>();
         Map<String, GitFileDescriptor> files = new HashMap<>();
@@ -99,10 +99,20 @@ public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitRep
         JGitScanner jGitScanner = new JGitScanner(gitRepositoryDescriptor.getFileName(), range);
 
         List<GitCommit> gitCommits = jGitScanner.findCommits();
-        List<GitBranch> branches = jGitScanner.findBranches();
-        List<GitTag> tags = jGitScanner.findTags();
-        GitBranch head = jGitScanner.findHead();
 
+        addCommits(store, gitRepositoryDescriptor, authors, files, commits, gitCommits);
+        addBranches(store, gitRepositoryDescriptor, commits, jGitScanner.findBranches());
+        addTags(store, gitRepositoryDescriptor, commits, jGitScanner.findTags());
+
+        authors.values().forEach(gitAuthor -> gitRepositoryDescriptor.getAuthors().add(gitAuthor));
+        files.values().forEach(gitFile -> gitRepositoryDescriptor.getFiles().add(gitFile));
+
+        GitBranch head = jGitScanner.findHead();
+        GitCommitDescriptor headDescriptor = commits.get(head.getCommitSha());
+        gitRepositoryDescriptor.setHead(headDescriptor);
+    }
+
+    private void addCommits(final Store store, final GitRepositoryDescriptor gitRepositoryDescriptor, final Map<String, GitAuthorDescriptor> authors, final Map<String, GitFileDescriptor> files, final Map<String, GitCommitDescriptor> commits, final List<GitCommit> gitCommits) {
         // First pass: Add the commits to the graph
         for (GitCommit gitCommit : gitCommits) {
             GitCommitDescriptor gitCommitDescriptor = store.create(GitCommitDescriptor.class);
@@ -138,15 +148,9 @@ public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitRep
                 }
             }
         }
+    }
 
-        for (GitAuthorDescriptor gitAuthor : authors.values()) {
-            gitRepositoryDescriptor.getAuthors().add(gitAuthor);
-        }
-
-        for (GitFileDescriptor gitFile : files.values()) {
-            gitRepositoryDescriptor.getFiles().add(gitFile);
-        }
-
+    private void addBranches(final Store store, final GitRepositoryDescriptor gitRepositoryDescriptor, final Map<String, GitCommitDescriptor> commits, List<GitBranch> branches) throws IOException {
         for (GitBranch gitBranch : branches) {
             GitBranchDescriptor gitBranchDescriptor = store.create(GitBranchDescriptor.class);
             String name = gitBranch.getName();
@@ -161,7 +165,9 @@ public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitRep
             gitBranchDescriptor.setHead(gitCommitDescriptor);
             gitRepositoryDescriptor.getBranches().add(gitBranchDescriptor);
         }
+    }
 
+    private void addTags(final Store store, final GitRepositoryDescriptor gitRepositoryDescriptor, final Map<String, GitCommitDescriptor> commits, List<GitTag> tags) throws IOException {
         for (GitTag gitTag : tags) {
             GitTagDescriptor gitTagDescriptor = store.create(GitTagDescriptor.class);
             String label = gitTag.getLabel();
@@ -176,9 +182,6 @@ public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitRep
             gitTagDescriptor.setCommit(gitCommitDescriptor);
             gitRepositoryDescriptor.getTags().add(gitTagDescriptor);
         }
-
-        GitCommitDescriptor headDescriptor = commits.get(head.getCommitSha());
-        gitRepositoryDescriptor.setHead(headDescriptor);
     }
 
     private void addCommitForAuthor(final Map<String, GitAuthorDescriptor> authors, final String author, final Store store, final GitCommitDescriptor gitCommit) {
@@ -214,39 +217,59 @@ public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitRep
 
         gitChangeDescriptor.setModifies(gitFileDescriptor);
 
-    /* Modification Kinds
-     * Added (A),
-     * Copied (C),
-     * Deleted (D),
-     * Modified (M),
-     * Renamed (R)
-     */
-        if("A".equals(gitChangeDescriptor.getModificationKind().toUpperCase())) {
+        /* Modification Kinds
+         * Added (A),
+         * Copied (C),
+         * Deleted (D),
+         * Modified (M),
+         * Renamed (R)
+         */
+        if(isAddChange(gitChangeDescriptor)) {
             gitFileDescriptor.setCreatedAt(DATE_TIME_FORMAT.format(date));
             gitFileDescriptor.setCreatedAtEpoch(date.getTime());
             gitChangeDescriptor.setCreates(gitFileDescriptor);
-        } else if("M".equals(gitChangeDescriptor.getModificationKind().toUpperCase())) {
+        } else if(isUpdateChange(gitChangeDescriptor)) {
             gitFileDescriptor.setLastModificationAt(DATE_TIME_FORMAT.format(date));
             gitFileDescriptor.setLastModificationAtEpoch(date.getTime());
             gitChangeDescriptor.setUpdates(gitFileDescriptor);
-        } else if("D".equals(gitChangeDescriptor.getModificationKind().toUpperCase())) {
+        } else if(isDeleteChange(gitChangeDescriptor)) {
             gitFileDescriptor.setDeletedAt(DATE_TIME_FORMAT.format(date));
             gitFileDescriptor.setDeletedAtEpoch(date.getTime());
             gitChangeDescriptor.setDeletes(gitFileDescriptor);
-        } else if("R".equals(gitChangeDescriptor.getModificationKind().toUpperCase())) {
+        } else if(isRenameChange(gitChangeDescriptor)) {
             final GitFileDescriptor oldFile = getOrCreateGitFileDescriptor(files, store, gitChange.getOldPath());
             final GitFileDescriptor newFile = getOrCreateGitFileDescriptor(files, store, gitChange.getNewPath());
             oldFile.setHasNewName(newFile);
             gitChangeDescriptor.setRenames(oldFile);
             gitChangeDescriptor.setDeletes(oldFile);
             gitChangeDescriptor.setCreates(newFile);
-        } else if("C".equals(gitChangeDescriptor.getModificationKind().toUpperCase())) {
+        } else if(isCopyChange(gitChangeDescriptor)) {
             final GitFileDescriptor oldFile = getOrCreateGitFileDescriptor(files, store, gitChange.getOldPath());
             final GitFileDescriptor newFile = getOrCreateGitFileDescriptor(files, store, gitChange.getNewPath());
             newFile.setCopyOf(oldFile);
             gitChangeDescriptor.setCopies(oldFile);
             gitChangeDescriptor.setCreates(newFile);
         }
+    }
+
+    private boolean isCopyChange(final GitChangeDescriptor gitChangeDescriptor) {
+        return "C".equals(gitChangeDescriptor.getModificationKind().toUpperCase());
+    }
+
+    private boolean isRenameChange(final GitChangeDescriptor gitChangeDescriptor) {
+        return "R".equals(gitChangeDescriptor.getModificationKind().toUpperCase());
+    }
+
+    private boolean isDeleteChange(final GitChangeDescriptor gitChangeDescriptor) {
+        return "D".equals(gitChangeDescriptor.getModificationKind().toUpperCase());
+    }
+
+    private boolean isUpdateChange(final GitChangeDescriptor gitChangeDescriptor) {
+        return "M".equals(gitChangeDescriptor.getModificationKind().toUpperCase());
+    }
+
+    private boolean isAddChange(final GitChangeDescriptor gitChangeDescriptor) {
+        return "A".equals(gitChangeDescriptor.getModificationKind().toUpperCase());
     }
 
     private GitFileDescriptor getOrCreateGitFileDescriptor(final Map<String, GitFileDescriptor> files, final Store store, String relativePath) {
