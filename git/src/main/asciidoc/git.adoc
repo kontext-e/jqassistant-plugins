@@ -53,10 +53,12 @@ Represents a single commit.
 | Name          | Description
 | sha           | The sha key
 | author        | The author as a string, e.g. Jens Nerche <j.nerche@kontext-e.de>
+| committer     | The committer as a string, e.g. GitHub <noreply@github.com>
 | date          | The date with time
 | time          | The time part of the date
 | epoch         | The date in epoch representation: milliseconds since 1970-01-01
 | message       | The commit message
+| shortMessage  | The short commit message
 |====
 
 .Relations of :Git:Commit
@@ -83,6 +85,11 @@ Represents the change of one file in one commit.
 |====
 | Name              | Target label(s)            | Cardinality | Description
 | MODIFIES          | <<:Git:File>>              | 1           | References to one modified <<:Git:File>>
+| CREATES           | <<:Git:File>>              | 1           | References to one created <<:Git:File>>
+| UPDATES           | <<:Git:File>>              | 1           | References to one updated <<:Git:File>>
+| DELETES           | <<:Git:File>>              | 1           | References to one deleted <<:Git:File>>
+| RENAMES           | <<:Git:File>>              | 1           | References to one renamed <<:Git:File>> This relation points to the old file. A RENAME change has also two additional relations CREATES for the new and DELETES for the old file.
+| COPIES            | <<:Git:File>>              | 1           | References to one copied <<:Git:File>> This relation points to the old file. A COPIES change also has an additional relation CREATES for the new file.
 |====
 
 === :Git:File
@@ -99,6 +106,14 @@ Represents a file in the repository which was added, modified, or deleted in the
 | createdAtEpoch            | Creation timestamp in epoch representation, e.g. 1398851290000
 | deletedAtEpoch            | Deletion timestamp in epoch representation, e.g. 1398851290000
 | lastModificationAtEpoch   | Last modification timestamp in epoch representation, e.g. 1398851290000
+|====
+
+.Relations of :Git:File
+[options="header"]
+|====
+| Name              | Target label(s)   | Cardinality   | Description
+| HAS_NEW_NAME      | <<:Git:File>>     | 1             | References the <<:Git:File>> with the new name
+| COPY_OF           | <<:Git:File>>     | 1             | References the <<:Git:File>> from which this was copied
 |====
 
 === :Git:Branch
