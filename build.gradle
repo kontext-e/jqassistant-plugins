@@ -193,6 +193,7 @@ task(jqascan, dependsOn: 'removeJQAReport', type: JavaExec) {
   args 'jqassistant/jqassistant.properties'
   args '-f'
 
+/*
   rootProject.subprojects {
     args 'java:classpath::'+it.name+'/build/classes/main'
     args 'java:classpath::'+it.name+'/build/classes/test'
@@ -200,12 +201,13 @@ task(jqascan, dependsOn: 'removeJQAReport', type: JavaExec) {
     args it.name+'/src/main'
     args it.name+'/src/test'
   }
+*/
 
-  args 'plantuml/src/test/asciidoc'
+//  args 'plantuml/src/test/asciidoc'
   args '.git'
 
-  args 'asciidoc/src/test/asciidoc'
-  args 'plaintext/src/test/testfiles'
+//  args 'asciidoc/src/test/asciidoc'
+//  args 'plaintext/src/test/testfiles'
   //args 'cpp/src/test/ast'
   //args 'privatetestdata'
 }

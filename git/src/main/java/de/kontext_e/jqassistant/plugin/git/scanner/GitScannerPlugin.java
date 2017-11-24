@@ -47,16 +47,20 @@ public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitRep
      * repository and the scanner may perform it's work on it (call to "scan" method).
      */
     public boolean accepts(final FileResource item, final String path, final Scope scope) throws IOException {
-        File gitDirectory = item.getFile();
-        LOGGER.debug ("Checking path {} / dir {}", path, gitDirectory);
-        boolean isGitDir = path.endsWith("/HEAD")
-                && ".git".equals(gitDirectory.toPath().toAbsolutePath().getParent().toFile().getName());
-        if (!isGitDir) {
-            return false;
+        if(path.endsWith("/HEAD")) {
+            final File gitDirectory = item.getFile();
+            LOGGER.info("Checking path {} / dir {}", path, gitDirectory);
+            boolean isGitDir = ".git".equals(gitDirectory.toPath().toAbsolutePath().getParent().toFile().getName());
+            if (!isGitDir) {
+                return false;
+            } else {
+                String pathToGitProject = gitDirectory.toPath().getParent().toFile().getAbsolutePath();
+                LOGGER.info("Accepted Git project in '{}'", pathToGitProject);
+                return true;
+            }
         }
-        String pathToGitProject = item.getFile().toPath().getParent().toFile().getAbsolutePath();
-        LOGGER.info("Accepted Git project in '{}'", pathToGitProject);
-        return true;
+
+        return false;
     }
 
     protected static void initGitDescriptor (final GitRepositoryDescriptor gitRepositoryDescriptor, final File file) throws IOException {
