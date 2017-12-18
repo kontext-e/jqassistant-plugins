@@ -6,7 +6,7 @@ apply plugin: 'com.github.jruby-gradle.base'
 project.ext["jqaversion"] = "1.3.0"
 project.ext["jqacoreversion"] = "1.3"
 project.group = 'de.kontext-e.jqassistant.plugin'
-project.version = '1.3.2-SNAPSHOT'
+project.version = '1.3.2'
 
 buildscript {
   repositories {
@@ -193,7 +193,6 @@ task(jqascan, dependsOn: 'removeJQAReport', type: JavaExec) {
   args 'jqassistant/jqassistant.properties'
   args '-f'
 
-/*
   rootProject.subprojects {
     args 'java:classpath::'+it.name+'/build/classes/main'
     args 'java:classpath::'+it.name+'/build/classes/test'
@@ -201,14 +200,13 @@ task(jqascan, dependsOn: 'removeJQAReport', type: JavaExec) {
     args it.name+'/src/main'
     args it.name+'/src/test'
   }
-*/
 
   args 'plantuml/src/test/asciidoc'
   args 'plantuml/src/test/plantuml'
-//  args '.git'
+  args '.git'
 
-//  args 'asciidoc/src/test/asciidoc'
-//  args 'plaintext/src/test/testfiles'
+  args 'asciidoc/src/test/asciidoc'
+  args 'plaintext/src/test/testfiles'
   //args 'cpp/src/test/ast'
   //args 'privatetestdata'
 }

@@ -10,7 +10,7 @@ How to install
  
     - groupId de.kontext-e.jqassistant.plugin
     - artifactId jqassistant.plugin.checkstyle or .findbugs or .jacoco or .git or .pmd
-    - e.g. for gradle:   runtime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.checkstyle:1.1.0")
+    - e.g. for gradle:   runtime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.checkstyle:1.3.2")
 
 
 * you may want to configure some properties in jqassistant.properties or as system property (java -Dpropertyname=propertyvalue):
