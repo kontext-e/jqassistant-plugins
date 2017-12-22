@@ -16,6 +16,9 @@ import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlFileDes
 import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlGroupDescriptor;
 import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlLeafDescriptor;
 import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlPackageDescriptor;
+import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlParticipantDescriptor;
+import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlSequenceDiagramDescriptor;
+import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlSequenceDiagramMessageDescriptor;
 import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlStateDescriptor;
 import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlStateDiagramDescriptor;
 import net.sourceforge.plantuml.BlockUml;
@@ -30,6 +33,12 @@ import net.sourceforge.plantuml.cucadiagram.IGroup;
 import net.sourceforge.plantuml.cucadiagram.ILeaf;
 import net.sourceforge.plantuml.cucadiagram.LeafType;
 import net.sourceforge.plantuml.cucadiagram.Link;
+import net.sourceforge.plantuml.cucadiagram.Stereotype;
+import net.sourceforge.plantuml.sequencediagram.Event;
+import net.sourceforge.plantuml.sequencediagram.Message;
+import net.sourceforge.plantuml.sequencediagram.Participant;
+import net.sourceforge.plantuml.sequencediagram.ParticipantType;
+import net.sourceforge.plantuml.sequencediagram.SequenceDiagram;
 
 class PumlLineParser {
     private static final Logger LOGGER = LoggerFactory.getLogger(PumlLineParser.class);
@@ -39,6 +48,7 @@ class PumlLineParser {
     private final PlantUmlFileDescriptor plantUmlFileDescriptor;
     private ParsingState parsingState = ParsingState.ACCEPTING;
     private StringBuilder lineBuffer = new StringBuilder();
+    private final Map<String, PlantUmlParticipantDescriptor> participantDescriptors = new HashMap<>();
 
     PumlLineParser(final Store store, final PlantUmlFileDescriptor plantUmlFileDescriptor, final ParsingState parsingState) {
         this.store = store;
@@ -88,55 +98,71 @@ class PumlLineParser {
             LOGGER.warn("Error while parsing at postion "+higherErrorPosition+": "+error.getErrorsUml());
             return;
         }
-        if(!(diagram instanceof AbstractEntityDiagram)) {
-            return;
+
+
+        if(diagram instanceof SequenceDiagram) {
+            final SequenceDiagram sequenceDiagram = (SequenceDiagram) diagram;
+            final UmlDiagramType umlDiagramType = sequenceDiagram.getUmlDiagramType();
+            final PlantUmlDiagramDescriptor diagramDescriptor = createDiagramDescriptor(umlDiagramType);
+            if(diagramDescriptor == null) return;
+
+            final DiagramDescription description = sequenceDiagram.getDescription();
+            final String type = description.getType();
+            diagramDescriptor.setType(type);
+
+            sequenceDiagram.participants().forEach(this::addParticipant);
+            sequenceDiagram.events().forEach(this::addEvent);
+
+            plantUmlFileDescriptor.getPlantUmlDiagrams().add(diagramDescriptor);
+            setOldRelationsForCompatibility(diagramDescriptor);
         }
+        else if(diagram instanceof AbstractEntityDiagram) {
+            final AbstractEntityDiagram descriptionDiagram = (AbstractEntityDiagram) diagram;
+            final UmlDiagramType umlDiagramType = descriptionDiagram.getUmlDiagramType();
+            final PlantUmlDiagramDescriptor diagramDescriptor = createDiagramDescriptor(umlDiagramType);
+            if(diagramDescriptor == null) return;
 
-        AbstractEntityDiagram descriptionDiagram = (AbstractEntityDiagram) diagram;
-        final DiagramDescription description = descriptionDiagram.getDescription();
-        final String type = description.getType();
-        final String namespaceSeparator = descriptionDiagram.getNamespaceSeparator();
+            final DiagramDescription description = descriptionDiagram.getDescription();
+            final String type = description.getType();
+            diagramDescriptor.setType(type);
 
-        PlantUmlDiagramDescriptor diagramDescriptor = null;
-        final UmlDiagramType umlDiagramType = descriptionDiagram.getUmlDiagramType();
+            final String namespaceSeparator = descriptionDiagram.getNamespaceSeparator();
+            diagramDescriptor.setNamespaceSeparator(namespaceSeparator);
+
+            final Collection<IGroup> groups = descriptionDiagram.getRootGroup().getChildren();
+            addGroups(diagramDescriptor, groups, null);
+
+            final Collection<ILeaf> leafsvalues = descriptionDiagram.getRootGroup().getLeafsDirect();
+            addLeafs(leafsvalues, null);
+
+            final List<Link> links = descriptionDiagram.getLinks();
+            addLinks(links);
+
+            plantUmlFileDescriptor.getPlantUmlDiagrams().add(diagramDescriptor);
+            setOldRelationsForCompatibility(diagramDescriptor);
+        }
+    }
+
+    private PlantUmlDiagramDescriptor createDiagramDescriptor(final UmlDiagramType umlDiagramType) {
         switch (umlDiagramType) {
             case ACTIVITY: break;
             case CLASS:
-                diagramDescriptor = store.create(PlantUmlClassDiagramDescriptor.class);
-                break;
+                return store.create(PlantUmlClassDiagramDescriptor.class);
             case COMPOSITE: break;
             case DESCRIPTION:
-                diagramDescriptor = store.create(PlantUmlDescriptionDiagramDescriptor.class);
-                break;
+                return store.create(PlantUmlDescriptionDiagramDescriptor.class);
             case FLOW: break;
             case OBJECT: break;
-            case SEQUENCE: break;
+            case SEQUENCE:
+                return store.create(PlantUmlSequenceDiagramDescriptor.class);
             case STATE:
-                diagramDescriptor = store.create(PlantUmlStateDiagramDescriptor.class);
-                break;
+                return store.create(PlantUmlStateDiagramDescriptor.class);
             case TIMING: break;
             default: break;
         }
 
-        if(diagramDescriptor != null) {
-            diagramDescriptor.setType(type);
-            diagramDescriptor.setNamespaceSeparator(namespaceSeparator);
-            plantUmlFileDescriptor.getPlantUmlDiagrams().add(diagramDescriptor);
-        } else {
-            LOGGER.warn("Diagram type not yet supported: "+umlDiagramType);
-            return;
-        }
-
-        final Collection<IGroup> groups = descriptionDiagram.getRootGroup().getChildren();
-        addGroups(diagramDescriptor, groups, null);
-
-        final Collection<ILeaf> leafsvalues = descriptionDiagram.getRootGroup().getLeafsDirect();
-        addLeafs(leafsvalues, null);
-
-        final List<Link> links = descriptionDiagram.getLinks();
-        addLinks(links);
-
-        setOldRelationsForCompatibility(diagramDescriptor);
+        LOGGER.warn("Diagram type not yet supported: "+umlDiagramType);
+        return null;
     }
 
     private void setOldRelationsForCompatibility(final PlantUmlDiagramDescriptor diagramDescriptor) {
@@ -233,5 +259,48 @@ class PumlLineParser {
                 LOGGER.warn("Not handled group type: "+groupType);
             }
         }
+    }
+
+    private void addEvent(final Event event) {
+        if(event instanceof Message) {
+            Message message = (Message) event;
+            final String messageText = message.getLabel().asStringWithHiddenNewLine();
+            final String messageNumber = message.getMessageNumber();
+            final Participant participant1 = message.getParticipant1();
+            final Participant participant2 = message.getParticipant2();
+            final String participant1Name = participant1.getCode();
+            final String participant2Name = participant2.getCode();
+
+            final PlantUmlParticipantDescriptor p1 = participantDescriptors.get(participant1Name);
+            if(p1 == null) {
+                LOGGER.warn("Participant "+participant1Name+" not registered.");
+                return;
+            }
+
+            final PlantUmlParticipantDescriptor p2 = participantDescriptors.get(participant2Name);
+            if(p2 == null) {
+                LOGGER.warn("Participant "+participant2Name+" not registered.");
+                return;
+            }
+
+            final PlantUmlSequenceDiagramMessageDescriptor messageDescriptor = store.create(p1, PlantUmlSequenceDiagramMessageDescriptor.class, p2);
+            messageDescriptor.setMessage(messageText);
+            messageDescriptor.setMessageNumber(messageNumber);
+        }
+    }
+
+    private void addParticipant(final String actorName, final Participant participant) {
+        final PlantUmlParticipantDescriptor plantUmlParticipantDescriptor = store.create(PlantUmlParticipantDescriptor.class);
+
+        final ParticipantType type = participant.getType();
+        plantUmlParticipantDescriptor.setType(type.name());
+        plantUmlParticipantDescriptor.setName(actorName);
+
+        final Stereotype stereotype = participant.getStereotype();
+        if(stereotype != null) {
+            plantUmlParticipantDescriptor.setStereotype(stereotype.getLabel(true));
+        }
+
+        participantDescriptors.put(actorName, plantUmlParticipantDescriptor);
     }
 }

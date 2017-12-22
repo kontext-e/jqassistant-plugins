@@ -11,7 +11,9 @@
         <class>de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlElement</class>
         <class>de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlFileDescriptor</class>
         <class>de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlPackageDescriptor</class>
+        <class>de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlParticipantDescriptor</class>
         <class>de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlSequenceDiagramDescriptor</class>
+        <class>de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlSequenceDiagramMessageDescriptor</class>
         <class>de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlStateDescriptor</class>
         <class>de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlStateDiagramDescriptor</class>
     </model>
