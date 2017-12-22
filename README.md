@@ -42,6 +42,10 @@ From master branch. Note: most recent versions from branches may differ.
 Latest Changes
 ==============
 
+Release 1.3.3-SNAPSHOT
+-------------
+* #52 git plugin: protect against multiple scans of the same repo
+
 Release 1.3.2
 -------------
 * #46 Git Plugin: enhanced the graph of a git repository
