@@ -20,3 +20,5 @@ include 'cpp'
 
 include 'asciidoc'
 
+include 'javaparser'
+
