@@ -170,6 +170,7 @@ dependencies {
 	jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.checkstyle:${project.version}")
 	jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.findbugs:${project.version}")
 	jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.jacoco:${project.version}")
+	jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.javaparser:${project.version}")
 	jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.linecount:${project.version}")
 	jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.git:${project.version}")
 	jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.pmd:${project.version}")
@@ -209,8 +210,10 @@ task(jqascan, dependsOn: 'removeJQAReport', type: JavaExec) {
 
   args 'asciidoc/src/test/asciidoc'
   args 'plaintext/src/test/testfiles'
-  //args 'cpp/src/test/ast'
-  //args 'privatetestdata'
+    args 'javaparser/src/test'
+
+    //args 'cpp/src/test/ast'
+    //args 'privatetestdata'
 }
 
 task(jqaanalyze, type: JavaExec) {

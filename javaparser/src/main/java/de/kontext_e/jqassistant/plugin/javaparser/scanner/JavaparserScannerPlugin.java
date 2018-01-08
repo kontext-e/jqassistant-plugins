@@ -38,7 +38,7 @@ public class JavaparserScannerPlugin extends AbstractScannerPlugin<FileResource,
 
             boolean accepted = suffixes.contains(suffix);
             if(accepted) {
-                LOGGER.info("Javaparser accepted path "+path);
+                LOGGER.debug("Javaparser accepted path "+path);
             }
             return accepted;
         }
@@ -92,7 +92,6 @@ public class JavaparserScannerPlugin extends AbstractScannerPlugin<FileResource,
         for (PropertyMetaModel sl : subLists) {
             NodeList<? extends com.github.javaparser.ast.Node> nl = (NodeList<? extends com.github.javaparser.ast.Node>) sl.getValue(node);
             if (nl != null && nl.isNonEmpty()) {
-                LOGGER.info(" --- sublist "+sl.getName());
                 String slName = sl.getName();
                 slName = slName.endsWith("s") ? slName.substring(0, sl.getName().length() - 1) : slName;
                 for (com.github.javaparser.ast.Node nd : nl) {
