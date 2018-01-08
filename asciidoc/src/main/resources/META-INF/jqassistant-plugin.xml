@@ -2,6 +2,7 @@
         xmlns:jqa-plugin="http://www.buschmais.com/jqassistant/core/plugin/schema/v1.0" name="Asciidoc">
     <description>Provides a scanner for Asciidoc documents.</description>
     <model>
+        <class>de.kontext_e.jqassistant.plugin.asciidoc.store.descriptor.AsciidocAttribute</class>
         <class>de.kontext_e.jqassistant.plugin.asciidoc.store.descriptor.AsciidocDescriptor</class>
         <class>de.kontext_e.jqassistant.plugin.asciidoc.store.descriptor.AsciidocFileDescriptor</class>
         <class>de.kontext_e.jqassistant.plugin.asciidoc.store.descriptor.AsciidocBlockDescriptor</class>
