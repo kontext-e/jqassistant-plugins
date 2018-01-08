@@ -5,6 +5,7 @@ jar {
 }
 
 dependencies {
+    compile 'org.neo4j:neo4j-kernel:2.3.10'
     compile 'com.github.javaparser:javaparser-core:3.5.7'
 }
 

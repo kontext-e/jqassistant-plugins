@@ -1,0 +1,14 @@
+<jqa-plugin:jqassistant-plugin xmlns:jqa-plugin="http://www.buschmais.com/jqassistant/core/plugin/schema/v1.0" name="Javaparser">
+    <description>Provides a scanner for Java source files using Javaparser project.</description>
+    <model>
+        <class>de.kontext_e.jqassistant.plugin.javaparser.store.descriptor.JavaSourceDescriptor</class>
+        <class>de.kontext_e.jqassistant.plugin.javaparser.store.descriptor.JavaSourceFileDescriptor</class>
+    </model>
+    <scanner>
+        <class>de.kontext_e.jqassistant.plugin.javaparser.scanner.JavaparserScannerPlugin</class>
+    </scanner>
+  <rules>
+      <resource>javaparser.xml</resource>
+  </rules>
+
+</jqa-plugin:jqassistant-plugin>

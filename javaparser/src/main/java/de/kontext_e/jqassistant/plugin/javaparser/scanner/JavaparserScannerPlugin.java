@@ -1,0 +1,105 @@
+package de.kontext_e.jqassistant.plugin.javaparser.scanner;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
+import org.neo4j.graphdb.GraphDatabaseService;
+import org.neo4j.graphdb.Node;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.buschmais.jqassistant.core.scanner.api.Scanner;
+import com.buschmais.jqassistant.core.scanner.api.Scope;
+import com.buschmais.jqassistant.core.store.api.Store;
+import com.buschmais.jqassistant.plugin.common.api.scanner.AbstractScannerPlugin;
+import com.buschmais.jqassistant.plugin.common.api.scanner.filesystem.FileResource;
+import com.github.javaparser.JavaParser;
+import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.NodeList;
+import com.github.javaparser.metamodel.NodeMetaModel;
+import com.github.javaparser.metamodel.PropertyMetaModel;
+import de.kontext_e.jqassistant.plugin.javaparser.store.descriptor.JavaSourceDescriptor;
+import de.kontext_e.jqassistant.plugin.javaparser.store.descriptor.JavaSourceFileDescriptor;
+
+import static com.github.javaparser.utils.Utils.assertNotNull;
+import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
+import static org.neo4j.graphdb.DynamicLabel.label;
+
+public class JavaparserScannerPlugin extends AbstractScannerPlugin<FileResource, JavaSourceDescriptor> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(JavaparserScannerPlugin.class);
+    private static List<String> suffixes = asList("java");
+
+    @Override
+    public boolean accepts(final FileResource item, final String path, final Scope scope) {
+        int beginIndex = path.lastIndexOf(".");
+        if(beginIndex > 0) {
+            final String suffix = path.substring(beginIndex + 1).toLowerCase();
+
+            boolean accepted = suffixes.contains(suffix);
+            if(accepted) {
+                LOGGER.info("Javaparser accepted path "+path);
+            }
+            return accepted;
+        }
+        return false;
+    }
+
+    @Override
+    public JavaSourceDescriptor scan(final FileResource item, final String path, final Scope scope, final Scanner scanner) throws IOException {
+        final Store store = scanner.getContext().getStore();
+        final JavaSourceFileDescriptor javaSourceFileDescriptor = store.create(JavaSourceFileDescriptor.class);
+        javaSourceFileDescriptor.setFileName(path);
+        foo(store, item.createStream(), path);
+        return javaSourceFileDescriptor;
+    }
+
+    private void foo(final Store store, final InputStream stream, final String path) {
+        final GraphDatabaseService graphDatabaseService = store.getGraphDatabaseService();
+        CompilationUnit cu = JavaParser.parse(stream);
+        output(cu, path, graphDatabaseService, null, null);
+    }
+
+    private void output(com.github.javaparser.ast.Node node, String name, GraphDatabaseService graphDatabaseService, Node parent, String relName) {
+        assertNotNull(node);
+        NodeMetaModel metaModel = node.getMetaModel();
+        List<PropertyMetaModel> allPropertyMetaModels = metaModel.getAllPropertyMetaModels();
+        List<PropertyMetaModel> attributes = allPropertyMetaModels.stream().filter(PropertyMetaModel::isAttribute)
+                .filter(PropertyMetaModel::isSingular).collect(toList());
+        List<PropertyMetaModel> subNodes = allPropertyMetaModels.stream().filter(PropertyMetaModel::isNode)
+                .filter(PropertyMetaModel::isSingular).collect(toList());
+        List<PropertyMetaModel> subLists = allPropertyMetaModels.stream().filter(PropertyMetaModel::isNodeList)
+                .collect(toList());
+
+        final Node compilationUnit = graphDatabaseService.createNode(label("JavaSource"), label(metaModel.getTypeName()));
+        compilationUnit.setProperty("name", name);
+
+        if(parent != null) {
+            parent.createRelationshipTo(compilationUnit, () -> relName);
+        }
+
+        for (PropertyMetaModel a : attributes) {
+            compilationUnit.setProperty(a.getName(), a.getValue(node).toString());
+        }
+
+        for (PropertyMetaModel sn : subNodes) {
+            com.github.javaparser.ast.Node nd = (com.github.javaparser.ast.Node) sn.getValue(node);
+            if (nd != null) {
+                output(nd, sn.getName(), graphDatabaseService, compilationUnit, "SUBNODE");
+            }
+        }
+
+        for (PropertyMetaModel sl : subLists) {
+            NodeList<? extends com.github.javaparser.ast.Node> nl = (NodeList<? extends com.github.javaparser.ast.Node>) sl.getValue(node);
+            if (nl != null && nl.isNonEmpty()) {
+                LOGGER.info(" --- sublist "+sl.getName());
+                String slName = sl.getName();
+                slName = slName.endsWith("s") ? slName.substring(0, sl.getName().length() - 1) : slName;
+                for (com.github.javaparser.ast.Node nd : nl) {
+                    output(nd, slName, graphDatabaseService, compilationUnit, "SUBLIST");
+                }
+            }
+        }
+    }
+
+}
