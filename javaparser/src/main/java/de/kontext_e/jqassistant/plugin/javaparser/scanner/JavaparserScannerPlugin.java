@@ -50,11 +50,11 @@ public class JavaparserScannerPlugin extends AbstractScannerPlugin<FileResource,
         final Store store = scanner.getContext().getStore();
         final JavaSourceFileDescriptor javaSourceFileDescriptor = store.create(JavaSourceFileDescriptor.class);
         javaSourceFileDescriptor.setFileName(path);
-        foo(store, item.createStream(), path);
+        importStream(store, item.createStream(), path);
         return javaSourceFileDescriptor;
     }
 
-    private void foo(final Store store, final InputStream stream, final String path) {
+    private void importStream(final Store store, final InputStream stream, final String path) {
         final GraphDatabaseService graphDatabaseService = store.getGraphDatabaseService();
         CompilationUnit cu = JavaParser.parse(stream);
         output(cu, path, graphDatabaseService, null, null);
