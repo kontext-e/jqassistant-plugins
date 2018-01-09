@@ -6,18 +6,21 @@ The default rule conflicts with default.xml, so only one of both may be active.
 The following constraints apply for modules:
 
 [[default]]
-[role=group,includesConstraints="debug:rule(critical)"]
+[role=group,includesConstraints="debug:rule(critical)",includesConcepts="structure:MarkAsciidocTypeRegex, structure:LabelTypesMatchedByRegex"]
 - <<debug:rule>>
 - <<package:PackageLevel>>
 - <<dependency:TransitivePackageDependencies>>
 - <<dependency:WrongDirection>>
+- <<structure:MarkAsciidocTypeRegex>>
+- <<structure:LabelTypesMatchedByRegex>>
+
 
 [[debug:rule]]
 .For testing and debugging purposes.
 [source,cypher,role=constraint]
 ----
 MATCH
-    (p:Asciidoc)
+    (p:Asciidoc:IgnoreMe)
 RETURN
     count(p);
 ----
@@ -92,4 +95,63 @@ WHERE
     AND p2.fqn = p3.fqn
 RETURN
     p3.fqn + "-->" + p4.fqn AS WrongDirection;
+----
+
+== Enhance Graph with design information from Architecture Documentation
+
+[[structure:MarkAsciidocTypeRegex]]
+[source,cypher,role=concept]
+.Mark Asciidoc Table Cells that contain regular expressions for types that have to be marked with given labels.
+----
+    MATCH
+        (a:Asciidoc:Table)-[:BODY]->(body),
+        (a)-[:HAS_ATTRIBUTE]->(att:Asciidoc:Attribute)
+    WHERE
+        att.name='label' AND att.value='types'
+    WITH
+        body
+    MATCH
+        (body)-[:CONTAINS_CELLS]->(regexCell:Asciidoc:Cell {colnumber: 0}),
+        (body)-[:CONTAINS_CELLS]->(labelCell:Asciidoc:Cell {colnumber: 1})
+    SET
+        regexCell:RegularExpressionCell,
+        labelCell:LabelCell
+    CREATE UNIQUE
+        (regexCell)-[:REGEX_FOR_LABEL]->(labelCell)
+    RETURN
+        regexCell, labelCell
+----
+
+
+[[structure:LabelTypesMatchedByRegex]]
+[source,js,role=concept,requiresConcepts="structure:MarkAsciidocTypeRegex"]
+.Mark types with labels matched by regex.
+----
+    var graphDatabaseService = store.getGraphDatabaseService();
+    // Define the columns returned by the constraint
+    var columnNames = java.util.Arrays.asList("Type");
+    // Define the list of rows returned by the constraint
+    var rows = new java.util.ArrayList();
+
+    var result = graphDatabaseService.execute("    MATCH\n" +
+                                                       "        (type:Type),\n" +
+                                                       "        (regexCell:RegularExpressionCell)-[:REGEX_FOR_LABEL]->(labelCell:LabelCell)\n" +
+                                                       "    WHERE\n" +
+                                                       "        type.fqn =~ regexCell.text\n" +
+                                                       "    RETURN\n" +
+                                                       "        type, labelCell.text as label\n");
+
+    while(result.hasNext()) {
+        var next = result.next();
+        var node = next.get("type");
+        var label = next.get("label");
+        node.addLabel(org.neo4j.graphdb.DynamicLabel.label(label));
+        var resultRow = new java.util.HashMap();
+        resultRow.put("Class", node);
+        rows.add(resultRow);
+    }
+
+    // Return the result
+    var status = com.buschmais.jqassistant.core.analysis.api.Result.Status.SUCCESS;
+    new com.buschmais.jqassistant.core.analysis.api.Result(rule, status, severity, columnNames, rows);
 ----
