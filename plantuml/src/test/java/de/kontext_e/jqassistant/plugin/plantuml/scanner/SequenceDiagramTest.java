@@ -58,4 +58,30 @@ public class SequenceDiagramTest {
         verify(mockPlantUmlSequenceDiagramMessageDescriptor, times(4)).setMessage(Mockito.anyString());
     }
 
+    @Test
+    public void sequenceDiagramWithParticipantDeclarations() {
+        final String puml = "@startuml\n" +
+                            "participant Foo0\n" +
+                            "actor Foo1\n" +
+                            "boundary Foo2\n" +
+                            "control Foo3\n" +
+                            "entity Foo4\n" +
+                            "database Foo5\n" +
+                            "collections Foo6\n" +
+                            "Foo1 -> Foo2 : To boundary\n" +
+                            "Foo1 -> Foo3 : To control\n" +
+                            "Foo1 -> Foo4 : To entity\n" +
+                            "Foo1 -> Foo5 : To database\n" +
+                            "Foo1 -> Foo6 : To collections\n" +
+                            "\n" +
+                            "@enduml";
+
+        asList(puml.split("\\n")).forEach(line -> pumlLineParser.parseLine(line));
+
+        verify(mockStore).create(PlantUmlSequenceDiagramDescriptor.class);
+        verify(mockStore, times(7)).create(PlantUmlParticipantDescriptor.class);
+        verify(mockStore, times(5)).create(Mockito.any(PlantUmlParticipantDescriptor.class), Mockito.eq(PlantUmlSequenceDiagramMessageDescriptor.class), Mockito.any(PlantUmlParticipantDescriptor.class));
+        verify(mockPlantUmlSequenceDiagramMessageDescriptor, times(5)).setMessage(Mockito.anyString());
+    }
+
 }
