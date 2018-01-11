@@ -21,13 +21,27 @@ public class SequenceDiagramTest {
     private Store mockStore = mock(Store.class);
     private PlantUmlFileDescriptor plantUmlFileDescriptor = mock(PlantUmlFileDescriptor.class);
 
+    private PlantUmlSequenceDiagramDescriptor mockDescriptor;
+    private PlantUmlParticipantDescriptor mockPlantUmlParticipantDescriptor;
+    private PlantUmlSequenceDiagramMessageDescriptor mockPlantUmlSequenceDiagramMessageDescriptor;
+
     @Before
     public void setUp() {
+        pumlLineParser = new PumlLineParser(mockStore, plantUmlFileDescriptor, ParsingState.ACCEPTING);
+        mockDescriptor = mock(PlantUmlSequenceDiagramDescriptor.class);
+        mockPlantUmlParticipantDescriptor = mock(PlantUmlParticipantDescriptor.class);
+        mockPlantUmlSequenceDiagramMessageDescriptor = mock(PlantUmlSequenceDiagramMessageDescriptor.class);
+
+        when(mockStore.create(PlantUmlSequenceDiagramDescriptor.class)).thenReturn(mockDescriptor);
+        when(mockStore.create(PlantUmlParticipantDescriptor.class)).thenReturn(mockPlantUmlParticipantDescriptor);
+        when(mockStore.create(Mockito.any(PlantUmlParticipantDescriptor.class), Mockito.eq(PlantUmlSequenceDiagramMessageDescriptor.class), Mockito.any(PlantUmlParticipantDescriptor.class)))
+                .thenReturn(mockPlantUmlSequenceDiagramMessageDescriptor);
+
         pumlLineParser = new PumlLineParser(mockStore, plantUmlFileDescriptor, ParsingState.ACCEPTING);
     }
 
     @Test
-    public void thatSequenceDiagramIsRead() {
+    public void thatSimpleSequenceDiagramIsRead() {
         final String puml = "@startuml\n" +
                             "Alice -> Bob: Authentication Request\n" +
                             "Bob --> Alice: Authentication Response\n" +
@@ -35,16 +49,6 @@ public class SequenceDiagramTest {
                             "Alice -> Bob: Another authentication Request\n" +
                             "Alice <-- Bob: another authentication Response\n" +
                             "@enduml\n";
-
-        pumlLineParser = new PumlLineParser(mockStore, plantUmlFileDescriptor, ParsingState.ACCEPTING);
-
-        final PlantUmlSequenceDiagramDescriptor mockDescriptor = mock(PlantUmlSequenceDiagramDescriptor.class);
-        when(mockStore.create(PlantUmlSequenceDiagramDescriptor.class)).thenReturn(mockDescriptor);
-        final PlantUmlParticipantDescriptor mockPlantUmlParticipantDescriptor = mock(PlantUmlParticipantDescriptor.class);
-        when(mockStore.create(PlantUmlParticipantDescriptor.class)).thenReturn(mockPlantUmlParticipantDescriptor);
-        final PlantUmlSequenceDiagramMessageDescriptor mockPlantUmlSequenceDiagramMessageDescriptor = mock(PlantUmlSequenceDiagramMessageDescriptor.class);
-        when(mockStore.create(Mockito.any(PlantUmlParticipantDescriptor.class), Mockito.eq(PlantUmlSequenceDiagramMessageDescriptor.class), Mockito.any(PlantUmlParticipantDescriptor.class)))
-                .thenReturn(mockPlantUmlSequenceDiagramMessageDescriptor);
 
         asList(puml.split("\\n")).forEach(line -> pumlLineParser.parseLine(line));
 
