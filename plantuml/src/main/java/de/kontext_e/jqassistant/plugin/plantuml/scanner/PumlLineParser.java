@@ -221,6 +221,10 @@ class PumlLineParser {
             leafNode.setType(entityType.name());
             plantUmlFileDescriptor.getPlantUmlElements().add(leafNode);
             mappingFromFqnToPackage.put(fullName, leafNode);
+            final Stereotype stereotype = iLeaf.getStereotype();
+            if(stereotype != null) {
+                leafNode.setStereotype(stereotype.getLabel(true));
+            }
             if(plantUmlGroupDescriptor != null) {
                 plantUmlGroupDescriptor.getLeafs().add(leafNode);
             }

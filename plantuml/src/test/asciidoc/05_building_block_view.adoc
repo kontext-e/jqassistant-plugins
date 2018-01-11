@@ -55,7 +55,7 @@ component Restful [
 
      RESTful interface
 ]
-component JSF_UI [
+component JSF_UI <<UI>> <<abstract>> [
      <size:20><b><u>JSF UI</u></b></size>
 
      Contains Entities

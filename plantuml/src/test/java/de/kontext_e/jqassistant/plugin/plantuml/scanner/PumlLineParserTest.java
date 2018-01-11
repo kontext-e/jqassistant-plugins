@@ -90,7 +90,7 @@ public class PumlLineParserTest {
                             "  BorderColor<<UI>> #FF6655\n" +
                             "}\n" +
                             "\n" +
-                            "component TestComponent1 [\n" +
+                            "component TestComponent1 <<UI>> <<abstract>> [\n" +
                             "     <size:20><b><u>TestComponent1</u></b></size>\n" +
                             "]\n" +
                             "component TestComponent2 [\n" +
