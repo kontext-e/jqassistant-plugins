@@ -62,7 +62,7 @@ public class SequenceDiagramTest {
     public void sequenceDiagramWithParticipantDeclarations() {
         final String puml = "@startuml\n" +
                             "participant Foo0\n" +
-                            "actor Foo1\n" +
+                            "actor Foo1 as foofoo\n" +
                             "boundary Foo2\n" +
                             "control Foo3\n" +
                             "entity Foo4\n" +
@@ -79,7 +79,8 @@ public class SequenceDiagramTest {
         asList(puml.split("\\n")).forEach(line -> pumlLineParser.parseLine(line));
 
         verify(mockStore).create(PlantUmlSequenceDiagramDescriptor.class);
-        verify(mockStore, times(7)).create(PlantUmlParticipantDescriptor.class);
+        // 7 participants + 1 for renaming using "as"
+        verify(mockStore, times(8)).create(PlantUmlParticipantDescriptor.class);
         verify(mockStore, times(5)).create(Mockito.any(PlantUmlParticipantDescriptor.class), Mockito.eq(PlantUmlSequenceDiagramMessageDescriptor.class), Mockito.any(PlantUmlParticipantDescriptor.class));
         verify(mockPlantUmlSequenceDiagramMessageDescriptor, times(5)).setMessage(Mockito.anyString());
     }
