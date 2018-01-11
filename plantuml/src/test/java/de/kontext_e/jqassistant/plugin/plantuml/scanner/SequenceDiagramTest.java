@@ -85,4 +85,29 @@ public class SequenceDiagramTest {
         verify(mockPlantUmlSequenceDiagramMessageDescriptor, times(5)).setMessage(Mockito.anyString());
     }
 
+    @Test
+    public void sequenceDiagramWithColorAndLongName() {
+        final String puml = "@startuml\n" +
+                            "actor Bob #red\n" +
+                            "' The only difference between actor\n" +
+                            "'and participant is the drawing\n" +
+                            "participant Alice\n" +
+                            "participant \"I have a really\\nlong name\" as L #99FF99\n" +
+                            "/' You can also declare:\n" +
+                            "   participant L as \"I have a really\\nlong name\"  #99FF99\n" +
+                            "  '/\n" +
+                            "\n" +
+                            "Alice->Bob: Authentication Request\n" +
+                            "Bob->Alice: Authentication Response\n" +
+                            "Bob->L: Log transaction\n" +
+                            "@enduml";
+
+        asList(puml.split("\\n")).forEach(line -> pumlLineParser.parseLine(line));
+
+        verify(mockStore).create(PlantUmlSequenceDiagramDescriptor.class);
+        verify(mockStore, times(3)).create(PlantUmlParticipantDescriptor.class);
+        verify(mockStore, times(3)).create(Mockito.any(PlantUmlParticipantDescriptor.class), Mockito.eq(PlantUmlSequenceDiagramMessageDescriptor.class), Mockito.any(PlantUmlParticipantDescriptor.class));
+        verify(mockPlantUmlSequenceDiagramMessageDescriptor, times(3)).setMessage(Mockito.anyString());
+    }
+
 }
