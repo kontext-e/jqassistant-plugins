@@ -6,7 +6,7 @@ The default rule conflicts with default.xml, so only one of both may be active.
 The following constraints apply for modules:
 
 [[default]]
-[role=group,includesConstraints="debug:rule(critical)",includesConcepts="structure:MarkAsciidocTypeRegex, structure:LabelTypesMatchedByRegex"]
+[role=group,includesConstraints="debug:rule(info)",includesConcepts="structure:MarkAsciidocTypeRegex, structure:LabelTypesMatchedByRegex"]
 - <<debug:rule>>
 - <<package:PackageLevel>>
 - <<dependency:TransitivePackageDependencies>>
