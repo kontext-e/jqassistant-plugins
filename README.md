@@ -10,7 +10,7 @@ How to install
  
     - groupId de.kontext-e.jqassistant.plugin
     - artifactId jqassistant.plugin.checkstyle or .findbugs or .jacoco or .git or .pmd
-    - e.g. for gradle:   runtime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.checkstyle:1.3.2")
+    - e.g. for gradle:   runtime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.checkstyle:1.3.3")
 
 
 * you may want to configure some properties in jqassistant.properties or as system property (java -Dpropertyname=propertyvalue):
@@ -36,15 +36,21 @@ From master branch. Note: most recent versions from branches may differ.
 * [FindBugs Plugin](https://github.com/kontext-e/jqassistant-plugins/blob/master/findbugs/src/main/asciidoc/findbugs.adoc)
 * [Git Plugin](https://github.com/kontext-e/jqassistant-plugins/blob/master/git/src/main/asciidoc/git.adoc)
 * [JaCoCo Plugin](https://github.com/kontext-e/jqassistant-plugins/blob/master/jacoco/src/main/asciidoc/jacoco.adoc)
+* [JavaParser Plugin](https://github.com/kontext-e/jqassistant-plugins/blob/master/javaparser/src/main/asciidoc/javaparser.adoc)
 * [PlantUML Plugin](https://github.com/kontext-e/jqassistant-plugins/blob/master/plantuml/src/main/asciidoc/plantuml.adoc)
 * [PMD Plugin](https://github.com/kontext-e/jqassistant-plugins/blob/master/pmd/src/main/asciidoc/pmd.adoc)
 
 Latest Changes
 ==============
 
-Release 1.3.3-SNAPSHOT
+Release 1.3.3
 -------------
 * #52 git plugin: protect against multiple scans of the same repo
+* #53 PlantUML: scan sequence diagrams
+* #54 Try javaparser project to scan also Java sources
+* #55 Asciidoc plugin: import also attributes on tables, sections, and lists
+* #56 Asciidoc: document an example for defining labels for types matched by regular expressions in tables; see [issue 56](https://github.com/kontext-e/jqassistant-plugins/issues/56)
+* #57 PlantUML: Add stereotype property
 
 Release 1.3.2
 -------------
