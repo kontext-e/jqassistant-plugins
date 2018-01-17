@@ -1,0 +1,15 @@
+<<JavaParserScanner>>
+[[JavaParserScanner]]
+
+== Use JavaParser for scanning Java source files
+Accepts all files with the file suffix '.java'.
+
+!! *WARNING* !!
+This is a highly experimental plugin. Schema and stored data may change in every upcoming release.
+So use it to play around, try it out and give me feedback. I'll be happy to hear how it can be
+improved.
+
+This plugin does not provide a defined schema. Instead it uses JavaParser metadata to store the AST
+as graph. Try ':JavaSource' label and 'SUBNODE' and 'SUBLIST' relationships for exploring the graph.
+
+
