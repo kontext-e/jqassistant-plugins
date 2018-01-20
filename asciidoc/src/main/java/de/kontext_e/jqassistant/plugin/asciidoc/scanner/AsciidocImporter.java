@@ -104,7 +104,6 @@ class AsciidocImporter {
 
     private AsciidocBlockDescriptor scanListBlock(final ListNode list) {
         final AsciidocListDescriptor listDescriptor = store.create(AsciidocListDescriptor.class);
-        listDescriptor.setIsItem(list.isItem());
         for (Object o: list.getItems()) {
             if(o instanceof AbstractBlock) {
                 AbstractBlock abstractBlock = (AbstractBlock) o;

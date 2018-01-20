@@ -3,10 +3,10 @@ apply plugin: 'maven'
 apply plugin: 'org.asciidoctor.gradle.asciidoctor'
 apply plugin: 'com.github.jruby-gradle.base'
 
-project.ext["jqaversion"] = "1.3.0"
-project.ext["jqacoreversion"] = "1.3"
+project.ext["jqaversion"] = "1.4.0-SNAPSHOT"
+project.ext["jqacoreversion"] = "1.4-SNAPSHOT"
 project.group = 'de.kontext-e.jqassistant.plugin'
-project.version = '1.3.3'
+project.version = '1.4.0-SNAPSHOT'
 
 buildscript {
   repositories {
@@ -54,18 +54,17 @@ subprojects {
     }
 
   dependencies {
-    compileOnly  'com.buschmais.jqassistant:jqa-uber-parent:'+project.jqaversion
-    compileOnly  'com.buschmais.jqassistant:jqassistant.plugin.plugin-parent:'+project.jqaversion
     compileOnly  'com.buschmais.jqassistant.core:plugin:'+project.jqaversion
     compileOnly  'com.buschmais.jqassistant.core:scanner:'+project.jqaversion
-    compileOnly  'com.buschmais.jqassistant.plugin:common:'+project.jqacoreversion
     compileOnly  'com.buschmais.jqassistant.core:report:'+project.jqaversion
     compileOnly  'com.buschmais.jqassistant.core:store:'+project.jqaversion
     compileOnly  'com.buschmais.jqassistant.core:shared:'+project.jqaversion
+    compileOnly  'com.buschmais.jqassistant.plugin:common:'+project.jqacoreversion
 
-    testCompile  'org.neo4j:neo4j:2.3.10'
     testCompile  'com.buschmais.jqassistant.core:store:'+project.jqaversion
+    testCompile  'org.neo4j:neo4j:2.3.12'
     testCompile  'com.buschmais.jqassistant.plugin:common:'+project.jqacoreversion
+
     testCompile group: 'junit', name: 'junit', version: '4.12'
     testCompile group: 'org.hamcrest', name: 'hamcrest-all', version: '1.3'
     testCompile group: 'org.mockito', name: 'mockito-all', version: '1.9.5'
@@ -167,18 +166,17 @@ dependencies {
   jqaRuntime("com.buschmais.jqassistant.plugin:java:${project.jqacoreversion}")
   jqaRuntime("com.buschmais.jqassistant.plugin:junit:${project.jqacoreversion}")
 
-	jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.checkstyle:${project.version}")
-	jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.findbugs:${project.version}")
-	jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.jacoco:${project.version}")
-	jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.javaparser:${project.version}")
-	jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.linecount:${project.version}")
-	jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.git:${project.version}")
-	jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.pmd:${project.version}")
-	jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.plantuml:${project.version}")
-	jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.plaintext:${project.version}")
-
-	jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.asciidoc:${project.version}")
-	//  jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.cpp:${project.version}")
+  jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.asciidoc:${project.version}")
+  jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.checkstyle:${project.version}")
+  jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.findbugs:${project.version}")
+  jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.git:${project.version}")
+  jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.jacoco:${project.version}")
+  jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.javaparser:${project.version}")
+  jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.linecount:${project.version}")
+  jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.plaintext:${project.version}")
+  jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.plantuml:${project.version}")
+  jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.pmd:${project.version}")
+  //  jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.cpp:${project.version}")
 
   	gems 'rubygems:asciidoctor-diagram:1.2.1'
 }
