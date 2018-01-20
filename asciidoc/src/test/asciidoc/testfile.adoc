@@ -52,12 +52,18 @@ resolve dependency circles, move responsibilities etc. Open tasks are:
 MyTerm:: The definition of my term
 
 
-==== Some Definitions of Labels by Regular Expressions
+==== Design Pattern of Classes Matched by Regular Expressions
 
-.Label types which match regular expressions with given labels
+Just as Carola Lilienthal explains in her talks, classes which
+use Design Patterns may be identified by regular expressions.
+She does it in her analysis tools, but a better way is to document
+it in the Architecture Documentation. It could be done like in
+this example.
+
+.Design Pattern of Classes Matched by Regular Expressions
 [options="header", label="types"]
 |===
-| Regex                                 | Label
+| Regex                                 | Pattern
 | de.kontext_e.jqassistant.*Plugin      | Plugin
 | de.kontext_e.jqassistant.*Command     | Command
 | de.kontext_e.jqassistant.*Factory     | Factory
