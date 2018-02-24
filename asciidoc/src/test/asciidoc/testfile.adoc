@@ -61,7 +61,7 @@ it in the Architecture Documentation. It could be done like in
 this example.
 
 .Design Pattern of Classes Matched by Regular Expressions
-[options="header", label="types"]
+[options="header", label="Pattern"]
 |===
 | Regex                                 | Pattern
 | de.kontext_e.jqassistant.*Plugin      | Plugin

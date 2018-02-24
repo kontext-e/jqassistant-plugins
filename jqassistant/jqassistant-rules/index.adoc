@@ -107,7 +107,7 @@ RETURN
         (a:Asciidoc:Table)-[:BODY]->(body),
         (a)-[:HAS_ATTRIBUTE]->(att:Asciidoc:Attribute)
     WHERE
-        att.name='label' AND att.value='types'
+        att.name='label' AND att.value='Pattern'
     WITH
         body
     MATCH
