@@ -1,5 +1,14 @@
 package de.kontext_e.jqassistant.plugin.git.scanner;
 
+import java.io.File;
+import java.io.IOException;
+import org.junit.Test;
+
+import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitRepositoryDescriptor;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+
 /**
  * Test cases for GitScannerPlugin
  *
@@ -17,9 +26,6 @@ public class GitScannerPluginTest {
         final String osName = System.getProperty("os.name");
         return null != osName && osName.startsWith("Windows");
     }
-
-/* does not compile anymore with message: cannot access ScannerPlugin although ScannerPlugin is API and public
---> compiler bug??
 
     @Test
     public void testGitScannerInitGitDescriptorDefault () {
@@ -70,6 +76,4 @@ public class GitScannerPluginTest {
             e.printStackTrace();
         }
     }
-*/
-
 }
