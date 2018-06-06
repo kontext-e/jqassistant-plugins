@@ -6,7 +6,7 @@ apply plugin: 'com.github.jruby-gradle.base'
 project.ext["jqaversion"] = "1.4.0"
 project.ext["jqacoreversion"] = "1.4"
 project.group = 'de.kontext-e.jqassistant.plugin'
-project.version = '1.4.0-SNAPSHOT'
+project.version = '1.4.0'
 
 buildscript {
   repositories {
@@ -160,7 +160,7 @@ configurations {
 }
 
 dependencies {
-  jqaRuntime("com.buschmais.jqassistant:jqassistant-commandline:${project.jqaversion}") {
+  jqaRuntime("com.buschmais.jqassistant.cli:jqassistant-commandline-neo4jv2:${project.jqaversion}") {
     exclude module: 'neo4j'
   }
 
