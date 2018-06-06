@@ -13,6 +13,6 @@ import com.buschmais.xo.neo4j.api.annotation.Relation;
 @Label("Report")
 public interface CheckstyleReportDescriptor extends CheckstyleDescriptor, FileDescriptor {
 
-    @Relation("CHECKSTYLE_FILES")
+    @Relation("CHECKSTYLE_FILE")
     Set<CheckstyleFileDescriptor> getFiles();
 }

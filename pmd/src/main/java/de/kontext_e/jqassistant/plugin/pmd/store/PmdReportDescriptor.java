@@ -13,6 +13,6 @@ import com.buschmais.xo.neo4j.api.annotation.Relation;
 @Label("Report")
 public interface PmdReportDescriptor extends PmdDescriptor, FileDescriptor {
 
-    @Relation("HAS_FILES")
+    @Relation("HAS_FILE")
     Set<PmdFileDescriptor> getFiles();
 }

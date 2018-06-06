@@ -18,11 +18,11 @@ Represents a git repository filesystem directory.
 [options="header"]
 |====
 | Name         | Target label(s)   | Cardinality | Description
-| HAS_COMMITS  | <<:Git:Commit>>   | 0..n        | References the commits of the Git repository.
-| HAS_AUTHORS  | <<:Git:Author>>   | 0..n        | References the authors of the Git repository.
-| HAS_FILES    | <<:Git:File>>     | 0..n        | References the files of the Git repository.
-| HAS_BRANCHES | <<:Git:Branch>>   | 0..n        | References the branches of the Git repository.
-| HAS_TAGS     | <<:Git:Tag>>      | 0..n        | References the tags of the Git repository.
+| HAS_COMMIT   | <<:Git:Commit>>   | 0..n        | References the commits of the Git repository.
+| HAS_AUTHOR   | <<:Git:Author>>   | 0..n        | References the authors of the Git repository.
+| HAS_FILE     | <<:Git:File>>     | 0..n        | References the files of the Git repository.
+| HAS_BRANCHE  | <<:Git:Branch>>   | 0..n        | References the branches of the Git repository.
+| HAS_TAG      | <<:Git:Tag>>      | 0..n        | References the tags of the Git repository.
 |====
 
 === :Git:Author

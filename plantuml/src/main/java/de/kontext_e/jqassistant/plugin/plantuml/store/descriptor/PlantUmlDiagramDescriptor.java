@@ -17,6 +17,6 @@ public interface PlantUmlDiagramDescriptor extends PlantUmlDescriptor {
     void setNamespaceSeparator(String namespaceSeparator);
     String getNamespaceSeparator();
 
-    @Relation("CONTAINS_GROUPS")
+    @Relation("CONTAINS_GROUP")
     Set<PlantUmlGroupDescriptor> getPlantUmlGroups();
 }

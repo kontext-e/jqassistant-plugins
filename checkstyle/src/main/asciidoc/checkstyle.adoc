@@ -21,7 +21,7 @@ Represents a Checkstyle report file.
 [options="header"]
 |====
 | Name              | Target label(s)       | Cardinality | Description
-| CHECKSTYLE_FILES  | <<:Checkstyle:File>>  | 0..n        | A 'File' element in the Checkstyle report.
+| CHECKSTYLE_FILE   | <<:Checkstyle:File>>  | 0..n        | A 'File' element in the Checkstyle report.
 |====
 
 === :Checkstyle:File
@@ -31,7 +31,7 @@ Represents a File element in the Checkstyle report.
 [options="header"]
 |====
 | Name              | Target label(s)       | Cardinality | Description
-| CHECKSTYLE_ERRORS | <<:Checkstyle:Error>> | 0..n        | An issue found by Checkstyle.
+| CHECKSTYLE_ERROR  | <<:Checkstyle:Error>> | 0..n        | An issue found by Checkstyle.
 |====
 
 === :Checkstyle:Error

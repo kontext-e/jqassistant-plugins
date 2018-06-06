@@ -12,6 +12,6 @@ import com.buschmais.xo.neo4j.api.annotation.Relation;
  */
 @Label("Report")
 public interface JacocoReportDescriptor extends JacocoDescriptor, NamedDescriptor, FileDescriptor {
-    @Relation("HAS_PACKAGES")
+    @Relation("HAS_PACKAGE")
     Set<JacocoPackageDescriptor> getJacocoPackages();
 }

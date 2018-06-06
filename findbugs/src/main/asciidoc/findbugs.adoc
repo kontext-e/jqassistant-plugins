@@ -55,7 +55,7 @@ Has all fields of a <<:FindBugs:SourceLine>>.
 | HAS_SOURCELINE    | <<:FindBugs:SourceLine>>          | 0..n        | The the source line for a FindBugs issue
 | HAS_CLASS         | <<:FindBugs:BugInstanceClass>>    | 0..n        | The class of a FindBugs issue
 | HAS_METHOD        | <<:FindBugs:BugInstanceMethod>>   | 0..n        | The method of a FindBugs issue
-| HAS_FIELDS        | <<:FindBugs:BugInstanceField>>    | 0..n        | The field of a FindBugs issue
+| HAS_FIELD         | <<:FindBugs:BugInstanceField>>    | 0..n        | The field of a FindBugs issue
 |====
 
 === :FindBugs:BugInstanceClass

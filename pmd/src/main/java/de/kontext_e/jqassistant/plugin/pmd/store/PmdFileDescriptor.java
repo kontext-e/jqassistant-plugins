@@ -13,6 +13,6 @@ import com.buschmais.xo.neo4j.api.annotation.Relation;
 @Label("File")
 public interface PmdFileDescriptor extends PmdDescriptor, NamedDescriptor, FullQualifiedNameDescriptor {
 
-    @Relation("HAS_VIOLATIONS")
+    @Relation("HAS_VIOLATION")
     Set<PmdViolationDescriptor> getViolations();
 }

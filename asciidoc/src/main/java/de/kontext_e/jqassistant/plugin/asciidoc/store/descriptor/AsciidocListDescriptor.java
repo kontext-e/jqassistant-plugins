@@ -12,7 +12,7 @@ public interface AsciidocListDescriptor extends AsciidocBlockDescriptor {
     void setIsItem(Boolean isItem);
     Boolean getIsItem();
 
-    @Relation("HAS_ITEMS")
+    @Relation("HAS_ITEM")
     Set<AsciidocBlockDescriptor> getListItems();
 
 }

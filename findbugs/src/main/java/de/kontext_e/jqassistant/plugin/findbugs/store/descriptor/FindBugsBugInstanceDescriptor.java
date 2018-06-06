@@ -31,9 +31,9 @@ public interface FindBugsBugInstanceDescriptor extends FindBugsDescriptor, FindB
     FindBugsBugInstanceClassDescriptor getBugInstanceClass();
     void setBugInstanceClass(FindBugsBugInstanceClassDescriptor findBugsBugInstanceClassDescriptor);
 
-    @Relation("HAS_METHODS")
+    @Relation("HAS_METHOD")
     List<FindBugsBugInstanceMethodDescriptor> getBugInstanceMethods();
 
-    @Relation("HAS_FIELDS")
+    @Relation("HAS_FIELD")
     List<FindBugsBugInstanceFieldDescriptor> getBugInstanceFields();
 }

@@ -21,6 +21,6 @@ public interface JacocoMethodDescriptor extends JacocoDescriptor, NamedDescripto
     String getLine();
     void setLine(String value);
 
-    @Relation("HAS_COUNTERS")
+    @Relation("HAS_COUNTER")
     Set<JacocoCounterDescriptor> getJacocoCounters();
 }

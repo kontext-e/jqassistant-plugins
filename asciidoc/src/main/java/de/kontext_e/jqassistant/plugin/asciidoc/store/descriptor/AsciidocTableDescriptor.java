@@ -9,16 +9,16 @@ import com.buschmais.xo.neo4j.api.annotation.Relation;
 @Label("Table")
 public interface AsciidocTableDescriptor extends AsciidocBlockDescriptor {
 
-    @Relation("COLUMNS")
+    @Relation("HAS_COLUMN")
     Set<AsciidocTableColumnDescriptor> getAsciidocTableColumns();
 
-    @Relation("HEADER")
+    @Relation("HAS_HEADER")
     Set<AsciidocTableRowDescriptor> getAsciidocTableHeaderRows();
 
-    @Relation("BODY")
+    @Relation("HAS_BODY")
     Set<AsciidocTableRowDescriptor> getAsciidocTableBodyRows();
 
-    @Relation("FOOTER")
+    @Relation("HAS_FOOTER")
     Set<AsciidocTableRowDescriptor> getAsciidocTableFooterRows();
 
     @Property("frame")

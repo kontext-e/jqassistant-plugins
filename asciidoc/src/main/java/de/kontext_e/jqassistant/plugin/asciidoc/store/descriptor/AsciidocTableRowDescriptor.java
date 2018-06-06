@@ -8,6 +8,6 @@ import com.buschmais.xo.neo4j.api.annotation.Relation;
 @Label("Row")
 public interface AsciidocTableRowDescriptor extends AsciidocDescriptor {
 
-    @Relation("CONTAINS_CELLS")
+    @Relation("CONTAINS_CELL")
     Set<AsciidocTableCellDescriptor> getAsciidocTableCells();
 }
