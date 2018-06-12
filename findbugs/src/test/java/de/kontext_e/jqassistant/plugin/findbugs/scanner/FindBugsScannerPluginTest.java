@@ -39,7 +39,7 @@ public class FindBugsScannerPluginTest {
 		assertThat(bugCollectionType.getFile().size(), is(2));
 		assertThat(bugCollectionType.getFile().get(0).getClassname(), is("com.example.LogFormatter"));
 		BugInstanceType firstBug = bugCollectionType.getFile().get(0).getBugInstance().get(0);
-		assertThat(firstBug.getType(), is("DE_MIGHT_IGNOR"));
+		assertThat(firstBug.getType(), is("DE_MIGHT_IGNORE"));
 	}
 
 }
