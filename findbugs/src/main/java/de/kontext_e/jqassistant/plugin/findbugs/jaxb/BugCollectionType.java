@@ -46,7 +46,8 @@ import javax.xml.bind.annotation.XmlType;
     "errors",
     "findBugsSummary",
     "classFeatures",
-    "history"
+    "history",
+	"file"
 })
 public class BugCollectionType {
 
@@ -72,6 +73,8 @@ public class BugCollectionType {
     protected String analysisTimestamp;
     @XmlAttribute(name = "release")
     protected String release;
+	@XmlElement(name = "file")
+	protected List<FileType> file;
 
     /**
      * Gets the value of the project property.
@@ -125,6 +128,13 @@ public class BugCollectionType {
         }
         return this.bugInstance;
     }
+
+	public List<FileType> getFile() {
+    	if(file == null) {
+    		file = new ArrayList<>();
+		}
+		return file;
+	}
 
     /**
      * Gets the value of the errors property.
