@@ -42,7 +42,9 @@ import javax.xml.bind.annotation.XmlType;
     "clazz",
     "field",
     "method",
-    "sourceLine"
+    "sourceLine",
+    "message",
+    "lineNumber",
 })
 public class BugInstanceType {
 
@@ -64,6 +66,10 @@ public class BugInstanceType {
     protected String abbrev;
     @XmlAttribute(name = "category")
     protected String category;
+    @XmlAttribute(name = "message")
+    protected String message;
+    @XmlAttribute(name = "lineNumber")
+    protected Integer lineNumber;
 
     /**
      * Gets the value of the clazz property.
@@ -291,4 +297,19 @@ public class BugInstanceType {
         this.category = value;
     }
 
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(final String message) {
+		this.message = message;
+	}
+
+	public Integer getLineNumber() {
+		return lineNumber;
+	}
+
+	public void setLineNumber(final Integer lineNumber) {
+		this.lineNumber = lineNumber;
+	}
 }

@@ -97,7 +97,7 @@ public class FindBugsScannerPlugin extends AbstractScannerPlugin<FileResource, F
         for (BugInstanceType bugInstanceType : bugCollectionType.getBugInstance()) {
             FindBugsBugInstanceDescriptor findBugsBugInstanceDescriptor = store.create(FindBugsBugInstanceDescriptor.class);
 
-			fillBugInstanceDescriptor(store, bugInstanceType, findBugsBugInstanceDescriptor);
+			fillBugInstanceDescriptor(store, bugInstanceType, findBugsBugInstanceDescriptor, null);
 
 			findBugsReportDescriptor.getContains().add(findBugsBugInstanceDescriptor);
         }
@@ -106,18 +106,21 @@ public class FindBugsScannerPlugin extends AbstractScannerPlugin<FileResource, F
 			for (BugInstanceType bugInstanceType : fileType.getBugInstance()) {
 				FindBugsBugInstanceDescriptor findBugsBugInstanceDescriptor = store.create(FindBugsBugInstanceDescriptor.class);
 
-				fillBugInstanceDescriptor(store, bugInstanceType, findBugsBugInstanceDescriptor);
+				fillBugInstanceDescriptor(store, bugInstanceType, findBugsBugInstanceDescriptor, fileType.getClassname());
 
 				findBugsReportDescriptor.getContains().add(findBugsBugInstanceDescriptor);
 			}
         }
     }
 
-	private void fillBugInstanceDescriptor(final Store store, final BugInstanceType bugInstanceType, final FindBugsBugInstanceDescriptor findBugsBugInstanceDescriptor) {
+	private void fillBugInstanceDescriptor(final Store store, final BugInstanceType bugInstanceType, final FindBugsBugInstanceDescriptor findBugsBugInstanceDescriptor, final String classname) {
 		findBugsBugInstanceDescriptor.setType(bugInstanceType.getType());
 		findBugsBugInstanceDescriptor.setPriority(bugInstanceType.getPriority());
 		findBugsBugInstanceDescriptor.setAbbrev(bugInstanceType.getAbbrev());
 		findBugsBugInstanceDescriptor.setCategory(bugInstanceType.getCategory());
+		findBugsBugInstanceDescriptor.setMessage(bugInstanceType.getMessage());
+		findBugsBugInstanceDescriptor.setLineNumber(bugInstanceType.getLineNumber());
+		findBugsBugInstanceDescriptor.setClassName(classname);
 
 		if(bugInstanceType.getClazz() != null) {
 			final FindBugsBugInstanceClassDescriptor findBugsBugInstanceClassDescriptor = store.create(FindBugsBugInstanceClassDescriptor.class);

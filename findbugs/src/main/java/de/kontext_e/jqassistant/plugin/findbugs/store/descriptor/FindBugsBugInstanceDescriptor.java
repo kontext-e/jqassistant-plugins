@@ -27,6 +27,18 @@ public interface FindBugsBugInstanceDescriptor extends FindBugsDescriptor, FindB
     String getCategory();
     void setCategory(String category);
 
+    @Property("message")
+    String getMessage();
+    void setMessage(String message);
+
+    @Property("className")
+    String getClassName();
+    void setClassName(String className);
+
+    @Property("lineNumber")
+    Integer getLineNumber();
+    void setLineNumber(Integer lineNumber);
+
     @Relation("HAS_CLASS")
     FindBugsBugInstanceClassDescriptor getBugInstanceClass();
     void setBugInstanceClass(FindBugsBugInstanceClassDescriptor findBugsBugInstanceClassDescriptor);
