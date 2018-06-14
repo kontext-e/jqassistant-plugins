@@ -1,8 +1,10 @@
 package de.kontext_e.jqassistant.plugin.asciidoc.scanner;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.asciidoctor.Asciidoctor;
@@ -55,7 +57,8 @@ public class AsciidocImporterTest {
         final AsciidocTableRowDescriptor mockAsciidocTableRowDescriptor = mock(AsciidocTableRowDescriptor.class);
         when(mockStore.create(AsciidocTableRowDescriptor.class)).thenReturn(mockAsciidocTableRowDescriptor);
         when(mockTableDescriptor.getAttributes()).thenReturn(new HashSet<>());
-
+		List<AsciidocTableColumnDescriptor> columns = new ArrayList<>();
+		when(mockTableDescriptor.getAsciidocTableColumns()).thenReturn(columns);
         asciidocImporter.scanBlocks(document.blocks(), mockBlockContainer);
 
         verify(mockAsciidocTableCellDescriptor).setText("Package");
