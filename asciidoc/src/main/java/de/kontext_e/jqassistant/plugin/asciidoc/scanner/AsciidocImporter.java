@@ -143,19 +143,19 @@ class AsciidocImporter {
 
         int rownumber = 0;
         for (Row row : table.getHeader()) {
-        	tableDescriptor.getAsciidocTableHeaderRows().add(scanTableRow(row, rownumber));
+        	tableDescriptor.getAsciidocTableHeaderRows().add(scanTableRow(row, rownumber, tableDescriptor.getAsciidocTableColumns()));
         	rownumber++;
         }
 
 		rownumber = 0;
         for (Row row : table.getBody()) {
-            tableDescriptor.getAsciidocTableBodyRows().add(scanTableRow(row, rownumber));
+            tableDescriptor.getAsciidocTableBodyRows().add(scanTableRow(row, rownumber, tableDescriptor.getAsciidocTableColumns()));
 			rownumber++;
         }
 
 		rownumber = 0;
         for (Row row : table.getFooter()) {
-            tableDescriptor.getAsciidocTableFooterRows().add(scanTableRow(row, rownumber));
+            tableDescriptor.getAsciidocTableFooterRows().add(scanTableRow(row, rownumber, tableDescriptor.getAsciidocTableColumns()));
 			rownumber++;
         }
 
@@ -197,7 +197,7 @@ class AsciidocImporter {
         addCommonProperties(block, blockDescriptor);
     }
 
-    private AsciidocTableRowDescriptor scanTableRow(final Row row, final int rownumber) {
+    private AsciidocTableRowDescriptor scanTableRow(final Row row, final int rownumber, final List<AsciidocTableColumnDescriptor> columns) {
         int colNumber = 0;
         AsciidocTableRowDescriptor rowDescriptor = store.create(AsciidocTableRowDescriptor.class);
 		rowDescriptor.setRownumber(rownumber);
@@ -205,7 +205,9 @@ class AsciidocImporter {
             AsciidocTableCellDescriptor cellDescriptor = store.create(AsciidocTableCellDescriptor.class);
             rowDescriptor.getAsciidocTableCells().add(cellDescriptor);
             cellDescriptor.setText(cell.getText());
-// does not work because of
+			cellDescriptor.setColumn(columns.get(colNumber));
+
+			// does not work because of
 // java.lang.ClassCastException: org.jruby.gen.InterfaceImpl1670529912 cannot be cast to org.asciidoctor.ast.Column
 // try again with later asciidoctorj version
 //            cellDescriptor.setColnumber(cell.getColumn().getColnumber());
