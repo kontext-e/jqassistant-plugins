@@ -46,8 +46,9 @@ Latest Changes
 Release 1.4.1
 -------------
 * FindBugs plugin also reads new SpotBugs format (tested with SpotBugs 3.1.3)
-* AsciiDoc plugin relations renamed: HAS_HEADER -> HAS_HEADER_ROW, HAS_BODY -> HAS_ROW, HAS_FOOTER -> HAS_FOOTER_ROW
-
+* AsciiDoc plugin: relations renamed: HAS_HEADER -> HAS_HEADER_ROW, HAS_BODY -> HAS_ROW, HAS_FOOTER -> HAS_FOOTER_ROW
+* AsciiDoc plugin: new rownumber property for :Row nodes
+* AsciiDoc plugin: new relation OF_COLUMN from Cell nodes to the column they belong to
 
 Release 1.4.0
 -------------

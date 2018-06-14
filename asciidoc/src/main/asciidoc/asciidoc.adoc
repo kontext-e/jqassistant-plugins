@@ -149,9 +149,9 @@ Is a <<:Asciidoc:Block>>.
 |====
 | Name              | Target label(s)           | Cardinality | Description
 | HAS_COLUMN        | <<:Asciidoc:Column>>      | 0..n        | References the table columns.
-| HAS_HEADER        | <<:Asciidoc:Row>>         | 0..n        | References the tables header rows.
-| HAS_BODY          | <<:Asciidoc:Row>>         | 0..n        | References the tables body rows.
-| HAS_FOOTER        | <<:Asciidoc:Row>>         | 0..n        | References the tables footer rows.
+| HAS_HEADER_ROW    | <<:Asciidoc:Row>>         | 0..n        | References the tables header rows.
+| HAS_ROW           | <<:Asciidoc:Row>>         | 0..n        | References the tables body rows.
+| HAS_FOOTER_ROW    | <<:Asciidoc:Row>>         | 0..n        | References the tables footer rows.
 | HAS_ATTRIBUTE     | <<:Asciidoc:Attribute>>   | 0..n        | References the attributes of this table.
 |====
 
@@ -172,6 +172,13 @@ Has also <<Asciidoc Common Properties>>.
 === :Asciidoc:Row
 
 Represents an Asciidoc table row.
+
+.Properties
+[options="header"]
+|====
+| Name      | Description
+| rownumber | The row number of this row.
+|====
 
 .Relations
 [options="header"]
@@ -194,6 +201,13 @@ Has also <<Asciidoc Common Properties>>.
 | colnumber | The column number of this cell (no AST property).
 | style     | The Asciidoctor AST property
 | text      | The Asciidoctor AST property
+|====
+
+.Relations
+[options="header"]
+|====
+| Name              | Target label(s)           | Cardinality | Description
+| OF_COLUMN         | <<:Asciidoc:Column>>      | n..1        | References the column of this cell.
 |====
 
 === :Asciidoc:Attribute
