@@ -43,6 +43,11 @@ From master branch. Note: most recent versions from branches may differ.
 Latest Changes
 ==============
 
+Release 1.4.0
+-------------
+* Relation names changed, see [this blog post](http://techblog.kontext-e.de/jqa-change-relation-names/) for details
+* Use jQAssistant 1.4
+
 Release 1.3.3
 -------------
 * #52 git plugin: protect against multiple scans of the same repo
