@@ -141,16 +141,22 @@ class AsciidocImporter {
             tableDescriptor.getAsciidocTableColumns().add(scanTableColumn(column, colnumber++));
         }
 
+        int rownumber = 0;
         for (Row row : table.getHeader()) {
-            tableDescriptor.getAsciidocTableHeaderRows().add(scanTableRow(row));
+        	tableDescriptor.getAsciidocTableHeaderRows().add(scanTableRow(row, rownumber));
+        	rownumber++;
         }
 
+		rownumber = 0;
         for (Row row : table.getBody()) {
-            tableDescriptor.getAsciidocTableBodyRows().add(scanTableRow(row));
+            tableDescriptor.getAsciidocTableBodyRows().add(scanTableRow(row, rownumber));
+			rownumber++;
         }
 
+		rownumber = 0;
         for (Row row : table.getFooter()) {
-            tableDescriptor.getAsciidocTableFooterRows().add(scanTableRow(row));
+            tableDescriptor.getAsciidocTableFooterRows().add(scanTableRow(row, rownumber));
+			rownumber++;
         }
 
         return tableDescriptor;
@@ -191,9 +197,10 @@ class AsciidocImporter {
         addCommonProperties(block, blockDescriptor);
     }
 
-    private AsciidocTableRowDescriptor scanTableRow(final Row row) {
+    private AsciidocTableRowDescriptor scanTableRow(final Row row, final int rownumber) {
         int colNumber = 0;
         AsciidocTableRowDescriptor rowDescriptor = store.create(AsciidocTableRowDescriptor.class);
+		rowDescriptor.setRownumber(rownumber);
         for (Cell cell : row.getCells()) {
             AsciidocTableCellDescriptor cellDescriptor = store.create(AsciidocTableCellDescriptor.class);
             rowDescriptor.getAsciidocTableCells().add(cellDescriptor);

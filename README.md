@@ -43,6 +43,12 @@ From master branch. Note: most recent versions from branches may differ.
 Latest Changes
 ==============
 
+Release 1.4.1
+-------------
+* FindBugs plugin also reads new SpotBugs format (tested with SpotBugs 3.1.3)
+* AsciiDoc plugin relations renamed: HAS_HEADER -> HAS_HEADER_ROW, HAS_BODY -> HAS_ROW, HAS_FOOTER -> HAS_FOOTER_ROW
+
+
 Release 1.4.0
 -------------
 * Relation names changed, see [this blog post](http://techblog.kontext-e.de/jqa-change-relation-names/) for details
