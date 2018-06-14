@@ -12,13 +12,13 @@ public interface AsciidocTableDescriptor extends AsciidocBlockDescriptor {
     @Relation("HAS_COLUMN")
     Set<AsciidocTableColumnDescriptor> getAsciidocTableColumns();
 
-    @Relation("HAS_HEADER")
+    @Relation("HAS_HEADER_ROW")
     Set<AsciidocTableRowDescriptor> getAsciidocTableHeaderRows();
 
-    @Relation("HAS_BODY")
+    @Relation("HAS_ROW")
     Set<AsciidocTableRowDescriptor> getAsciidocTableBodyRows();
 
-    @Relation("HAS_FOOTER")
+    @Relation("HAS_FOOTER_ROW")
     Set<AsciidocTableRowDescriptor> getAsciidocTableFooterRows();
 
     @Property("frame")
