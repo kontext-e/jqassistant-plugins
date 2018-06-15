@@ -9,14 +9,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.buschmais.jqassistant.core.scanner.api.Scanner;
+import com.buschmais.jqassistant.core.scanner.api.ScannerPlugin;
 import com.buschmais.jqassistant.core.scanner.api.Scope;
 import com.buschmais.jqassistant.core.store.api.Store;
+import com.buschmais.jqassistant.plugin.common.api.model.FileDescriptor;
 import com.buschmais.jqassistant.plugin.common.api.scanner.AbstractScannerPlugin;
 import com.buschmais.jqassistant.plugin.common.api.scanner.filesystem.FileResource;
 import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlFileDescriptor;
 
 import static java.util.Arrays.asList;
 
+@ScannerPlugin.Requires(FileDescriptor.class)
 public class PlantUmlFileScannerPlugin extends AbstractScannerPlugin<FileResource, PlantUmlFileDescriptor> {
     private static final Logger LOGGER = LoggerFactory.getLogger(PlantUmlFileScannerPlugin.class);
     private static final String JQASSISTANT_PLUGIN_PLANTUML_SUFFIXES = "jqassistant.plugin.plantuml.suffixes";
@@ -43,8 +46,8 @@ public class PlantUmlFileScannerPlugin extends AbstractScannerPlugin<FileResourc
     @Override
     public PlantUmlFileDescriptor scan(final FileResource item, final String path, final Scope scope, final Scanner scanner) throws IOException {
         final Store store = scanner.getContext().getStore();
-        final PlantUmlFileDescriptor plantUmlFileDescriptor = store.create(PlantUmlFileDescriptor.class);
-        plantUmlFileDescriptor.setFileName(path);
+		FileDescriptor fileDescriptor = scanner.getContext().getCurrentDescriptor();
+		final PlantUmlFileDescriptor plantUmlFileDescriptor = store.migrate(fileDescriptor, PlantUmlFileDescriptor.class);
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(item.createStream()))) {
             final PumlLineParser pumlLineParser = new PumlLineParser(store, plantUmlFileDescriptor, path.endsWith(".puml") ? ParsingState.ACCEPTING : ParsingState.IGNORING);

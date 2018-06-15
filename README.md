@@ -49,6 +49,7 @@ Release 1.4.1
 * AsciiDoc plugin: relations renamed: HAS_HEADER -> HAS_HEADER_ROW, HAS_BODY -> HAS_ROW, HAS_FOOTER -> HAS_FOOTER_ROW
 * AsciiDoc plugin: new rownumber property for :Row nodes
 * AsciiDoc plugin: new relation OF_COLUMN from Cell nodes to the column they belong to
+* Experimental JavaParser plugin: #58 replaced deprecated GraphDatabaseService by Cypher queries
 
 Release 1.4.0
 -------------

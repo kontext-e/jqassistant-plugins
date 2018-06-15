@@ -164,6 +164,7 @@ dependencies {
     exclude module: 'neo4j'
   }
 
+    jqaRuntime  'com.buschmais.jqassistant.plugin:common:'+project.jqacoreversion
   jqaRuntime("com.buschmais.jqassistant.plugin:java:${project.jqacoreversion}")
   jqaRuntime("com.buschmais.jqassistant.plugin:junit:${project.jqacoreversion}")
 
@@ -195,7 +196,6 @@ task(jqascan, dependsOn: 'removeJQAReport', type: JavaExec) {
   args 'jqassistant/jqassistant.properties'
   args '-f'
 
-/*
   rootProject.subprojects {
     args 'java:classpath::'+it.name+'/build/classes/main'
     args 'java:classpath::'+it.name+'/build/classes/test'
@@ -210,7 +210,6 @@ task(jqascan, dependsOn: 'removeJQAReport', type: JavaExec) {
 
   args 'asciidoc/src/test/asciidoc'
   args 'plaintext/src/test/testfiles'
-*/
     args 'javaparser/src/test'
 
     //args 'cpp/src/test/ast'

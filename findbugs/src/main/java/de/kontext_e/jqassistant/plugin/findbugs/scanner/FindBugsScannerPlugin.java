@@ -10,8 +10,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.buschmais.jqassistant.core.scanner.api.Scanner;
+import com.buschmais.jqassistant.core.scanner.api.ScannerPlugin;
 import com.buschmais.jqassistant.core.scanner.api.Scope;
 import com.buschmais.jqassistant.core.store.api.Store;
+import com.buschmais.jqassistant.plugin.common.api.model.FileDescriptor;
 import com.buschmais.jqassistant.plugin.common.api.scanner.AbstractScannerPlugin;
 import com.buschmais.jqassistant.plugin.common.api.scanner.filesystem.FileResource;
 import de.kontext_e.jqassistant.plugin.findbugs.jaxb.BugCollectionType;
@@ -31,6 +33,7 @@ import de.kontext_e.jqassistant.plugin.findbugs.store.descriptor.FindBugsSourceL
 /**
  * @author jn4, Kontext E GmbH, 05.02.14
  */
+@ScannerPlugin.Requires(FileDescriptor.class)
 public class FindBugsScannerPlugin extends AbstractScannerPlugin<FileResource, FindBugsReportDescriptor> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FindBugsScannerPlugin.class);
@@ -76,8 +79,8 @@ public class FindBugsScannerPlugin extends AbstractScannerPlugin<FileResource, F
     public FindBugsReportDescriptor scan(final FileResource file, String path, Scope scope, Scanner scanner) throws IOException {
         LOGGER.debug(String.format("FindBugs scans file %s", path));
         final BugCollectionType bugCollectionType = unmarshalFindBugsXml(file.createStream());
-        final FindBugsReportDescriptor findBugsReportDescriptor = scanner.getContext().getStore().create(FindBugsReportDescriptor.class);
-        writeFindBugsDescriptor(path, bugCollectionType, findBugsReportDescriptor);
+		FileDescriptor fileDescriptor = scanner.getContext().getCurrentDescriptor();
+		final FindBugsReportDescriptor findBugsReportDescriptor = scanner.getContext().getStore().migrate(fileDescriptor, FindBugsReportDescriptor.class);
         addBugInstancesToFindBugsDescriptor(scanner.getContext().getStore(), bugCollectionType, findBugsReportDescriptor);
         return findBugsReportDescriptor;
     }

@@ -17,8 +17,10 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
 import com.buschmais.jqassistant.core.scanner.api.Scanner;
+import com.buschmais.jqassistant.core.scanner.api.ScannerPlugin;
 import com.buschmais.jqassistant.core.scanner.api.Scope;
 import com.buschmais.jqassistant.core.store.api.Store;
+import com.buschmais.jqassistant.plugin.common.api.model.FileDescriptor;
 import com.buschmais.jqassistant.plugin.common.api.scanner.AbstractScannerPlugin;
 import com.buschmais.jqassistant.plugin.common.api.scanner.filesystem.FileResource;
 import de.kontext_e.jqassistant.plugin.jacoco.jaxb.ClassType;
@@ -38,6 +40,7 @@ import static java.lang.String.format;
 /**
  * @author jn4, Kontext E GmbH, 11.02.14
  */
+@ScannerPlugin.Requires(FileDescriptor.class)
 public class JacocoScannerPlugin extends AbstractScannerPlugin<FileResource,JacocoReportDescriptor> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JacocoScannerPlugin.class);
@@ -80,8 +83,8 @@ public class JacocoScannerPlugin extends AbstractScannerPlugin<FileResource,Jaco
     @Override
     public JacocoReportDescriptor scan(final FileResource file, String path, Scope scope, Scanner scanner) throws IOException {
         LOGGER.debug("Jacoco plugin scans "+path);
-        final JacocoReportDescriptor jacocoReportDescriptor = scanner.getContext().getStore().create(JacocoReportDescriptor.class);
-        jacocoReportDescriptor.setFileName(path);
+		FileDescriptor fileDescriptor = scanner.getContext().getCurrentDescriptor();
+		final JacocoReportDescriptor jacocoReportDescriptor = scanner.getContext().getStore().migrate(fileDescriptor, JacocoReportDescriptor.class);
         final ReportType reportType = unmarshalJacocoXml(file.createStream());
         readPackages(scanner.getContext().getStore(), reportType, jacocoReportDescriptor);
         return jacocoReportDescriptor;

@@ -9,14 +9,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.buschmais.jqassistant.core.scanner.api.Scanner;
+import com.buschmais.jqassistant.core.scanner.api.ScannerPlugin;
 import com.buschmais.jqassistant.core.scanner.api.Scope;
 import com.buschmais.jqassistant.core.store.api.Store;
+import com.buschmais.jqassistant.plugin.common.api.model.FileDescriptor;
 import com.buschmais.jqassistant.plugin.common.api.scanner.AbstractScannerPlugin;
 import com.buschmais.jqassistant.plugin.common.api.scanner.filesystem.FileResource;
 import de.kontext_e.jqassistant.plugin.plaintext.store.descriptor.PlaintextFileDescriptor;
 
 import static java.util.Arrays.asList;
 
+@ScannerPlugin.Requires(FileDescriptor.class)
 public class PlaintextFileScannerPlugin extends AbstractScannerPlugin<FileResource, PlaintextFileDescriptor> {
     private static final Logger LOGGER = LoggerFactory.getLogger(PlaintextFileScannerPlugin.class);
     public static final String JQASSISTANT_PLUGIN_PLAINTEXT_SUFFIXES = "jqassistant.plugin.plaintext.suffixes";
@@ -44,8 +47,8 @@ public class PlaintextFileScannerPlugin extends AbstractScannerPlugin<FileResour
     @Override
     public PlaintextFileDescriptor scan(final FileResource item, final String path, final Scope scope, final Scanner scanner) throws IOException {
         final Store store = scanner.getContext().getStore();
-        final PlaintextFileDescriptor plaintextFileDescriptor = store.create(PlaintextFileDescriptor.class);
-        plaintextFileDescriptor.setFileName(path);
+		FileDescriptor fileDescriptor = scanner.getContext().getCurrentDescriptor();
+		final PlaintextFileDescriptor plaintextFileDescriptor = store.migrate(fileDescriptor, PlaintextFileDescriptor.class);
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(item.createStream()))) {
             final PlaintextLineParser pumlLineParser = new PlaintextLineParser(store, plaintextFileDescriptor);
