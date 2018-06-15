@@ -2,8 +2,8 @@ package de.kontext_e.jqassistant.plugin.javaparser.scanner;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.List;
-import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,13 +22,12 @@ import de.kontext_e.jqassistant.plugin.javaparser.store.descriptor.JavaSourceDes
 import de.kontext_e.jqassistant.plugin.javaparser.store.descriptor.JavaSourceFileDescriptor;
 
 import static com.github.javaparser.utils.Utils.assertNotNull;
-import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static org.neo4j.graphdb.DynamicLabel.label;
 
 public class JavaparserScannerPlugin extends AbstractScannerPlugin<FileResource, JavaSourceDescriptor> {
     private static final Logger LOGGER = LoggerFactory.getLogger(JavaparserScannerPlugin.class);
-    private static List<String> suffixes = asList("java");
+    private static List<String> suffixes = Collections.singletonList("java");
 
     @Override
     public boolean accepts(final FileResource item, final String path, final Scope scope) {
@@ -55,12 +54,11 @@ public class JavaparserScannerPlugin extends AbstractScannerPlugin<FileResource,
     }
 
     private void importStream(final Store store, final InputStream stream, final String path) {
-        final GraphDatabaseService graphDatabaseService = store.getGraphDatabaseService();
-        CompilationUnit cu = JavaParser.parse(stream);
-        output(cu, path, graphDatabaseService, null, null);
+		CompilationUnit cu = JavaParser.parse(stream);
+        output(cu, path, new MyGraphDatabaseService(store), null, null);
     }
 
-    private void output(com.github.javaparser.ast.Node node, String name, GraphDatabaseService graphDatabaseService, Node parent, String relName) {
+    private void output(com.github.javaparser.ast.Node node, String name, MyGraphDatabaseService graphDatabaseService, Node parent, String relName) {
         assertNotNull(node);
         NodeMetaModel metaModel = node.getMetaModel();
         List<PropertyMetaModel> allPropertyMetaModels = metaModel.getAllPropertyMetaModels();
