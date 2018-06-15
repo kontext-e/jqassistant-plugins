@@ -4,6 +4,7 @@ import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Node;
 
 import com.buschmais.jqassistant.core.store.api.Store;
+import com.buschmais.xo.api.CompositeObject;
 import com.buschmais.xo.api.Query;
 
 class MyGraphDatabaseService {
@@ -19,9 +20,11 @@ class MyGraphDatabaseService {
 			labelsClause += ":" + label.name();
 		}
 
-		final Query.Result<Query.Result.CompositeRowObject> compositeRowObjects = store.executeQuery("CREATE (n" + labelsClause + ") RETURN id(n)");
+		final Query.Result<Query.Result.CompositeRowObject> compositeRowObjects = store.executeQuery("CREATE (n" + labelsClause + ") RETURN n");
 		final Query.Result.CompositeRowObject singleResult = compositeRowObjects.getSingleResult();
-		int id = ((Number)singleResult.get("id(n)", Object.class)).intValue();
+		CompositeObject compositeObject = singleResult.get("n", CompositeObject.class);
+		Object idObject = compositeObject.getId();
+		int id = ((Number)idObject).intValue();
 		compositeRowObjects.close();
 		return new MyNode(store, id);
 	}
