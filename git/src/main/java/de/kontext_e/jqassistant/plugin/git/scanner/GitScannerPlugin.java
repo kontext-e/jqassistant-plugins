@@ -8,10 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.buschmais.jqassistant.core.scanner.api.Scanner;
-import com.buschmais.jqassistant.core.scanner.api.ScannerPlugin;
 import com.buschmais.jqassistant.core.scanner.api.Scope;
 import com.buschmais.jqassistant.core.store.api.Store;
-import com.buschmais.jqassistant.plugin.common.api.model.FileDescriptor;
 import com.buschmais.jqassistant.plugin.common.api.scanner.AbstractScannerPlugin;
 import com.buschmais.jqassistant.plugin.common.api.scanner.filesystem.FileResource;
 import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitRepositoryDescriptor;
@@ -19,7 +17,6 @@ import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitRepositoryDescrip
 /**
  * @author jn4, Kontext E GmbH
  */
-@ScannerPlugin.Requires(FileDescriptor.class)
 public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitRepositoryDescriptor> {
     private static final Logger LOGGER = LoggerFactory.getLogger(GitScannerPlugin.class);
     private static final String GIT_RANGE = "jqassistant.plugin.git.range";
@@ -62,8 +59,7 @@ public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitRep
         // This is called with path = "/HEAD" since this is the only "accepted" file
         LOGGER.debug ("Scanning Git directory '{}' (call with path: '{}')", item.getFile(), path);
         Store store = scanner.getContext().getStore();
-		FileDescriptor fileDescriptor = scanner.getContext().getCurrentDescriptor();
-		final GitRepositoryDescriptor gitRepositoryDescriptor = store.migrate(fileDescriptor, GitRepositoryDescriptor.class);
+        final GitRepositoryDescriptor gitRepositoryDescriptor = store.create(GitRepositoryDescriptor.class);
         initGitDescriptor(gitRepositoryDescriptor, item.getFile());
 
         new GitRepositoryScanner(store, gitRepositoryDescriptor, range).scanGitRepo();
