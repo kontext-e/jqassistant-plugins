@@ -50,6 +50,7 @@ Release 1.4.1
 * AsciiDoc plugin: new rownumber property for :Row nodes
 * AsciiDoc plugin: new relation OF_COLUMN from Cell nodes to the column they belong to
 * Experimental JavaParser plugin: #58 replaced deprecated GraphDatabaseService by Cypher queries
+* #59 Plugins shall migrate existing file nodes instead of creating new ones
 
 Release 1.4.0
 -------------
