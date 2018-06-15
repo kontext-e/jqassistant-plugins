@@ -181,7 +181,16 @@ class MyNode implements Node {
 	@Override
 	public void setProperty(final String key, final Object value) {
 		LOGGER.debug("SET " + key + " = '" + value + "'");
-		store.executeQuery("MATCH (n) WHERE id(n) ="+id+" SET n."+key+" = '"+value+"'");
+		String escaped = value.toString()
+				.replaceAll("\\\\","\\\\\\\\")
+				.replaceAll("'","\\\\'")
+				;
+		final String query = "MATCH (n) WHERE id(n) = " + id + " SET n." + key + " = '" + escaped + "'";
+		try {
+			store.executeQuery(query);
+		} catch (Exception e) {
+			LOGGER.warn("Error in query "+query+ " with value "+value);
+		}
 	}
 
 	@Override
