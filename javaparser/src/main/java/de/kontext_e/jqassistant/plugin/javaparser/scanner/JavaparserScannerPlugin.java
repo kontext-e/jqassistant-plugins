@@ -9,8 +9,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.buschmais.jqassistant.core.scanner.api.Scanner;
+import com.buschmais.jqassistant.core.scanner.api.ScannerPlugin;
 import com.buschmais.jqassistant.core.scanner.api.Scope;
 import com.buschmais.jqassistant.core.store.api.Store;
+import com.buschmais.jqassistant.plugin.common.api.model.FileDescriptor;
 import com.buschmais.jqassistant.plugin.common.api.scanner.AbstractScannerPlugin;
 import com.buschmais.jqassistant.plugin.common.api.scanner.filesystem.FileResource;
 import com.github.javaparser.JavaParser;
@@ -25,6 +27,7 @@ import static com.github.javaparser.utils.Utils.assertNotNull;
 import static java.util.stream.Collectors.toList;
 import static org.neo4j.graphdb.DynamicLabel.label;
 
+@ScannerPlugin.Requires(FileDescriptor.class)
 public class JavaparserScannerPlugin extends AbstractScannerPlugin<FileResource, JavaSourceDescriptor> {
     private static final Logger LOGGER = LoggerFactory.getLogger(JavaparserScannerPlugin.class);
     private static List<String> suffixes = Collections.singletonList("java");
@@ -45,10 +48,10 @@ public class JavaparserScannerPlugin extends AbstractScannerPlugin<FileResource,
     }
 
     @Override
-    public JavaSourceDescriptor scan(final FileResource item, final String path, final Scope scope, final Scanner scanner) throws IOException {
-        final Store store = scanner.getContext().getStore();
-        final JavaSourceFileDescriptor javaSourceFileDescriptor = store.create(JavaSourceFileDescriptor.class);
-        javaSourceFileDescriptor.setFileName(path);
+	public JavaSourceDescriptor scan(final FileResource item, final String path, final Scope scope, final Scanner scanner) throws IOException {
+		final Store store = scanner.getContext().getStore();
+		FileDescriptor fileDescriptor = scanner.getContext().getCurrentDescriptor();
+		final JavaSourceFileDescriptor javaSourceFileDescriptor = store.migrate(fileDescriptor, JavaSourceFileDescriptor.class);
         importStream(store, item.createStream(), path);
         return javaSourceFileDescriptor;
     }
