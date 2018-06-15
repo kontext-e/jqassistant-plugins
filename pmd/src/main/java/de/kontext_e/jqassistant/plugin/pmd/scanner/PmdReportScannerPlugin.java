@@ -73,7 +73,7 @@ public class PmdReportScannerPlugin extends AbstractScannerPlugin<FileResource, 
     public boolean accepts(FileResource item, String path, Scope scope) throws IOException {
         boolean accepted = path.endsWith(pmdFileName) || (pmdDirName.equals(item.getFile().toPath().getParent().toFile().getName()) && path.endsWith(".xml"));
         if(accepted) {
-            LOGGER.debug("Pmd accepted path "+path);
+            LOGGER.info("Pmd accepted path "+path);
         }
         return accepted;
     }
@@ -83,7 +83,11 @@ public class PmdReportScannerPlugin extends AbstractScannerPlugin<FileResource, 
         LOGGER.debug("Pmd scans path "+path);
         final PmdType pmdType = unmarshalPmdXml(file.createStream());
 		FileDescriptor fileDescriptor = scanner.getContext().getCurrentDescriptor();
-		final PmdReportDescriptor pmdReportDescriptor = scanner.getContext().getStore().migrate(fileDescriptor, PmdReportDescriptor.class);
+		final PmdReportDescriptor pmdReportDescriptor = scanner.getContext().getStore().create(PmdReportDescriptor.class);
+		LOGGER.info("Create a node for "+path+" with ID "+pmdReportDescriptor.getId());
+		pmdReportDescriptor.setFileName(path);
+		pmdReportDescriptor.setVersion(pmdType.getVersion());
+		pmdReportDescriptor.setTimestamp(pmdType.getTimestamp().toString());
         readFiles(scanner.getContext().getStore(), pmdType, pmdReportDescriptor);
         return pmdReportDescriptor;
     }
