@@ -7,14 +7,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.buschmais.jqassistant.core.scanner.api.Scanner;
+import com.buschmais.jqassistant.core.scanner.api.ScannerPlugin;
 import com.buschmais.jqassistant.core.scanner.api.Scope;
 import com.buschmais.jqassistant.core.store.api.Store;
+import com.buschmais.jqassistant.plugin.common.api.model.FileDescriptor;
 import com.buschmais.jqassistant.plugin.common.api.scanner.AbstractScannerPlugin;
 import com.buschmais.jqassistant.plugin.common.api.scanner.filesystem.FileResource;
 import de.kontext_e.jqassistant.plugin.asciidoc.store.descriptor.AsciidocFileDescriptor;
 
 import static java.util.Arrays.asList;
 
+@ScannerPlugin.Requires(FileDescriptor.class)
 public class AsciidocFileScannerPlugin extends AbstractScannerPlugin<FileResource, AsciidocFileDescriptor> {
     private static final Logger LOGGER = LoggerFactory.getLogger(AsciidocFileScannerPlugin.class);
     private static final String JQASSISTANT_PLUGIN_ASCIIDOC_SUFFIXES = "jqassistant.plugin.asciidoc.suffixes";
@@ -41,7 +44,8 @@ public class AsciidocFileScannerPlugin extends AbstractScannerPlugin<FileResourc
     @Override
     public AsciidocFileDescriptor scan(final FileResource item, final String path, final Scope scope, final Scanner scanner) throws IOException {
         final Store store = scanner.getContext().getStore();
-        final AsciidocFileDescriptor asciidocFileDescriptor = store.create(AsciidocFileDescriptor.class);
+		FileDescriptor fileDescriptor = scanner.getContext().getCurrentDescriptor();
+		final AsciidocFileDescriptor asciidocFileDescriptor  = store.addDescriptorType(fileDescriptor, AsciidocFileDescriptor.class);
         asciidocFileDescriptor.setFileName(path);
 
         new AsciidocImporter(item.getFile(), store, 20).importDocument(asciidocFileDescriptor);

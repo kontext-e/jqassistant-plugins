@@ -11,8 +11,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.buschmais.jqassistant.core.scanner.api.Scanner;
+import com.buschmais.jqassistant.core.scanner.api.ScannerPlugin;
 import com.buschmais.jqassistant.core.scanner.api.Scope;
 import com.buschmais.jqassistant.core.store.api.Store;
+import com.buschmais.jqassistant.plugin.common.api.model.FileDescriptor;
 import com.buschmais.jqassistant.plugin.common.api.scanner.AbstractScannerPlugin;
 import com.buschmais.jqassistant.plugin.common.api.scanner.filesystem.FileResource;
 import de.kontext_e.jqassistant.plugin.checkstyle.jaxb.CheckstyleType;
@@ -27,6 +29,7 @@ import de.kontext_e.jqassistant.plugin.checkstyle.store.descriptor.CheckstyleFil
 /**
  * @author jn4, Kontext E GmbH, 11.02.14
  */
+@ScannerPlugin.Requires(FileDescriptor.class)
 public class CheckstyleScannerPlugin extends AbstractScannerPlugin<FileResource, CheckstyleReportDescriptor> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CheckstyleScannerPlugin.class);
@@ -59,8 +62,8 @@ public class CheckstyleScannerPlugin extends AbstractScannerPlugin<FileResource,
     public CheckstyleReportDescriptor scan(final FileResource file, String path, Scope scope, Scanner scanner) throws IOException {
         LOGGER.debug("Checkstyle scans path "+path);
         final CheckstyleType checkstyleType = unmarshalCheckstyleXml(file.createStream());
-        final CheckstyleReportDescriptor checkstyleReportDescriptor = scanner.getContext().getStore().create(CheckstyleReportDescriptor.class);
-        checkstyleReportDescriptor.setFileName(path);
+		FileDescriptor fileDescriptor = scanner.getContext().getCurrentDescriptor();
+		final CheckstyleReportDescriptor checkstyleReportDescriptor = scanner.getContext().getStore().addDescriptorType(fileDescriptor, CheckstyleReportDescriptor.class);
         readFiles(scanner.getContext().getStore(), checkstyleType, checkstyleReportDescriptor);
         return checkstyleReportDescriptor;
     }
