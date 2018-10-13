@@ -5,6 +5,5 @@ jar {
 }
 
 dependencies {
-    compile group: 'org.ow2.asm', name: 'asm', version: '5.0.2'
-    compile group: 'org.ow2.asm', name: 'asm-util', version: '5.0.2'
+    compile("com.buschmais.jqassistant.plugin:java:${project.jqacoreversion}")
 }

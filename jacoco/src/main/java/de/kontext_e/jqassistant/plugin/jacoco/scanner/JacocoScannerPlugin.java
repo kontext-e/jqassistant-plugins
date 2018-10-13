@@ -16,6 +16,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
+import com.buschmais.jqassistant.plugin.java.api.scanner.SignatureHelper;
 import com.buschmais.jqassistant.core.scanner.api.Scanner;
 import com.buschmais.jqassistant.core.scanner.api.ScannerPlugin;
 import com.buschmais.jqassistant.core.scanner.api.Scope;
@@ -113,7 +114,7 @@ public class JacocoScannerPlugin extends AbstractScannerPlugin<FileResource,Jaco
         for (MethodType methodType : classType.getMethod()) {
             final JacocoMethodDescriptor jacocoMethodDescriptor = store.create(JacocoMethodDescriptor.class);
             jacocoMethodDescriptor.setName(methodType.getName());
-            jacocoMethodDescriptor.setSignature(getMethodSignature(methodType.getName(), methodType.getDesc()));
+			jacocoMethodDescriptor.setSignature(SignatureHelper.getMethodSignature(methodType.getName(), methodType.getDesc()));
             jacocoMethodDescriptor.setLine(methodType.getLine());
             jacocoClassDescriptor.getJacocoMethods().add(jacocoMethodDescriptor);
             readCounters(store, methodType, jacocoMethodDescriptor);
@@ -131,28 +132,7 @@ public class JacocoScannerPlugin extends AbstractScannerPlugin<FileResource,Jaco
         }
     }
 
-    // copied from VisitorHelper, should be a common utility class
-    String getMethodSignature(String name, String desc) {
-        final StringBuilder signature = new StringBuilder();
-        String returnType = org.objectweb.asm.Type.getReturnType(desc).getClassName();
-        if (returnType != null) {
-            signature.append(returnType);
-            signature.append(' ');
-        }
-        signature.append(name);
-        signature.append('(');
-        org.objectweb.asm.Type[] types = org.objectweb.asm.Type.getArgumentTypes(desc);
-        for (int i = 0; i < types.length; i++) {
-            if (i > 0) {
-                signature.append(',');
-            }
-            signature.append(types[i].getClassName());
-        }
-        signature.append(')');
-        return signature.toString();
-    }
-
-    protected ReportType unmarshalJacocoXml(final InputStream streamSource) throws IOException {
+	protected ReportType unmarshalJacocoXml(final InputStream streamSource) throws IOException {
         ReportType reportType;
         try {
             // use own SAXSource to prevent reading of jacoco's report.dtd
