@@ -3,10 +3,10 @@ apply plugin: 'maven'
 apply plugin: 'org.asciidoctor.gradle.asciidoctor'
 apply plugin: 'com.github.jruby-gradle.base'
 
-project.ext["jqaversion"] = "1.4.0"
-project.ext["jqacoreversion"] = "1.4"
+project.ext["jqaversion"] = "1.5.0-RC-1"
+project.ext["jqacoreversion"] = "1.5-RC-1"
 project.group = 'de.kontext-e.jqassistant.plugin'
-project.version = '1.4.2-SNAPSHOT'
+project.version = '1.5.0-RC-1'
 
 buildscript {
   repositories {

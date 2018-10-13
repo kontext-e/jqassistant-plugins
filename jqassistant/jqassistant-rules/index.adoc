@@ -127,19 +127,18 @@ RETURN
 [source,js,role=concept,requiresConcepts="structure:MarkAsciidocTypeRegex"]
 .Mark types with labels matched by regex.
 ----
-    var graphDatabaseService = store.getGraphDatabaseService();
     // Define the columns returned by the constraint
     var columnNames = java.util.Arrays.asList("Type");
     // Define the list of rows returned by the constraint
     var rows = new java.util.ArrayList();
 
-    var result = graphDatabaseService.execute("    MATCH\n" +
+    var result = store.executeQuery("    MATCH\n" +
                                                        "        (type:Type),\n" +
                                                        "        (regexCell:RegularExpressionCell)-[:REGEX_FOR_LABEL]->(labelCell:LabelCell)\n" +
                                                        "    WHERE\n" +
                                                        "        type.fqn =~ regexCell.text\n" +
                                                        "    RETURN\n" +
-                                                       "        type, labelCell.text as label\n");
+                                                       "        type, labelCell.text as label\n").iterator();
 
     while(result.hasNext()) {
         var next = result.next();
