@@ -15,4 +15,7 @@ public interface CheckstyleFileDescriptor extends CheckstyleDescriptor, NamedDes
 
     @Relation("CHECKSTYLE_ERROR")
     Set<CheckstyleErrorDescriptor> getErrors();
+
+	String getPath();
+	void setPath(String path);
 }
