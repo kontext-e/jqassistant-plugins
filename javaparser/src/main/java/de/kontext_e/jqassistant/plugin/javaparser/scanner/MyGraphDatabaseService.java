@@ -1,8 +1,5 @@
 package de.kontext_e.jqassistant.plugin.javaparser.scanner;
 
-import org.neo4j.graphdb.Label;
-import org.neo4j.graphdb.Node;
-
 import com.buschmais.jqassistant.core.store.api.Store;
 import com.buschmais.xo.api.CompositeObject;
 import com.buschmais.xo.api.Query;
@@ -14,10 +11,10 @@ class MyGraphDatabaseService {
 		this.store = store;
 	}
 
-	Node createNode(final Label... labels) {
+	MyNode createNode(final String... labels) {
 		String labelsClause = "";
-		for (Label label: labels) {
-			labelsClause += ":" + label.name();
+		for (String label: labels) {
+			labelsClause += ":" + label;
 		}
 
 		final Query.Result<Query.Result.CompositeRowObject> compositeRowObjects = store.executeQuery("CREATE (n" + labelsClause + ") RETURN n");

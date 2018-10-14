@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
-import org.neo4j.graphdb.Node;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,7 +24,6 @@ import de.kontext_e.jqassistant.plugin.javaparser.store.descriptor.JavaSourceFil
 
 import static com.github.javaparser.utils.Utils.assertNotNull;
 import static java.util.stream.Collectors.toList;
-import static org.neo4j.graphdb.DynamicLabel.label;
 
 @ScannerPlugin.Requires(FileDescriptor.class)
 public class JavaparserScannerPlugin extends AbstractScannerPlugin<FileResource, JavaSourceDescriptor> {
@@ -61,7 +59,7 @@ public class JavaparserScannerPlugin extends AbstractScannerPlugin<FileResource,
         output(cu, path, new MyGraphDatabaseService(store), null, null);
     }
 
-    private void output(com.github.javaparser.ast.Node node, String name, MyGraphDatabaseService graphDatabaseService, Node parent, String relName) {
+    private void output(com.github.javaparser.ast.Node node, String name, MyGraphDatabaseService graphDatabaseService, MyNode parent, String relName) {
         assertNotNull(node);
         NodeMetaModel metaModel = node.getMetaModel();
         List<PropertyMetaModel> allPropertyMetaModels = metaModel.getAllPropertyMetaModels();
@@ -72,11 +70,11 @@ public class JavaparserScannerPlugin extends AbstractScannerPlugin<FileResource,
         List<PropertyMetaModel> subLists = allPropertyMetaModels.stream().filter(PropertyMetaModel::isNodeList)
                 .collect(toList());
 
-        final Node compilationUnit = graphDatabaseService.createNode(label("JavaSource"), label(metaModel.getTypeName()));
+        final MyNode compilationUnit = graphDatabaseService.createNode("JavaSource", metaModel.getTypeName());
         compilationUnit.setProperty("name", name);
 
         if(parent != null) {
-            parent.createRelationshipTo(compilationUnit, () -> relName);
+            parent.createRelationshipTo(compilationUnit, relName);
         }
 
         for (PropertyMetaModel a : attributes) {
