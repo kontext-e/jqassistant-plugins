@@ -10,6 +10,9 @@ import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlDescrip
 import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlFileDescriptor;
 import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlLeafDescriptor;
 import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlPackageDescriptor;
+import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlParticipantDescriptor;
+import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlSequenceDiagramDescriptor;
+import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlSequenceDiagramMessageDescriptor;
 import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlStateDiagramDescriptor;
 
 import static org.mockito.Mockito.mock;
@@ -64,6 +67,7 @@ public class PumlLineParserTest {
         verify(mockStore, times(3)).create(PlantUmlPackageDescriptor.class);
         verify(mockPackageDescriptor, times(1)).getChildGroups();
         verify(mockPackageDescriptor, times(1)).getLeafs();
+        verify(mockPlantUmlClassDiagramDescriptor).setType("ClassDiagram");
         verify(mockPlantUmlLeafDescriptor, times(1)).setType("INTERFACE");
         verify(mockPlantUmlLeafDescriptor, times(1)).setType("CLASS");
         verify(mockPackageDescriptor, times(1)).getLinkTargets();
@@ -114,6 +118,7 @@ public class PumlLineParserTest {
 
         verify(mockStore).create(PlantUmlDescriptionDiagramDescriptor.class);
         verify(mockStore, times(2)).create(PlantUmlLeafDescriptor.class);
+		verify(mockDescriptionDiagramDescriptor).setType("DescriptionDiagram");
         verify(mockPlantUmlLeafDescriptor, times(2)).setType("DESCRIPTION");
         verify(mockPlantUmlLeafDescriptor, times(1)).getLinkTargets();
     }
@@ -146,6 +151,7 @@ public class PumlLineParserTest {
 
         verify(mockStore).create(PlantUmlStateDiagramDescriptor.class);
         verify(mockStore, times(4)).create(PlantUmlLeafDescriptor.class);
+		verify(mockDescriptor).setType("StateDiagram");
         verify(mockPlantUmlLeafDescriptor, times(1)).setType("CIRCLE_START");
         verify(mockPlantUmlLeafDescriptor, times(2)).setType("STATE");
         verify(mockPlantUmlLeafDescriptor, times(1)).setType("CIRCLE_END");
@@ -156,7 +162,44 @@ public class PumlLineParserTest {
         verify(mockPlantUmlLeafDescriptor, times(4)).getLinkTargets();
     }
 
-    @Test
+	@Test
+	public void thatSequenceDiagramIsRead() throws Exception {
+		final String puml = "@startuml\n" +
+							"autonumber\n" +
+							"participant de.kontext_e.spikes.trace_to_plantuml.application.Controller <<Controller>>\n" +
+							"de.kontext_e.spikes.trace_to_plantuml.application.Controller -> de.kontext_e.spikes.trace_to_plantuml.application.Boundary : loadEntity([1])\n" +
+							"de.kontext_e.spikes.trace_to_plantuml.application.Boundary -> de.kontext_e.spikes.trace_to_plantuml.application.Repository : readEntity([1])\n" +
+							"de.kontext_e.spikes.trace_to_plantuml.application.Repository -> de.kontext_e.spikes.trace_to_plantuml.application.Boundary : throws(NoSuchEntityException{id=1})\n" +
+							"de.kontext_e.spikes.trace_to_plantuml.application.Boundary -> de.kontext_e.spikes.trace_to_plantuml.application.Controller : return([LoadEntityResult{results=NO_RESULT}])\n" +
+							"de.kontext_e.spikes.trace_to_plantuml.application.Controller -> de.kontext_e.spikes.trace_to_plantuml.application.LoadEntityResult : getResults([])\n" +
+							"de.kontext_e.spikes.trace_to_plantuml.application.LoadEntityResult -> de.kontext_e.spikes.trace_to_plantuml.application.Controller : return([NO_RESULT])\n" +
+							"@enduml";
+
+		String[] lines = puml.split("\\n");
+		pumlLineParser = new PumlLineParser(mockStore, plantUmlFileDescriptor, ParsingState.ACCEPTING);
+
+		final PlantUmlSequenceDiagramDescriptor mockDescriptor = mock(PlantUmlSequenceDiagramDescriptor.class);
+		when(mockStore.create(PlantUmlSequenceDiagramDescriptor.class)).thenReturn(mockDescriptor);
+		final PlantUmlParticipantDescriptor participantDescriptor = mock(PlantUmlParticipantDescriptor.class);
+		when(mockStore.create(PlantUmlParticipantDescriptor.class)).thenReturn(participantDescriptor);
+		final PlantUmlSequenceDiagramMessageDescriptor messageDescriptor = mock(PlantUmlSequenceDiagramMessageDescriptor.class);
+		when(mockStore.create(participantDescriptor, PlantUmlSequenceDiagramMessageDescriptor.class, participantDescriptor)).thenReturn(messageDescriptor);
+
+		for (String line : lines) {
+			pumlLineParser.parseLine(line);
+		}
+
+		verify(mockStore).create(PlantUmlSequenceDiagramDescriptor.class);
+		verify(mockDescriptor).setType("SequenceDiagram");
+		verify(participantDescriptor, times(4)).setType("PARTICIPANT");
+		verify(participantDescriptor).setName("de.kontext_e.spikes.trace_to_plantuml.application.controller");
+		verify(participantDescriptor).setStereotype("«controller»");
+		verify(messageDescriptor).setMessage("loadentity([1])");
+		verify(messageDescriptor).setMessageNumber("<b>1</b>");
+    }
+
+
+	@Test
     public void thatEmbeddedPlantUMLInAsciidocIsRead() throws Exception {
         final String asciidoc = "=== Level 1\n" +
                                 "\n" +
@@ -228,5 +271,4 @@ public class PumlLineParserTest {
         verify(mockPlantUmlLeafDescriptor, times(1)).setFullName("jsf ui");
         verify(mockPlantUmlLeafDescriptor, times(1)).getLinkTargets();
     }
-
 }
