@@ -1,14 +1,13 @@
 package de.kontext_e.jqassistant.plugin.plantuml.scanner;
 
+import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import org.junit.Test;
 
 import net.sourceforge.plantuml.BlockUml;
 import net.sourceforge.plantuml.SourceStringReader;
 import net.sourceforge.plantuml.classdiagram.AbstractEntityDiagram;
 import net.sourceforge.plantuml.core.Diagram;
-import net.sourceforge.plantuml.cucadiagram.Code;
 import net.sourceforge.plantuml.cucadiagram.IGroup;
 import net.sourceforge.plantuml.cucadiagram.Link;
 import net.sourceforge.plantuml.cucadiagram.entity.EntityFactory;
@@ -64,10 +63,9 @@ public class PumlTest {
         Diagram diagram = blocks.get(0).getDiagram();
         AbstractEntityDiagram descriptionDiagram = (AbstractEntityDiagram) diagram;
         EntityFactory entityFactory = descriptionDiagram.getEntityFactory();
-        Map<Code, IGroup> groups = entityFactory.getGroups();
+        Collection<IGroup> groups = entityFactory.getGroupsvalues();
         assertThat(groups.size(), is(3));
-        for (Map.Entry<Code, IGroup> codeIGroupEntry : groups.entrySet()) {
-            IGroup iGroup = codeIGroupEntry.getValue();
+        for (IGroup iGroup : groups) {
             assertThat(iGroup.getCode().getFullName(), isOneOf(
                     "de.kontext_e.project.domain",
                     "de.kontext_e.project.domain.sub1",

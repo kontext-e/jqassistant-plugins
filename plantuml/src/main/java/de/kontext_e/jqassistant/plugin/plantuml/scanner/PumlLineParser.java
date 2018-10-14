@@ -27,7 +27,6 @@ import net.sourceforge.plantuml.SourceStringReader;
 import net.sourceforge.plantuml.UmlDiagramType;
 import net.sourceforge.plantuml.classdiagram.AbstractEntityDiagram;
 import net.sourceforge.plantuml.core.Diagram;
-import net.sourceforge.plantuml.core.DiagramDescription;
 import net.sourceforge.plantuml.cucadiagram.GroupType;
 import net.sourceforge.plantuml.cucadiagram.IGroup;
 import net.sourceforge.plantuml.cucadiagram.ILeaf;
@@ -94,7 +93,7 @@ class PumlLineParser {
         final Diagram diagram = blocks.get(0).getDiagram();
         if(diagram instanceof PSystemError) {
             PSystemError error = (PSystemError) diagram;
-            final int higherErrorPosition = error.getHigherErrorPosition();
+            final int higherErrorPosition = error.getHigherErrorPosition2().getPosition();  // incompatible with 1.2018.11
             LOGGER.warn("Error while parsing at postion "+higherErrorPosition+": "+error.getErrorsUml());
             return;
         }
@@ -106,11 +105,10 @@ class PumlLineParser {
             final PlantUmlDiagramDescriptor diagramDescriptor = createDiagramDescriptor(umlDiagramType);
             if(diagramDescriptor == null) return;
 
-            final DiagramDescription description = sequenceDiagram.getDescription();
-            final String type = description.getType();
-            diagramDescriptor.setType(type);
+            final String type = umlDiagramType.name(); // incompatible with 1.2018.11
+            diagramDescriptor.setType(type+"DIAGRAM");
 
-            sequenceDiagram.participants().forEach(this::addParticipant);
+            sequenceDiagram.participants().forEach(this::addParticipant);  // incompatible with 1.2018.11
             sequenceDiagram.events().forEach(this::addEvent);
 
             plantUmlFileDescriptor.getPlantUmlDiagrams().add(diagramDescriptor);
@@ -122,9 +120,8 @@ class PumlLineParser {
             final PlantUmlDiagramDescriptor diagramDescriptor = createDiagramDescriptor(umlDiagramType);
             if(diagramDescriptor == null) return;
 
-            final DiagramDescription description = descriptionDiagram.getDescription();
-            final String type = description.getType();
-            diagramDescriptor.setType(type);
+            final String type = umlDiagramType.name();  // incompatible with 1.2018.11
+            diagramDescriptor.setType(type+"DIAGRAM");
 
             final String namespaceSeparator = descriptionDiagram.getNamespaceSeparator();
             diagramDescriptor.setNamespaceSeparator(namespaceSeparator);
@@ -217,7 +214,7 @@ class PumlLineParser {
             PlantUmlLeafDescriptor leafNode = store.create(PlantUmlLeafDescriptor.class);
             final String fullName = iLeaf.getCode().getFullName();
             leafNode.setFullName(fullName);
-            final LeafType entityType = iLeaf.getEntityType();
+            final LeafType entityType = iLeaf.getLeafType();  // incompatible with 1.2018.11
             leafNode.setType(entityType.name());
             plantUmlFileDescriptor.getPlantUmlElements().add(leafNode);
             mappingFromFqnToPackage.put(fullName, leafNode);
@@ -268,7 +265,7 @@ class PumlLineParser {
     private void addEvent(final Event event) {
         if(event instanceof Message) {
             Message message = (Message) event;
-            final String messageText = message.getLabel().asStringWithHiddenNewLine();
+            final String messageText = message.getLabel().toString();  // incompatible with 1.2018.11
             final String messageNumber = message.getMessageNumber();
             final Participant participant1 = message.getParticipant1();
             final Participant participant2 = message.getParticipant2();
@@ -293,18 +290,18 @@ class PumlLineParser {
         }
     }
 
-    private void addParticipant(final String actorName, final Participant participant) {
+    private void addParticipant(final Participant participant) {
         final PlantUmlParticipantDescriptor plantUmlParticipantDescriptor = store.create(PlantUmlParticipantDescriptor.class);
 
         final ParticipantType type = participant.getType();
         plantUmlParticipantDescriptor.setType(type.name());
-        plantUmlParticipantDescriptor.setName(actorName);
+        plantUmlParticipantDescriptor.setName(participant.getCode());
 
         final Stereotype stereotype = participant.getStereotype();
         if(stereotype != null) {
             plantUmlParticipantDescriptor.setStereotype(stereotype.getLabel(true));
         }
 
-        participantDescriptors.put(actorName, plantUmlParticipantDescriptor);
+        participantDescriptors.put(participant.getCode(), plantUmlParticipantDescriptor);
     }
 }

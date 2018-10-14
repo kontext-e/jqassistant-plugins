@@ -31,7 +31,7 @@ public class PumlLineParserTest {
     }
 
     @Test
-    public void thatPackagePumlFileIsRead() throws Exception {
+    public void thatPackagePumlFileIsRead() {
         final String puml = "@startuml\n" +
                             "\n" +
                             "skinparam packageStyle rect\n" +
@@ -67,7 +67,7 @@ public class PumlLineParserTest {
         verify(mockStore, times(3)).create(PlantUmlPackageDescriptor.class);
         verify(mockPackageDescriptor, times(1)).getChildGroups();
         verify(mockPackageDescriptor, times(1)).getLeafs();
-        verify(mockPlantUmlClassDiagramDescriptor).setType("ClassDiagram");
+        verify(mockPlantUmlClassDiagramDescriptor).setType("CLASSDIAGRAM");
         verify(mockPlantUmlLeafDescriptor, times(1)).setType("INTERFACE");
         verify(mockPlantUmlLeafDescriptor, times(1)).setType("CLASS");
         verify(mockPackageDescriptor, times(1)).getLinkTargets();
@@ -75,7 +75,7 @@ public class PumlLineParserTest {
     }
 
     @Test
-    public void thatComponentPumlFileIsRead() throws Exception {
+    public void thatComponentPumlFileIsRead() {
         final String puml = "@startuml\n" +
                             "\n" +
                             "skinparam componentStyle uml2\n" +
@@ -107,8 +107,8 @@ public class PumlLineParserTest {
         String[] lines = puml.split("\\n");
         pumlLineParser = new PumlLineParser(mockStore, plantUmlFileDescriptor, ParsingState.ACCEPTING);
 
-        final PlantUmlDescriptionDiagramDescriptor mockDescriptionDiagramDescriptor = mock(PlantUmlDescriptionDiagramDescriptor.class);
-        when(mockStore.create(PlantUmlDescriptionDiagramDescriptor.class)).thenReturn(mockDescriptionDiagramDescriptor);
+        final PlantUmlClassDiagramDescriptor mockDescriptionDiagramDescriptor = mock(PlantUmlClassDiagramDescriptor.class);
+        when(mockStore.create(PlantUmlClassDiagramDescriptor.class)).thenReturn(mockDescriptionDiagramDescriptor);
         final PlantUmlLeafDescriptor mockPlantUmlLeafDescriptor = mock(PlantUmlLeafDescriptor.class);
         when(mockStore.create(PlantUmlLeafDescriptor.class)).thenReturn(mockPlantUmlLeafDescriptor);
 
@@ -116,15 +116,18 @@ public class PumlLineParserTest {
             pumlLineParser.parseLine(line);
         }
 
-        verify(mockStore).create(PlantUmlDescriptionDiagramDescriptor.class);
+        verify(mockStore).create(PlantUmlClassDiagramDescriptor.class);
         verify(mockStore, times(2)).create(PlantUmlLeafDescriptor.class);
-		verify(mockDescriptionDiagramDescriptor).setType("DescriptionDiagram");
+		verify(mockDescriptionDiagramDescriptor).setType("CLASSDIAGRAM");
         verify(mockPlantUmlLeafDescriptor, times(2)).setType("DESCRIPTION");
         verify(mockPlantUmlLeafDescriptor, times(1)).getLinkTargets();
+        verify(mockPlantUmlLeafDescriptor, times(1)).setStereotype("«ui»«abstract»");
+        verify(mockPlantUmlLeafDescriptor, times(1)).setFullName("testcomponent1");
+        verify(mockPlantUmlLeafDescriptor, times(1)).setFullName("testcomponent2");
     }
 
     @Test
-    public void thatStateDiagramIsRead() throws Exception {
+    public void thatStateDiagramIsRead() {
         final String puml = "@startuml\n" +
                                "\n" +
                                "[*] --> State1\n" +
@@ -151,7 +154,7 @@ public class PumlLineParserTest {
 
         verify(mockStore).create(PlantUmlStateDiagramDescriptor.class);
         verify(mockStore, times(4)).create(PlantUmlLeafDescriptor.class);
-		verify(mockDescriptor).setType("StateDiagram");
+		verify(mockDescriptor).setType("STATEDIAGRAM");
         verify(mockPlantUmlLeafDescriptor, times(1)).setType("CIRCLE_START");
         verify(mockPlantUmlLeafDescriptor, times(2)).setType("STATE");
         verify(mockPlantUmlLeafDescriptor, times(1)).setType("CIRCLE_END");
@@ -163,7 +166,7 @@ public class PumlLineParserTest {
     }
 
 	@Test
-	public void thatSequenceDiagramIsRead() throws Exception {
+	public void thatSequenceDiagramIsRead() {
 		final String puml = "@startuml\n" +
 							"autonumber\n" +
 							"participant de.kontext_e.spikes.trace_to_plantuml.application.Controller <<Controller>>\n" +
@@ -190,17 +193,17 @@ public class PumlLineParserTest {
 		}
 
 		verify(mockStore).create(PlantUmlSequenceDiagramDescriptor.class);
-		verify(mockDescriptor).setType("SequenceDiagram");
+		verify(mockDescriptor).setType("SEQUENCEDIAGRAM");
 		verify(participantDescriptor, times(4)).setType("PARTICIPANT");
 		verify(participantDescriptor).setName("de.kontext_e.spikes.trace_to_plantuml.application.controller");
 		verify(participantDescriptor).setStereotype("«controller»");
-		verify(messageDescriptor).setMessage("loadentity([1])");
+		verify(messageDescriptor).setMessage("[loadentity([1])]");
 		verify(messageDescriptor).setMessageNumber("<b>1</b>");
     }
 
 
 	@Test
-    public void thatEmbeddedPlantUMLInAsciidocIsRead() throws Exception {
+    public void thatEmbeddedPlantUMLInAsciidocIsRead() {
         final String asciidoc = "=== Level 1\n" +
                                 "\n" +
                                 "\n" +
@@ -238,7 +241,7 @@ public class PumlLineParserTest {
     }
 
     @Test
-    public void thatEmbeddedPlantUMLInAsciidocIsRead2() throws Exception {
+    public void thatEmbeddedPlantUMLInAsciidocIsRead2() {
         String[] lines = ("=== Level 1\n" +
                                         "\n" +
                                         "\n" +
