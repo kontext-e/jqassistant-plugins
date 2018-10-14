@@ -43,6 +43,14 @@ From master branch. Note: most recent versions from branches may differ.
 Latest Changes
 ==============
 
+Release 1.5.0
+-------------
+* Use jQAssistant 1.5
+* #61 PlantUML jar to version 1.2018.11 to be compabible with main distro
+* Simplified Checkstyle plugin graph connection to Java graph; configuration property "jqassistant.plugin.checkstyle.basepackage" is obsolete now
+* Own jqa uses Neo4j 3 now
+* use jqa Java plugins 'SignatureHelper' to create the signature string which replaces own dependency to ASM by dependency to jqa Java plugin; should be more robust and create less trouble
+
 Release 1.4.1
 -------------
 * FindBugs plugin also reads new SpotBugs format (tested with SpotBugs 3.1.3)
@@ -84,16 +92,17 @@ Release 1.3.0
 * Speedup Git "git:CurrentBranch" (thanks Dirk Mahler)
 * Added label "Git" to git repository node (thanks Dirk Mahler)
 
-Work in progress
-================
-* PlantUML class diagram packages; please note: although the plantuml plugin is version 1.1.x, it is
-  far from a complete PlantUML import; in fact, only the packages of class diagrams were imported for now
-  because this is the only thing that is currently needed for architecture rules
 
-Coming later
-============
-* Jenkins
-* More ideas? Feel free to add Issues
+## Compatibility Notes
+
+### v1.5.0
+
+A newer PlantUML jar is now used. This had some API changes. As a consequence, there are some
+incompatibilities with former graphs that may affect existing queries:
+
+* :Diagram Property "type" is completely upper cased
+* Sequence Diagram labels are in brackets
+* Component Diagram is not a :DescriptionDiagram but a :ClassDiagram
 
 ## Continuous Build
 
