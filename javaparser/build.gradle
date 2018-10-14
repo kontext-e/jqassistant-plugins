@@ -5,6 +5,6 @@ jar {
 }
 
 dependencies {
-    compile 'com.github.javaparser:javaparser-core:3.5.9'
+    compile 'com.github.javaparser:javaparser-core:3.6.25'
 }
 
