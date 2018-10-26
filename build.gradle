@@ -3,10 +3,9 @@ apply plugin: 'maven'
 apply plugin: 'org.asciidoctor.gradle.asciidoctor'
 apply plugin: 'com.github.jruby-gradle.base'
 
-project.ext["jqaversion"] = "1.5.0-RC-1"
-project.ext["jqacoreversion"] = "1.5-RC-1"
+project.ext["jqaversion"] = "1.5.0"
 project.group = 'de.kontext-e.jqassistant.plugin'
-project.version = '1.5.0-RC-1'
+project.version = '1.5.0'
 
 buildscript {
   repositories {
@@ -59,11 +58,11 @@ subprojects {
     compileOnly  'com.buschmais.jqassistant.core:report:'+project.jqaversion
     compileOnly  'com.buschmais.jqassistant.core:store:'+project.jqaversion
     compileOnly  'com.buschmais.jqassistant.core:shared:'+project.jqaversion
-    compileOnly  'com.buschmais.jqassistant.plugin:common:'+project.jqacoreversion
+    compileOnly  'com.buschmais.jqassistant.plugin:common:'+project.jqaversion
 
     testCompile  'com.buschmais.jqassistant.core:store:'+project.jqaversion
-    testCompile  'org.neo4j:neo4j:2.3.12'
-    testCompile  'com.buschmais.jqassistant.plugin:common:'+project.jqacoreversion
+//    testCompile  'org.neo4j:neo4j:2.3.12'
+    testCompile  'com.buschmais.jqassistant.plugin:common:'+project.jqaversion
     testCompile 'com.buschmais.jqassistant.core:scanner:'+project.jqaversion
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
@@ -164,9 +163,9 @@ dependencies {
     exclude module: 'neo4j'
   }
 
-    jqaRuntime  'com.buschmais.jqassistant.plugin:common:'+project.jqacoreversion
-  jqaRuntime("com.buschmais.jqassistant.plugin:java:${project.jqacoreversion}")
-  jqaRuntime("com.buschmais.jqassistant.plugin:junit:${project.jqacoreversion}")
+    jqaRuntime  'com.buschmais.jqassistant.plugin:common:'+project.jqaversion
+  jqaRuntime("com.buschmais.jqassistant.plugin:java:${project.jqaversion}")
+  jqaRuntime("com.buschmais.jqassistant.plugin:junit:${project.jqaversion}")
 
   jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.asciidoc:${project.version}")
   jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.checkstyle:${project.version}")

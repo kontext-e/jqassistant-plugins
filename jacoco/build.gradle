@@ -5,5 +5,5 @@ jar {
 }
 
 dependencies {
-    compile("com.buschmais.jqassistant.plugin:java:${project.jqacoreversion}")
+    compile("com.buschmais.jqassistant.plugin:java:${project.jqaversion}")
 }
