@@ -49,7 +49,7 @@ public class JavaparserScannerPlugin extends AbstractScannerPlugin<FileResource,
 	public JavaSourceDescriptor scan(final FileResource item, final String path, final Scope scope, final Scanner scanner) throws IOException {
 		final Store store = scanner.getContext().getStore();
 		FileDescriptor fileDescriptor = scanner.getContext().getCurrentDescriptor();
-		final JavaSourceFileDescriptor javaSourceFileDescriptor = store.migrate(fileDescriptor, JavaSourceFileDescriptor.class);
+		final JavaSourceFileDescriptor javaSourceFileDescriptor = store.addDescriptorType(fileDescriptor, JavaSourceFileDescriptor.class);
         importStream(store, item.createStream(), path);
         return javaSourceFileDescriptor;
     }
