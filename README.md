@@ -49,7 +49,7 @@ Release 1.5.0
 * #61 PlantUML jar to version 1.2018.11 to be compabible with main distro
 * Simplified Checkstyle plugin graph connection to Java graph; configuration property "jqassistant.plugin.checkstyle.basepackage" is obsolete now
 * Own jqa uses Neo4j 3 now
-* use jqa Java plugins 'SignatureHelper' to create the signature string which replaces own dependency to ASM by dependency to jqa Java plugin; should be more robust and create less trouble
+* jacoco: use jqa Java plugins 'SignatureHelper' to create the signature string which replaces own dependency to ASM by dependency to jqa Java plugin; should be more robust and create less trouble
 * updated to JavaParser version 3.6.25
 * removed some dependencies to other JARs for easier maintenance
 
