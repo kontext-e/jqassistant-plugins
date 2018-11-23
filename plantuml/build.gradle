@@ -5,5 +5,5 @@ jar {
 }
 
 dependencies {
-  compile 'net.sourceforge.plantuml:plantuml:1.2018.11'
+  compile 'net.sourceforge.plantuml:plantuml:1.2018.12'
 }
