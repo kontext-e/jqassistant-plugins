@@ -10,6 +10,9 @@ project.version = '1.6.0-SNAPSHOT'
 buildscript {
   repositories {
     jcenter()
+      maven {
+          url "https://oss.sonatype.org/content/repositories/snapshots"
+      }
   }
 
   dependencies {
@@ -49,6 +52,9 @@ subprojects {
 
 	repositories {
         mavenCentral()
+        maven {
+            url "https://oss.sonatype.org/content/repositories/snapshots"
+        }
         mavenLocal()
     }
 
@@ -151,6 +157,9 @@ subprojects {
 
 repositories {
   mavenLocal()
+    maven {
+        url "https://oss.sonatype.org/content/repositories/snapshots"
+    }
   mavenCentral()
 }
 
@@ -159,27 +168,26 @@ configurations {
 }
 
 dependencies {
-  jqaRuntime("com.buschmais.jqassistant.cli:jqassistant-commandline-neo4jv3:${project.jqaversion}") {
-    exclude module: 'neo4j'
-  }
+    jqaRuntime("com.buschmais.jqassistant.cli:jqassistant-commandline-neo4jv3:${project.jqaversion}") {
+        exclude module: 'neo4j'
+    }
+    jqaRuntime("com.buschmais.jqassistant.plugin:common:${project.jqaversion}")
+    jqaRuntime("com.buschmais.jqassistant.plugin:java:${project.jqaversion}")
+    jqaRuntime("com.buschmais.jqassistant.plugin:junit:${project.jqaversion}")
 
-    jqaRuntime  'com.buschmais.jqassistant.plugin:common:'+project.jqaversion
-  jqaRuntime("com.buschmais.jqassistant.plugin:java:${project.jqaversion}")
-  jqaRuntime("com.buschmais.jqassistant.plugin:junit:${project.jqaversion}")
-
-  jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.asciidoc:${project.version}")
-  jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.checkstyle:${project.version}")
-  jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.spotbugs:${project.version}")
-  jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.git:${project.version}")
-  jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.jacoco:${project.version}")
+    jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.asciidoc:${project.version}")
+    jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.checkstyle:${project.version}")
+    jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.spotbugs:${project.version}")
+    jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.git:${project.version}")
+    jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.jacoco:${project.version}")
 //  jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.javaparser:${project.version}")
-  jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.linecount:${project.version}")
-  jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.plaintext:${project.version}")
-  jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.plantuml:${project.version}")
-  jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.pmd:${project.version}")
-  //  jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.cpp:${project.version}")
+    jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.linecount:${project.version}")
+    jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.plaintext:${project.version}")
+    jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.plantuml:${project.version}")
+    jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.pmd:${project.version}")
+    //  jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.cpp:${project.version}")
 
-  	gems 'rubygems:asciidoctor-diagram:1.2.1'
+    gems 'rubygems:asciidoctor-diagram:1.2.1'
 }
 
 task removeJQAReport(type: Delete) {
