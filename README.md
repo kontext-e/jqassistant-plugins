@@ -33,7 +33,7 @@ From master branch. Note: most recent versions from branches may differ.
 
 * [Asciidoc Plugin](https://github.com/kontext-e/jqassistant-plugins/blob/master/asciidoc/src/main/asciidoc/asciidoc.adoc)
 * [Checkstyle Plugin](https://github.com/kontext-e/jqassistant-plugins/blob/master/checkstyle/src/main/asciidoc/checkstyle.adoc)
-* [FindBugs Plugin](https://github.com/kontext-e/jqassistant-plugins/blob/master/findbugs/src/main/asciidoc/findbugs.adoc)
+* [SpotBugs/FindBugs Plugin](https://github.com/kontext-e/jqassistant-plugins/blob/master/spotbugs/src/main/asciidoc/spotbugs.adoc)
 * [Git Plugin](https://github.com/kontext-e/jqassistant-plugins/blob/master/git/src/main/asciidoc/git.adoc)
 * [JaCoCo Plugin](https://github.com/kontext-e/jqassistant-plugins/blob/master/jacoco/src/main/asciidoc/jacoco.adoc)
 * [JavaParser Plugin](https://github.com/kontext-e/jqassistant-plugins/blob/master/javaparser/src/main/asciidoc/javaparser.adoc)

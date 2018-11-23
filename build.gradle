@@ -169,7 +169,7 @@ dependencies {
 
   jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.asciidoc:${project.version}")
   jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.checkstyle:${project.version}")
-  jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.findbugs:${project.version}")
+  jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.spotbugs:${project.version}")
   jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.git:${project.version}")
   jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.jacoco:${project.version}")
 //  jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.javaparser:${project.version}")
