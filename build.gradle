@@ -3,7 +3,7 @@ apply plugin: 'maven'
 apply plugin: 'org.asciidoctor.gradle.asciidoctor'
 apply plugin: 'com.github.jruby-gradle.base'
 
-project.ext["jqaversion"] = "1.5.0"
+project.ext["jqaversion"] = "1.6.0-RC1"
 project.group = 'de.kontext-e.jqassistant.plugin'
 project.version = '1.6.0-SNAPSHOT'
 
@@ -156,11 +156,11 @@ subprojects {
 }
 
 repositories {
-  mavenLocal()
+    mavenLocal()
     maven {
         url "https://oss.sonatype.org/content/repositories/snapshots"
     }
-  mavenCentral()
+    mavenCentral()
 }
 
 configurations {
@@ -196,27 +196,35 @@ task removeJQAReport(type: Delete) {
 }
 
 task(jqascan, dependsOn: 'removeJQAReport', type: JavaExec) {
-  main = 'com.buschmais.jqassistant.commandline.Main'
-  classpath = configurations.jqaRuntime
-  args 'scan'
-  args '-p'
-  args 'jqassistant/jqassistant.properties'
-  args '-f'
+    main = 'com.buschmais.jqassistant.commandline.Main'
+    classpath = configurations.jqaRuntime
 
-  rootProject.subprojects {
-    args 'java:classpath::'+it.name+'/build/classes/main'
-    args 'java:classpath::'+it.name+'/build/classes/test'
-    args it.name+'/build/reports'
-    args it.name+'/src/main'
-    args it.name+'/src/test'
-  }
+    // this is needed to work around a windows limitation
+    // of a too long command path
+    // see https://stackoverflow.com/questions/50707110/gradle-windows-java-io-ioexception-createprocess-error-206-filename-is-too-lon
+    def cp = CollectionUtils.join(File.pathSeparator, classpath.getFiles())
+    environment 'CLASSPATH', cp
+    classpath = classpath.filter { false }
 
-  args 'plantuml/src/test/asciidoc'
-  args 'plantuml/src/test/plantuml'
-  args '.git'
+    args 'scan'
+    args '-p'
+    args 'jqassistant/jqassistant.properties'
+    args '-f'
 
-  args 'asciidoc/src/test/asciidoc'
-  args 'plaintext/src/test/testfiles'
+    rootProject.subprojects {
+        args 'java:classpath::' + it.name + '/build/classes/main'
+        args 'java:classpath::' + it.name + '/build/classes/test'
+        args it.name + '/build/reports'
+        args it.name + '/src/main'
+        args it.name + '/src/test'
+    }
+
+    args 'plantuml/src/test/asciidoc'
+    args 'plantuml/src/test/plantuml'
+    args '.git'
+
+    args 'asciidoc/src/test/asciidoc'
+    args 'plaintext/src/test/testfiles'
     args 'javaparser/src/test'
 
     //args 'cpp/src/test/ast'
