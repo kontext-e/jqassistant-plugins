@@ -43,6 +43,14 @@ From master branch. Note: most recent versions from branches may differ.
 Latest Changes
 ==============
 
+Release 1.6.0
+-------------
+* Use jQAssistant 1.6
+* Renamed FindBugs plugin to SpotBugs (still scans FindBugs reports)
+* use classpath trick to make long classpath work with Windows
+* Upgrade to Gradle 4.10.2
+* Upgraded Dependencies to stay compatible with jQAssistant 1.6
+
 Release 1.5.0
 -------------
 * Use jQAssistant 1.5
