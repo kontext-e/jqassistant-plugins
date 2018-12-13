@@ -43,6 +43,11 @@ From master branch. Note: most recent versions from branches may differ.
 Latest Changes
 ==============
 
+Upcoming Release
+----------------
+* Use jQAssistant 1.7
+
+
 Release 1.6.0
 -------------
 * Use jQAssistant 1.6

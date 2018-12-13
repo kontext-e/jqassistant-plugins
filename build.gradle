@@ -3,9 +3,9 @@ apply plugin: 'maven'
 apply plugin: 'org.asciidoctor.gradle.asciidoctor'
 apply plugin: 'com.github.jruby-gradle.base'
 
-project.ext["jqaversion"] = "1.6.0"
+project.ext["jqaversion"] = "1.7.0-SNAPSHOT"
 project.group = 'de.kontext-e.jqassistant.plugin'
-project.version = '1.6.0'
+project.version = '1.7.0-SNAPSHOT'
 
 buildscript {
   repositories {
@@ -164,7 +164,12 @@ repositories {
 }
 
 configurations {
-	jqaRuntime
+	jqaRuntime {
+        // newer gradle versions resolve ALL depencencies before build
+        // so on version number changes this version needs to be set once
+        // until new version is in local maven repo installed
+//        project.version = '1.6.0-SNAPSHOT'
+    }
 }
 
 dependencies {
