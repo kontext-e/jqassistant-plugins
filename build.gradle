@@ -168,7 +168,7 @@ configurations {
         // newer gradle versions resolve ALL depencencies before build
         // so on version number changes this version needs to be set once
         // until new version is in local maven repo installed
-//        project.version = '1.6.0-SNAPSHOT'
+        project.version = '1.6.0-SNAPSHOT'
     }
 }
 
@@ -258,10 +258,18 @@ task(jqa, dependsOn: ['jqascan','jqaanalyze']) {
 }
 
 task(jqs, type: JavaExec) {
-  main = 'com.buschmais.jqassistant.commandline.Main'
-  classpath = configurations.jqaRuntime
-  args 'server'
-  standardInput = System.in
+    main = 'com.buschmais.jqassistant.commandline.Main'
+    classpath = configurations.jqaRuntime
+
+    // this is needed to work around a windows limitation
+    // of a too long command path
+    // see https://stackoverflow.com/questions/50707110/gradle-windows-java-io-ioexception-createprocess-error-206-filename-is-too-lon
+    def cp = CollectionUtils.join(File.pathSeparator, classpath.getFiles())
+    environment 'CLASSPATH', cp
+    classpath = classpath.filter { false }
+
+    args 'server'
+    standardInput = System.in
 }
 
 task install2jqa(type: Copy) {
