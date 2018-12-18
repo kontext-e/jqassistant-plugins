@@ -168,7 +168,7 @@ configurations {
         // newer gradle versions resolve ALL depencencies before build
         // so on version number changes this version needs to be set once
         // until new version is in local maven repo installed
-        project.version = '1.6.0-SNAPSHOT'
+//        project.version = '1.6.0-SNAPSHOT'
     }
 }
 
