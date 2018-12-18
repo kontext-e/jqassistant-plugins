@@ -5,7 +5,7 @@ apply plugin: 'com.github.jruby-gradle.base'
 
 project.ext["jqaversion"] = "1.6.0"
 project.group = 'de.kontext-e.jqassistant.plugin'
-project.version = '1.6.0'
+project.version = '1.6.1-SNAPSHOT'
 
 buildscript {
   repositories {
@@ -164,13 +164,16 @@ repositories {
 }
 
 configurations {
-	jqaRuntime
+    jqaRuntime {
+        // newer gradle versions resolve ALL depencencies before build
+        // so on version number changes this version needs to be set once
+        // until new version is in local maven repo installed
+//        project.version = '1.6.0'
+    }
 }
 
 dependencies {
-    jqaRuntime("com.buschmais.jqassistant.cli:jqassistant-commandline-neo4jv3:${project.jqaversion}") {
-        exclude module: 'neo4j'
-    }
+    jqaRuntime("com.buschmais.jqassistant.cli:jqassistant-commandline-neo4jv2:${project.jqaversion}")
     jqaRuntime("com.buschmais.jqassistant.plugin:common:${project.jqaversion}")
     jqaRuntime("com.buschmais.jqassistant.plugin:java:${project.jqaversion}")
     jqaRuntime("com.buschmais.jqassistant.plugin:junit:${project.jqaversion}")
@@ -212,11 +215,11 @@ task(jqascan, dependsOn: 'removeJQAReport', type: JavaExec) {
     args '-f'
 
     rootProject.subprojects {
-        args 'java:classpath::' + it.name + '/build/classes/main'
-        args 'java:classpath::' + it.name + '/build/classes/test'
+//        args 'java:classpath::' + it.name + '/build/classes/java/main'
+//        args 'java:classpath::' + it.name + '/build/classes/java/test'
         args it.name + '/build/reports'
-        args it.name + '/src/main'
-        args it.name + '/src/test'
+//        args it.name + '/src/main'
+//        args it.name + '/src/test'
     }
 
     args 'plantuml/src/test/asciidoc'
@@ -225,7 +228,7 @@ task(jqascan, dependsOn: 'removeJQAReport', type: JavaExec) {
 
     args 'asciidoc/src/test/asciidoc'
     args 'plaintext/src/test/testfiles'
-    args 'javaparser/src/test'
+//    args 'javaparser/src/test'
 
     //args 'cpp/src/test/ast'
     //args 'privatetestdata'
