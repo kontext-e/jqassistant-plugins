@@ -6,7 +6,7 @@ The default rule conflicts with default.xml, so only one of both may be active.
 The following constraints apply for modules:
 
 [[default]]
-[role=group,includesConstraints="debug:rule(info),spotbugs:MaxSpotBugsWarnings",includesConcepts="structure:MarkAsciidocTypeRegex, structure:LabelTypesMatchedByRegex"]
+[role=group,includesConstraints="debug:rule(info),spotbugs:MaxSpotBugsWarnings,checkstyle:*",includesConcepts="structure:MarkAsciidocTypeRegex, structure:LabelTypesMatchedByRegex"]
 - <<debug:rule>>
 - <<package:PackageLevel>>
 - <<dependency:TransitivePackageDependencies>>
@@ -14,6 +14,8 @@ The following constraints apply for modules:
 - <<structure:MarkAsciidocTypeRegex>>
 - <<structure:LabelTypesMatchedByRegex>>
 - <<spotbugs:MaxSpotBugsWarnings>>
+- <<checkstyle:MaxErrors>>
+- <<checkstyle:MaxWarnings>>
 
 [[debug:rule]]
 .For testing and debugging purposes.
@@ -67,6 +69,30 @@ This query works with the old FindBugs file format which the Gradle plugin produ
         c.priority, c.category, c.type
     SKIP
         29
+----
+
+[[checkstyle:MaxErrors]]
+.There must be less than X errors reported by Checkstyle.
+[source,cypher,role=constraint]
+----
+    MATCH
+        (n:Checkstyle:Error {severity: 'error'})--(f:Checkstyle:File)
+    RETURN
+        n.message,f.name, n.line
+    SKIP
+        21
+----
+
+[[checkstyle:MaxWarnings]]
+.There must be less than X warnings reported by Checkstyle.
+[source,cypher,role=constraint]
+----
+    MATCH
+        (n:Checkstyle:Error {severity: 'warning'})--(f:Checkstyle:File)
+    RETURN
+        n.message,f.name, n.line
+    SKIP
+        1
 ----
 
 

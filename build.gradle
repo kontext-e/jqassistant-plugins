@@ -100,11 +100,11 @@ subprojects {
       archives sourcesJar
     }
 
-  if (JavaVersion.current().isJava8Compatible()) {
-    tasks.withType(Javadoc) {
-        options.addStringOption('Xdoclint:none', '-quiet')
-      }
-  }
+    if (JavaVersion.current().isJava8Compatible()) {
+        tasks.withType(Javadoc) {
+            options.addStringOption('Xdoclint:none', '-quiet')
+        }
+    }
 
     jacoco {
         toolVersion = "0.8.1"
@@ -118,10 +118,10 @@ subprojects {
     }
 
     checkstyle {
-      configFile = new File(rootDir, 'config/checkstyle/checks.xml')
-      ignoreFailures = true
-      showViolations = false
-      toolVersion = '6.18'
+        configFile = new File(rootDir, 'config/checkstyle/checks.xml')
+        ignoreFailures = true
+        showViolations = false
+        toolVersion = '8.15'
     }
 
     spotbugs {
