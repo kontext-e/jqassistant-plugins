@@ -1,85 +1,49 @@
 package de.kontext_e.jqassistant.plugin.pmd.scanner;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.function.Consumer;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import com.buschmais.jqassistant.core.scanner.api.Scanner;
-import com.buschmais.jqassistant.core.scanner.api.ScannerPlugin;
-import com.buschmais.jqassistant.core.scanner.api.Scope;
 import com.buschmais.jqassistant.core.store.api.Store;
-import com.buschmais.jqassistant.plugin.common.api.model.FileDescriptor;
-import com.buschmais.jqassistant.plugin.common.api.scanner.AbstractScannerPlugin;
-import com.buschmais.jqassistant.plugin.common.api.scanner.filesystem.FileResource;
 import de.kontext_e.jqassistant.plugin.pmd.store.PmdFileDescriptor;
 import de.kontext_e.jqassistant.plugin.pmd.store.PmdReportDescriptor;
 import de.kontext_e.jqassistant.plugin.pmd.store.PmdViolationDescriptor;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-/**
- * @author aw, Kontext E GmbH, 29.01.15
- */
-@ScannerPlugin.Requires(FileDescriptor.class)
-public class PmdReportScannerPlugin extends AbstractScannerPlugin<FileResource, PmdReportDescriptor> {
+public class PmdScannerTest {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(PmdReportScannerPlugin.class);
-     public static final String JQASSISTANT_PLUGIN_PMD_FILENAME = "jqassistant.plugin.pmd.filename";
-     public static final String JQASSISTANT_PLUGIN_PMD_DIRNAME = "jqassistant.plugin.pmd.dirname";
+    @Test
+    public void dom() throws Exception {
+        final File file = new File("src/test/main.xml");
+        final InputStream is = new FileInputStream(file);
+        final PmdReportDescriptor pmdReportDescriptor = mock(PmdReportDescriptor.class);
+        final Store store = mock(Store.class);
+        PmdFileDescriptor pmdFileDescriptor = mock(PmdFileDescriptor.class);
+        PmdViolationDescriptor pmdViolationDescriptor = mock(PmdViolationDescriptor.class);
+        when(store.create(PmdFileDescriptor.class)).thenReturn(pmdFileDescriptor);
+        when(store.create(PmdViolationDescriptor.class)).thenReturn(pmdViolationDescriptor);
 
-    private String pmdFileName = "pmd.xml";
-    private String pmdDirName = "pmd";
 
-    @Override
-    protected void configure() {
-        super.configure();
+        scanViaDom(is, pmdReportDescriptor, store);
 
-        if(getProperties().containsKey(JQASSISTANT_PLUGIN_PMD_FILENAME)) {
-            pmdFileName = (String) getProperties().get(JQASSISTANT_PLUGIN_PMD_FILENAME);
-        }
-        if(System.getProperty(JQASSISTANT_PLUGIN_PMD_FILENAME) != null) {
-            pmdFileName = System.getProperty(JQASSISTANT_PLUGIN_PMD_FILENAME);
-        }
-        if(getProperties().containsKey(JQASSISTANT_PLUGIN_PMD_DIRNAME)) {
-            pmdDirName = (String) getProperties().get(JQASSISTANT_PLUGIN_PMD_DIRNAME);
-        }
-        if(System.getProperty(JQASSISTANT_PLUGIN_PMD_DIRNAME) != null) {
-            pmdDirName = System.getProperty(JQASSISTANT_PLUGIN_PMD_DIRNAME);
-        }
-        LOGGER.info(String.format("PMD plugin looks for files named %s or for all XML files in directories named '%s'", pmdFileName, pmdDirName));
-    }
+        verify(pmdReportDescriptor).setVersion("6.10.0");
+        verify(pmdReportDescriptor).setTimestamp("2018-12-18T13:17:50.505");
 
-    @Override
-    public boolean accepts(FileResource item, String path, Scope scope) throws IOException {
-        boolean accepted = path.endsWith(pmdFileName) || (pmdDirName.equals(item.getFile().toPath().getParent().toFile().getName()) && path.endsWith(".xml"));
-        if(accepted) {
-            LOGGER.info("Pmd accepted path "+path);
-        }
-        return accepted;
-    }
-
-    @Override
-    public PmdReportDescriptor scan(final FileResource file, String path, Scope scope, Scanner scanner) {
-        try {
-            LOGGER.info("PMD scans path "+path);
-            FileDescriptor fileDescriptor = scanner.getContext().getCurrentDescriptor();
-            final PmdReportDescriptor pmdReportDescriptor = scanner.getContext().getStore().addDescriptorType(fileDescriptor, PmdReportDescriptor.class);
-
-            scanViaDom(file.createStream(), pmdReportDescriptor, scanner.getContext().getStore());
-            return pmdReportDescriptor;
-        } catch (Exception e) {
-            LOGGER.warn("Error while scanning a PMD file: "+e, e);
-            return null;
-        }
+        verify(pmdFileDescriptor).setName("C:\\Users\\jn\\projects\\jqassistant-plugins\\pmd\\src\\main\\java\\de\\kontext_e\\jqassistant\\plugin\\pmd\\jaxb\\FileType.java");
     }
 
     private void scanViaDom(final InputStream is, final PmdReportDescriptor pmdReportDescriptor, final Store store) throws ParserConfigurationException, SAXException, IOException {
@@ -100,15 +64,14 @@ public class PmdReportScannerPlugin extends AbstractScannerPlugin<FileResource, 
     }
 
     private void attributes(final Node child, Consumer<Node> attributeConumser) {
-        if(child == null) return;
-        if(attributeConumser == null) return;
+        try {
+            NamedNodeMap attributes = child.getAttributes();
+            for(int a = 0; a < attributes.getLength(); a++) {
+                Node attr = attributes.item(a);
+                attributeConumser.accept(attr);
+            }
+        } catch (Exception e) {
 
-        NamedNodeMap attributes = child.getAttributes();
-        if(attributes == null) return;
-        for(int a = 0; a < attributes.getLength(); a++) {
-            Node attr = attributes.item(a);
-            if(attr == null) continue;
-            attributeConumser.accept(attr);
         }
     }
 
@@ -122,8 +85,6 @@ public class PmdReportScannerPlugin extends AbstractScannerPlugin<FileResource, 
     }
 
     private void importFileNode(final Node fileNode, final Store store, final PmdReportDescriptor pmdReportDescriptor) {
-        if(!"file".equalsIgnoreCase(fileNode.getNodeName())) return;
-
         final PmdFileDescriptor pmdFileDescriptor = store.create(PmdFileDescriptor.class);
         pmdReportDescriptor.getFiles().add(pmdFileDescriptor);
         attributes(fileNode, node -> {
@@ -131,16 +92,12 @@ public class PmdReportScannerPlugin extends AbstractScannerPlugin<FileResource, 
                 pmdFileDescriptor.setName(node.getNodeValue());
             }
         });
-        LOGGER.info("PMD scanning file node "+pmdFileDescriptor.getName());
         visitNode(fileNode, node -> importViolationNode(node, store, pmdFileDescriptor));
     }
 
     private void importViolationNode(final Node fileNode, final Store store, final PmdFileDescriptor pmdFileDescriptor) {
-        if(!"violation".equalsIgnoreCase(fileNode.getNodeName())) return;
-
         final PmdViolationDescriptor vioDescriptor = store.create(PmdViolationDescriptor.class);
         pmdFileDescriptor.getViolations().add(vioDescriptor);
-        final String[] x = new String[2];
         attributes(fileNode, node -> {
             if("beginline".equalsIgnoreCase(node.getNodeName())) {
                 vioDescriptor.setBeginLine(Integer.valueOf(node.getNodeValue()));
@@ -161,15 +118,9 @@ public class PmdReportScannerPlugin extends AbstractScannerPlugin<FileResource, 
                 vioDescriptor.setRuleSet(node.getNodeValue());
             }
             if("package".equalsIgnoreCase(node.getNodeName())) {
-                if(x[0] == null) {
-                    x[0] = node.getNodeValue();
-                }
                 vioDescriptor.setPackage(node.getNodeValue());
             }
             if("class".equalsIgnoreCase(node.getNodeName())) {
-                if(x[1] == null) {
-                    x[1] = node.getNodeValue();
-                }
                 vioDescriptor.setClassName(node.getNodeValue());
             }
             if("externalInfoUrl".equalsIgnoreCase(node.getNodeName())) {
@@ -185,13 +136,9 @@ public class PmdReportScannerPlugin extends AbstractScannerPlugin<FileResource, 
                 vioDescriptor.setMethod(node.getNodeValue());
             }
         });
-        pmdFileDescriptor.setFullQualifiedName(x[0]+"."+x[1]);
-
         visitNode(fileNode, node -> {
             if("#text".equalsIgnoreCase(node.getNodeName())) {
-                String message = node.getNodeValue();
-                message = message.replaceAll("\\n","").trim();
-                vioDescriptor.setMessage(message);
+                vioDescriptor.setMessage(node.getNodeValue());
             }
         });
     }

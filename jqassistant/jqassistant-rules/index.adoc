@@ -6,7 +6,7 @@ The default rule conflicts with default.xml, so only one of both may be active.
 The following constraints apply for modules:
 
 [[default]]
-[role=group,includesConstraints="debug:rule(info),spotbugs:MaxSpotBugsWarnings,checkstyle:*",includesConcepts="structure:MarkAsciidocTypeRegex, structure:LabelTypesMatchedByRegex"]
+[role=group,includesConstraints="debug:rule(info),spotbugs:MaxSpotBugsWarnings,checkstyle:*,pmd:*",includesConcepts="structure:MarkAsciidocTypeRegex, structure:LabelTypesMatchedByRegex"]
 - <<debug:rule>>
 - <<package:PackageLevel>>
 - <<dependency:TransitivePackageDependencies>>
@@ -16,6 +16,7 @@ The following constraints apply for modules:
 - <<spotbugs:MaxSpotBugsWarnings>>
 - <<checkstyle:MaxErrors>>
 - <<checkstyle:MaxWarnings>>
+- <<pmd:MaxWarnings>>
 
 [[debug:rule]]
 .For testing and debugging purposes.
@@ -68,7 +69,7 @@ This query works with the old FindBugs file format which the Gradle plugin produ
     ORDER BY
         c.priority, c.category, c.type
     SKIP
-        29
+        31
 ----
 
 [[checkstyle:MaxErrors]]
@@ -93,6 +94,20 @@ This query works with the old FindBugs file format which the Gradle plugin produ
         n.message,f.name, n.line
     SKIP
         1
+----
+
+[[pmd:MaxWarnings]]
+.There must be less than X warnings reported by PMD.
+[source,cypher,role=constraint]
+----
+    MATCH
+        (f:Pmd:File)-->(v:Pmd:Violation)
+    WHERE
+        v.priority=1 or v.priority=2
+    RETURN
+        f.fqn, v.className, v.method, v.variable, v.rule, v.priority, v.message
+    SKIP
+      46
 ----
 
 

@@ -132,29 +132,30 @@ subprojects {
     }
 
     pmd {
-      ruleSets = ["java-basic", "java-braces"]
-      ignoreFailures = true
-      sourceSets = [sourceSets.main]
+        ruleSets = ["category/java/errorprone.xml", "category/java/multithreading.xml", "category/java/bestpractices.xml", "category/java/codestyle.xml","category/java/design.xml","category/java/security.xml"]
+        ignoreFailures = true
+        sourceSets = [sourceSets.main]
+        toolVersion = '6.10.0'
     }
 
-  install {
+    install {
         repositories.mavenInstaller {
             pom.groupId = 'de.kontext-e.jqassistant.plugin'
         }
     }
 
-  asciidoctor {
-    dependsOn jrubyPrepareGems
-    requires = ['asciidoctor-diagram']
-    gemPath = jrubyPrepareGems.outputDir
-    sourceDir = file('src/main/asciidoc')
+    asciidoctor {
+        dependsOn jrubyPrepareGems
+        requires = ['asciidoctor-diagram']
+        gemPath = jrubyPrepareGems.outputDir
+        sourceDir = file('src/main/asciidoc')
 
-    resources {
-      from('src/main/asciidoc') {
-        include '**/*.png'
-      }
+        resources {
+            from('src/main/asciidoc') {
+                include '**/*.png'
+            }
+        }
     }
-  }
 
 }
 

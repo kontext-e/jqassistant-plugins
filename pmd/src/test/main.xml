@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pmd xmlns="http://pmd.sourceforge.net/report/2.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pmd.sourceforge.net/report/2.0.0 http://pmd.sourceforge.net/report_2_0_0.xsd" version="6.10.0" timestamp="2018-12-18T13:17:50.505">
+    <file name="C:\Users\jn\projects\jqassistant-plugins\pmd\src\main\java\de\kontext_e\jqassistant\plugin\pmd\jaxb\FileType.java">
+        <violation beginline="43" endline="102" begincolumn="8" endcolumn="1" rule="AtLeastOneConstructor" ruleset="Code Style" package="de.kontext_e.jqassistant.plugin.pmd.jaxb" class="FileType" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_codestyle.html#atleastoneconstructor" priority="3">
+            Each class should declare at least one constructor
+        </violation>
+        <violation beginline="45" endline="45" begincolumn="35" endcolumn="43" rule="BeanMembersShouldSerialize" ruleset="Error Prone" package="de.kontext_e.jqassistant.plugin.pmd.jaxb" class="FileType" variable="violation" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_errorprone.html#beanmembersshouldserialize" priority="3">
+            Found non-transient, non-static member. Please mark as transient or provide accessors.
+        </violation>
+        <violation beginline="98" endline="98" begincolumn="25" endcolumn="36" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="de.kontext_e.jqassistant.plugin.pmd.jaxb" class="FileType" method="setName" variable="value" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+            Parameter 'value' is not assigned and could be declared final
+        </violation>
+    </file>
+    <file name="C:\Users\jn\projects\jqassistant-plugins\pmd\src\main\java\de\kontext_e\jqassistant\plugin\pmd\jaxb\ObjectFactory.java">
+        <violation beginline="34" endline="34" begincolumn="32" endcolumn="41" rule="FieldNamingConventions" ruleset="Code Style" package="de.kontext_e.jqassistant.plugin.pmd.jaxb" class="ObjectFactory" variable="_Pmd_QNAME" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_codestyle.html#fieldnamingconventions" priority="1">
+            The constant name '_Pmd_QNAME' doesn't match '[A-Z][A-Z_0-9]*'
+        </violation>
+        <violation beginline="34" endline="34" begincolumn="32" endcolumn="41" rule="VariableNamingConventions" ruleset="Code Style" package="de.kontext_e.jqassistant.plugin.pmd.jaxb" class="ObjectFactory" variable="_Pmd_QNAME" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_codestyle.html#variablenamingconventions" priority="1">
+            Variables that are final and static should be all capitals, '_Pmd_QNAME' is not all capitals.
+        </violation>
+        <violation beginline="40" endline="41" begincolumn="12" endcolumn="5" rule="UnnecessaryConstructor" ruleset="Code Style" package="de.kontext_e.jqassistant.plugin.pmd.jaxb" class="ObjectFactory" method="ObjectFactory" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_codestyle.html#unnecessaryconstructor" priority="3">
+            Avoid unnecessary constructors - the compiler will generate these for you
+        </violation>
+        <violation beginline="72" endline="72" begincolumn="43" endcolumn="55" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="de.kontext_e.jqassistant.plugin.pmd.jaxb" class="ObjectFactory" method="createPmd" variable="value" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+            Parameter 'value' is not assigned and could be declared final
+        </violation>
+    </file>
+    <file name="C:\Users\jn\projects\jqassistant-plugins\pmd\src\main\java\de\kontext_e\jqassistant\plugin\pmd\jaxb\PmdType.java">
+        <violation beginline="46" endline="132" begincolumn="8" endcolumn="1" rule="AtLeastOneConstructor" ruleset="Code Style" package="de.kontext_e.jqassistant.plugin.pmd.jaxb" class="PmdType" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_codestyle.html#atleastoneconstructor" priority="3">
+            Each class should declare at least one constructor
+        </violation>
+        <violation beginline="46" endline="132" begincolumn="8" endcolumn="1" rule="DataClass" ruleset="Design" package="de.kontext_e.jqassistant.plugin.pmd.jaxb" class="PmdType" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_design.html#dataclass" priority="3">
+            The class 'PmdType' is suspected to be a Data Class (WOC=0.000%, NOPA=0, NOAM=5, WMC=6)
+        </violation>
+        <violation beginline="48" endline="48" begincolumn="30" endcolumn="33" rule="BeanMembersShouldSerialize" ruleset="Error Prone" package="de.kontext_e.jqassistant.plugin.pmd.jaxb" class="PmdType" variable="file" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_errorprone.html#beanmembersshouldserialize" priority="3">
+            Found non-transient, non-static member. Please mark as transient or provide accessors.
+        </violation>
+        <violation beginline="104" endline="104" begincolumn="28" endcolumn="39" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="de.kontext_e.jqassistant.plugin.pmd.jaxb" class="PmdType" method="setVersion" variable="value" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+            Parameter 'value' is not assigned and could be declared final
+        </violation>
+        <violation beginline="128" endline="128" begincolumn="30" endcolumn="55" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="de.kontext_e.jqassistant.plugin.pmd.jaxb" class="PmdType" method="setTimestamp" variable="value" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+            Parameter 'value' is not assigned and could be declared final
+        </violation>
+    </file>
+    <file name="C:\Users\jn\projects\jqassistant-plugins\pmd\src\main\java\de\kontext_e\jqassistant\plugin\pmd\jaxb\ViolationType.java">
+        <violation beginline="50" endline="384" begincolumn="8" endcolumn="1" rule="AtLeastOneConstructor" ruleset="Code Style" package="de.kontext_e.jqassistant.plugin.pmd.jaxb" class="ViolationType" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_codestyle.html#atleastoneconstructor" priority="3">
+            Each class should declare at least one constructor
+        </violation>
+        <violation beginline="50" endline="384" begincolumn="8" endcolumn="1" rule="DataClass" ruleset="Design" package="de.kontext_e.jqassistant.plugin.pmd.jaxb" class="ViolationType" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_design.html#dataclass" priority="3">
+            The class 'ViolationType' is suspected to be a Data Class (WOC=7.143%, NOPA=0, NOAM=26, WMC=28)
+        </violation>
+        <violation beginline="67" endline="67" begincolumn="22" endcolumn="29" rule="VariableNamingConventions" ruleset="Code Style" package="de.kontext_e.jqassistant.plugin.pmd.jaxb" class="ViolationType" variable="_package" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_codestyle.html#variablenamingconventions" priority="1">
+            Only variables that are final should contain underscores (except for underscores in standard prefix/suffix), '_package' is not final.
+        </violation>
+        <violation beginline="67" endline="67" begincolumn="22" endcolumn="29" rule="FieldNamingConventions" ruleset="Code Style" package="de.kontext_e.jqassistant.plugin.pmd.jaxb" class="ViolationType" variable="_package" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_codestyle.html#fieldnamingconventions" priority="1">
+            The field name '_package' doesn't match '[a-z][a-zA-Z0-9]*'
+        </violation>
+        <violation beginline="100" endline="100" begincolumn="26" endcolumn="37" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="de.kontext_e.jqassistant.plugin.pmd.jaxb" class="ViolationType" method="setValue" variable="value" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+            Parameter 'value' is not assigned and could be declared final
+        </violation>
+        <violation beginline="124" endline="124" begincolumn="30" endcolumn="42" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="de.kontext_e.jqassistant.plugin.pmd.jaxb" class="ViolationType" method="setBeginline" variable="value" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+            Parameter 'value' is not assigned and could be declared final
+        </violation>
+        <violation beginline="148" endline="148" begincolumn="28" endcolumn="40" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="de.kontext_e.jqassistant.plugin.pmd.jaxb" class="ViolationType" method="setEndline" variable="value" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+            Parameter 'value' is not assigned and could be declared final
+        </violation>
+        <violation beginline="172" endline="172" begincolumn="32" endcolumn="44" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="de.kontext_e.jqassistant.plugin.pmd.jaxb" class="ViolationType" method="setBegincolumn" variable="value" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+            Parameter 'value' is not assigned and could be declared final
+        </violation>
+        <violation beginline="196" endline="196" begincolumn="30" endcolumn="42" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="de.kontext_e.jqassistant.plugin.pmd.jaxb" class="ViolationType" method="setEndcolumn" variable="value" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+            Parameter 'value' is not assigned and could be declared final
+        </violation>
+        <violation beginline="220" endline="220" begincolumn="25" endcolumn="36" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="de.kontext_e.jqassistant.plugin.pmd.jaxb" class="ViolationType" method="setRule" variable="value" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+            Parameter 'value' is not assigned and could be declared final
+        </violation>
+        <violation beginline="244" endline="244" begincolumn="28" endcolumn="39" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="de.kontext_e.jqassistant.plugin.pmd.jaxb" class="ViolationType" method="setRuleset" variable="value" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+            Parameter 'value' is not assigned and could be declared final
+        </violation>
+        <violation beginline="268" endline="268" begincolumn="28" endcolumn="39" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="de.kontext_e.jqassistant.plugin.pmd.jaxb" class="ViolationType" method="setPackage" variable="value" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+            Parameter 'value' is not assigned and could be declared final
+        </violation>
+        <violation beginline="292" endline="292" begincolumn="26" endcolumn="37" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="de.kontext_e.jqassistant.plugin.pmd.jaxb" class="ViolationType" method="setClazz" variable="value" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+            Parameter 'value' is not assigned and could be declared final
+        </violation>
+        <violation beginline="316" endline="316" begincolumn="27" endcolumn="38" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="de.kontext_e.jqassistant.plugin.pmd.jaxb" class="ViolationType" method="setMethod" variable="value" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+            Parameter 'value' is not assigned and could be declared final
+        </violation>
+        <violation beginline="320" endline="322" begincolumn="16" endcolumn="9" rule="MethodNamingConventions" ruleset="Code Style" package="de.kontext_e.jqassistant.plugin.pmd.jaxb" class="ViolationType" method="get_package" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_codestyle.html#methodnamingconventions" priority="1">
+            The instance method name 'get_package' doesn't match '[a-z][a-zA-Z0-9]*'
+        </violation>
+        <violation beginline="324" endline="324" begincolumn="40" endcolumn="47" rule="VariableNamingConventions" ruleset="Code Style" package="de.kontext_e.jqassistant.plugin.pmd.jaxb" class="ViolationType" method="set_package" variable="_package" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_codestyle.html#variablenamingconventions" priority="1">
+            Only variables that are final should contain underscores (except for underscores in standard prefix/suffix), '_package' is not final.
+        </violation>
+        <violation beginline="324" endline="324" begincolumn="33" endcolumn="47" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="de.kontext_e.jqassistant.plugin.pmd.jaxb" class="ViolationType" method="set_package" variable="_package" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+            Parameter '_package' is not assigned and could be declared final
+        </violation>
+        <violation beginline="324" endline="326" begincolumn="16" endcolumn="9" rule="MethodNamingConventions" ruleset="Code Style" package="de.kontext_e.jqassistant.plugin.pmd.jaxb" class="ViolationType" method="set_package" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_codestyle.html#methodnamingconventions" priority="1">
+            The instance method name 'set_package' doesn't match '[a-z][a-zA-Z0-9]*'
+        </violation>
+        <violation beginline="324" endline="324" begincolumn="40" endcolumn="47" rule="FormalParameterNamingConventions" ruleset="Code Style" package="de.kontext_e.jqassistant.plugin.pmd.jaxb" class="ViolationType" method="set_package" variable="_package" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_codestyle.html#formalparameternamingconventions" priority="1">
+            The method parameter name '_package' doesn't match '[a-z][a-zA-Z0-9]*'
+        </violation>
+        <violation beginline="332" endline="332" begincolumn="33" endcolumn="47" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="de.kontext_e.jqassistant.plugin.pmd.jaxb" class="ViolationType" method="setVariable" variable="variable" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+            Parameter 'variable' is not assigned and could be declared final
+        </violation>
+        <violation beginline="356" endline="356" begincolumn="36" endcolumn="47" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="de.kontext_e.jqassistant.plugin.pmd.jaxb" class="ViolationType" method="setExternalInfoUrl" variable="value" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+            Parameter 'value' is not assigned and could be declared final
+        </violation>
+        <violation beginline="380" endline="380" begincolumn="29" endcolumn="41" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="de.kontext_e.jqassistant.plugin.pmd.jaxb" class="ViolationType" method="setPriority" variable="value" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+            Parameter 'value' is not assigned and could be declared final
+        </violation>
+    </file>
+    <file name="C:\Users\jn\projects\jqassistant-plugins\pmd\src\main\java\de\kontext_e\jqassistant\plugin\pmd\scanner\PmdReportScannerPlugin.java">
+        <violation beginline="38" endline="38" begincolumn="33" endcolumn="63" rule="LongVariable" ruleset="Code Style" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" variable="JQASSISTANT_PLUGIN_PMD_FILENAME" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+            Avoid excessively long variable names like JQASSISTANT_PLUGIN_PMD_FILENAME
+        </violation>
+        <violation beginline="39" endline="39" begincolumn="33" endcolumn="62" rule="LongVariable" ruleset="Code Style" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" variable="JQASSISTANT_PLUGIN_PMD_DIRNAME" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+            Avoid excessively long variable names like JQASSISTANT_PLUGIN_PMD_DIRNAME
+        </violation>
+        <violation beginline="41" endline="41" begincolumn="25" endcolumn="35" rule="BeanMembersShouldSerialize" ruleset="Error Prone" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" variable="jaxbContext" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_errorprone.html#beanmembersshouldserialize" priority="3">
+            Found non-transient, non-static member. Please mark as transient or provide accessors.
+        </violation>
+        <violation beginline="42" endline="42" begincolumn="20" endcolumn="30" rule="BeanMembersShouldSerialize" ruleset="Error Prone" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" variable="pmdFileName" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_errorprone.html#beanmembersshouldserialize" priority="3">
+            Found non-transient, non-static member. Please mark as transient or provide accessors.
+        </violation>
+        <violation beginline="43" endline="43" begincolumn="20" endcolumn="29" rule="BeanMembersShouldSerialize" ruleset="Error Prone" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" variable="pmdDirName" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_errorprone.html#beanmembersshouldserialize" priority="3">
+            Found non-transient, non-static member. Please mark as transient or provide accessors.
+        </violation>
+        <violation beginline="45" endline="51" begincolumn="12" endcolumn="5" rule="CallSuperInConstructor" ruleset="Code Style" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" method="PmdReportScannerPlugin" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_codestyle.html#callsuperinconstructor" priority="3">
+            It is a good practice to call super() in a constructor
+        </violation>
+        <violation beginline="57" endline="57" begincolumn="12" endcolumn="71" rule="LawOfDemeter" ruleset="Design" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" method="configure" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_design.html#lawofdemeter" priority="3">
+            Potential violation of Law of Demeter (method chain calls)
+        </violation>
+        <violation beginline="58" endline="58" begincolumn="36" endcolumn="87" rule="LawOfDemeter" ruleset="Design" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" method="configure" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_design.html#lawofdemeter" priority="3">
+            Potential violation of Law of Demeter (method chain calls)
+        </violation>
+        <violation beginline="63" endline="63" begincolumn="12" endcolumn="70" rule="LawOfDemeter" ruleset="Design" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" method="configure" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_design.html#lawofdemeter" priority="3">
+            Potential violation of Law of Demeter (method chain calls)
+        </violation>
+        <violation beginline="64" endline="64" begincolumn="35" endcolumn="85" rule="LawOfDemeter" ruleset="Design" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" method="configure" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_design.html#lawofdemeter" priority="3">
+            Potential violation of Law of Demeter (method chain calls)
+        </violation>
+        <violation beginline="73" endline="73" begincolumn="28" endcolumn="44" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" method="accepts" variable="item" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+            Parameter 'item' is not assigned and could be declared final
+        </violation>
+        <violation beginline="73" endline="73" begincolumn="47" endcolumn="57" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" method="accepts" variable="path" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+            Parameter 'path' is not assigned and could be declared final
+        </violation>
+        <violation beginline="73" endline="73" begincolumn="60" endcolumn="70" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" method="accepts" variable="scope" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+            Parameter 'scope' is not assigned and could be declared final
+        </violation>
+        <violation beginline="74" endline="74" begincolumn="9" endcolumn="157" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" method="accepts" variable="VariableDeclaratorId" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+            Local variable 'accepted' could be declared final
+        </violation>
+        <violation beginline="74" endline="74" begincolumn="59" endcolumn="131" rule="LawOfDemeter" ruleset="Design" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" method="accepts" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_design.html#lawofdemeter" priority="3">
+            Potential violation of Law of Demeter (method chain calls)
+        </violation>
+        <violation beginline="74" endline="74" begincolumn="59" endcolumn="131" rule="LawOfDemeter" ruleset="Design" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" method="accepts" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_design.html#lawofdemeter" priority="3">
+            Potential violation of Law of Demeter (method chain calls)
+        </violation>
+        <violation beginline="74" endline="74" begincolumn="59" endcolumn="131" rule="LawOfDemeter" ruleset="Design" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" method="accepts" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_design.html#lawofdemeter" priority="3">
+            Potential violation of Law of Demeter (method chain calls)
+        </violation>
+        <violation beginline="74" endline="74" begincolumn="59" endcolumn="131" rule="LawOfDemeter" ruleset="Design" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" method="accepts" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_design.html#lawofdemeter" priority="3">
+            Potential violation of Law of Demeter (method chain calls)
+        </violation>
+        <violation beginline="74" endline="74" begincolumn="77" endcolumn="130" rule="LawOfDemeter" ruleset="Design" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" method="accepts" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_design.html#lawofdemeter" priority="3">
+            Potential violation of Law of Demeter (method chain calls)
+        </violation>
+        <violation beginline="74" endline="74" begincolumn="77" endcolumn="130" rule="LawOfDemeter" ruleset="Design" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" method="accepts" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_design.html#lawofdemeter" priority="3">
+            Potential violation of Law of Demeter (method chain calls)
+        </violation>
+        <violation beginline="74" endline="74" begincolumn="77" endcolumn="130" rule="LawOfDemeter" ruleset="Design" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" method="accepts" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_design.html#lawofdemeter" priority="3">
+            Potential violation of Law of Demeter (method chain calls)
+        </violation>
+        <violation beginline="74" endline="74" begincolumn="77" endcolumn="130" rule="LawOfDemeter" ruleset="Design" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" method="accepts" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_design.html#lawofdemeter" priority="3">
+            Potential violation of Law of Demeter (method chain calls)
+        </violation>
+        <violation beginline="74" endline="74" begincolumn="59" endcolumn="156" rule="UselessParentheses" ruleset="Code Style" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" method="accepts" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
+            Useless parentheses.
+        </violation>
+        <violation beginline="76" endline="76" begincolumn="13" endcolumn="50" rule="GuardLogStatement" ruleset="Best Practices" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" method="accepts" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_bestpractices.html#guardlogstatement" priority="2">
+            Logger calls should be surrounded by log level guards.
+        </violation>
+        <violation beginline="82" endline="82" begincolumn="62" endcolumn="72" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" method="scan" variable="path" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+            Parameter 'path' is not assigned and could be declared final
+        </violation>
+        <violation beginline="82" endline="82" begincolumn="88" endcolumn="102" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" method="scan" variable="scanner" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+            Parameter 'scanner' is not assigned and could be declared final
+        </violation>
+        <violation beginline="82" endline="82" begincolumn="75" endcolumn="85" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" method="scan" variable="scope" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+            Parameter 'scope' is not assigned and could be declared final
+        </violation>
+        <violation beginline="83" endline="83" begincolumn="9" endcolumn="43" rule="GuardLogStatement" ruleset="Best Practices" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" method="scan" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_bestpractices.html#guardlogstatement" priority="2">
+            Logger calls should be surrounded by log level guards.
+        </violation>
+        <violation beginline="85" endline="85" begincolumn="17" endcolumn="91" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" method="scan" variable="VariableDeclaratorId" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+            Local variable 'fileDescriptor' could be declared final
+        </violation>
+        <violation beginline="85" endline="85" begincolumn="49" endcolumn="91" rule="LawOfDemeter" ruleset="Design" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" method="scan" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_design.html#lawofdemeter" priority="3">
+            Potential violation of Law of Demeter (method chain calls)
+        </violation>
+        <violation beginline="86" endline="86" begincolumn="43" endcolumn="61" rule="LongVariable" ruleset="Code Style" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" method="scan" variable="pmdReportDescriptor" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+            Avoid excessively long variable names like pmdReportDescriptor
+        </violation>
+        <violation beginline="86" endline="86" begincolumn="65" endcolumn="156" rule="LawOfDemeter" ruleset="Design" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" method="scan" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_design.html#lawofdemeter" priority="3">
+            Potential violation of Law of Demeter (method chain calls)
+        </violation>
+        <violation beginline="86" endline="86" begincolumn="65" endcolumn="156" rule="LawOfDemeter" ruleset="Design" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" method="scan" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_design.html#lawofdemeter" priority="3">
+            Potential violation of Law of Demeter (method chain calls)
+        </violation>
+        <violation beginline="87" endline="87" begincolumn="17" endcolumn="68" rule="LawOfDemeter" ruleset="Design" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" method="scan" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_design.html#lawofdemeter" priority="3">
+            Potential violation of Law of Demeter (object not created locally)
+        </violation>
+        <violation beginline="87" endline="87" begincolumn="48" endcolumn="67" rule="LawOfDemeter" ruleset="Design" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" method="scan" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_design.html#lawofdemeter" priority="3">
+            Potential violation of Law of Demeter (object not created locally)
+        </violation>
+        <violation beginline="88" endline="88" begincolumn="20" endcolumn="41" rule="LawOfDemeter" ruleset="Design" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" method="scan" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_design.html#lawofdemeter" priority="3">
+            Potential violation of Law of Demeter (object not created locally)
+        </violation>
+        <violation beginline="89" endline="89" begincolumn="25" endcolumn="91" rule="LawOfDemeter" ruleset="Design" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" method="scan" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_design.html#lawofdemeter" priority="3">
+            Potential violation of Law of Demeter (method chain calls)
+        </violation>
+        <violation beginline="89" endline="89" begincolumn="58" endcolumn="90" rule="LawOfDemeter" ruleset="Design" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" method="scan" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_design.html#lawofdemeter" priority="3">
+            Potential violation of Law of Demeter (method chain calls)
+        </violation>
+        <violation beginline="91" endline="91" begincolumn="17" endcolumn="88" rule="LawOfDemeter" ruleset="Design" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" method="scan" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_design.html#lawofdemeter" priority="3">
+            Potential violation of Law of Demeter (method chain calls)
+        </violation>
+        <violation beginline="91" endline="91" begincolumn="27" endcolumn="57" rule="LawOfDemeter" ruleset="Design" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" method="scan" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_design.html#lawofdemeter" priority="3">
+            Potential violation of Law of Demeter (method chain calls)
+        </violation>
+        <violation beginline="95" endline="95" begincolumn="96" endcolumn="114" rule="LongVariable" ruleset="Code Style" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" method="readFiles" variable="pmdReportDescriptor" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+            Avoid excessively long variable names like pmdReportDescriptor
+        </violation>
+        <violation beginline="95" endline="97" begincolumn="13" endcolumn="61" rule="DataflowAnomalyAnalysis" ruleset="Error Prone" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" method="readFiles" variable="fileType" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_errorprone.html#dataflowanomalyanalysis" priority="5">
+            Found 'UR'-anomaly for variable 'fileType' (lines '95'-'97').
+        </violation>
+        <violation beginline="96" endline="96" begincolumn="14" endcolumn="30" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" method="readFiles" variable="VariableDeclaratorId" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+            Local variable 'fileType' could be declared final
+        </violation>
+        <violation beginline="97" endline="97" begincolumn="13" endcolumn="61" rule="GuardLogStatement" ruleset="Best Practices" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" method="readFiles" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_bestpractices.html#guardlogstatement" priority="2">
+            Logger calls should be surrounded by log level guards.
+        </violation>
+        <violation beginline="100" endline="100" begincolumn="13" endcolumn="71" rule="LawOfDemeter" ruleset="Design" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" method="readFiles" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_design.html#lawofdemeter" priority="3">
+            Potential violation of Law of Demeter (object not created locally)
+        </violation>
+        <violation beginline="103" endline="103" begincolumn="13" endcolumn="72" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" method="readFiles" variable="VariableDeclaratorId" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+            Local variable 'classname' could be declared final
+        </violation>
+        <violation beginline="103" endline="103" begincolumn="32" endcolumn="72" rule="LawOfDemeter" ruleset="Design" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" method="readFiles" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_design.html#lawofdemeter" priority="3">
+            Potential violation of Law of Demeter (method chain calls)
+        </violation>
+        <violation beginline="103" endline="103" begincolumn="32" endcolumn="72" rule="LawOfDemeter" ruleset="Design" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" method="readFiles" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_design.html#lawofdemeter" priority="3">
+            Potential violation of Law of Demeter (method chain calls)
+        </violation>
+        <violation beginline="104" endline="104" begincolumn="13" endcolumn="76" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" method="readFiles" variable="VariableDeclaratorId" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+            Local variable 'packagename' could be declared final
+        </violation>
+        <violation beginline="104" endline="104" begincolumn="34" endcolumn="76" rule="LawOfDemeter" ruleset="Design" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" method="readFiles" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_design.html#lawofdemeter" priority="3">
+            Potential violation of Law of Demeter (method chain calls)
+        </violation>
+        <violation beginline="104" endline="104" begincolumn="34" endcolumn="76" rule="LawOfDemeter" ruleset="Design" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" method="readFiles" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_design.html#lawofdemeter" priority="3">
+            Potential violation of Law of Demeter (method chain calls)
+        </violation>
+        <violation beginline="105" endline="105" begincolumn="13" endcolumn="50" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" method="readFiles" variable="VariableDeclaratorId" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+            Local variable 'fqn' could be declared final
+        </violation>
+        <violation beginline="106" endline="106" begincolumn="13" endcolumn="55" rule="LawOfDemeter" ruleset="Design" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" method="readFiles" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_design.html#lawofdemeter" priority="3">
+            Potential violation of Law of Demeter (object not created locally)
+        </violation>
+        <violation beginline="108" endline="108" begincolumn="13" endcolumn="65" rule="LawOfDemeter" ruleset="Design" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" method="readFiles" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_design.html#lawofdemeter" priority="3">
+            Potential violation of Law of Demeter (method chain calls)
+        </violation>
+        <violation beginline="113" endline="116" begincolumn="25" endcolumn="74" rule="DataflowAnomalyAnalysis" ruleset="Error Prone" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" method="readViolations" variable="vioType" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_errorprone.html#dataflowanomalyanalysis" priority="5">
+            Found 'UR'-anomaly for variable 'vioType' (lines '113'-'116').
+        </violation>
+        <violation beginline="114" endline="114" begincolumn="14" endcolumn="34" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" method="readViolations" variable="VariableDeclaratorId" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+            Local variable 'vioType' could be declared final
+        </violation>
+        <violation beginline="116" endline="116" begincolumn="25" endcolumn="74" rule="LawOfDemeter" ruleset="Design" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" method="readViolations" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_design.html#lawofdemeter" priority="3">
+            Potential violation of Law of Demeter (object not created locally)
+        </violation>
+        <violation beginline="117" endline="117" begincolumn="25" endcolumn="70" rule="LawOfDemeter" ruleset="Design" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" method="readViolations" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_design.html#lawofdemeter" priority="3">
+            Potential violation of Law of Demeter (object not created locally)
+        </violation>
+        <violation beginline="118" endline="118" begincolumn="25" endcolumn="78" rule="LawOfDemeter" ruleset="Design" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" method="readViolations" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_design.html#lawofdemeter" priority="3">
+            Potential violation of Law of Demeter (object not created locally)
+        </violation>
+        <violation beginline="119" endline="119" begincolumn="25" endcolumn="74" rule="LawOfDemeter" ruleset="Design" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" method="readViolations" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_design.html#lawofdemeter" priority="3">
+            Potential violation of Law of Demeter (object not created locally)
+        </violation>
+        <violation beginline="120" endline="120" begincolumn="13" endcolumn="52" rule="LawOfDemeter" ruleset="Design" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" method="readViolations" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_design.html#lawofdemeter" priority="3">
+            Potential violation of Law of Demeter (object not created locally)
+        </violation>
+        <violation beginline="121" endline="121" begincolumn="13" endcolumn="58" rule="LawOfDemeter" ruleset="Design" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" method="readViolations" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_design.html#lawofdemeter" priority="3">
+            Potential violation of Law of Demeter (object not created locally)
+        </violation>
+        <violation beginline="122" endline="122" begincolumn="13" endcolumn="59" rule="LawOfDemeter" ruleset="Design" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" method="readViolations" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_design.html#lawofdemeter" priority="3">
+            Potential violation of Law of Demeter (object not created locally)
+        </violation>
+        <violation beginline="123" endline="123" begincolumn="13" endcolumn="58" rule="LawOfDemeter" ruleset="Design" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" method="readViolations" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_design.html#lawofdemeter" priority="3">
+            Potential violation of Law of Demeter (object not created locally)
+        </violation>
+        <violation beginline="124" endline="124" begincolumn="25" endcolumn="68" rule="LawOfDemeter" ruleset="Design" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" method="readViolations" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_design.html#lawofdemeter" priority="3">
+            Potential violation of Law of Demeter (object not created locally)
+        </violation>
+        <violation beginline="125" endline="125" begincolumn="25" endcolumn="72" rule="LawOfDemeter" ruleset="Design" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" method="readViolations" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_design.html#lawofdemeter" priority="3">
+            Potential violation of Law of Demeter (object not created locally)
+        </violation>
+        <violation beginline="126" endline="126" begincolumn="25" endcolumn="86" rule="LawOfDemeter" ruleset="Design" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" method="readViolations" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_design.html#lawofdemeter" priority="3">
+            Potential violation of Law of Demeter (object not created locally)
+        </violation>
+        <violation beginline="127" endline="127" begincolumn="25" endcolumn="72" rule="LawOfDemeter" ruleset="Design" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" method="readViolations" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_design.html#lawofdemeter" priority="3">
+            Potential violation of Law of Demeter (object not created locally)
+        </violation>
+        <violation beginline="128" endline="128" begincolumn="25" endcolumn="68" rule="LawOfDemeter" ruleset="Design" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" method="readViolations" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_design.html#lawofdemeter" priority="3">
+            Potential violation of Law of Demeter (object not created locally)
+        </violation>
+        <violation beginline="129" endline="129" begincolumn="13" endcolumn="64" rule="LawOfDemeter" ruleset="Design" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" method="readViolations" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_design.html#lawofdemeter" priority="3">
+            Potential violation of Law of Demeter (method chain calls)
+        </violation>
+        <violation beginline="135" endline="135" begincolumn="13" endcolumn="24" rule="OnlyOneReturn" ruleset="Code Style" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" method="truncateName" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+            A method should have only one exit point, and that should be the last statement in the method
+        </violation>
+        <violation beginline="141" endline="141" begincolumn="9" endcolumn="29" rule="AvoidFinalLocalVariable" ruleset="Code Style" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" method="unmarshalPmdXml" variable="VariableDeclaratorId" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_codestyle.html#avoidfinallocalvariable" priority="3">
+            Avoid using final local variables, turn them into fields
+        </violation>
+        <violation beginline="144" endline="149" begincolumn="13" endcolumn="102" rule="DataflowAnomalyAnalysis" ruleset="Error Prone" package="de.kontext_e.jqassistant.plugin.pmd.scanner" class="PmdReportScannerPlugin" method="unmarshalPmdXml" variable="pmdType" externalInfoUrl="https://pmd.github.io/pmd-6.10.0/pmd_rules_java_errorprone.html#dataflowanomalyanalysis" priority="5">
+            Found 'DU'-anomaly for variable 'pmdType' (lines '144'-'149').
+        </violation>
+    </file>
+    <configerror rule="LoosePackageCoupling" msg="No packages or classes specified"/>
+</pmd>
