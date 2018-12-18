@@ -6,14 +6,14 @@ The default rule conflicts with default.xml, so only one of both may be active.
 The following constraints apply for modules:
 
 [[default]]
-[role=group,includesConstraints="debug:rule(info)",includesConcepts="structure:MarkAsciidocTypeRegex, structure:LabelTypesMatchedByRegex"]
+[role=group,includesConstraints="debug:rule(info),spotbugs:MaxSpotBugsWarnings",includesConcepts="structure:MarkAsciidocTypeRegex, structure:LabelTypesMatchedByRegex"]
 - <<debug:rule>>
 - <<package:PackageLevel>>
 - <<dependency:TransitivePackageDependencies>>
 - <<dependency:WrongDirection>>
 - <<structure:MarkAsciidocTypeRegex>>
 - <<structure:LabelTypesMatchedByRegex>>
-
+- <<spotbugs:MaxSpotBugsWarnings>>
 
 [[debug:rule]]
 .For testing and debugging purposes.
@@ -24,6 +24,9 @@ MATCH
 RETURN
     count(p);
 ----
+
+This kind of Technical Debt is about module dependencies which are in the code,
+but are not desired.
 
 [[documented:TechnicalDebt]]
 .Creates a relationship between two Packages for Technical Debt.
@@ -46,6 +49,26 @@ with c1, c2
 				m1, m2;
 
 ----
+
+There is also some Technical Debt regarding SpotBugs.
+This query works with the old FindBugs file format which the Gradle plugin produces.
+
+[[spotbugs:MaxSpotBugsWarnings]]
+.There must be less than X warnings reported by SpotBugs
+[source,cypher,role=constraint]
+----
+    MATCH
+        (c:FindBugs:BugInstance)-[:HAS_SOURCELINE]->(s:FindBugs:SourceLine)
+    WHERE
+        not(c.category='PERFORMANCE')
+    RETURN
+        s.fqn, s.start, c.priority, c.category, c.type
+    ORDER BY
+        c.priority, c.category, c.type
+    SKIP
+        29
+----
+
 
 == Find package dependencies in the wrong direction
 

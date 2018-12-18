@@ -13,11 +13,15 @@ buildscript {
       maven {
           url "https://oss.sonatype.org/content/repositories/snapshots"
       }
+      maven {
+          url "https://plugins.gradle.org/m2/"
+      }
   }
 
   dependencies {
     classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.2'
     classpath 'com.github.jruby-gradle:jruby-gradle-plugin:0.1.11'
+    classpath "gradle.plugin.com.github.spotbugs:spotbugs-gradle-plugin:1.6.6"
   }
 }
 
@@ -39,7 +43,7 @@ subprojects {
     apply plugin: 'maven'
     apply plugin: 'signing'
     apply plugin: 'checkstyle'
-    apply plugin: 'findbugs'
+    apply plugin: "com.github.spotbugs"
     apply plugin: "jacoco"
     apply plugin: 'pmd'
     apply plugin: 'org.asciidoctor.gradle.asciidoctor'
@@ -67,7 +71,6 @@ subprojects {
     compileOnly  'com.buschmais.jqassistant.plugin:common:'+project.jqaversion
 
     testCompile  'com.buschmais.jqassistant.core:store:'+project.jqaversion
-//    testCompile  'org.neo4j:neo4j:2.3.12'
     testCompile  'com.buschmais.jqassistant.plugin:common:'+project.jqaversion
     testCompile 'com.buschmais.jqassistant.core:scanner:'+project.jqaversion
 
@@ -121,11 +124,11 @@ subprojects {
       toolVersion = '6.18'
     }
 
-    findbugs {
-      ignoreFailures = true
-      effort = "max"
-      reportLevel = "medium"
-      toolVersion = '3.0.1'
+    spotbugs {
+        ignoreFailures = true
+        effort = "max"
+        reportLevel = "medium"
+        toolVersion = '3.1.9'
     }
 
     pmd {
