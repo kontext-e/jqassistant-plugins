@@ -1,5 +1,5 @@
 <jqa-plugin:jqassistant-plugin
-        xmlns:jqa-plugin="http://www.buschmais.com/jqassistant/core/plugin/schema/v1.0" name="FindBugs">
+        xmlns:jqa-plugin="http://www.buschmais.com/jqassistant/core/plugin/schema/v1.0" name="SpotBugs">
     <description>Provides a scanner for SpotBugs and FindBugs XML result files.</description>
     <model>
         <class>de.kontext_e.jqassistant.plugin.spotbugs.store.descriptor.FindBugsDescriptor</class>
