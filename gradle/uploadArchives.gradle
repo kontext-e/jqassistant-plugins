@@ -18,9 +18,11 @@ if(this.hasProperty('sonatypeUsername')) {
         }
 
         // snapshots
+/*
         repository(url: "https://oss.sonatype.org/content/repositories/snapshots") {
             authentication(userName: sonatypeUsername, password: sonatypePassword)
         }
+*/
 
         pom.project {
           name 'ke-jqassistant-plugins'
