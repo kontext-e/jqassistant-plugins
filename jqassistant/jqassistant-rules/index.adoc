@@ -6,13 +6,14 @@ The default rule conflicts with default.xml, so only one of both may be active.
 The following constraints apply for modules:
 
 [[default]]
-[role=group,includesConstraints="debug:rule(info)",includesConcepts="structure:MarkAsciidocTypeRegex, structure:LabelTypesMatchedByRegex"]
+[role=group,includesConstraints="debug:rule(info),pmd:*",includesConcepts="structure:MarkAsciidocTypeRegex, structure:LabelTypesMatchedByRegex"]
 - <<debug:rule>>
 - <<package:PackageLevel>>
 - <<dependency:TransitivePackageDependencies>>
 - <<dependency:WrongDirection>>
 - <<structure:MarkAsciidocTypeRegex>>
 - <<structure:LabelTypesMatchedByRegex>>
+- <<pmd:MaxWarnings>>
 
 
 [[debug:rule]]
@@ -45,6 +46,18 @@ with c1, c2
 			RETURN
 				m1, m2;
 
+----
+
+[[pmd:MaxWarnings]]
+.There must be less than X warnings reported by PMD.
+[source,cypher,role=constraint]
+----
+    MATCH
+        (f:Pmd:File)-->(v:Pmd:Violation)
+    RETURN
+        f.fqn, v.className, v.method, v.variable, v.rule, v.priority, v.message
+    SKIP
+      0
 ----
 
 == Find package dependencies in the wrong direction
