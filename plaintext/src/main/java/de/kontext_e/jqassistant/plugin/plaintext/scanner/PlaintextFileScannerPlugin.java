@@ -28,20 +28,28 @@ public class PlaintextFileScannerPlugin extends AbstractScannerPlugin<FileResour
 
 
     @Override
-    public boolean accepts(final FileResource item, final String path, final Scope scope) throws IOException {
-        int beginIndex = path.lastIndexOf(".");
-        if(beginIndex > 0) {
-            final String suffix = path.substring(beginIndex + 1).toLowerCase();
+    public boolean accepts(final FileResource item, final String path, final Scope scope) {
+        try {
+            int beginIndex = path.lastIndexOf(".");
+            if(beginIndex > 0) {
+                final String suffix = path.substring(beginIndex + 1).toLowerCase();
 
-            boolean accepted = suffixes.contains(suffix);
-            if(accepted) {
-                LOGGER.info("Plaintext accepted path "+path);
+                boolean accepted = suffixes.contains(suffix);
+                if(accepted) {
+                    LOGGER.info("Plaintext accepted path "+path);
+                }
+
+                return accepted;
             }
 
-            return accepted;
+            return false;
+        } catch (NullPointerException e) {
+            // could do a lengthy null check at beginning or do it the short dirty way
+            return false;
+        } catch (Exception e) {
+            LOGGER.error("Error while checking path: "+e, e);
+            return false;
         }
-
-        return false;
     }
 
     @Override

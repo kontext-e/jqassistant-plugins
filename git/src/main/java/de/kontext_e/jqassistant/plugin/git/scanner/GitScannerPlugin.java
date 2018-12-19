@@ -34,25 +34,33 @@ public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitRep
      * If the path is "/HEAD" and the file (behind item) lives in a directory called ".git" this must be a git
      * repository and the scanner may perform it's work on it (call to "scan" method).
      */
-    public boolean accepts(final FileResource item, final String path, final Scope scope) throws IOException {
+    public boolean accepts(final FileResource item, final String path, final Scope scope) {
         // in some maven project layouts, the .git repo is offered in every subproject
         // but needs to be imported only once
         if(counter > 0) return false;
 
-        if(path.endsWith("/HEAD")) {
-            final File gitDirectory = item.getFile();
-            LOGGER.debug("Checking path {} / dir {}", path, gitDirectory);
-            boolean isGitDir = ".git".equals(gitDirectory.toPath().toAbsolutePath().getParent().toFile().getName());
-            if (!isGitDir) {
-                return false;
-            } else {
-                String pathToGitProject = gitDirectory.toPath().getParent().toFile().getAbsolutePath();
-                LOGGER.info("Accepted Git project in '{}'", pathToGitProject);
-                return true;
+        try {
+            if(path.endsWith("/HEAD")) {
+                final File gitDirectory = item.getFile();
+                LOGGER.debug("Checking path {} / dir {}", path, gitDirectory);
+                boolean isGitDir = ".git".equals(gitDirectory.toPath().toAbsolutePath().getParent().toFile().getName());
+                if (!isGitDir) {
+                    return false;
+                } else {
+                    String pathToGitProject = gitDirectory.toPath().getParent().toFile().getAbsolutePath();
+                    LOGGER.info("Accepted Git project in '{}'", pathToGitProject);
+                    return true;
+                }
             }
-        }
 
-        return false;
+            return false;
+        } catch (NullPointerException e) {
+            // could do a lengthy null check at beginning or do it the short dirty way
+            return false;
+        } catch (Exception e) {
+            LOGGER.error("Error while checking path: "+e, e);
+            return false;
+        }
     }
 
     @Override

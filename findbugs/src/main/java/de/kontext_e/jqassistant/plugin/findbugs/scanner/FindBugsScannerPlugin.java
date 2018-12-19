@@ -67,12 +67,20 @@ public class FindBugsScannerPlugin extends AbstractScannerPlugin<FileResource, F
     }
 
     @Override
-    public boolean accepts(FileResource item, String path, Scope scope) throws IOException {
-        boolean accepted = path.endsWith(findBugsFileName) || (findBugsDirName.equals(item.getFile().toPath().getParent().toFile().getName()) && path.endsWith(".xml"));
-        if(accepted) {
-            LOGGER.debug(String.format("FindBugs accepted file %s", path));
+    public boolean accepts(FileResource item, String path, Scope scope) {
+        try {
+            boolean accepted = path.endsWith(findBugsFileName) || (findBugsDirName.equals(item.getFile().toPath().getParent().toFile().getName()) && path.endsWith(".xml"));
+            if(accepted) {
+                LOGGER.debug(String.format("FindBugs accepted file %s", path));
+            }
+            return accepted;
+        } catch (NullPointerException e) {
+            // could do a lengthy null check at beginning or do it the short dirty way
+            return false;
+        } catch (Exception e) {
+            LOGGER.error("Error while checking path: "+e, e);
+            return false;
         }
-        return accepted;
     }
 
     @Override
