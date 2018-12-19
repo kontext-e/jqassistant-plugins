@@ -27,20 +27,25 @@ public class PlantUmlFileScannerPlugin extends AbstractScannerPlugin<FileResourc
     private static List<String> suffixes = asList("puml", "adoc");
 
     @Override
-    public boolean accepts(final FileResource item, final String path, final Scope scope) throws IOException {
-        int beginIndex = path.lastIndexOf(".");
-        if(beginIndex > 0) {
-            final String suffix = path.substring(beginIndex + 1).toLowerCase();
+    public boolean accepts(final FileResource item, final String path, final Scope scope) {
+        try {
+            int beginIndex = path.lastIndexOf(".");
+            if(beginIndex > 0) {
+                final String suffix = path.substring(beginIndex + 1).toLowerCase();
 
-            boolean accepted = suffixes.contains(suffix);
-            if(accepted) {
-                LOGGER.info("PlantUML accepted path "+path);
+                boolean accepted = suffixes.contains(suffix);
+                if(accepted) {
+                    LOGGER.info("PlantUML accepted path "+path);
+                }
+
+                return accepted;
             }
 
-            return accepted;
+            return false;
+        } catch (Exception e) {
+            LOGGER.error("Error while checking path: "+e, e);
+            return false;
         }
-
-        return false;
     }
 
     @Override
