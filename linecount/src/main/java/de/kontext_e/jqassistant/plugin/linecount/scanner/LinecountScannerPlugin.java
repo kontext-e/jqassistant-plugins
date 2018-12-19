@@ -46,19 +46,24 @@ public class LinecountScannerPlugin extends AbstractScannerPlugin<FileResource, 
     }
 
     @Override
-    public LinecountDescriptor scan(final FileResource item, final String path, final Scope scope, final Scanner scanner) throws IOException {
-        Store store = scanner.getContext().getStore();
-		FileDescriptor fileDescriptor = scanner.getContext().getCurrentDescriptor();
-		final LinecountDescriptor linecountDescriptor = store.addDescriptorType(fileDescriptor, LinecountDescriptor.class);
-        linecountDescriptor.setName(path);
+    public LinecountDescriptor scan(final FileResource item, final String path, final Scope scope, final Scanner scanner) {
+        try {
+            Store store = scanner.getContext().getStore();
+            FileDescriptor fileDescriptor = scanner.getContext().getCurrentDescriptor();
+            final LinecountDescriptor linecountDescriptor = store.addDescriptorType(fileDescriptor, LinecountDescriptor.class);
+            linecountDescriptor.setName(path);
 
-        int lines = 0;
-        try(BufferedReader reader = new BufferedReader(new FileReader(item.getFile().getAbsolutePath()))) {
-            while (reader.readLine() != null) lines++;
+            int lines = 0;
+            try(BufferedReader reader = new BufferedReader(new FileReader(item.getFile().getAbsolutePath()))) {
+                while (reader.readLine() != null) lines++;
+            }
+            linecountDescriptor.setLinecount(lines);
+
+            return linecountDescriptor;
+        } catch (Exception e) {
+            LOGGER.error("Error while checking scanning path "+path+": "+e, e);
+            return null;
         }
-        linecountDescriptor.setLinecount(lines);
-
-        return linecountDescriptor;
     }
 
     @Override

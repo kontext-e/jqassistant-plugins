@@ -90,13 +90,18 @@ public class JacocoScannerPlugin extends AbstractScannerPlugin<FileResource,Jaco
     }
 
     @Override
-    public JacocoReportDescriptor scan(final FileResource file, String path, Scope scope, Scanner scanner) throws IOException {
-        LOGGER.debug("Jacoco plugin scans "+path);
-		FileDescriptor fileDescriptor = scanner.getContext().getCurrentDescriptor();
-		final JacocoReportDescriptor jacocoReportDescriptor = scanner.getContext().getStore().addDescriptorType(fileDescriptor, JacocoReportDescriptor.class);
-        final ReportType reportType = unmarshalJacocoXml(file.createStream());
-        readPackages(scanner.getContext().getStore(), reportType, jacocoReportDescriptor);
-        return jacocoReportDescriptor;
+    public JacocoReportDescriptor scan(final FileResource file, String path, Scope scope, Scanner scanner) {
+        try {
+            LOGGER.debug("Jacoco plugin scans "+path);
+            FileDescriptor fileDescriptor = scanner.getContext().getCurrentDescriptor();
+            final JacocoReportDescriptor jacocoReportDescriptor = scanner.getContext().getStore().addDescriptorType(fileDescriptor, JacocoReportDescriptor.class);
+            final ReportType reportType = unmarshalJacocoXml(file.createStream());
+            readPackages(scanner.getContext().getStore(), reportType, jacocoReportDescriptor);
+            return jacocoReportDescriptor;
+        } catch (Exception e) {
+            LOGGER.error("Error while checking scanning path "+path+": "+e, e);
+            return null;
+        }
     }
 
     private void readPackages(final Store store, final ReportType reportType, final JacocoReportDescriptor jacocoReportDescriptor) {

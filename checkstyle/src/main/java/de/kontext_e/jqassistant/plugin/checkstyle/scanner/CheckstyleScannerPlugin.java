@@ -65,13 +65,18 @@ public class CheckstyleScannerPlugin extends AbstractScannerPlugin<FileResource,
     }
 
     @Override
-    public CheckstyleReportDescriptor scan(final FileResource file, String path, Scope scope, Scanner scanner) throws IOException {
-        LOGGER.debug("Checkstyle scans path "+path);
-        final CheckstyleType checkstyleType = unmarshalCheckstyleXml(file.createStream());
-		FileDescriptor fileDescriptor = scanner.getContext().getCurrentDescriptor();
-		final CheckstyleReportDescriptor checkstyleReportDescriptor = scanner.getContext().getStore().addDescriptorType(fileDescriptor, CheckstyleReportDescriptor.class);
-        readFiles(scanner.getContext().getStore(), checkstyleType, checkstyleReportDescriptor);
-        return checkstyleReportDescriptor;
+    public CheckstyleReportDescriptor scan(final FileResource file, String path, Scope scope, Scanner scanner) {
+        try {
+            LOGGER.debug("Checkstyle scans path "+path);
+            final CheckstyleType checkstyleType = unmarshalCheckstyleXml(file.createStream());
+            FileDescriptor fileDescriptor = scanner.getContext().getCurrentDescriptor();
+            final CheckstyleReportDescriptor checkstyleReportDescriptor = scanner.getContext().getStore().addDescriptorType(fileDescriptor, CheckstyleReportDescriptor.class);
+            readFiles(scanner.getContext().getStore(), checkstyleType, checkstyleReportDescriptor);
+            return checkstyleReportDescriptor;
+        } catch (Exception e) {
+            LOGGER.error("Error while checking scanning path "+path+": "+e, e);
+            return null;
+        }
     }
 
     private void readFiles(final Store store, final CheckstyleType checkstyleType, final CheckstyleReportDescriptor checkstyleReportDescriptor) {

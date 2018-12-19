@@ -64,19 +64,24 @@ public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitRep
     }
 
     @Override
-    public GitRepositoryDescriptor scan(final FileResource item, final String path, final Scope scope, final Scanner scanner) throws IOException {
-        counter++;
+    public GitRepositoryDescriptor scan(final FileResource item, final String path, final Scope scope, final Scanner scanner) {
+        try {
+            counter++;
 
-        // This is called with path = "/HEAD" since this is the only "accepted" file
-        LOGGER.debug ("Scanning Git directory '{}' (call with path: '{}')", item.getFile(), path);
-        Store store = scanner.getContext().getStore();
-		FileDescriptor fileDescriptor = scanner.getContext().getCurrentDescriptor();
-		final GitRepositoryDescriptor gitRepositoryDescriptor = store.addDescriptorType(fileDescriptor, GitRepositoryDescriptor.class);
-        initGitDescriptor(gitRepositoryDescriptor, item.getFile());
+            // This is called with path = "/HEAD" since this is the only "accepted" file
+            LOGGER.debug ("Scanning Git directory '{}' (call with path: '{}')", item.getFile(), path);
+            Store store = scanner.getContext().getStore();
+            FileDescriptor fileDescriptor = scanner.getContext().getCurrentDescriptor();
+            final GitRepositoryDescriptor gitRepositoryDescriptor = store.addDescriptorType(fileDescriptor, GitRepositoryDescriptor.class);
+            initGitDescriptor(gitRepositoryDescriptor, item.getFile());
 
-        new GitRepositoryScanner(store, gitRepositoryDescriptor, range).scanGitRepo();
+            new GitRepositoryScanner(store, gitRepositoryDescriptor, range).scanGitRepo();
 
-        return gitRepositoryDescriptor;
+            return gitRepositoryDescriptor;
+        } catch (Exception e) {
+            LOGGER.error("Error while checking scanning path "+path+": "+e, e);
+            return null;
+        }
     }
 
     static void initGitDescriptor(final GitRepositoryDescriptor gitRepositoryDescriptor, final File file) throws IOException {

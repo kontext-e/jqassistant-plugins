@@ -54,12 +54,17 @@ public class JavaparserScannerPlugin extends AbstractScannerPlugin<FileResource,
     }
 
     @Override
-	public JavaSourceDescriptor scan(final FileResource item, final String path, final Scope scope, final Scanner scanner) throws IOException {
-		final Store store = scanner.getContext().getStore();
-		FileDescriptor fileDescriptor = scanner.getContext().getCurrentDescriptor();
-		final JavaSourceFileDescriptor javaSourceFileDescriptor = store.addDescriptorType(fileDescriptor, JavaSourceFileDescriptor.class);
-        importStream(store, item.createStream(), path);
-        return javaSourceFileDescriptor;
+	public JavaSourceDescriptor scan(final FileResource item, final String path, final Scope scope, final Scanner scanner) {
+        try {
+            final Store store = scanner.getContext().getStore();
+            FileDescriptor fileDescriptor = scanner.getContext().getCurrentDescriptor();
+            final JavaSourceFileDescriptor javaSourceFileDescriptor = store.addDescriptorType(fileDescriptor, JavaSourceFileDescriptor.class);
+            importStream(store, item.createStream(), path);
+            return javaSourceFileDescriptor;
+        } catch (Exception e) {
+            LOGGER.error("Error while checking scanning path "+path+": "+e, e);
+            return null;
+        }
     }
 
     private void importStream(final Store store, final InputStream stream, final String path) {

@@ -39,12 +39,17 @@ public class CppScannerPlugin extends AbstractScannerPlugin<FileResource, CppCla
     }
 
     @Override
-    public CppClangAstDescriptor scan(final FileResource item, final String path, final Scope scope, final Scanner scanner) throws IOException {
-        LOGGER.debug("Cpp scans path "+path);
-        Store store = scanner.getContext().getStore();
-		FileDescriptor fileDescriptor = scanner.getContext().getCurrentDescriptor();
-		final CppClangAstDescriptor cppClangAstDescriptor = store.addDescriptorType(fileDescriptor, CppClangAstDescriptor.class);
-        new CppAstParser().readStream(store, item.createStream());
-        return cppClangAstDescriptor;
+    public CppClangAstDescriptor scan(final FileResource item, final String path, final Scope scope, final Scanner scanner) {
+        try {
+            LOGGER.debug("Cpp scans path "+path);
+            Store store = scanner.getContext().getStore();
+            FileDescriptor fileDescriptor = scanner.getContext().getCurrentDescriptor();
+            final CppClangAstDescriptor cppClangAstDescriptor = store.addDescriptorType(fileDescriptor, CppClangAstDescriptor.class);
+            new CppAstParser().readStream(store, item.createStream());
+            return cppClangAstDescriptor;
+        } catch (Exception e) {
+            LOGGER.error("Error while checking scanning path "+path+": "+e, e);
+            return null;
+        }
     }
 }

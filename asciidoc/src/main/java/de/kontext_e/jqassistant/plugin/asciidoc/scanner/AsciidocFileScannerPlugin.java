@@ -50,15 +50,20 @@ public class AsciidocFileScannerPlugin extends AbstractScannerPlugin<FileResourc
     }
 
     @Override
-    public AsciidocFileDescriptor scan(final FileResource item, final String path, final Scope scope, final Scanner scanner) throws IOException {
-        final Store store = scanner.getContext().getStore();
-		FileDescriptor fileDescriptor = scanner.getContext().getCurrentDescriptor();
-		final AsciidocFileDescriptor asciidocFileDescriptor  = store.addDescriptorType(fileDescriptor, AsciidocFileDescriptor.class);
-        asciidocFileDescriptor.setFileName(path);
+    public AsciidocFileDescriptor scan(final FileResource item, final String path, final Scope scope, final Scanner scanner) {
+        try {
+            final Store store = scanner.getContext().getStore();
+            FileDescriptor fileDescriptor = scanner.getContext().getCurrentDescriptor();
+            final AsciidocFileDescriptor asciidocFileDescriptor  = store.addDescriptorType(fileDescriptor, AsciidocFileDescriptor.class);
+            asciidocFileDescriptor.setFileName(path);
 
-        new AsciidocImporter(item.getFile(), store, 20).importDocument(asciidocFileDescriptor);
+            new AsciidocImporter(item.getFile(), store, 20).importDocument(asciidocFileDescriptor);
 
-        return asciidocFileDescriptor;
+            return asciidocFileDescriptor;
+        } catch (Exception e) {
+            LOGGER.error("Error while checking scanning path "+path+": "+e, e);
+            return null;
+        }
     }
 
     @Override

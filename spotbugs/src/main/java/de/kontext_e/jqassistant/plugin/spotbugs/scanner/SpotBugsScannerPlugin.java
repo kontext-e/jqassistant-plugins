@@ -90,13 +90,18 @@ public class SpotBugsScannerPlugin extends AbstractScannerPlugin<FileResource, S
     }
 
     @Override
-    public SpotBugsReportDescriptor scan(final FileResource file, String path, Scope scope, Scanner scanner) throws IOException {
-        LOGGER.debug(String.format("SpotBugs scans file %s", path));
-        final BugCollectionType bugCollectionType = unmarshalSpotBugsXml(file.createStream());
-		FileDescriptor fileDescriptor = scanner.getContext().getCurrentDescriptor();
-		final SpotBugsReportDescriptor spotBugsReportDescriptor = scanner.getContext().getStore().addDescriptorType(fileDescriptor, SpotBugsReportDescriptor.class);
-        addBugInstancesToFindBugsDescriptor(scanner.getContext().getStore(), bugCollectionType, spotBugsReportDescriptor);
-        return spotBugsReportDescriptor;
+    public SpotBugsReportDescriptor scan(final FileResource file, String path, Scope scope, Scanner scanner) {
+        try {
+            LOGGER.debug(String.format("SpotBugs scans file %s", path));
+            final BugCollectionType bugCollectionType = unmarshalSpotBugsXml(file.createStream());
+            FileDescriptor fileDescriptor = scanner.getContext().getCurrentDescriptor();
+            final SpotBugsReportDescriptor spotBugsReportDescriptor = scanner.getContext().getStore().addDescriptorType(fileDescriptor, SpotBugsReportDescriptor.class);
+            addBugInstancesToFindBugsDescriptor(scanner.getContext().getStore(), bugCollectionType, spotBugsReportDescriptor);
+            return spotBugsReportDescriptor;
+        } catch (Exception e) {
+            LOGGER.error("Error while checking scanning path "+path+": "+e, e);
+            return null;
+        }
     }
 
     protected BugCollectionType unmarshalSpotBugsXml(final InputStream streamSource) throws IOException {

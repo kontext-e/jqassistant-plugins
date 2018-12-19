@@ -49,20 +49,25 @@ public class PlantUmlFileScannerPlugin extends AbstractScannerPlugin<FileResourc
     }
 
     @Override
-    public PlantUmlFileDescriptor scan(final FileResource item, final String path, final Scope scope, final Scanner scanner) throws IOException {
-        final Store store = scanner.getContext().getStore();
-		FileDescriptor fileDescriptor = scanner.getContext().getCurrentDescriptor();
-		final PlantUmlFileDescriptor plantUmlFileDescriptor = store.addDescriptorType(fileDescriptor, PlantUmlFileDescriptor.class);
+    public PlantUmlFileDescriptor scan(final FileResource item, final String path, final Scope scope, final Scanner scanner) {
+        try {
+            final Store store = scanner.getContext().getStore();
+            FileDescriptor fileDescriptor = scanner.getContext().getCurrentDescriptor();
+            final PlantUmlFileDescriptor plantUmlFileDescriptor = store.addDescriptorType(fileDescriptor, PlantUmlFileDescriptor.class);
 
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(item.createStream()))) {
-            final PumlLineParser pumlLineParser = new PumlLineParser(store, plantUmlFileDescriptor, path.endsWith(".puml") ? ParsingState.ACCEPTING : ParsingState.IGNORING);
-            String line;
-            while ((line = reader.readLine()) != null) {
-                pumlLineParser.parseLine(line);
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(item.createStream()))) {
+                final PumlLineParser pumlLineParser = new PumlLineParser(store, plantUmlFileDescriptor, path.endsWith(".puml") ? ParsingState.ACCEPTING : ParsingState.IGNORING);
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    pumlLineParser.parseLine(line);
+                }
             }
-        }
 
-        return plantUmlFileDescriptor;
+            return plantUmlFileDescriptor;
+        } catch (Exception e) {
+            LOGGER.error("Error while checking scanning path "+path+": "+e, e);
+            return null;
+        }
     }
 
     @Override
