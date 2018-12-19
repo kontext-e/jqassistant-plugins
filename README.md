@@ -43,6 +43,10 @@ From master branch. Note: most recent versions from branches may differ.
 Latest Changes
 ==============
 
+Release 1.6.1
+-------------
+* PMD plugin ignores 'file' elements in XML under some circumstances
+
 Release 1.6.0
 -------------
 * Use jQAssistant 1.6
