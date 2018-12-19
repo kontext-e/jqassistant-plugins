@@ -5,7 +5,7 @@ apply plugin: 'com.github.jruby-gradle.base'
 
 project.ext["jqaversion"] = "1.5.0"
 project.group = 'de.kontext-e.jqassistant.plugin'
-project.version = '1.5.0'
+project.version = '1.5.1'
 
 buildscript {
   repositories {
@@ -155,7 +155,12 @@ repositories {
 }
 
 configurations {
-	jqaRuntime
+    jqaRuntime {
+        // newer gradle versions resolve ALL depencencies before build
+        // so on version number changes this version needs to be set once
+        // until new version is in local maven repo installed
+//        project.version = '1.6.0'
+    }
 }
 
 dependencies {
