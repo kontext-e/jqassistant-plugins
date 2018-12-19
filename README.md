@@ -43,10 +43,15 @@ From master branch. Note: most recent versions from branches may differ.
 Latest Changes
 ==============
 
+Release 1.5.1
+-------------
+* PMD plugin ignores 'file' elements in XML under some circumstances
+* Catch errors in path check which could cause 'com.buschmais.xo.api.XOException: There is no existing transaction.'
+
 Release 1.5.0
 -------------
 * Use jQAssistant 1.5
-* #61 PlantUML jar to version 1.2018.11 to be compabible with main distro
+* 61 PlantUML jar to version 1.2018.11 to be compabible with main distro
 * Simplified Checkstyle plugin graph connection to Java graph; configuration property "jqassistant.plugin.checkstyle.basepackage" is obsolete now
 * Own jqa uses Neo4j 3 now
 * use jqa Java plugins 'SignatureHelper' to create the signature string which replaces own dependency to ASM by dependency to jqa Java plugin; should be more robust and create less trouble
@@ -60,7 +65,7 @@ Release 1.4.1
 * AsciiDoc plugin: new rownumber property for :Row nodes
 * AsciiDoc plugin: new relation OF_COLUMN from Cell nodes to the column they belong to
 * Experimental JavaParser plugin: #58 replaced deprecated GraphDatabaseService by Cypher queries
-* #59 Plugins shall migrate existing file nodes instead of creating new ones
+* 59 Plugins shall migrate existing file nodes instead of creating new ones
 
 Release 1.4.0
 -------------
@@ -69,19 +74,19 @@ Release 1.4.0
 
 Release 1.3.3
 -------------
-* #52 git plugin: protect against multiple scans of the same repo
-* #53 PlantUML: scan sequence diagrams
-* #54 Try javaparser project to scan also Java sources
-* #55 Asciidoc plugin: import also attributes on tables, sections, and lists
-* #56 Asciidoc: document an example for defining labels for types matched by regular expressions in tables; see [issue 56](https://github.com/kontext-e/jqassistant-plugins/issues/56)
-* #57 PlantUML: Add stereotype property
+* 52 git plugin: protect against multiple scans of the same repo
+* 53 PlantUML: scan sequence diagrams
+* 54 Try javaparser project to scan also Java sources
+* 55 Asciidoc plugin: import also attributes on tables, sections, and lists
+* 56 Asciidoc: document an example for defining labels for types matched by regular expressions in tables; see [issue 56](https://github.com/kontext-e/jqassistant-plugins/issues/56)
+* 57 PlantUML: Add stereotype property
 
 Release 1.3.2
 -------------
-* #46 Git Plugin: enhanced the graph of a git repository
-* #47 guarded item.getFile() by path.endsWith("/HEAD") to speed up scanning
-* #48 For contributors: raised language level to 1.8
-* #49 Git Plugin: Add also properties committer, shortMessage, and encoding to GitCommit
+* 46 Git Plugin: enhanced the graph of a git repository
+* 47 guarded item.getFile() by path.endsWith("/HEAD") to speed up scanning
+* 48 For contributors: raised language level to 1.8
+* 49 Git Plugin: Add also properties committer, shortMessage, and encoding to GitCommit
 
 Release 1.3.1
 -------------
