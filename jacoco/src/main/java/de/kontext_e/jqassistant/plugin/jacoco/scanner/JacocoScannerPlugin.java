@@ -72,12 +72,20 @@ public class JacocoScannerPlugin extends AbstractScannerPlugin<FileResource,Jaco
     }
 
     @Override
-    public boolean accepts(final FileResource item, String path, Scope scope) throws IOException {
-        boolean accepted = path.endsWith(jacocoFileName) || (jacocoDirName.equalsIgnoreCase(item.getFile().toPath().getParent().toFile().getName()) && path.endsWith(".xml"));
-        if(accepted) {
-            LOGGER.debug("Jacoco plugin accepted "+path);
+    public boolean accepts(final FileResource item, String path, Scope scope) {
+        try {
+            boolean accepted = path.endsWith(jacocoFileName) || (jacocoDirName.equalsIgnoreCase(item.getFile().toPath().getParent().toFile().getName()) && path.endsWith(".xml"));
+            if(accepted) {
+                LOGGER.debug("Jacoco plugin accepted "+path);
+            }
+            return accepted;
+        } catch (NullPointerException e) {
+            // could do a lengthy null check at beginning or do it the short dirty way
+            return false;
+        } catch (Exception e) {
+            LOGGER.error("Error while checking path: "+e, e);
+            return false;
         }
-        return accepted;
     }
 
     @Override
