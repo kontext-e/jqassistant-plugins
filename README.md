@@ -43,6 +43,11 @@ From master branch. Note: most recent versions from branches may differ.
 Latest Changes
 ==============
 
+Release 1.4.2
+-------------
+* PMD plugin ignores 'file' elements in XML under some circumstances
+* Catch errors in path check which could cause 'com.buschmais.xo.api.XOException: There is no existing transaction.'
+
 Release 1.4.1
 -------------
 * FindBugs plugin also reads new SpotBugs format (tested with SpotBugs 3.1.3)
