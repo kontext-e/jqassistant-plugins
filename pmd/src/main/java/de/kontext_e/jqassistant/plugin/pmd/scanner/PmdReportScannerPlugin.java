@@ -78,7 +78,6 @@ public class PmdReportScannerPlugin extends AbstractScannerPlugin<FileResource, 
     @Override
     public PmdReportDescriptor scan(final FileResource file, String path, Scope scope, Scanner scanner) {
         try {
-            LOGGER.info("PMD scans path "+path);
             FileDescriptor fileDescriptor = scanner.getContext().getCurrentDescriptor();
             final PmdReportDescriptor pmdReportDescriptor = scanner.getContext().getStore().addDescriptorType(fileDescriptor, PmdReportDescriptor.class);
 
@@ -139,7 +138,6 @@ public class PmdReportScannerPlugin extends AbstractScannerPlugin<FileResource, 
                 pmdFileDescriptor.setName(node.getNodeValue());
             }
         });
-        LOGGER.info("PMD scanning file node "+pmdFileDescriptor.getName());
         visitNode(fileNode, node -> importViolationNode(node, store, pmdFileDescriptor));
     }
 
