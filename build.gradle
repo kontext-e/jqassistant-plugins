@@ -178,7 +178,7 @@ configurations {
 
 dependencies {
     jqaRuntime("com.buschmais.jqassistant.cli:jqassistant-commandline-neo4jv3:${project.jqaversion}") {
-        exclude module: 'neo4j'
+        exclude module: 'asm'
     }
     jqaRuntime("com.buschmais.jqassistant.plugin:common:${project.jqaversion}")
     jqaRuntime("com.buschmais.jqassistant.plugin:java:${project.jqaversion}")
@@ -221,23 +221,21 @@ task(jqascan, dependsOn: 'removeJQAReport', type: JavaExec) {
     args '-f'
 
     rootProject.subprojects {
-        args 'java:classpath::' + it.name + '/build/classes/main'
-        args 'java:classpath::' + it.name + '/build/classes/test'
+        args 'java:classpath::' + it.name + '/build/classes/java/main'
+        args 'java:classpath::' + it.name + '/build/classes/java/test'
         args it.name + '/build/reports'
         args it.name + '/src/main'
         args it.name + '/src/test'
     }
 
+    args '.git'
+    args 'doc/architecture'
+    
     args 'plantuml/src/test/asciidoc'
     args 'plantuml/src/test/plantuml'
-    args '.git'
-
     args 'asciidoc/src/test/asciidoc'
     args 'plaintext/src/test/testfiles'
     args 'javaparser/src/test'
-
-    //args 'cpp/src/test/ast'
-    //args 'privatetestdata'
 }
 
 task(jqaanalyze, type: JavaExec) {
@@ -253,7 +251,6 @@ task(jqaanalyze, type: JavaExec) {
 
     args 'analyze'
     args '-r'
-//  args 'doc/architecture'
     args 'jqassistant/jqassistant-rules'
 }
 
