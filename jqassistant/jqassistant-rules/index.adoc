@@ -101,13 +101,13 @@ This query works with the old FindBugs file format which the Gradle plugin produ
 [source,cypher,role=constraint]
 ----
     MATCH
-        (f:Pmd:File)-->(v:Pmd:Violation)
+        (f:Pmd:File)-[:HAS_VIOLATION]->(v:Pmd:Violation)
     WHERE
         v.priority=1 or v.priority=2
     RETURN
         f.fqn, v.className, v.method, v.variable, v.rule, v.priority, v.message
     SKIP
-      46
+      56
 ----
 
 
