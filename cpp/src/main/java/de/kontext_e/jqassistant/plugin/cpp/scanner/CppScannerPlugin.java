@@ -23,11 +23,19 @@ public class CppScannerPlugin extends AbstractScannerPlugin<FileResource, CppCla
 
     @Override
     public boolean accepts(final FileResource item, final String path, final Scope scope) throws IOException {
-        boolean accepted = path.endsWith(".ast");
-        if(accepted) {
-            LOGGER.info("Accepted "+path);
+        try {
+            boolean accepted = path.endsWith(".ast");
+            if(accepted) {
+                LOGGER.info("Accepted "+path);
+            }
+            return accepted;
+        } catch (NullPointerException e) {
+            // could do a lengthy null check at beginning or do it the short dirty way
+            return false;
+        } catch (Exception e) {
+            LOGGER.error("Error while checking path: "+e, e);
+            return false;
         }
-        return accepted;
     }
 
     @Override

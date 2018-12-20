@@ -26,31 +26,44 @@ public class AsciidocFileScannerPlugin extends AbstractScannerPlugin<FileResourc
 
     @Override
     public boolean accepts(final FileResource item, final String path, final Scope scope) throws IOException {
-        int beginIndex = path.lastIndexOf(".");
-        if(beginIndex > 0) {
-            final String suffix = path.substring(beginIndex + 1).toLowerCase();
+        try {
+            int beginIndex = path.lastIndexOf(".");
+            if(beginIndex > 0) {
+                final String suffix = path.substring(beginIndex + 1).toLowerCase();
 
-            boolean accepted = suffixes.contains(suffix);
-            if(accepted) {
-                LOGGER.info("Asciidoc accepted path "+path);
+                boolean accepted = suffixes.contains(suffix);
+                if(accepted) {
+                    LOGGER.info("Asciidoc accepted path "+path);
+                }
+
+                return accepted;
             }
 
-            return accepted;
+            return false;
+        } catch (NullPointerException e) {
+            // could do a lengthy null check at beginning or do it the short dirty way
+            return false;
+        } catch (Exception e) {
+            LOGGER.error("Error while checking path: "+e, e);
+            return false;
         }
-
-        return false;
     }
 
     @Override
     public AsciidocFileDescriptor scan(final FileResource item, final String path, final Scope scope, final Scanner scanner) throws IOException {
-        final Store store = scanner.getContext().getStore();
-		FileDescriptor fileDescriptor = scanner.getContext().getCurrentDescriptor();
-		final AsciidocFileDescriptor asciidocFileDescriptor  = store.addDescriptorType(fileDescriptor, AsciidocFileDescriptor.class);
-        asciidocFileDescriptor.setFileName(path);
+        try {
+            final Store store = scanner.getContext().getStore();
+            FileDescriptor fileDescriptor = scanner.getContext().getCurrentDescriptor();
+            final AsciidocFileDescriptor asciidocFileDescriptor  = store.addDescriptorType(fileDescriptor, AsciidocFileDescriptor.class);
+            asciidocFileDescriptor.setFileName(path);
 
-        new AsciidocImporter(item.getFile(), store, 20).importDocument(asciidocFileDescriptor);
+            new AsciidocImporter(item.getFile(), store, 20).importDocument(asciidocFileDescriptor);
 
-        return asciidocFileDescriptor;
+            return asciidocFileDescriptor;
+        } catch (IOException e) {
+            LOGGER.error("Error while checking scanning path "+path+": "+e, e);
+            return null;
+        }
     }
 
     @Override
