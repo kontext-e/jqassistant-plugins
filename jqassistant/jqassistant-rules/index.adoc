@@ -6,17 +6,17 @@ The default rule conflicts with default.xml, so only one of both may be active.
 The following constraints apply for modules:
 
 [[default]]
-[role=group,includesConstraints="debug:rule(info),metrics:*",includesConcepts="structure:*"]
+[role=group,includesGroups="jccc:Default",includesConstraints="debug:rule(info),metrics:*",includesConcepts="structure:*"]
 - <<debug:rule>>
 - <<package:PackageLevel>>
 - <<dependency:TransitivePackageDependencies>>
 - <<dependency:WrongDirection>>
 - <<structure:MarkAsciidocTypeRegex>>
 - <<structure:LabelTypesMatchedByRegex>>
-- <<spotbugs:MaxSpotBugsWarnings>>
-- <<checkstyle:MaxErrors>>
-- <<checkstyle:MaxWarnings>>
-- <<pmd:MaxWarnings>>
+- <<metrics:MaxSpotBugsWarnings>>
+- <<metrics:MaxCheckstyleErrors>>
+- <<metrics:MaxCheckstyleWarnings>>
+- <<metrics:MaxPmdWarnings>>
 
 [[debug:rule]]
 .For testing and debugging purposes.
