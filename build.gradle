@@ -198,6 +198,8 @@ dependencies {
 
     jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.jccc:1.0-SNAPSHOT")
 
+    jqaRuntime ('org.asciidoctor:asciidoctorj:1.6.0')
+
     gems 'rubygems:asciidoctor-diagram:1.2.1'
 }
 

@@ -4,6 +4,8 @@
     <model>
         <class>de.kontext_e.jqassistant.plugin.asciidoc.store.descriptor.AsciidocAttribute</class>
         <class>de.kontext_e.jqassistant.plugin.asciidoc.store.descriptor.AsciidocDescriptor</class>
+        <class>de.kontext_e.jqassistant.plugin.asciidoc.store.descriptor.AsciidocDescriptionListDescriptor</class>
+        <class>de.kontext_e.jqassistant.plugin.asciidoc.store.descriptor.AsciidocDescriptionListEntryDescriptor</class>
         <class>de.kontext_e.jqassistant.plugin.asciidoc.store.descriptor.AsciidocFileDescriptor</class>
         <class>de.kontext_e.jqassistant.plugin.asciidoc.store.descriptor.AsciidocBlockDescriptor</class>
         <class>de.kontext_e.jqassistant.plugin.asciidoc.store.descriptor.AsciidocTableDescriptor</class>

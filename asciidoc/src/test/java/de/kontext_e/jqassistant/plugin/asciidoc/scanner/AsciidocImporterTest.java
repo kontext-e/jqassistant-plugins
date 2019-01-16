@@ -59,7 +59,8 @@ public class AsciidocImporterTest {
         when(mockTableDescriptor.getAttributes()).thenReturn(new HashSet<>());
 		List<AsciidocTableColumnDescriptor> columns = new ArrayList<>();
 		when(mockTableDescriptor.getAsciidocTableColumns()).thenReturn(columns);
-        asciidocImporter.scanBlocks(document.blocks(), mockBlockContainer);
+
+        asciidocImporter.scanBlocks(document.getBlocks(), mockBlockContainer);
 
         verify(mockAsciidocTableCellDescriptor).setText("Package");
         verify(mockAsciidocTableCellDescriptor).setText("Purpose");

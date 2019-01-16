@@ -5,6 +5,8 @@ jar {
 }
 
 dependencies {
+    compile ('org.asciidoctor:asciidoctorj:1.6.0')
+
 /*
 dont declare own dependencies here
 because jQA also comes with Asciidoc
