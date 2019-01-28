@@ -5,7 +5,7 @@ jar {
 }
 
 dependencies {
-    compile ('org.asciidoctor:asciidoctorj:1.6.0')
+    compile ('org.asciidoctor:asciidoctorj:1.6.1')
 
 /*
 dont declare own dependencies here
