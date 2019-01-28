@@ -16,4 +16,8 @@ public interface AsciidocListItemDescriptor extends AsciidocBlockDescriptor {
     @Property("hasText")
     void setHasText(Boolean hasText);
     Boolean getHasText();
+
+    @Property("source")
+    void setSource(String source);
+    String getSource();
 }
