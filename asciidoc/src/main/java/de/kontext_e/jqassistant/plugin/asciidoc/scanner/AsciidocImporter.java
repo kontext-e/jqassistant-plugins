@@ -33,13 +33,10 @@ class AsciidocImporter {
     }
 
     void scanBlocks(List<StructuralNode> blocks, BlockContainer blockContainer) {
-        // in asciidoctor 1.6.0 this can be NULL
+        // FIXME in asciidoctor 1.6.0 this can be NULL
         if(blocks == null) return;
 
         for (StructuralNode block: blocks) {
-            // FIXME: check if still true ListItem is reported twice: as first class and as part of ListNode
-            if (block instanceof ListItem) continue;
-
             try {
                 AsciidocBlockDescriptor blockDescriptor = scanOneBlock(block);
                 blockContainer.getAsciidocBlocks().add(blockDescriptor);
@@ -55,7 +52,7 @@ class AsciidocImporter {
         if(block instanceof Table) {
             blockDescriptor = scanTableBlock((Table) block);
         } else if(block instanceof org.asciidoctor.ast.List) {
-            blockDescriptor = scanListBlock((org.asciidoctor.ast.List) block); // not happy with FQN
+            blockDescriptor = scanListBlock((org.asciidoctor.ast.List) block); // FIXME not happy with FQN
         } else if(block instanceof ListItem) {
             blockDescriptor = scanListItemBlock((ListItem) block);
         } else if(block instanceof DescriptionList) {
@@ -68,7 +65,7 @@ class AsciidocImporter {
             blockDescriptor = store.create(AsciidocBlockDescriptor.class);
         } else {
             LOGGER.warn(" -------------------------> Unhandled case for "+block.getClass().getName());
-            LOGGER.warn("Assume Block");
+            LOGGER.warn("Assume Generic Block");
             blockDescriptor = store.create(AsciidocBlockDescriptor.class);
         }
 
@@ -97,7 +94,6 @@ class AsciidocImporter {
     }
 
     private AsciidocBlockDescriptor scanDescriptionListBlock(final DescriptionList list) {
-        LOGGER.info(" ++++++++++++++++++++++++++ scan DescriptionList "+list);
         final AsciidocDescriptionListDescriptor listDescriptor = store.create(AsciidocDescriptionListDescriptor.class);
         for (DescriptionListEntry abstractBlock: list.getItems()) {
             listDescriptor.getListItems().add(scanDescriptionListEntryBlock(abstractBlock));
@@ -109,7 +105,6 @@ class AsciidocImporter {
     }
 
     private AsciidocDescriptionListEntryDescriptor scanDescriptionListEntryBlock(final DescriptionListEntry listEntry) {
-        LOGGER.info(" ++++++++++++++++++++++++++ scan DescriptionListEntry "+listEntry);
         final AsciidocDescriptionListEntryDescriptor listEntryDescriptor = store.create(AsciidocDescriptionListEntryDescriptor.class);
         for (ListItem abstractBlock: listEntry.getTerms()) {
             listEntryDescriptor.getListItems().add(scanListItemBlock(abstractBlock));
@@ -140,9 +135,8 @@ class AsciidocImporter {
 
         addAttributes(tableDescriptor, table.getAttributes());
 
-        int colnumber = 0;
         for (Column column : table.getColumns()) {
-            tableDescriptor.getAsciidocTableColumns().add(scanTableColumn(column, colnumber++));
+            tableDescriptor.getAsciidocTableColumns().add(scanTableColumn(column));
         }
 
         int rownumber = 0;
@@ -175,21 +169,11 @@ class AsciidocImporter {
         });
     }
 
-    private AsciidocTableColumnDescriptor scanTableColumn(final Column column, final int colnumber) {
+    private AsciidocTableColumnDescriptor scanTableColumn(final Column column) {
         final AsciidocTableColumnDescriptor columnDescriptor = store.create(AsciidocTableColumnDescriptor.class);
         columnDescriptor.setColnumber(column.getColumnNumber());
         addCommonProperties(column, columnDescriptor);
         return columnDescriptor;
-    }
-
-    private void setCommonBlockProperties(final StructuralNode block, final AsciidocBlockDescriptor blockDescriptor) {
-        blockDescriptor.setContext(block.getContext());
-        blockDescriptor.setLevel(block.getLevel());
-        blockDescriptor.setRole(block.getRole());
-        blockDescriptor.setStyle(block.getStyle());
-        blockDescriptor.setTitle(block.getTitle());
-        blockDescriptor.setReftext(block.getReftext());
-        addCommonProperties(block, blockDescriptor);
     }
 
     private AsciidocTableRowDescriptor scanTableRow(final Row row, final int rownumber, final List<AsciidocTableColumnDescriptor> columns) {
@@ -202,20 +186,29 @@ class AsciidocImporter {
             cellDescriptor.setText(cell.getText());
 			cellDescriptor.setColumn(columns.get(colNumber));
             cellDescriptor.setColnumber(cell.getColumn().getColumnNumber());
+            cellDescriptor.setRownumber(rownumber);
 
             addCommonProperties(cell, cellDescriptor);
         }
         return rowDescriptor;
     }
 
+    private void setCommonBlockProperties(final StructuralNode block, final AsciidocBlockDescriptor blockDescriptor) {
+        blockDescriptor.setTitle(block.getTitle());
+        blockDescriptor.setCaption(block.getCaption());
+        blockDescriptor.setStyle(block.getStyle());
+        blockDescriptor.setLevel(block.getLevel());
+        blockDescriptor.setContext(block.getContext());
+        blockDescriptor.setRole(block.getRole());
+        blockDescriptor.setReftext(block.getReftext());
+        addCommonProperties(block, blockDescriptor);
+    }
+
     private void addCommonProperties(final StructuralNode abstractNode, final AsciidocCommonProperties descriptor) {
-        descriptor.setContext(abstractNode.getContext());
-        descriptor.setReftext(abstractNode.getReftext());
-        descriptor.setRole(abstractNode.getRole());
+        addCommonProperties((ContentNode)abstractNode, descriptor);
         descriptor.setStyle(abstractNode.getStyle());
     }
 
-    // why ContentNode when there are common properties??
     private void addCommonProperties(final ContentNode abstractNode, final AsciidocCommonProperties descriptor) {
         descriptor.setContext(abstractNode.getContext());
         descriptor.setReftext(abstractNode.getReftext());
