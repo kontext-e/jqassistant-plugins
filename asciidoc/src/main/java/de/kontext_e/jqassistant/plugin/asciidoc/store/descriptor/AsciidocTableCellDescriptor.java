@@ -18,4 +18,8 @@ public interface AsciidocTableCellDescriptor extends AsciidocDescriptor, Asciido
     @Property("colnumber")
     void setColnumber(Integer colnumber);
     Integer getColnumber();
+
+    @Property("rownumber")
+    void setRownumber(Integer rownumber);
+    Integer getRownumber();
 }
