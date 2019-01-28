@@ -30,4 +30,7 @@ public interface AsciidocBlockDescriptor extends AsciidocDescriptor, BlockContai
     void setLevel(Integer level);
     Integer getLevel();
 
+    @Property("caption")
+    void setCaption(String caption);
+    String getCaption();
 }
