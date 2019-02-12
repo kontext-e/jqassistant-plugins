@@ -127,10 +127,10 @@ class PumlLineParser {
             diagramDescriptor.setNamespaceSeparator(namespaceSeparator);
 
             final Collection<IGroup> groups = descriptionDiagram.getRootGroup().getChildren();
-            addGroups(diagramDescriptor, groups, null);
+            addGroups(diagramDescriptor, groups, diagramDescriptor);
 
             final Collection<ILeaf> leafsvalues = descriptionDiagram.getRootGroup().getLeafsDirect();
-            addLeafs(leafsvalues, null);
+            addLeafs(leafsvalues, diagramDescriptor);
 
             final List<Link> links = descriptionDiagram.getLinks();
             addLinks(links);

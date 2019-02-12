@@ -1,12 +1,15 @@
 package de.kontext_e.jqassistant.plugin.plantuml.scanner;
 
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
 
 import com.buschmais.jqassistant.core.store.api.Store;
 import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlClassDiagramDescriptor;
 import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlDescriptionDiagramDescriptor;
+import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlElement;
 import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlFileDescriptor;
 import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlLeafDescriptor;
 import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlPackageDescriptor;
@@ -15,6 +18,7 @@ import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlSequenc
 import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlSequenceDiagramMessageDescriptor;
 import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlStateDiagramDescriptor;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -249,10 +253,10 @@ public class PumlLineParserTest {
                                         "\n" +
                                         "[\"plantuml\",\"MainBuildingBlocks\",\"png\"]\n" +
                                         "-----\n" +
-                                        "component Domain\n" +
-                                        "component [JSF UI]\n" +
+                                        "component Backend\n" +
+                                        "component [Some UI]\n" +
                                         "\n" +
-                                        "[JSF UI] --> Domain\n" +
+                                        "[Some UI] --> Backend\n" +
                                         "-----\n" +
                                         "\n" +
                                         "Comments regarding structure and interdependencies at Level 1:\n")
@@ -263,6 +267,8 @@ public class PumlLineParserTest {
         when(mockStore.create(PlantUmlDescriptionDiagramDescriptor.class)).thenReturn(mockDescriptionDiagramDescriptor);
         final PlantUmlLeafDescriptor mockPlantUmlLeafDescriptor = mock(PlantUmlLeafDescriptor.class);
         when(mockStore.create(PlantUmlLeafDescriptor.class)).thenReturn(mockPlantUmlLeafDescriptor);
+        final Set<PlantUmlElement> leafs = new HashSet<>();
+        when(mockDescriptionDiagramDescriptor.getLeafs()).thenReturn(leafs);
 
         Arrays.stream(lines).forEach(line -> pumlLineParser.parseLine(line));
 
@@ -270,8 +276,11 @@ public class PumlLineParserTest {
         verify(mockStore).create(PlantUmlDescriptionDiagramDescriptor.class);
         verify(mockStore, times(2)).create(PlantUmlLeafDescriptor.class);
         verify(mockPlantUmlLeafDescriptor, times(2)).setType("DESCRIPTION");
-        verify(mockPlantUmlLeafDescriptor, times(1)).setFullName("domain");
-        verify(mockPlantUmlLeafDescriptor, times(1)).setFullName("jsf ui");
+        verify(mockPlantUmlLeafDescriptor, times(1)).setFullName("backend");
+        verify(mockPlantUmlLeafDescriptor, times(1)).setFullName("some ui");
         verify(mockPlantUmlLeafDescriptor, times(1)).getLinkTargets();
+        // mock returns two times the same other mock
+        // so only one entry is in the map
+        assertEquals(1, leafs.size());
     }
 }
