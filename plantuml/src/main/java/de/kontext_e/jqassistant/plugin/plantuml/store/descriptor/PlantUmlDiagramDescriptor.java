@@ -8,7 +8,7 @@ import com.buschmais.xo.neo4j.api.annotation.Property;
 import com.buschmais.xo.neo4j.api.annotation.Relation;
 
 @Label("Diagram")
-public interface PlantUmlDiagramDescriptor extends PlantUmlDescriptor {
+public interface PlantUmlDiagramDescriptor extends PlantUmlDescriptor, PlantUmlGroupDescriptor {
     @Property("type")
     void setType(String type);
     String getType();

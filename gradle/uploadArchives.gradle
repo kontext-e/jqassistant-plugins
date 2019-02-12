@@ -12,13 +12,16 @@ if(this.hasProperty('sonatypeUsername')) {
       mavenDeployer {
         beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
-        // releases
-        repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-          authentication(userName: sonatypeUsername, password: sonatypePassword)
-        }
-        // snapshots
-        repository(url: "https://oss.sonatype.org/content/repositories/snapshots") {
+        if(this.getProperty("version").contains("SNAPSHOT")) {
+          // snapshots
+          repository(url: "https://oss.sonatype.org/content/repositories/snapshots") {
             authentication(userName: sonatypeUsername, password: sonatypePassword)
+          }
+        } else {
+          // releases
+          repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+            authentication(userName: sonatypeUsername, password: sonatypePassword)
+          }
         }
         
         pom.project {
