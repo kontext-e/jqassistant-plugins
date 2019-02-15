@@ -46,7 +46,8 @@ Latest Changes
 Upcoming Release
 ----------------
 * Use jQAssistant 1.7
-
+* added a plantuml constraint plantuml:WrongDirection that checks packages with package diagrams
+* more properties in PlantUML nodes
 
 Release 1.6.0
 -------------
