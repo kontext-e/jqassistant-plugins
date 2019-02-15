@@ -283,4 +283,75 @@ public class PumlLineParserTest {
         // so only one entry is in the map
         assertEquals(1, leafs.size());
     }
+
+    @Test
+    public void thatEmbeddedPlantUMLInAsciidocIsRead3() {
+        String[] lines = ("The Backend is structured with Domain Components in the first level. Could look like this:\n" +
+                          "\n" +
+                          "[\"plantuml\",\"Backend\",\"png\"]\n" +
+                          "-----\n" +
+                          "!include puml.style\n" +
+                          "!define FOR table_id\n" +
+                          "title Backend\n" +
+                          "\n" +
+                          "component customer <<Business>><<com.example.application.customer>> [\n" +
+                          "    componentName(Customer)\n" +
+                          "\n" +
+                          "    com.example.application.customer\n" +
+                          "]\n" +
+                          "note left: com.example.application.customer\n" +
+                          "\n" +
+                          "component com.example.application.project <<Business>> [\n" +
+                          "    componentName(Project)\n" +
+                          "]\n" +
+                          "com.example.application.project --> customer : DEPENDS_ON\n" +
+                          "\n" +
+                          "header\n" +
+                          "<font color=red>Warning:</font>\n" +
+                          "Do not use in production.\n" +
+                          "endheader\n" +
+                          "\n" +
+                          "center footer Generated for demonstration\n" +
+                          "\n" +
+                          "caption figure 1\n" +
+                          "\n" +
+                          "legend right\n" +
+                          "    | Element | Description | Package |\n" +
+                          "    |customer| Customer represents... | com.example.application.customer |\n" +
+                          "    |project| Project represents... | com.example.application.project |\n" +
+                          "endlegend" +
+                          "\n" +
+                          "-----\n" +
+                          "\n")
+                .split("\\n");
+        pumlLineParser = new PumlLineParser(mockStore, plantUmlFileDescriptor, ParsingState.IGNORING);
+
+        final PlantUmlClassDiagramDescriptor mockDescriptionDiagramDescriptor = mock(PlantUmlClassDiagramDescriptor.class);
+        when(mockStore.create(PlantUmlClassDiagramDescriptor.class)).thenReturn(mockDescriptionDiagramDescriptor);
+        final PlantUmlLeafDescriptor mockPlantUmlLeafDescriptor = mock(PlantUmlLeafDescriptor.class);
+        when(mockStore.create(PlantUmlLeafDescriptor.class)).thenReturn(mockPlantUmlLeafDescriptor);
+        final Set<PlantUmlElement> leafs = new HashSet<>();
+        when(mockDescriptionDiagramDescriptor.getLeafs()).thenReturn(leafs);
+
+        Arrays.stream(lines).forEach(line -> pumlLineParser.parseLine(line));
+
+
+        verify(mockStore).create(PlantUmlClassDiagramDescriptor.class);
+        verify(mockStore, times(3)).create(PlantUmlLeafDescriptor.class);
+        verify(mockDescriptionDiagramDescriptor).setTitle("backend");
+        verify(mockDescriptionDiagramDescriptor).setCaption("figure 1");
+        verify(mockDescriptionDiagramDescriptor).setLegend("| element | description | package ||customer| customer represents... | com.example.application.customer ||project| project represents... | com.example.application.project |");
+        verify(mockPlantUmlLeafDescriptor, times(2)).setType("DESCRIPTION");
+        verify(mockPlantUmlLeafDescriptor, times(1)).setFullName("customer");
+        verify(mockPlantUmlLeafDescriptor, times(1)).setFullName("GMN3");
+        verify(mockPlantUmlLeafDescriptor, times(1)).setFullName("com.example.application.project");
+        verify(mockPlantUmlLeafDescriptor, times(1)).setDescription("componentname(customer)\n" +
+                                                                    "\n" +
+                                                                    "com.example.application.customer\n");
+        verify(mockPlantUmlLeafDescriptor, times(2)).getLinkTargets();
+        // mock returns two times the same other mock
+        // so only one entry is in the map
+        assertEquals(1, leafs.size());
+    }
+
 }
