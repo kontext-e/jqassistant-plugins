@@ -1,4 +1,19 @@
 <jqa:jqassistant-rules xmlns:jqa="http://www.buschmais.com/jqassistant/core/analysis/rules/schema/v1.0">
 
+    <constraint id="plantuml:WrongDirection">
+        <requiresConcept refId="dependency:Package" />
+        <description>Finds package dependencies which are in the wrong direction according to the diagram.</description>
+        <cypher><![CDATA[
+            MATCH
+                (p1:PlantUml:Package)-[:MAY_DEPEND_ON]->(p2:PlantUml:Package),
+                (p3:Java:Package)-[:DEPENDS_ON]->(p4:Java:Package)
+            WHERE
+                p1.fullName = p4.fqn
+                AND p2.fullName = p3.fqn
+            RETURN
+                p3.fqn + "  -->  " + p4.fqn AS WrongDirection
+        ]]></cypher>
+    </constraint>
+
 
 </jqa:jqassistant-rules>
