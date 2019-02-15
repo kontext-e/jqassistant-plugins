@@ -1,6 +1,5 @@
 package de.kontext_e.jqassistant.plugin.plantuml.scanner;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import org.junit.Before;
@@ -18,6 +17,7 @@ import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlSequenc
 import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlSequenceDiagramMessageDescriptor;
 import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlStateDiagramDescriptor;
 
+import static java.util.Arrays.stream;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -32,6 +32,35 @@ public class PumlLineParserTest {
     @Before
     public void setUp() {
         pumlLineParser = new PumlLineParser(mockStore, plantUmlFileDescriptor, ParsingState.ACCEPTING);
+    }
+
+    @Test
+    public void thatSimplePackagePumlFileIsRead() {
+        final String puml = "@startuml\n" +
+                            "\n" +
+                            "package de.kontext_e.packages.a {}\n" +
+                            "package de.kontext_e.packages.b {}\n" +
+                            "\n" +
+                            "de.kontext_e.packages.a <--- de.kontext_e.packages.b\n" +
+                            "\n" +
+                            "@enduml\n";
+
+        String[] lines = puml.split("\\n");
+        pumlLineParser = new PumlLineParser(mockStore, plantUmlFileDescriptor, ParsingState.ACCEPTING);
+
+        final PlantUmlClassDiagramDescriptor mockPlantUmlClassDiagramDescriptor = mock(PlantUmlClassDiagramDescriptor.class);
+        when(mockStore.create(PlantUmlClassDiagramDescriptor.class)).thenReturn(mockPlantUmlClassDiagramDescriptor);
+        final PlantUmlPackageDescriptor mockPackageDescriptor = mock(PlantUmlPackageDescriptor.class);
+        when(mockStore.create(PlantUmlPackageDescriptor.class)).thenReturn(mockPackageDescriptor);
+
+        stream(lines).forEach(line -> pumlLineParser.parseLine(line));
+
+        verify(mockStore).create(PlantUmlClassDiagramDescriptor.class);
+        verify(mockStore, times(2)).create(PlantUmlPackageDescriptor.class);
+        verify(mockPlantUmlClassDiagramDescriptor).setType("CLASSDIAGRAM");
+        verify(mockPackageDescriptor).setFullName("de.kontext_e.packages.a");
+        verify(mockPackageDescriptor).setFullName("de.kontext_e.packages.b");
+        verify(mockPackageDescriptor, times(1)).getLinkTargets();
     }
 
     @Test
@@ -270,7 +299,7 @@ public class PumlLineParserTest {
         final Set<PlantUmlElement> leafs = new HashSet<>();
         when(mockDescriptionDiagramDescriptor.getLeafs()).thenReturn(leafs);
 
-        Arrays.stream(lines).forEach(line -> pumlLineParser.parseLine(line));
+        stream(lines).forEach(line -> pumlLineParser.parseLine(line));
 
 
         verify(mockStore).create(PlantUmlDescriptionDiagramDescriptor.class);
@@ -333,7 +362,7 @@ public class PumlLineParserTest {
         final Set<PlantUmlElement> leafs = new HashSet<>();
         when(mockDescriptionDiagramDescriptor.getLeafs()).thenReturn(leafs);
 
-        Arrays.stream(lines).forEach(line -> pumlLineParser.parseLine(line));
+        stream(lines).forEach(line -> pumlLineParser.parseLine(line));
 
 
         verify(mockStore).create(PlantUmlClassDiagramDescriptor.class);
