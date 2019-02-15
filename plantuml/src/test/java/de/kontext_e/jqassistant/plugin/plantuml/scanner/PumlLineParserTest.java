@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import com.buschmais.jqassistant.core.store.api.Store;
 import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlClassDiagramDescriptor;
@@ -372,7 +373,7 @@ public class PumlLineParserTest {
         verify(mockDescriptionDiagramDescriptor).setLegend("| element | description | package ||customer| customer represents... | com.example.application.customer ||project| project represents... | com.example.application.project |");
         verify(mockPlantUmlLeafDescriptor, times(2)).setType("DESCRIPTION");
         verify(mockPlantUmlLeafDescriptor, times(1)).setFullName("customer");
-        verify(mockPlantUmlLeafDescriptor, times(1)).setFullName("GMN3");
+        verify(mockPlantUmlLeafDescriptor, times(1)).setFullName(Mockito.startsWith("GMN"));
         verify(mockPlantUmlLeafDescriptor, times(1)).setFullName("com.example.application.project");
         verify(mockPlantUmlLeafDescriptor, times(1)).setDescription("componentname(customer)\n" +
                                                                     "\n" +

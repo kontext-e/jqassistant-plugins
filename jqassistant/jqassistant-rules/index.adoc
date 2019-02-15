@@ -6,7 +6,7 @@ The default rule conflicts with default.xml, so only one of both may be active.
 The following constraints apply for modules:
 
 [[default]]
-[role=group,includesGroups="jccc:Default",includesConstraints="debug:rule(info),metrics:*",includesConcepts="structure:*"]
+[role=group,includesConstraints="debug:rule(info),metrics:*",includesConcepts="structure:*"]
 - <<debug:rule>>
 - <<package:PackageLevel>>
 - <<dependency:TransitivePackageDependencies>>
