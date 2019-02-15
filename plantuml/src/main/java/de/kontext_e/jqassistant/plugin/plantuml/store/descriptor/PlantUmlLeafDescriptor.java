@@ -13,4 +13,8 @@ public interface PlantUmlLeafDescriptor extends PlantUmlDescriptor, PlantUmlElem
     @Property("stereotype")
     void setStereotype(String stereotype);
     String getStereotype();
+
+    @Property("description")
+    void setDescription(String description);
+    String getDescription();
 }

@@ -2,6 +2,7 @@ package de.kontext_e.jqassistant.plugin.plantuml.scanner;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import org.slf4j.Logger;
@@ -27,6 +28,7 @@ import net.sourceforge.plantuml.SourceStringReader;
 import net.sourceforge.plantuml.UmlDiagramType;
 import net.sourceforge.plantuml.classdiagram.AbstractEntityDiagram;
 import net.sourceforge.plantuml.core.Diagram;
+import net.sourceforge.plantuml.cucadiagram.DisplayPositionned;
 import net.sourceforge.plantuml.cucadiagram.GroupType;
 import net.sourceforge.plantuml.cucadiagram.IGroup;
 import net.sourceforge.plantuml.cucadiagram.ILeaf;
@@ -59,6 +61,11 @@ class PumlLineParser {
         if(line == null) return;
 
         String normalizedLine = line.trim().toLowerCase();
+
+        // inlcudes cannot be handled because of working directory mismatch while scanning
+        if(normalizedLine.startsWith("!include")) {
+            return;
+        }
 
         if(parsingState == ParsingState.IGNORING && normalizedLine.startsWith("[\"plantuml\"")) {
             parsingState = ParsingState.PLANTUMLFOUND;
@@ -126,6 +133,10 @@ class PumlLineParser {
             final String namespaceSeparator = descriptionDiagram.getNamespaceSeparator();
             diagramDescriptor.setNamespaceSeparator(namespaceSeparator);
 
+            diagramDescriptor.setTitle(extractString(descriptionDiagram.getTitle()));
+            diagramDescriptor.setCaption(extractString(descriptionDiagram.getCaption()));
+            diagramDescriptor.setLegend(extractString(descriptionDiagram.getLegend()));
+
             final Collection<IGroup> groups = descriptionDiagram.getRootGroup().getChildren();
             addGroups(diagramDescriptor, groups, diagramDescriptor);
 
@@ -138,6 +149,14 @@ class PumlLineParser {
             plantUmlFileDescriptor.getPlantUmlDiagrams().add(diagramDescriptor);
             setOldRelationsForCompatibility(diagramDescriptor);
         }
+    }
+
+    private String extractString(final DisplayPositionned displayPositionned) {
+        StringBuilder title = new StringBuilder();
+        if (displayPositionned != null && displayPositionned.getDisplay() != null && !displayPositionned.isNull()) {
+            displayPositionned.getDisplay().iterator().forEachRemaining(title::append);
+        }
+        return title.toString();
     }
 
     private PlantUmlDiagramDescriptor createDiagramDescriptor(final UmlDiagramType umlDiagramType) {
@@ -216,12 +235,12 @@ class PumlLineParser {
             leafNode.setFullName(fullName);
             final LeafType entityType = iLeaf.getLeafType();  // incompatible with 1.2018.11
             leafNode.setType(entityType.name());
-            plantUmlFileDescriptor.getPlantUmlElements().add(leafNode);
             mappingFromFqnToPackage.put(fullName, leafNode);
             final Stereotype stereotype = iLeaf.getStereotype();
             if(stereotype != null) {
                 leafNode.setStereotype(stereotype.getLabel(true));
             }
+            leafNode.setDescription(iteratorToText(iLeaf.getDisplay().iterator()));
             if(plantUmlGroupDescriptor != null) {
                 plantUmlGroupDescriptor.getLeafs().add(leafNode);
             }
@@ -303,5 +322,11 @@ class PumlLineParser {
         }
 
         participantDescriptors.put(participant.getCode(), plantUmlParticipantDescriptor);
+    }
+
+    private String iteratorToText(Iterator<CharSequence> it) {
+        StringBuilder builder = new StringBuilder();
+        it.forEachRemaining(line -> builder.append(line).append("\n"));
+        return builder.toString();
     }
 }

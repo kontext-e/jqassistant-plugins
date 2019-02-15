@@ -19,4 +19,17 @@ public interface PlantUmlDiagramDescriptor extends PlantUmlDescriptor, PlantUmlG
 
     @Relation("CONTAINS_GROUP")
     Set<PlantUmlGroupDescriptor> getPlantUmlGroups();
+
+    @Property("title")
+    void setTitle(String title);
+    String getTitle();
+
+
+    @Property("caption")
+    void setCaption(String caption);
+    String getCaption();
+
+    @Property("legend")
+    void setLegend(String legend);
+    String getLegend();
 }
