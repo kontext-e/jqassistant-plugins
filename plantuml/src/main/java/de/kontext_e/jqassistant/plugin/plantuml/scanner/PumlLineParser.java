@@ -34,6 +34,8 @@ import net.sourceforge.plantuml.cucadiagram.IGroup;
 import net.sourceforge.plantuml.cucadiagram.ILeaf;
 import net.sourceforge.plantuml.cucadiagram.LeafType;
 import net.sourceforge.plantuml.cucadiagram.Link;
+import net.sourceforge.plantuml.cucadiagram.LinkStyle;
+import net.sourceforge.plantuml.cucadiagram.LinkType;
 import net.sourceforge.plantuml.cucadiagram.Stereotype;
 import net.sourceforge.plantuml.sequencediagram.Event;
 import net.sourceforge.plantuml.sequencediagram.Message;
@@ -204,6 +206,15 @@ class PumlLineParser {
 
     private void addLinks(final List<Link> links) {
         for (Link link : links) {
+            final LinkType type = link.getType();
+            final LinkStyle style = type.getStyle();
+            // there are invisible links between otherwise unconnected
+            // entities; dont import these internal links which are
+            // not declared in the diagram
+            if (style.toString().toLowerCase().contains("invis")) {
+                continue;
+            }
+
             String lhs = link.getEntity1().getCode().getFullName();
             String rhs = link.getEntity2().getCode().getFullName();
             if("ARROW".equalsIgnoreCase(link.getType().getDecor2().name())) {

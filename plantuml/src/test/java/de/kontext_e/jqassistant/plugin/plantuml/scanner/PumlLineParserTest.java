@@ -384,4 +384,74 @@ public class PumlLineParserTest {
         assertEquals(1, leafs.size());
     }
 
+    @Test
+    public void thatNoLinksToLeafsWereAddedIfNoLinksInDiagram() {
+        // when there are more than threshold of components,
+        // PlantUML starts to insert invisible arrows between components
+        // this test checks if they were filtered out
+        String[] lines = ("The Backend is structured with Domain Components in the first level. Could look like this:\n" +
+                          "\n" +
+                          "[\"plantuml\",\"Backend\",\"png\"]\n" +
+                          "-----\n" +
+                          "title First Level Components\n" +
+                          "caption Level 1 Building Blocks\n" +
+                          "\n" +
+                          "legend right\n" +
+                          "    | Element | Description |\n" +
+                          "    |<#42788e>| Component |\n" +
+                          "    | A --> B | A depends on B |\n" +
+                          "endlegend\n" +
+                          "\n" +
+                          "component TechnicalService [\n" +
+                          "    componentName(TechnicalService)\n" +
+                          "\n" +
+                          "]\n" +
+                          "\n" +
+                          "component Application [\n" +
+                          "    componentName(Application)\n" +
+                          "\n" +
+                          "]\n" +
+                          "\n" +
+                          "component A1 [\n" +
+                          "]\n" +
+                          "component A2 [\n" +
+                          "]\n" +
+                          "component A3 [\n" +
+                          "]\n" +
+                          "component A4 [\n" +
+                          "]\n" +
+                          "component A5 [\n" +
+                          "]\n" +
+                          "component A6 [\n" +
+                          "]\n" +
+                          "\n" +
+                          "-----\n" +
+                          "\n")
+                .split("\\n");
+        pumlLineParser = new PumlLineParser(mockStore, plantUmlFileDescriptor, ParsingState.IGNORING);
+
+        final PlantUmlClassDiagramDescriptor mockDescriptionDiagramDescriptor = mock(PlantUmlClassDiagramDescriptor.class);
+        when(mockStore.create(PlantUmlClassDiagramDescriptor.class)).thenReturn(mockDescriptionDiagramDescriptor);
+        final PlantUmlLeafDescriptor mockPlantUmlLeafDescriptor = mock(PlantUmlLeafDescriptor.class);
+        when(mockStore.create(PlantUmlLeafDescriptor.class)).thenReturn(mockPlantUmlLeafDescriptor);
+        final Set<PlantUmlElement> leafs = new HashSet<>();
+        when(mockDescriptionDiagramDescriptor.getLeafs()).thenReturn(leafs);
+
+        stream(lines).forEach(line -> pumlLineParser.parseLine(line));
+
+
+        verify(mockStore).create(PlantUmlClassDiagramDescriptor.class);
+ //       verify(mockStore, times(2)).create(PlantUmlLeafDescriptor.class);
+        verify(mockDescriptionDiagramDescriptor).setTitle("first level components");
+        verify(mockDescriptionDiagramDescriptor).setCaption("level 1 building blocks");
+//        verify(mockPlantUmlLeafDescriptor, times(2)).setType("DESCRIPTION");
+        verify(mockPlantUmlLeafDescriptor, times(1)).setFullName("technicalservice");
+        verify(mockPlantUmlLeafDescriptor, times(1)).setFullName("application");
+
+        verify(mockPlantUmlLeafDescriptor, times(0)).getLinkTargets();
+        // mock returns two times the same other mock
+        // so only one entry is in the map
+        assertEquals(1, leafs.size());
+    }
+
 }
