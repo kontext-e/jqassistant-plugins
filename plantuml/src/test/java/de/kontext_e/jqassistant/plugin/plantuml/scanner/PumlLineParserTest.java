@@ -441,10 +441,10 @@ public class PumlLineParserTest {
 
 
         verify(mockStore).create(PlantUmlClassDiagramDescriptor.class);
- //       verify(mockStore, times(2)).create(PlantUmlLeafDescriptor.class);
+        verify(mockStore, times(8)).create(PlantUmlLeafDescriptor.class);
         verify(mockDescriptionDiagramDescriptor).setTitle("first level components");
         verify(mockDescriptionDiagramDescriptor).setCaption("level 1 building blocks");
-//        verify(mockPlantUmlLeafDescriptor, times(2)).setType("DESCRIPTION");
+        verify(mockDescriptionDiagramDescriptor, times(8)).getLeafs();
         verify(mockPlantUmlLeafDescriptor, times(1)).setFullName("technicalservice");
         verify(mockPlantUmlLeafDescriptor, times(1)).setFullName("application");
 
