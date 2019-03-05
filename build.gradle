@@ -3,7 +3,7 @@ apply plugin: 'maven'
 apply plugin: 'org.asciidoctor.gradle.asciidoctor'
 apply plugin: 'com.github.jruby-gradle.base'
 
-project.ext["jqaversion"] = "1.7.0-MS1"
+project.ext["jqaversion"] = "1.7.0-MS3"
 project.group = 'de.kontext-e.jqassistant.plugin'
 project.version = '1.7.0-SNAPSHOT'
 
