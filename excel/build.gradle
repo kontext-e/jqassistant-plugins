@@ -1,0 +1,10 @@
+// its private, dont upload apply from: "${rootDir}/gradle/uploadArchives.gradle"
+
+jar {
+  baseName = 'jqassistant.plugin.excel'
+}
+
+dependencies {
+  compile 'org.apache.poi:poi:4.1.0'
+  compile 'org.apache.poi:poi-ooxml:4.1.0'
+}

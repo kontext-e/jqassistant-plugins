@@ -22,3 +22,5 @@ include 'asciidoc'
 
 include 'javaparser'
 
+include 'excel'
+
