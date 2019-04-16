@@ -237,7 +237,6 @@ task(jqascan, dependsOn: 'removeJQAReport', type: JavaExec) {
     args 'asciidoc/src/test/asciidoc'
     args 'plaintext/src/test/testfiles'
     args 'javaparser/src/test'
-    args 'excel/src/test/resources'
 }
 
 task(jqaanalyze, type: JavaExec) {

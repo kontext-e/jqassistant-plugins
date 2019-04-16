@@ -6,7 +6,7 @@ import com.buschmais.xo.neo4j.api.annotation.Relation;
 import java.util.List;
 
 @Label("Row")
-public interface ExcelRowDescriptor extends ExcelDescriptor {
+public interface ExcelRowDescriptor extends ExcelDescriptor, ExcelStyleDescriptor {
 
     @Relation("HAS_CELL")
     List<ExcelCellDescriptor> getCells();
