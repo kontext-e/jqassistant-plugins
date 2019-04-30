@@ -2,25 +2,35 @@ package de.kontext_e.jqassistant.plugin.excel.scanner;
 
 import com.buschmais.jqassistant.core.store.api.Store;
 import de.kontext_e.jqassistant.plugin.excel.store.descriptor.*;
+import org.apache.poi.hssf.usermodel.HSSFEvaluationWorkbook;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.formula.FormulaParser;
+import org.apache.poi.ss.formula.FormulaParsingWorkbook;
 import org.apache.poi.ss.formula.FormulaType;
 import org.apache.poi.ss.formula.ptg.AreaPtg;
 import org.apache.poi.ss.formula.ptg.Ptg;
+import org.apache.poi.ss.formula.ptg.Ref3DPxg;
 import org.apache.poi.ss.formula.ptg.RefPtg;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellAddress;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFEvaluationWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ExcelFileReader {
   private static final Logger LOGGER = LoggerFactory.getLogger(ExcelFileReader.class);
   private final Store store;
   private final ExcelFileDescriptor excelFileDescriptor;
   private InputStream inputStream;
+  private Map<CellKey, ExcelCellDescriptor> nameToCellDescriptors = new HashMap<>();
+  private Map<CellKey, ExcelCellDescriptor> preCreatedCells = new HashMap<>();
 
   public ExcelFileReader(Store store, ExcelFileDescriptor excelFileDescriptor, InputStream inputStream) {
     this.store = store;
@@ -37,6 +47,7 @@ public class ExcelFileReader {
   }
 
   private void readSheet(Sheet sheet) {
+    final String sheetName = sheet.getSheetName();
     final ExcelSheetDescriptor excelSheetDescriptor = store.create(ExcelSheetDescriptor.class);
     excelFileDescriptor.getSheets().add(excelSheetDescriptor);
     excelSheetDescriptor.setName(sheet.getSheetName());
@@ -50,12 +61,14 @@ public class ExcelFileReader {
       for (Cell cell : row) {
         final String cellName = createName(cell.getAddress());
         final ExcelCellDescriptor excelCellDescriptor;
-        if (pre.get(cellName) != null) {
-          excelCellDescriptor = pre.get(cellName);
+        final CellKey cellKey = new CellKey(sheetName, cellName);
+        if (preCreatedCells.get(cellKey) != null) {
+          excelCellDescriptor = preCreatedCells.get(cellKey);
         } else {
           excelCellDescriptor = store.create(ExcelCellDescriptor.class);
         }
         excelRowDescriptor.getCells().add(excelCellDescriptor);
+
         excelCellDescriptor.setColumn(cell.getAddress().getColumn());
         excelCellDescriptor.setRow(cell.getAddress().getRow());
         excelCellDescriptor.setName(cellName);
@@ -65,7 +78,8 @@ public class ExcelFileReader {
         }
         setStyle(cell.getCellStyle(), excelCellDescriptor);
         setCellValue(cell, excelCellDescriptor);
-        nameToCellDescriptors.put(excelCellDescriptor.getName(), excelCellDescriptor);
+        final String targetCellName = excelCellDescriptor.getName();
+        nameToCellDescriptors.put(new CellKey(sheetName, targetCellName), excelCellDescriptor);
       }
     }
   }
@@ -123,49 +137,77 @@ public class ExcelFileReader {
     }
   }
 
-  private Map<String, ExcelCellDescriptor> nameToCellDescriptors = new HashMap<>();
-  private Map<String, ExcelCellDescriptor> pre = new HashMap<>();
-  void setDependencies(ExcelCellDescriptor excelCellDescriptor, Cell cell) {
-    final Ptg[] parse = FormulaParser.parse(cell.getCellFormula(), null, FormulaType.CELL, 0);
-    for (Ptg ptg : parse) {
-      System.out.println("ptg="+ptg);
-      if(ptg instanceof RefPtg) {
-        final ExcelCellDescriptor excelCellDescriptor1 = nameToCellDescriptors.get(ptg.toFormulaString());
-        setCellDependency(excelCellDescriptor, ptg.toFormulaString(), excelCellDescriptor1);
-      }
-      if(ptg instanceof AreaPtg) {
-        final AreaPtg areaPtg = (AreaPtg) ptg;
-        final int firstColumn = areaPtg.getFirstColumn();
-        final int firstRow = areaPtg.getFirstRow();
-        final int lastColumn = areaPtg.getLastColumn();
-        final int lastRow = areaPtg.getLastRow();
-        System.out.println(firstRow+":"+firstColumn+"-"+lastRow+":"+lastColumn);
-        final Sheet sheet = cell.getSheet();
-        for(int row = firstRow; row <= lastRow; row++) {
-          final Row sheetRow = sheet.getRow(row);
-          for(int col = firstColumn; col <= lastColumn; col++) {
-            final Cell cell1 = sheetRow.getCell(col);
-            final String name = createName(cell1.getAddress());
-            System.out.println("In area cell name: "+name);
-            final ExcelCellDescriptor excelCellDescriptor1 = nameToCellDescriptors.get(name);
-            setCellDependency(excelCellDescriptor, name, excelCellDescriptor1);
-          }
+  private void setDependencies(ExcelCellDescriptor excelCellDescriptor, Cell cell) {
+    final Ptg[] ptgs = FormulaParser.parse(cell.getCellFormula(), createFpb(cell), FormulaType.CELL, -1);
+    for (Ptg ptg : ptgs) {
+      caseLocalRef(excelCellDescriptor, cell, ptg);
+      caseRefToOtherSheet(excelCellDescriptor, ptg);
+      caseArea(excelCellDescriptor, cell, ptg);
+    }
+  }
+
+  private void caseArea(ExcelCellDescriptor excelCellDescriptor, Cell cell, Ptg ptg) {
+    if(ptg instanceof AreaPtg) {
+      final AreaPtg areaPtg = (AreaPtg) ptg;
+      final int firstColumn = areaPtg.getFirstColumn();
+      final int firstRow = areaPtg.getFirstRow();
+      final int lastColumn = areaPtg.getLastColumn();
+      final int lastRow = areaPtg.getLastRow();
+      final Sheet sheet = cell.getSheet();
+      for(int row = firstRow; row <= lastRow; row++) {
+        final Row sheetRow = sheet.getRow(row);
+        for(int col = firstColumn; col <= lastColumn; col++) {
+          final Cell cell1 = sheetRow.getCell(col);
+          final String targetCellName = createName(cell1.getAddress());
+          final String targetSheetName = cell1.getSheet().getSheetName();
+          final ExcelCellDescriptor excelCellDescriptor1 = nameToCellDescriptors.get(new CellKey(targetSheetName, targetCellName));
+          setCellDependency(excelCellDescriptor, targetSheetName, targetCellName, excelCellDescriptor1);
         }
       }
     }
   }
 
-  private void setCellDependency(ExcelCellDescriptor excelCellDescriptor, String targetCellName, ExcelCellDescriptor excelCellDescriptor1) {
-    if(excelCellDescriptor1 != null) {
-      System.out.println("Found ExcelCellDescriptor " + excelCellDescriptor1.getName() + " for RefPtg");
-      excelCellDescriptor.getDependencies().add(excelCellDescriptor1);
+  private void caseRefToOtherSheet(ExcelCellDescriptor excelCellDescriptor, Ptg ptg) {
+    if(ptg instanceof Ref3DPxg) {
+      Ref3DPxg ref3DPxg = (Ref3DPxg) ptg;
+      final String sheetName = ref3DPxg.getSheetName();
+      final String cellName = ref3DPxg.format2DRefAsString();
+      CellKey cellKey = new CellKey(sheetName, cellName);
+      final ExcelCellDescriptor excelCellDescriptor1 = nameToCellDescriptors.get(cellKey);
+      setCellDependency(excelCellDescriptor, sheetName, ptg.toFormulaString(), excelCellDescriptor1);
+    }
+  }
+
+  private void caseLocalRef(ExcelCellDescriptor excelCellDescriptor, Cell cell, Ptg ptg) {
+    if(ptg instanceof RefPtg) {
+      final String sheetName = cell.getSheet().getSheetName();
+      final ExcelCellDescriptor excelCellDescriptor1 = nameToCellDescriptors.get(new CellKey(sheetName, ptg.toFormulaString()));
+      setCellDependency(excelCellDescriptor, sheetName, ptg.toFormulaString(), excelCellDescriptor1);
+    }
+  }
+
+  private void setCellDependency(ExcelCellDescriptor sourceCell, String targetSheetName, String targetCellName, ExcelCellDescriptor targetCell) {
+    if(targetCell != null) {
+      sourceCell.getDependencies().add(targetCell);
     } else {
-      System.out.println("Create a pre cell descriptor for "+targetCellName);
       final ExcelCellDescriptor excelCellDescriptor2 = store.create(ExcelCellDescriptor.class);
       excelCellDescriptor2.setName(targetCellName);
-      pre.put(excelCellDescriptor2.getName(), excelCellDescriptor2);
-      excelCellDescriptor.getDependencies().add(excelCellDescriptor2);
+      CellKey cellKey = new CellKey(targetSheetName, targetCellName);
+      preCreatedCells.put(cellKey, excelCellDescriptor2);
+      sourceCell.getDependencies().add(excelCellDescriptor2);
     }
+  }
+
+  private FormulaParsingWorkbook createFpb(Cell cell) {
+    FormulaParsingWorkbook fpb;
+    if(cell instanceof XSSFCell) {
+      XSSFWorkbook wb = (XSSFWorkbook) cell.getSheet().getWorkbook();
+      fpb = XSSFEvaluationWorkbook.create(wb);
+    } else {
+      final HSSFWorkbook workbook = (HSSFWorkbook) cell.getSheet().getWorkbook();
+      fpb = HSSFEvaluationWorkbook.create(workbook);
+    }
+    return fpb;
   }
 
 }
