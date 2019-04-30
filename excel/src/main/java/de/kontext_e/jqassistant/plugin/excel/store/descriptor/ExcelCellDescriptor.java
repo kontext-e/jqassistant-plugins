@@ -1,11 +1,14 @@
 package de.kontext_e.jqassistant.plugin.excel.store.descriptor;
 
+import com.buschmais.jqassistant.plugin.common.api.model.NamedDescriptor;
 import com.buschmais.xo.neo4j.api.annotation.Label;
+import com.buschmais.xo.neo4j.api.annotation.Relation;
 
 import java.util.Date;
+import java.util.List;
 
 @Label("Cell")
-public interface ExcelCellDescriptor extends ExcelDescriptor, ExcelStyleDescriptor {
+public interface ExcelCellDescriptor extends ExcelDescriptor, ExcelStyleDescriptor, NamedDescriptor {
     void setColumn(int column);
     int getColumn();
 
@@ -31,5 +34,8 @@ public interface ExcelCellDescriptor extends ExcelDescriptor, ExcelStyleDescript
     String getComment();
 
     void setBlank(boolean blank);
-    boolean getBlack();
+    boolean getBlank();
+
+    @Relation("DEPENDS_ON")
+    List<ExcelCellDescriptor> getDependencies();
 }

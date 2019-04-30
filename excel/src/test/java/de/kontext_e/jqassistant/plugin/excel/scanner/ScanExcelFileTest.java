@@ -62,6 +62,28 @@ public class ScanExcelFileTest {
         verify(excelCellDescriptor).setStringValue("Salary");
     }
 
+    @Test
+    public void testSetDependenciesWithTerm() {
+        ExcelFileReader excelFileReader = new ExcelFileReader(mockStore, excelFileDescriptor, inputStream);
+        List<ExcelCellDescriptor> dependencies = new ArrayList<>();
+        when(excelCellDescriptor.getDependencies()).thenReturn(dependencies);
+
+        excelFileReader.setDependencies(excelCellDescriptor, "=A1+A2");
+
+        assertEquals(2, dependencies.size());
+    }
+
+    @Test
+    public void testSetDependenciesWithFunction() {
+        ExcelFileReader excelFileReader = new ExcelFileReader(mockStore, excelFileDescriptor, inputStream);
+        List<ExcelCellDescriptor> dependencies = new ArrayList<>();
+        when(excelCellDescriptor.getDependencies()).thenReturn(dependencies);
+
+        excelFileReader.setDependencies(excelCellDescriptor, "=SUMME(A1:A3)");
+
+        assertEquals(2, dependencies.size());
+    }
+
     private void createWorkbook(OutputStream outputStream) throws IOException {
         String[] columns = {"Name", "Email", "Date Of Birth", "Salary"};
         Workbook workbook = new XSSFWorkbook();
