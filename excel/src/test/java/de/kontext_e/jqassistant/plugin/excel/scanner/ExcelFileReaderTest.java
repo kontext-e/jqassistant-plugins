@@ -5,7 +5,10 @@ import de.kontext_e.jqassistant.plugin.excel.store.descriptor.ExcelCellDescripto
 import de.kontext_e.jqassistant.plugin.excel.store.descriptor.ExcelFileDescriptor;
 import de.kontext_e.jqassistant.plugin.excel.store.descriptor.ExcelRowDescriptor;
 import de.kontext_e.jqassistant.plugin.excel.store.descriptor.ExcelSheetDescriptor;
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,7 +20,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
-public class ScanExcelFileTest {
+public class ExcelFileReaderTest {
     private Store mockStore = mock(Store.class);
     private ExcelFileDescriptor excelFileDescriptor = mock(ExcelFileDescriptor.class);
     private ExcelSheetDescriptor excelSheetDescriptor = mock(ExcelSheetDescriptor.class);
@@ -74,4 +77,6 @@ public class ScanExcelFileTest {
         workbook.write(outputStream);
         workbook.close();
     }
+
+
 }

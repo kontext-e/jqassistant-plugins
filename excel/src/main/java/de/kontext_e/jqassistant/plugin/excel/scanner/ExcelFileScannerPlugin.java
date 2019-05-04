@@ -19,7 +19,7 @@ import static java.util.Arrays.asList;
 @ScannerPlugin.Requires(FileDescriptor.class)
 public class ExcelFileScannerPlugin extends AbstractScannerPlugin<FileResource, ExcelFileDescriptor> {
     private static final Logger LOGGER = LoggerFactory.getLogger(ExcelFileScannerPlugin.class);
-    private static List<String> suffixes = asList("xls", "xlsx");
+    private static List<String> suffixes = asList("xls", "xlsx", "ods");
 
     @Override
     public boolean accepts(FileResource item, String path, Scope scope) {
@@ -46,10 +46,18 @@ public class ExcelFileScannerPlugin extends AbstractScannerPlugin<FileResource, 
     @Override
     public ExcelFileDescriptor scan(FileResource item, String path, Scope scope, Scanner scanner) throws IOException {
         final Store store = scanner.getContext().getStore();
-        FileDescriptor fileDescriptor = scanner.getContext().getCurrentDescriptor();
+        final FileDescriptor fileDescriptor = scanner.getContext().getCurrentDescriptor();
         final ExcelFileDescriptor excelFileDescriptor = store.addDescriptorType(fileDescriptor, ExcelFileDescriptor.class);
-        final ExcelFileReader excelFileReader = new ExcelFileReader(store, excelFileDescriptor, item.createStream());
-        excelFileReader.read();
+
+        if(path.endsWith("ods") || path.endsWith("xlsx")) {
+            final ExcelFileReader excelFileReader = new ExcelFileReader(store, excelFileDescriptor, item.createStream());
+            excelFileReader.read();
+        }
+
+        if(path.endsWith("ods__")) {
+            final OdsFileReader odsFileReader = new OdsFileReader(store, excelFileDescriptor, item.createStream());
+            odsFileReader.read();
+        }
         return excelFileDescriptor;
     }
 }
