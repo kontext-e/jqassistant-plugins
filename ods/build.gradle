@@ -1,0 +1,9 @@
+// its private, dont upload apply from: "${rootDir}/gradle/uploadArchives.gradle"
+
+jar {
+  baseName = 'jqassistant.plugin.ods'
+}
+
+dependencies {
+  compile 'com.github.miachm.sods:SODS:1.0.1'
+}

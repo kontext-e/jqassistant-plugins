@@ -1,12 +1,10 @@
-package de.kontext_e.jqassistant.plugin.excel.scanner;
+package de.kontext_e.jqassistant.plugin.ods.scanner;
 
 import com.buschmais.jqassistant.core.store.api.Store;
 import com.github.miachm.sods.Range;
 import com.github.miachm.sods.Sheet;
 import com.github.miachm.sods.SpreadSheet;
 import de.kontext_e.jqassistant.plugin.excel.store.descriptor.*;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.util.CellReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -83,25 +81,7 @@ class OdsFileReader {
   }
 
   private String formatAsString(int col, int row) {
-    return CellReference.convertNumToColString(col)+(row+1);
-  }
-
-
-  private void setStyle(CellStyle cellStyle, ExcelStyleDescriptor excelStyleDescriptor) {
-    if(cellStyle == null) return;
-
-    excelStyleDescriptor.setDataFormat(cellStyle.getDataFormat());
-    excelStyleDescriptor.setDataFormatString(cellStyle.getDataFormatString());
-    excelStyleDescriptor.setBottomBorderColor(cellStyle.getBottomBorderColor());
-    excelStyleDescriptor.setLeftBorderColor(cellStyle.getLeftBorderColor());
-    excelStyleDescriptor.setRightBorderColor(cellStyle.getRightBorderColor());
-    excelStyleDescriptor.setTopBorderColor(cellStyle.getTopBorderColor());
-    excelStyleDescriptor.setBackgroundColor(cellStyle.getFillBackgroundColor());
-    excelStyleDescriptor.setForegroundColor(cellStyle.getFillForegroundColor());
-    excelStyleDescriptor.setFillPattern(cellStyle.getFillPattern().getCode());
-    excelStyleDescriptor.setHidden(cellStyle.getHidden());
-    excelStyleDescriptor.setLocked(cellStyle.getLocked());
-    excelStyleDescriptor.setQuotePrefix(cellStyle.getQuotePrefixed());
+    return ""; // FIXME or copy from excel poi
   }
 
   private void setCellValue(Range cell, ExcelCellDescriptor excelCellDescriptor) {

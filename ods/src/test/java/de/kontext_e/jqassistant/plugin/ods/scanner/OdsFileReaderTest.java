@@ -1,9 +1,8 @@
-package de.kontext_e.jqassistant.plugin.excel.scanner;
+package de.kontext_e.jqassistant.plugin.ods.scanner;
 
 import com.github.miachm.sods.Range;
 import com.github.miachm.sods.Sheet;
 import com.github.miachm.sods.SpreadSheet;
-import org.apache.poi.ss.util.CellReference;
 import org.junit.Test;
 
 import java.io.File;
@@ -34,6 +33,6 @@ public class OdsFileReaderTest {
     }
 
     public String formatAsString(int col, int row) {
-        return CellReference.convertNumToColString(col)+(row+1);
+        return col+":"+row; // FIXME
     }
 }

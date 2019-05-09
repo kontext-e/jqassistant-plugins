@@ -7,5 +7,4 @@ jar {
 dependencies {
   compile 'org.apache.poi:poi:4.1.0'
   compile 'org.apache.poi:poi-ooxml:4.1.0'
-  compile 'com.github.miachm.sods:SODS:1.0.1'
 }
