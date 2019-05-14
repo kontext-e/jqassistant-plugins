@@ -1,4 +1,4 @@
-// its private, dont upload apply from: "${rootDir}/gradle/uploadArchives.gradle"
+apply from: "${rootDir}/gradle/uploadArchives.gradle"
 
 jar {
   baseName = 'jqassistant.plugin.excel'
