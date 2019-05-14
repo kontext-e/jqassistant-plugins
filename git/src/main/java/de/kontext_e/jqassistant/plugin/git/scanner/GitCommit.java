@@ -11,23 +11,15 @@ public class GitCommit {
     private Date date;
     private String message;
     private String shortMessage;
-    private final List<GitChange> gitChanges = new LinkedList<GitChange>();
-    private final List<GitCommit> parents = new LinkedList<GitCommit>();
+    private final List<GitChange> gitChanges = new LinkedList<>();
+    private final List<GitCommit> parents = new LinkedList<>();
     private String encoding;
 
-    public GitCommit(final String sha) {
+    GitCommit(final String sha) {
         this.sha = sha;
     }
 
-    private static String buildMessage(final List<String> message) {
-        StringBuilder builder = new StringBuilder();
-        for (String m : message) {
-            builder.append(m).append("\n");
-        }
-        return builder.toString();
-    }
-
-    public String getSha() {
+    String getSha() {
         return sha;
     }
 
@@ -36,45 +28,45 @@ public class GitCommit {
     }
     protected void setAuthor (final String author) {this.author = author;}
 
-    public String getCommitter() {
+    String getCommitter() {
         return committer;
     }
 
-    public void setCommitter(final String committer) {
+    void setCommitter(final String committer) {
         this.committer = committer;
     }
 
-    public Date getDate() {
+    Date getDate() {
         return date;
     }
-    protected void setDate (final Date date) {this.date = date;}
+    void setDate(final Date date) {this.date = date;}
 
-    public String getMessage() {
+    String getMessage() {
         return message;
     }
-    protected void setMessage (String message) {this.message = message;}
+    void setMessage(String message) {this.message = message;}
 
-    public String getShortMessage() {
+    String getShortMessage() {
         return shortMessage;
     }
 
-    public void setShortMessage(final String shortMessage) {
+    void setShortMessage(final String shortMessage) {
         this.shortMessage = shortMessage;
     }
 
-    public List<GitChange> getGitChanges() {
+    List<GitChange> getGitChanges() {
         return gitChanges;
     }
 
-    public List<GitCommit> getParents() {
+    List<GitCommit> getParents() {
         return parents;
     }
 
-    public void setEncoding(final String encoding) {
+    void setEncoding(final String encoding) {
         this.encoding = encoding;
     }
 
-    public String getEncoding() {
+    String getEncoding() {
         return encoding;
     }
 

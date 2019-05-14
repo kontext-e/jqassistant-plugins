@@ -4,8 +4,8 @@ import com.buschmais.xo.neo4j.api.annotation.Indexed;
 import com.buschmais.xo.neo4j.api.annotation.Label;
 import com.buschmais.xo.neo4j.api.annotation.Property;
 
-@Label("Author")
-public interface GitAuthorDescriptor extends GitPersonDescriptor {
+@Label("Committer")
+public interface GitCommitterDescriptor extends GitPersonDescriptor {
 
     // cannot be part of superinterface because of @Indexed
     @Indexed

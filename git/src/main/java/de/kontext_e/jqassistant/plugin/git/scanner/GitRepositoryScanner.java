@@ -1,24 +1,14 @@
 package de.kontext_e.jqassistant.plugin.git.scanner;
 
-import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.buschmais.jqassistant.core.store.api.Store;
+import de.kontext_e.jqassistant.plugin.git.store.descriptor.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.buschmais.jqassistant.core.store.api.Store;
-import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitAuthorDescriptor;
-import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitBranchDescriptor;
-import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitChangeDescriptor;
-import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitCommitDescriptor;
-import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitFileDescriptor;
-import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitRepositoryDescriptor;
-import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitTagDescriptor;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 class GitRepositoryScanner {
     private static final Logger LOGGER = LoggerFactory.getLogger(GitRepositoryScanner.class);
@@ -31,6 +21,7 @@ class GitRepositoryScanner {
     private final GitRepositoryDescriptor gitRepositoryDescriptor;
     private String range;
     private final Map<String, GitAuthorDescriptor> authors = new HashMap<>();
+    private final Map<String, GitCommitterDescriptor> committers = new HashMap<>();
     private final Map<String, GitFileDescriptor> files = new HashMap<>();
     private final Map<String, GitCommitDescriptor> commits = new HashMap<>();
     private final List<GitCommit> gitCommits = new ArrayList<>();
@@ -51,6 +42,7 @@ class GitRepositoryScanner {
         addTags(jGitScanner.findTags());
 
         authors.values().forEach(gitAuthor -> gitRepositoryDescriptor.getAuthors().add(gitAuthor));
+        committers.values().forEach(gitCommitter -> gitRepositoryDescriptor.getCommitters().add(gitCommitter));
         files.values().forEach(gitFile -> gitRepositoryDescriptor.getFiles().add(gitFile));
 
         GitBranch head = jGitScanner.findHead();
@@ -78,6 +70,7 @@ class GitRepositoryScanner {
             gitRepositoryDescriptor.getCommits().add(gitCommitDescriptor);
 
             addCommitForAuthor(authors, gitCommit.getAuthor(), gitCommitDescriptor);
+            addCommitForCommitter(committers, gitCommit.getCommitter(), gitCommitDescriptor);
 
             addCommitFiles(gitCommit, gitCommitDescriptor, files);
         }
@@ -98,7 +91,7 @@ class GitRepositoryScanner {
         }
     }
 
-    private void addBranches(List<GitBranch> branches) throws IOException {
+    private void addBranches(List<GitBranch> branches) {
         for (GitBranch gitBranch : branches) {
             GitBranchDescriptor gitBranchDescriptor = store.create(GitBranchDescriptor.class);
             String name = gitBranch.getName();
@@ -115,7 +108,7 @@ class GitRepositoryScanner {
         }
     }
 
-    private void addTags(List<GitTag> tags) throws IOException {
+    private void addTags(List<GitTag> tags) {
         for (GitTag gitTag : tags) {
             GitTagDescriptor gitTagDescriptor = store.create(GitTagDescriptor.class);
             String label = gitTag.getLabel();
@@ -142,12 +135,38 @@ class GitRepositoryScanner {
                     gitAuthor = store.create(GitAuthorDescriptor.class);
                     gitAuthor.setIdentString(author);
                 }
-                gitAuthor.setName(author.substring(0, author.indexOf("<")).trim());
-                gitAuthor.setEmail(author.substring(author.indexOf("<")+1, author.indexOf(">")).trim());
+                gitAuthor.setName(nameFrom(author));
+                gitAuthor.setEmail(emailFrom(author));
                 authors.put(author, gitAuthor);
             }
             authors.get(author).getCommits().add(gitCommit);
         }
+    }
+
+    private void addCommitForCommitter(final Map<String, GitCommitterDescriptor> committers, final String committer, final GitCommitDescriptor gitCommit) {
+        if (null != committer) {
+            if(! committers.containsKey(committer)) {
+                LOGGER.debug ("Adding new committer '{}'", committer);
+                GitCommitterDescriptor gitCommitter = store.find(GitCommitterDescriptor.class, committer);
+                if (null == gitCommitter) {
+                    LOGGER.debug ("Committer '{}' does not exist, have to create a new entity", committer);
+                    gitCommitter = store.create(GitCommitterDescriptor.class);
+                    gitCommitter.setIdentString(committer);
+                }
+                gitCommitter.setName(nameFrom(committer));
+                gitCommitter.setEmail(emailFrom(committer));
+                committers.put(committer, gitCommitter);
+            }
+            committers.get(committer).getCommits().add(gitCommit);
+        }
+    }
+
+    private String emailFrom(String author) {
+        return author.substring(author.indexOf("<")+1, author.indexOf(">")).trim();
+    }
+
+    private String nameFrom(String author) {
+        return author.substring(0, author.indexOf("<")).trim();
     }
 
     private void addCommitFiles(final GitCommit gitCommit, final GitCommitDescriptor gitCommitDescriptor, final Map<String, GitFileDescriptor> files) {

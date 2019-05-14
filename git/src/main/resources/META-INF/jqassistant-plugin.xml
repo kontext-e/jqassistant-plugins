@@ -6,6 +6,8 @@
         <class>de.kontext_e.jqassistant.plugin.git.store.descriptor.GitBranchDescriptor</class>
         <class>de.kontext_e.jqassistant.plugin.git.store.descriptor.GitRepositoryDescriptor</class>
         <class>de.kontext_e.jqassistant.plugin.git.store.descriptor.GitCommitDescriptor</class>
+        <class>de.kontext_e.jqassistant.plugin.git.store.descriptor.GitCommitterDescriptor</class>
+        <class>de.kontext_e.jqassistant.plugin.git.store.descriptor.GitPersonDescriptor</class>
         <class>de.kontext_e.jqassistant.plugin.git.store.descriptor.GitChangeDescriptor</class>
         <class>de.kontext_e.jqassistant.plugin.git.store.descriptor.GitAuthorDescriptor</class>
         <class>de.kontext_e.jqassistant.plugin.git.store.descriptor.GitFileDescriptor</class>
