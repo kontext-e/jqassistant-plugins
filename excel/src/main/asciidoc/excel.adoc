@@ -61,6 +61,7 @@ Represents a cell in an Excel sheet.
 [options="header"]
 |====
 | Name          | Description
+| name          | The name of the cell, e.g. A1 or BA67.
 | column        | The column number.
 | row           | The row number.
 | type          | The type of the cell.
