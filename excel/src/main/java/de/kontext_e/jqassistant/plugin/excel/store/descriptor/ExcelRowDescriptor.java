@@ -8,9 +8,9 @@ import java.util.List;
 @Label("Row")
 public interface ExcelRowDescriptor extends ExcelDescriptor, ExcelStyleDescriptor {
 
-    @Relation("HAS_CELL")
-    List<ExcelCellDescriptor> getCells();
-
     void setRowNumber(int rowNum);
     int getRowNumber();
+
+    @Relation("HAS_CELL")
+    List<ExcelCellDescriptor> getCells();
 }
