@@ -8,9 +8,13 @@ import de.kontext_e.jqassistant.plugin.ruby.store.descriptor.RubyFileDescriptor;
 import org.jrubyparser.NodeVisitor;
 import org.jrubyparser.ast.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 class AddDescriptorVisitor implements NodeVisitor {
     private final RubyFileDescriptor rubyFileDescriptor;
     private final Store store;
+    private Map<String, ModuleDescriptor> nameToModule = new HashMap<>();
 
     AddDescriptorVisitor(RubyFileDescriptor rubyFileDescriptor, Store store) {
         this.rubyFileDescriptor = rubyFileDescriptor;
@@ -129,8 +133,18 @@ class AddDescriptorVisitor implements NodeVisitor {
 
     @Override
     public Object visitClassNode(ClassNode iVisited) {
-        final ClassDescriptor moduleDescriptor = store.create(ClassDescriptor.class);
-        moduleDescriptor.setName(iVisited.getCPath().getName());
+        final ClassDescriptor classDescriptor = store.create(ClassDescriptor.class);
+        classDescriptor.setName(iVisited.getCPath().getName());
+
+        final ModuleNode parentModule = findParentModule(iVisited);
+        if(parentModule != null) {
+            final String parentName = parentModule.getCPath().getName();
+            final ModuleDescriptor parentModuleDescriptor = nameToModule.get(parentName);
+            if(parentModuleDescriptor != null) {
+                parentModuleDescriptor.getClasses().add(classDescriptor);
+            }
+        }
+
         return null;
     }
 
@@ -354,9 +368,29 @@ class AddDescriptorVisitor implements NodeVisitor {
     @Override
     public Object visitModuleNode(ModuleNode iVisited) {
         final ModuleDescriptor moduleDescriptor = store.create(ModuleDescriptor.class);
-        moduleDescriptor.setName(iVisited.getCPath().getName());
+        final String name = iVisited.getCPath().getName();
+        moduleDescriptor.setName(name);
         rubyFileDescriptor.getModules().add(moduleDescriptor);
+        nameToModule.put(name, moduleDescriptor);
+        final ModuleNode parentModule = findParentModule(iVisited);
+        if(parentModule != null) {
+            final String parentName = parentModule.getCPath().getName();
+            final ModuleDescriptor parentModuleDescriptor = nameToModule.get(parentName);
+            if(parentModuleDescriptor != null) {
+                parentModuleDescriptor.getModules().add(moduleDescriptor);
+            }
+        }
         return null;
+    }
+
+    private ModuleNode findParentModule(Node iVisited) {
+        if(iVisited == null) return null;
+
+        final Node parent = iVisited.getParent();
+        if(parent instanceof ModuleNode) {
+            return (ModuleNode) parent;
+        }
+        return findParentModule(iVisited.getParent());
     }
 
     @Override

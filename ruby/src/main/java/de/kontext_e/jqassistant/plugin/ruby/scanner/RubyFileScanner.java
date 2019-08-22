@@ -11,12 +11,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 class RubyFileScanner {
-    private final RubyFileDescriptor rubyFileDescriptor;
-    private final Store store;
+    private AddDescriptorVisitor addDescriptorVisitor;
 
     RubyFileScanner(RubyFileDescriptor rubyFileDescriptor, Store store) {
-        this.rubyFileDescriptor = rubyFileDescriptor;
-        this.store = store;
+        addDescriptorVisitor = new AddDescriptorVisitor(rubyFileDescriptor, store);
     }
 
     void scan(InputStream inputStream) {
@@ -29,7 +27,7 @@ class RubyFileScanner {
     }
 
     private void traverseNode(Node node) {
-        node.accept(new AddDescriptorVisitor(rubyFileDescriptor, store));
+        node.accept(addDescriptorVisitor);
         for (Node childNode : node.childNodes()) {
             traverseNode(childNode);
         }

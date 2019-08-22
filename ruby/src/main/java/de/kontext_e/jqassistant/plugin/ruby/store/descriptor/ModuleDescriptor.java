@@ -12,4 +12,7 @@ public interface ModuleDescriptor extends RubyDescriptor, NamedDescriptor {
     @Relation("CONTAINS")
     Set<ClassDescriptor> getClasses();
 
+    @Relation("CONTAINS")
+    Set<ModuleDescriptor> getModules();
+
 }
