@@ -1,0 +1,9 @@
+apply from: "${rootDir}/gradle/uploadArchives.gradle"
+
+jar {
+    baseName = 'jqassistant.plugin.ruby'
+}
+
+dependencies {
+    compile 'org.jruby:jrubyparser:0.5.3'
+}
