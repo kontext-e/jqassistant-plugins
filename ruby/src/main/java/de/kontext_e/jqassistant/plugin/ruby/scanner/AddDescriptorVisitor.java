@@ -14,7 +14,8 @@ import java.util.Map;
 class AddDescriptorVisitor implements NodeVisitor {
     private final RubyFileDescriptor rubyFileDescriptor;
     private final Store store;
-    private Map<String, ModuleDescriptor> nameToModule = new HashMap<>();
+    private Map<String, ModuleDescriptor> fqnToModule = new HashMap<>();
+    private Map<String, ClassDescriptor> fqnToClass = new HashMap<>();
 
     AddDescriptorVisitor(RubyFileDescriptor rubyFileDescriptor, Store store) {
         this.rubyFileDescriptor = rubyFileDescriptor;
@@ -135,11 +136,13 @@ class AddDescriptorVisitor implements NodeVisitor {
     public Object visitClassNode(ClassNode iVisited) {
         final ClassDescriptor classDescriptor = store.create(ClassDescriptor.class);
         classDescriptor.setName(iVisited.getCPath().getName());
+        classDescriptor.setFullQualifiedName(getFqn(iVisited));
+        fqnToClass.put(classDescriptor.getFullQualifiedName(), classDescriptor);
 
         final ModuleNode parentModule = findParentModule(iVisited);
         if(parentModule != null) {
-            final String parentName = parentModule.getCPath().getName();
-            final ModuleDescriptor parentModuleDescriptor = nameToModule.get(parentName);
+            final String parentFqn = getFqn(parentModule);
+            final ModuleDescriptor parentModuleDescriptor = fqnToModule.get(parentFqn);
             if(parentModuleDescriptor != null) {
                 parentModuleDescriptor.getClasses().add(classDescriptor);
             }
@@ -368,29 +371,20 @@ class AddDescriptorVisitor implements NodeVisitor {
     @Override
     public Object visitModuleNode(ModuleNode iVisited) {
         final ModuleDescriptor moduleDescriptor = store.create(ModuleDescriptor.class);
-        final String name = iVisited.getCPath().getName();
-        moduleDescriptor.setName(name);
+        moduleDescriptor.setName(iVisited.getCPath().getName());
+        moduleDescriptor.setFullQualifiedName(getFqn(iVisited));
+        fqnToModule.put(moduleDescriptor.getFullQualifiedName(), moduleDescriptor);
+
         rubyFileDescriptor.getModules().add(moduleDescriptor);
-        nameToModule.put(name, moduleDescriptor);
         final ModuleNode parentModule = findParentModule(iVisited);
         if(parentModule != null) {
-            final String parentName = parentModule.getCPath().getName();
-            final ModuleDescriptor parentModuleDescriptor = nameToModule.get(parentName);
+            final String parentFqn = getFqn(parentModule);
+            final ModuleDescriptor parentModuleDescriptor = fqnToModule.get(parentFqn);
             if(parentModuleDescriptor != null) {
                 parentModuleDescriptor.getModules().add(moduleDescriptor);
             }
         }
         return null;
-    }
-
-    private ModuleNode findParentModule(Node iVisited) {
-        if(iVisited == null) return null;
-
-        final Node parent = iVisited.getParent();
-        if(parent instanceof ModuleNode) {
-            return (ModuleNode) parent;
-        }
-        return findParentModule(iVisited.getParent());
     }
 
     @Override
@@ -602,4 +596,46 @@ class AddDescriptorVisitor implements NodeVisitor {
     public Object visitZSuperNode(ZSuperNode iVisited) {
         return null;
     }
+
+    private ModuleNode findParentModule(Node iVisited) {
+        if(iVisited == null) return null;
+
+        final Node parent = iVisited.getParent();
+        if(parent instanceof ModuleNode) {
+            return (ModuleNode) parent;
+        }
+        return findParentModule(iVisited.getParent());
+    }
+
+    private ClassNode findParentClass(Node iVisited) {
+        if(iVisited == null) return null;
+
+        final Node parent = iVisited.getParent();
+        if(parent instanceof ClassNode) {
+            return (ClassNode) parent;
+        }
+        return findParentClass(iVisited.getParent());
+    }
+
+    private IScopingNode findParentIScopingNode(Node iVisited) {
+        if(iVisited == null) return null;
+
+        final Node parent = iVisited.getParent();
+        if(parent instanceof IScopingNode) {
+            return (IScopingNode) parent;
+        }
+        return findParentIScopingNode(iVisited.getParent());
+    }
+
+    private String getFqn(IScopingNode iVisited) {
+        if(iVisited == null) return "";
+
+        final IScopingNode parentIScopingNode = findParentIScopingNode((Node) iVisited);
+        if(parentIScopingNode != null) {
+            return getFqn(parentIScopingNode)+"::"+iVisited.getCPath().getName();
+        } else {
+            return iVisited.getCPath().getName();
+        }
+    }
+
 }
