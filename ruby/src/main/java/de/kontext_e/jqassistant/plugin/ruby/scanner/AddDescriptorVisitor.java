@@ -1,10 +1,7 @@
 package de.kontext_e.jqassistant.plugin.ruby.scanner;
 
 import com.buschmais.jqassistant.core.store.api.Store;
-import de.kontext_e.jqassistant.plugin.ruby.store.descriptor.ClassDescriptor;
-import de.kontext_e.jqassistant.plugin.ruby.store.descriptor.MethodDescriptor;
-import de.kontext_e.jqassistant.plugin.ruby.store.descriptor.ModuleDescriptor;
-import de.kontext_e.jqassistant.plugin.ruby.store.descriptor.RubyFileDescriptor;
+import de.kontext_e.jqassistant.plugin.ruby.store.descriptor.*;
 import org.jrubyparser.NodeVisitor;
 import org.jrubyparser.ast.*;
 
@@ -145,6 +142,23 @@ class AddDescriptorVisitor implements NodeVisitor {
             final ModuleDescriptor parentModuleDescriptor = fqnToModule.get(parentFqn);
             if(parentModuleDescriptor != null) {
                 parentModuleDescriptor.getClasses().add(classDescriptor);
+            }
+        }
+
+        for (MethodDefNode methodDef : iVisited.getMethodDefs()) {
+            final MethodDescriptor methodDescriptor = store.create(MethodDescriptor.class);
+            classDescriptor.getDeclaredMethods().add(methodDescriptor);
+            methodDescriptor.setName(methodDef.getName());
+            methodDescriptor.setSignature(methodDef.getNormativeSignature());
+
+            final ArgsNode args = methodDef.getArgs();
+            for (Node param : args.getNormativeParameterList()) {
+                if(param instanceof ArgumentNode) {
+                    ArgumentNode argumentNode = (ArgumentNode) param;
+                    final ParameterDescriptor parameterDescriptor = store.create(ParameterDescriptor.class);
+                    methodDescriptor.getParameters().add(parameterDescriptor);
+                    parameterDescriptor.setName(argumentNode.getName());
+                }
             }
         }
 
