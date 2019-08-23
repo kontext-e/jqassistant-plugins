@@ -101,6 +101,20 @@ class AddDescriptorVisitor implements NodeVisitor {
 
     @Override
     public Object visitConstDeclNode(ConstDeclNode iVisited) {
+        final ConstantDescriptor constantDescriptor = store.create(ConstantDescriptor.class);
+        constantDescriptor.setName(iVisited.getName());
+        final String fqn = getFqn(findParentIScopingNode(iVisited));
+
+        if("".equals(fqn)) {
+            rubyFileDescriptor.getConstants().add(constantDescriptor);
+        }
+        if(fqnToModule.containsKey(fqn)) {
+            fqnToModule.get(fqn).getConstants().add(constantDescriptor);
+        }
+        if(fqnToClass.containsKey(fqn)) {
+            fqnToClass.get(fqn).getConstants().add(constantDescriptor);
+        }
+
         return null;
     }
 

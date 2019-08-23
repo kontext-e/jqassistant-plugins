@@ -3,6 +3,8 @@
     <description>Provides a scanner for Ruby files.</description>
     <model>
         <class>de.kontext_e.jqassistant.plugin.ruby.store.descriptor.ClassDescriptor</class>
+        <class>de.kontext_e.jqassistant.plugin.ruby.store.descriptor.ConstantContainer</class>
+        <class>de.kontext_e.jqassistant.plugin.ruby.store.descriptor.ConstantDescriptor</class>
         <class>de.kontext_e.jqassistant.plugin.ruby.store.descriptor.MethodDescriptor</class>
         <class>de.kontext_e.jqassistant.plugin.ruby.store.descriptor.ModuleDescriptor</class>
         <class>de.kontext_e.jqassistant.plugin.ruby.store.descriptor.ParameterDescriptor</class>

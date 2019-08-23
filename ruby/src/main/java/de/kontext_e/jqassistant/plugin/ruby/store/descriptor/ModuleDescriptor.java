@@ -8,7 +8,7 @@ import com.buschmais.xo.neo4j.api.annotation.Relation;
 import java.util.Set;
 
 @Label("Module")
-public interface ModuleDescriptor extends RubyDescriptor, NamedDescriptor, FullQualifiedNameDescriptor {
+public interface ModuleDescriptor extends RubyDescriptor, NamedDescriptor, FullQualifiedNameDescriptor, ConstantContainer {
 
     @Relation("CONTAINS")
     Set<ClassDescriptor> getClasses();

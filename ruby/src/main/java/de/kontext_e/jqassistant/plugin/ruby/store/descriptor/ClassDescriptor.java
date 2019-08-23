@@ -8,7 +8,7 @@ import com.buschmais.xo.neo4j.api.annotation.Relation;
 import java.util.List;
 
 @Label("Class")
-public interface ClassDescriptor extends RubyDescriptor, NamedDescriptor, FullQualifiedNameDescriptor {
+public interface ClassDescriptor extends RubyDescriptor, NamedDescriptor, FullQualifiedNameDescriptor, ConstantContainer {
 
     @Relation.Outgoing
     @Declares
