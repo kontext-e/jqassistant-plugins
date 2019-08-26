@@ -7,7 +7,8 @@ import com.buschmais.xo.neo4j.api.annotation.Relation;
 import java.util.List;
 import java.util.Set;
 
-public interface RubyFileDescriptor extends RubyDescriptor, NamedDescriptor, FileDescriptor, ConstantContainer {
+public interface RubyFileDescriptor extends RubyDescriptor, NamedDescriptor, FileDescriptor, ConstantContainer,
+        MethodContainer {
 
     @Relation("HAS_MODULE")
     Set<ModuleDescriptor> getModules();

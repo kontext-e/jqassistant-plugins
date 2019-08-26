@@ -8,6 +8,7 @@
         <class>de.kontext_e.jqassistant.plugin.ruby.store.descriptor.ConstantContainer</class>
         <class>de.kontext_e.jqassistant.plugin.ruby.store.descriptor.ConstantDescriptor</class>
         <class>de.kontext_e.jqassistant.plugin.ruby.store.descriptor.IncludeDescriptor</class>
+        <class>de.kontext_e.jqassistant.plugin.ruby.store.descriptor.MethodContainer</class>
         <class>de.kontext_e.jqassistant.plugin.ruby.store.descriptor.MethodDescriptor</class>
         <class>de.kontext_e.jqassistant.plugin.ruby.store.descriptor.ModuleDescriptor</class>
         <class>de.kontext_e.jqassistant.plugin.ruby.store.descriptor.ParameterDescriptor</class>

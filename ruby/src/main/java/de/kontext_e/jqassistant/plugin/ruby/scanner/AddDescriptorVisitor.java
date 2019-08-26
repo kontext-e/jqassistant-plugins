@@ -8,15 +8,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 class AddDescriptorVisitor implements NodeVisitor {
     private static final Logger LOGGER = LoggerFactory.getLogger(AddDescriptorVisitor.class);
 
     private final RubyFileDescriptor rubyFileDescriptor;
     private final Store store;
-    private Map<String, ModuleDescriptor> fqnToModule = new HashMap<>();
-    private Map<String, ClassDescriptor> fqnToClass = new HashMap<>();
+    private static Map<String, ModuleDescriptor> fqnToModule = new HashMap<>();
+    private static Map<String, ClassDescriptor> fqnToClass = new HashMap<>();
+    private static Set<UnresolvedCallTarget> unresolvedCallTargets = new HashSet<>();
 
     AddDescriptorVisitor(RubyFileDescriptor rubyFileDescriptor, Store store) {
         this.rubyFileDescriptor = rubyFileDescriptor;
@@ -139,8 +142,54 @@ class AddDescriptorVisitor implements NodeVisitor {
 
     @Override
     public Object visitCallNode(CallNode iVisited) {
+        final Node receiver = iVisited.getReceiver();
+        final String receiverFqn = getReceiverFqn(receiver);
+        if(receiverFqn == null) {
+            // ignore some internal call (at least for now)
+            return null;
+        }
+
+        // FIXME has ruby overloaded methods?
+        final MethodContainer targetMethodContainer = findByFqn(receiverFqn);
+        if(targetMethodContainer != null) {
+            String targetMethodName = iVisited.getName();
+            if("new".equals(targetMethodName)) {
+                targetMethodName = "initialize";
+            }
+            for (MethodDescriptor targetMethodCandidate : targetMethodContainer.getDeclaredMethods()) {
+                if(targetMethodCandidate.getName().equals(targetMethodName)) {
+                    final String fqn = getFqn(findParentIScopingNode(iVisited));
+                    final String normativeSignature = iVisited.getMethodFor().getNormativeSignature();
+                    final MethodContainer callerMethodContainer = findByFqn(fqn);
+                    for (MethodDescriptor callerMethodCandidates : callerMethodContainer.getDeclaredMethods()) {
+                        if(callerMethodCandidates.getSignature().equals(normativeSignature)) {
+                            callerMethodCandidates.getCalledMethods().add(targetMethodCandidate);
+                        }
+                    }
+                }
+            }
+
+        } else {
+            UnresolvedCallTarget uct = new UnresolvedCallTarget(receiverFqn, iVisited.getName());
+            UnresolvedCallTarget cleanMeUp;
+            if(unresolvedCallTargets.contains(uct)) {
+                cleanMeUp = unresolvedCallTargets.stream().filter(x -> x.equals(uct)).findFirst().get();
+            } else {
+                unresolvedCallTargets.add(uct);
+                cleanMeUp = uct;
+            }
+            final String fqn = getFqn(findParentIScopingNode(iVisited));
+            final String normativeSignature = iVisited.getMethodFor().getNormativeSignature();
+            final MethodContainer methodContainer = findByFqn(fqn);
+            for (MethodDescriptor declaredMethod : methodContainer.getDeclaredMethods()) {
+                if(declaredMethod.getSignature().equals(normativeSignature)) {
+                    cleanMeUp.addCallSource(declaredMethod);
+                }
+            }
+        }
         return null;
     }
+
 
     @Override
     public Object visitCaseNode(CaseNode iVisited) {
@@ -168,6 +217,18 @@ class AddDescriptorVisitor implements NodeVisitor {
             classDescriptor.getDeclaredMethods().add(methodDescriptor);
             methodDescriptor.setName(methodDef.getName());
             methodDescriptor.setSignature(methodDef.getNormativeSignature());
+
+            UnresolvedCallTarget uct = new UnresolvedCallTarget(classDescriptor.getFullQualifiedName(), methodDef.getName());
+            if(unresolvedCallTargets.contains(uct)) {
+                final UnresolvedCallTarget unresolvedCallTarget = unresolvedCallTargets.stream()
+                        .filter(x -> x.equals(uct)).findFirst().get();
+                unresolvedCallTargets.remove(uct);
+
+                for (MethodDescriptor callSource : unresolvedCallTarget.getCallSources()) {
+                    callSource.getCalledMethods().add(methodDescriptor);
+                }
+
+            }
 
             final ArgsNode args = methodDef.getArgs();
             for (Node param : args.getNormativeParameterList()) {
@@ -291,6 +352,7 @@ class AddDescriptorVisitor implements NodeVisitor {
                             final IncludeDescriptor includeDescriptor = store.create(IncludeDescriptor.class);
                             includeDescriptor.setName(constNode.getName());
                             fqnToClass.get(fqn).getIncludes().add(includeDescriptor);
+                            // FIXME resolve symbol for include
                         } else {
                             LOGGER.error("No class with fqn " + fqn + " found");
                         }
@@ -307,6 +369,7 @@ class AddDescriptorVisitor implements NodeVisitor {
                         final RequireDescriptor requireDescriptor = store.create(RequireDescriptor.class);
                         requireDescriptor.setName(strNode.getValue());
                         rubyFileDescriptor.getRequires().add(requireDescriptor);
+                        // FIXME resolve symbol for require
                     }
                 }
             }
@@ -322,7 +385,8 @@ class AddDescriptorVisitor implements NodeVisitor {
         } else {
             final MethodDefNode parentMethod = findParentMethod(iVisited);
             if(parentMethod != null) {
-                System.out.println(parentMethod+" calls "+iVisited.getName());
+                // System.out.println(parentMethod.getNormativeSignature()+" calls "+iVisited.getName());
+                // FIXME add a relationship between caller and callee
             } else {
                 System.out.println("!!! no method calls "+iVisited.getName());
             }
@@ -759,11 +823,35 @@ class AddDescriptorVisitor implements NodeVisitor {
 
     private <T> T findParentDescriptor(IScopingNode parentIScopingNode) {
         final String fqn = getFqn(parentIScopingNode);
+        return findByFqn(fqn);
+    }
+
+    private <T> T findByFqn(String fqn) {
         if(fqnToModule.containsKey(fqn)) {
             return (T) fqnToModule.get(fqn);
         }
         if(fqnToClass.containsKey(fqn)) {
             return (T) fqnToClass.get(fqn);
+        }
+        return null;
+    }
+
+    private String getReceiverFqn(Node receiver) {
+        if(receiver instanceof Colon3Node) {
+            String fqn = ((INameNode) receiver).getName();
+            Node firstChild = receiver;
+            while(true) {
+                if (firstChild.childNodes().size() > 0) {
+                    firstChild = firstChild.childNodes().get(0);
+                    fqn = ((INameNode) firstChild).getName() + "::" + fqn;
+                    if(firstChild.getNodeType() == NodeType.COLON3NODE ) {
+                        fqn = "::"+fqn;
+                    }
+                } else {
+                    break;
+                }
+            }
+            return fqn;
         }
         return null;
     }

@@ -11,4 +11,7 @@ public interface MethodDescriptor extends RubyDescriptor, NamedDescriptor, Signa
 
     @Relation("HAS")
     List<ParameterDescriptor> getParameters();
+
+    @Relation("CALLS")
+    List<MethodDescriptor> getCalledMethods();
 }
