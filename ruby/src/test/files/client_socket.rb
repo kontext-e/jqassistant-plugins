@@ -10,6 +10,8 @@ module ActionCable
     #
     # Copyright (c) 2010-2015 James Coglan
     class ClientSocket # :nodoc:
+      include ToFile
+
       def self.determine_url(env)
         scheme = secure_request?(env) ? "wss:" : "ws:"
         "#{ scheme }//#{ env['HTTP_HOST'] }#{ env['REQUEST_URI'] }"

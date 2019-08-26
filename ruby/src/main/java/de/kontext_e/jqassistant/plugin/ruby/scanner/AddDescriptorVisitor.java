@@ -4,11 +4,15 @@ import com.buschmais.jqassistant.core.store.api.Store;
 import de.kontext_e.jqassistant.plugin.ruby.store.descriptor.*;
 import org.jrubyparser.NodeVisitor;
 import org.jrubyparser.ast.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
 
 class AddDescriptorVisitor implements NodeVisitor {
+    private static final Logger LOGGER = LoggerFactory.getLogger(AddDescriptorVisitor.class);
+
     private final RubyFileDescriptor rubyFileDescriptor;
     private final Store store;
     private Map<String, ModuleDescriptor> fqnToModule = new HashMap<>();
@@ -176,6 +180,15 @@ class AddDescriptorVisitor implements NodeVisitor {
             }
         }
 
+        final Node superNode = iVisited.getSuper();
+        if(superNode instanceof ConstNode) {
+            ConstNode superClass = (ConstNode) superNode;
+            final String superClassName = superClass.getName();
+            System.out.println("  class' super node: " + superClassName);
+            // FIXME find super class within the right name space
+        }
+
+
         return null;
     }
 
@@ -266,7 +279,76 @@ class AddDescriptorVisitor implements NodeVisitor {
 
     @Override
     public Object visitFCallNode(FCallNode iVisited) {
+        if("include".equals(iVisited.getName())) {
+            final ClassNode parentClass = findParentClass(iVisited);
+            if (iVisited.getArgs() instanceof ArrayNode) {
+                ArrayNode args = (ArrayNode) iVisited.getArgs();
+                for (Node childNode : args.childNodes()) {
+                    if (childNode instanceof ConstNode) {
+                        ConstNode constNode = (ConstNode) childNode;
+                        final String fqn = getFqn(parentClass);
+                        if (fqnToClass.containsKey(fqn)) {
+                            final IncludeDescriptor includeDescriptor = store.create(IncludeDescriptor.class);
+                            includeDescriptor.setName(constNode.getName());
+                            fqnToClass.get(fqn).getIncludes().add(includeDescriptor);
+                        } else {
+                            LOGGER.error("No class with fqn " + fqn + " found");
+                        }
+                    }
+                }
+            }
+
+        } else if("require".equals(iVisited.getName())) {
+            if (iVisited.getArgs() instanceof ArrayNode) {
+                ArrayNode args = (ArrayNode) iVisited.getArgs();
+                for (Node childNode : args.childNodes()) {
+                    if (childNode instanceof StrNode) {
+                        StrNode strNode = (StrNode) childNode;
+                        final RequireDescriptor requireDescriptor = store.create(RequireDescriptor.class);
+                        requireDescriptor.setName(strNode.getValue());
+                        rubyFileDescriptor.getRequires().add(requireDescriptor);
+                    }
+                }
+            }
+
+        } else if("attr".equals(iVisited.getName())) {
+            addAttribute(iVisited);
+        } else if(" attr_accessor".equals(iVisited.getName())) {
+            addAttribute(iVisited);
+        } else if("attr_reader".equals(iVisited.getName())) {
+            addAttribute(iVisited);
+        } else if("attr_writer".equals(iVisited.getName())) {
+            addAttribute(iVisited);
+        } else {
+            final MethodDefNode parentMethod = findParentMethod(iVisited);
+            if(parentMethod != null) {
+                System.out.println(parentMethod+" calls "+iVisited.getName());
+            } else {
+                System.out.println("!!! no method calls "+iVisited.getName());
+            }
+        }
         return null;
+    }
+
+    private void addAttribute(FCallNode iVisited) {
+        final IScopingNode parentIScopingNode = findParentIScopingNode(iVisited);
+        if (iVisited.getArgs() instanceof ArrayNode) {
+            ArrayNode args = (ArrayNode) iVisited.getArgs();
+            for (Node childNode : args.childNodes()) {
+                if (childNode instanceof SymbolNode) {
+                    SymbolNode symbolNode = (SymbolNode) childNode;
+                    System.out.println(" declared variable " + symbolNode.getName());
+                    final AttributeDescriptor attributeDescriptor = store.create(AttributeDescriptor.class);
+                    attributeDescriptor.setName(symbolNode.getName());
+                    AttributedDescriptor module = findParentDescriptor(parentIScopingNode);
+                    if(module != null) {
+                        module.getAttributes().add(attributeDescriptor);
+                    } else {
+                        LOGGER.error("No module for attribute " + symbolNode.getName());
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -391,8 +473,7 @@ class AddDescriptorVisitor implements NodeVisitor {
 
     @Override
     public Object visitMethodNameNode(MethodNameNode iVisited) {
-        final MethodDescriptor methodDescriptor = store.create(MethodDescriptor.class);
-        methodDescriptor.setName(iVisited.getName());
+        // FIXME handle methods directly defined in the ruby file outside classes or modules
         return null;
     }
 
@@ -645,6 +726,16 @@ class AddDescriptorVisitor implements NodeVisitor {
         return findParentClass(iVisited.getParent());
     }
 
+    private MethodDefNode findParentMethod(Node iVisited) {
+        if(iVisited == null) return null;
+
+        final Node parent = iVisited.getParent();
+        if(parent instanceof MethodDefNode) {
+            return (MethodDefNode) parent;
+        }
+        return findParentMethod(iVisited.getParent());
+    }
+
     private IScopingNode findParentIScopingNode(Node iVisited) {
         if(iVisited == null) return null;
 
@@ -664,6 +755,17 @@ class AddDescriptorVisitor implements NodeVisitor {
         } else {
             return iVisited.getCPath().getName();
         }
+    }
+
+    private <T> T findParentDescriptor(IScopingNode parentIScopingNode) {
+        final String fqn = getFqn(parentIScopingNode);
+        if(fqnToModule.containsKey(fqn)) {
+            return (T) fqnToModule.get(fqn);
+        }
+        if(fqnToClass.containsKey(fqn)) {
+            return (T) fqnToClass.get(fqn);
+        }
+        return null;
     }
 
 }
