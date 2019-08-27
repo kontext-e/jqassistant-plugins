@@ -12,5 +12,10 @@ public interface ClassDescriptor extends RubyDescriptor, NamedDescriptor, FullQu
         ConstantContainer, AttributedDescriptor, MethodContainer {
 
     @Relation("INCLUDES")
-    List<IncludeDescriptor> getIncludes();
+    List<ModuleDescriptor> getIncludes();
+
+/*
+    @Relation("EXTENDS")
+    TypeDescriptor getSuperClass();
+*/
 }

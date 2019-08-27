@@ -10,7 +10,10 @@ import java.util.Set;
 public interface RubyFileDescriptor extends RubyDescriptor, NamedDescriptor, FileDescriptor, ConstantContainer,
         MethodContainer {
 
-    @Relation("HAS_MODULE")
+    @Relation("CONTAINS")
+    Set<ClassDescriptor> getClasses();
+
+    @Relation("CONTAINS")
     Set<ModuleDescriptor> getModules();
 
     @Relation("REQUIRES")

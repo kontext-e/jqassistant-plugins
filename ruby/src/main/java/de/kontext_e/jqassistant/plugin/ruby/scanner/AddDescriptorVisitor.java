@@ -7,10 +7,9 @@ import org.jrubyparser.ast.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+
+import static java.util.Arrays.asList;
 
 class AddDescriptorVisitor implements NodeVisitor {
     private static final Logger LOGGER = LoggerFactory.getLogger(AddDescriptorVisitor.class);
@@ -20,6 +19,7 @@ class AddDescriptorVisitor implements NodeVisitor {
     private static Map<String, ModuleDescriptor> fqnToModule = new HashMap<>();
     private static Map<String, ClassDescriptor> fqnToClass = new HashMap<>();
     private static Set<UnresolvedCallTarget> unresolvedCallTargets = new HashSet<>();
+    private static Map<UnresolvedIncludeTarget, List<String>> unresolvedIncludeTargets = new HashMap<>();
 
     AddDescriptorVisitor(RubyFileDescriptor rubyFileDescriptor, Store store) {
         this.rubyFileDescriptor = rubyFileDescriptor;
@@ -142,11 +142,16 @@ class AddDescriptorVisitor implements NodeVisitor {
 
     @Override
     public Object visitCallNode(CallNode iVisited) {
+        addRelationshipFromCallerToCallee(iVisited);
+        return null;
+    }
+
+    private void addRelationshipFromCallerToCallee(CallNode iVisited) {
         final Node receiver = iVisited.getReceiver();
         final String receiverFqn = getReceiverFqn(receiver);
         if(receiverFqn == null) {
             // ignore some internal call (at least for now)
-            return null;
+            return;
         }
 
         // FIXME has ruby overloaded methods?
@@ -187,7 +192,6 @@ class AddDescriptorVisitor implements NodeVisitor {
                 }
             }
         }
-        return null;
     }
 
 
@@ -202,6 +206,7 @@ class AddDescriptorVisitor implements NodeVisitor {
         classDescriptor.setName(iVisited.getCPath().getName());
         classDescriptor.setFullQualifiedName(getFqn(iVisited));
         fqnToClass.put(classDescriptor.getFullQualifiedName(), classDescriptor);
+        rubyFileDescriptor.getClasses().add(classDescriptor);
 
         final ModuleNode parentModule = findParentModule(iVisited);
         if(parentModule != null) {
@@ -349,10 +354,24 @@ class AddDescriptorVisitor implements NodeVisitor {
                         ConstNode constNode = (ConstNode) childNode;
                         final String fqn = getFqn(parentClass);
                         if (fqnToClass.containsKey(fqn)) {
-                            final IncludeDescriptor includeDescriptor = store.create(IncludeDescriptor.class);
-                            includeDescriptor.setName(constNode.getName());
-                            fqnToClass.get(fqn).getIncludes().add(includeDescriptor);
-                            // FIXME resolve symbol for include
+                            boolean connected = false;
+                            for (ModuleDescriptor module : fqnToModule.values()) {
+                                if (module.getFullQualifiedName().equals(constNode.getName())) {
+                                    fqnToClass.get(fqn).getIncludes().add(module);
+                                    connected = true;
+                                }
+                            }
+
+                            if(!connected) {
+                                UnresolvedIncludeTarget uit = new UnresolvedIncludeTarget(constNode.getName());
+                                if (unresolvedIncludeTargets.containsKey(uit)) {
+                                    final List list = unresolvedIncludeTargets.get(uit);
+                                    list.add(fqn);
+                                } else {
+                                    unresolvedIncludeTargets.put(uit, asList(fqn));
+                                }
+                            }
+
                         } else {
                             LOGGER.error("No class with fqn " + fqn + " found");
                         }
@@ -401,7 +420,6 @@ class AddDescriptorVisitor implements NodeVisitor {
             for (Node childNode : args.childNodes()) {
                 if (childNode instanceof SymbolNode) {
                     SymbolNode symbolNode = (SymbolNode) childNode;
-                    System.out.println(" declared variable " + symbolNode.getName());
                     final AttributeDescriptor attributeDescriptor = store.create(AttributeDescriptor.class);
                     attributeDescriptor.setName(symbolNode.getName());
                     AttributedDescriptor module = findParentDescriptor(parentIScopingNode);
@@ -557,6 +575,15 @@ class AddDescriptorVisitor implements NodeVisitor {
                 parentModuleDescriptor.getModules().add(moduleDescriptor);
             }
         }
+
+        UnresolvedIncludeTarget uit = new UnresolvedIncludeTarget(iVisited.getCPath().getName());
+        if(unresolvedIncludeTargets.containsKey(uit)) {
+            final List<String> fqns = unresolvedIncludeTargets.get(uit);
+            for (String fqn : fqns) {
+                fqnToClass.get(fqn).getIncludes().add(moduleDescriptor);
+            }
+        }
+
         return null;
     }
 
