@@ -4,12 +4,18 @@ require "websocket/driver"
 
 module ActionCable
   module Connection
+        class Base
+          def aMethod
+            puts "Got here"
+          end
+          private :aMethod
+        end
 
     #--
     # This class is heavily based on faye-websocket-ruby
     #
     # Copyright (c) 2010-2015 James Coglan
-    class ClientSocket # :nodoc:
+    class ClientSocket < Base # :nodoc:
       include ToFile
 
       def self.determine_url(env)

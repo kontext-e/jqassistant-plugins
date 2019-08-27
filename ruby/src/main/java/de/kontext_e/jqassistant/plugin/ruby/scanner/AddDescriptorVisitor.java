@@ -262,12 +262,33 @@ class AddDescriptorVisitor implements NodeVisitor {
             }
         }
 
+        // set relationship to super class
         final Node superNode = iVisited.getSuper();
         if(superNode instanceof ConstNode) {
             ConstNode superClass = (ConstNode) superNode;
             final String superClassName = superClass.getName();
             System.out.println("  class' super node: " + superClassName);
-            // FIXME find super class within the right name space
+            if(superClassName.contains("::")) {
+                // assume name is already fully qualified, FIXME maybe partly qualified within sibling module
+                System.out.println("superClassName.contains ::");
+                if (fqnToClass.containsKey(superClassName)) {
+                    System.out.println("create superclass relationship");
+                    final ClassDescriptor superClassDescriptor = fqnToClass.get(superClassName);
+                    classDescriptor.setSuperClass(superClassDescriptor);
+                }
+            } else {
+                // super class is in the same namespace but cached with fqn
+                System.out.println("superClassName in same namespace");
+                final String inheritedClassFqn = getFqn(iVisited);
+                FullyQualifiedName fullyQualifiedName = new FullyQualifiedName(inheritedClassFqn);
+                FullyQualifiedName replaced = fullyQualifiedName.replaceLastBy(superClassName);
+                System.out.println("replaced: "+replaced);
+                if (fqnToClass.containsKey(replaced.asString())) {
+                    System.out.println("create superclass relationship");
+                    final ClassDescriptor superClassDescriptor = fqnToClass.get(replaced.asString());
+                    classDescriptor.setSuperClass(superClassDescriptor);
+                }
+            }
         }
 
 

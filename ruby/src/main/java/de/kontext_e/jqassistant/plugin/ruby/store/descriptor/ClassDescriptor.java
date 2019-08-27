@@ -14,8 +14,7 @@ public interface ClassDescriptor extends RubyDescriptor, NamedDescriptor, FullQu
     @Relation("INCLUDES")
     List<ModuleDescriptor> getIncludes();
 
-/*
     @Relation("EXTENDS")
-    TypeDescriptor getSuperClass();
-*/
+    ClassDescriptor getSuperClass();
+    void setSuperClass(ClassDescriptor superClass);
 }
