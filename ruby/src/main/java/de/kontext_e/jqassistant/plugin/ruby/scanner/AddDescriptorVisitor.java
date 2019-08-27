@@ -157,39 +157,55 @@ class AddDescriptorVisitor implements NodeVisitor {
         // FIXME has ruby overloaded methods?
         final MethodContainer targetMethodContainer = findByFqn(receiverFqn);
         if(targetMethodContainer != null) {
-            String targetMethodName = iVisited.getName();
-            if("new".equals(targetMethodName)) {
-                targetMethodName = "initialize";
-            }
-            for (MethodDescriptor targetMethodCandidate : targetMethodContainer.getDeclaredMethods()) {
-                if(targetMethodCandidate.getName().equals(targetMethodName)) {
-                    final String fqn = getFqn(findParentIScopingNode(iVisited));
-                    final String normativeSignature = iVisited.getMethodFor().getNormativeSignature();
-                    final MethodContainer callerMethodContainer = findByFqn(fqn);
-                    for (MethodDescriptor callerMethodCandidates : callerMethodContainer.getDeclaredMethods()) {
-                        if(callerMethodCandidates.getSignature().equals(normativeSignature)) {
-                            callerMethodCandidates.getCalledMethods().add(targetMethodCandidate);
-                        }
+            addCallsRelationship(iVisited, targetMethodContainer);
+        } else {
+            addUnresolvedCallTarget(iVisited, receiverFqn);
+        }
+    }
+
+    private void addCallsRelationship(CallNode iVisited, MethodContainer targetMethodContainer) {
+        String targetMethodName = iVisited.getName();
+        if("new".equals(targetMethodName)) {
+            targetMethodName = "initialize";
+        }
+        for (MethodDescriptor targetMethodCandidate : targetMethodContainer.getDeclaredMethods()) {
+            if(targetMethodCandidate.getName().equals(targetMethodName)) {
+                final String fqn = getFqn(findParentIScopingNode(iVisited));
+                final MethodDefNode methodFor = iVisited.getMethodFor();
+                if(methodFor == null) {
+                    // call is not inside from a method
+                    continue;
+                }
+                final String normativeSignature = methodFor.getNormativeSignature();
+                final MethodContainer callerMethodContainer = findByFqn(fqn);
+                for (MethodDescriptor callerMethodCandidates : callerMethodContainer.getDeclaredMethods()) {
+                    if(callerMethodCandidates.getSignature().equals(normativeSignature)) {
+                        callerMethodCandidates.getCalledMethods().add(targetMethodCandidate);
                     }
                 }
             }
+        }
+    }
 
+    private void addUnresolvedCallTarget(CallNode iVisited, String receiverFqn) {
+        UnresolvedCallTarget uct = new UnresolvedCallTarget(receiverFqn, iVisited.getName());
+        UnresolvedCallTarget cleanMeUp;
+        if(unresolvedCallTargets.contains(uct)) {
+            cleanMeUp = unresolvedCallTargets.stream().filter(x -> x.equals(uct)).findFirst().get();
         } else {
-            UnresolvedCallTarget uct = new UnresolvedCallTarget(receiverFqn, iVisited.getName());
-            UnresolvedCallTarget cleanMeUp;
-            if(unresolvedCallTargets.contains(uct)) {
-                cleanMeUp = unresolvedCallTargets.stream().filter(x -> x.equals(uct)).findFirst().get();
-            } else {
-                unresolvedCallTargets.add(uct);
-                cleanMeUp = uct;
-            }
-            final String fqn = getFqn(findParentIScopingNode(iVisited));
-            final String normativeSignature = iVisited.getMethodFor().getNormativeSignature();
-            final MethodContainer methodContainer = findByFqn(fqn);
-            for (MethodDescriptor declaredMethod : methodContainer.getDeclaredMethods()) {
-                if(declaredMethod.getSignature().equals(normativeSignature)) {
-                    cleanMeUp.addCallSource(declaredMethod);
-                }
+            unresolvedCallTargets.add(uct);
+            cleanMeUp = uct;
+        }
+        final String fqn = getFqn(findParentIScopingNode(iVisited));
+        final MethodDefNode methodFor = iVisited.getMethodFor();
+        if(methodFor == null) {
+            return;
+        }
+        final String normativeSignature = methodFor.getNormativeSignature();
+        final MethodContainer methodContainer = findByFqn(fqn);
+        for (MethodDescriptor declaredMethod : methodContainer.getDeclaredMethods()) {
+            if(declaredMethod.getSignature().equals(normativeSignature)) {
+                cleanMeUp.addCallSource(declaredMethod);
             }
         }
     }
