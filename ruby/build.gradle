@@ -5,5 +5,7 @@ jar {
 }
 
 dependencies {
-    compile 'org.jruby:jrubyparser:0.5.3'
+    compile 'org.jruby:jrubyparser:0.5.5-SNAPSHOT'
+    compile 'org.jruby:jruby-core:9.2.8.0'
+
 }

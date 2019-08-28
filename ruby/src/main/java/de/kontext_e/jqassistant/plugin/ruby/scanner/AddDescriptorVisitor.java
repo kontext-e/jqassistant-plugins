@@ -203,9 +203,11 @@ class AddDescriptorVisitor implements NodeVisitor {
         }
         final String normativeSignature = methodFor.getNormativeSignature();
         final MethodContainer methodContainer = findByFqn(fqn);
-        for (MethodDescriptor declaredMethod : methodContainer.getDeclaredMethods()) {
-            if(declaredMethod.getSignature().equals(normativeSignature)) {
-                cleanMeUp.addCallSource(declaredMethod);
+        if(methodContainer != null) {
+            for (MethodDescriptor declaredMethod : methodContainer.getDeclaredMethods()) {
+                if(declaredMethod.getSignature().equals(normativeSignature)) {
+                    cleanMeUp.addCallSource(declaredMethod);
+                }
             }
         }
     }
@@ -297,6 +299,11 @@ class AddDescriptorVisitor implements NodeVisitor {
 
     @Override
     public Object visitCommentNode(CommentNode iVisited) {
+        return null;
+    }
+
+    @Override
+    public Object visitComplexNode(ComplexNode complexNode) {
         return null;
     }
 
@@ -405,7 +412,7 @@ class AddDescriptorVisitor implements NodeVisitor {
                                     final List list = unresolvedIncludeTargets.get(uit);
                                     list.add(fqn);
                                 } else {
-                                    unresolvedIncludeTargets.put(uit, asList(fqn));
+                                    unresolvedIncludeTargets.put(uit, new ArrayList<>(asList(fqn)));
                                 }
                             }
 
@@ -444,7 +451,7 @@ class AddDescriptorVisitor implements NodeVisitor {
                 // System.out.println(parentMethod.getNormativeSignature()+" calls "+iVisited.getName());
                 // FIXME add a relationship between caller and callee
             } else {
-                System.out.println("!!! no method calls "+iVisited.getName());
+                // FIXME System.out.println("!!! no method calls "+iVisited.getName());
             }
         }
         return null;
@@ -690,12 +697,22 @@ class AddDescriptorVisitor implements NodeVisitor {
     }
 
     @Override
+    public Object visitRationalNode(RationalNode rationalNode) {
+        return null;
+    }
+
+    @Override
     public Object visitRedoNode(RedoNode iVisited) {
         return null;
     }
 
     @Override
     public Object visitRegexpNode(RegexpNode iVisited) {
+        return null;
+    }
+
+    @Override
+    public Object visitRequiredKeywordArgumentValueNode(RequiredKeywordArgumentValueNode requiredKeywordArgumentValueNode) {
         return null;
     }
 

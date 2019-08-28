@@ -45,6 +45,7 @@ class UnresolvedCallTarget {
         return "UnresolvedCallTarget{" +
                 "receiverFqn='" + receiverFqn + '\'' +
                 ", normativeSignature='" + normativeSignature + '\'' +
+                ", callSources=" + callSources +
                 '}';
     }
 
