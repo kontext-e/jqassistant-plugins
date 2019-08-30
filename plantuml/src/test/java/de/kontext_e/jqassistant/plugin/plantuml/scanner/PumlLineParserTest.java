@@ -1,29 +1,17 @@
 package de.kontext_e.jqassistant.plugin.plantuml.scanner;
 
-import java.util.HashSet;
-import java.util.Set;
+import com.buschmais.jqassistant.core.store.api.Store;
+import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import com.buschmais.jqassistant.core.store.api.Store;
-import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlClassDiagramDescriptor;
-import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlDescriptionDiagramDescriptor;
-import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlElement;
-import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlFileDescriptor;
-import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlLeafDescriptor;
-import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlPackageDescriptor;
-import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlParticipantDescriptor;
-import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlSequenceDiagramDescriptor;
-import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlSequenceDiagramMessageDescriptor;
-import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlStateDiagramDescriptor;
+import java.util.HashSet;
+import java.util.Set;
 
 import static java.util.Arrays.stream;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class PumlLineParserTest {
     private PumlLineParser pumlLineParser;
@@ -199,40 +187,53 @@ public class PumlLineParserTest {
         verify(mockPlantUmlLeafDescriptor, times(4)).getLinkTargets();
     }
 
-	@Test
-	public void thatSequenceDiagramIsRead() {
-		final String puml = "@startuml\n" +
-							"autonumber\n" +
-							"participant de.kontext_e.spikes.trace_to_plantuml.application.Controller <<Controller>>\n" +
-							"de.kontext_e.spikes.trace_to_plantuml.application.Controller -> de.kontext_e.spikes.trace_to_plantuml.application.Boundary : loadEntity([1])\n" +
-							"de.kontext_e.spikes.trace_to_plantuml.application.Boundary -> de.kontext_e.spikes.trace_to_plantuml.application.Repository : readEntity([1])\n" +
-							"de.kontext_e.spikes.trace_to_plantuml.application.Repository -> de.kontext_e.spikes.trace_to_plantuml.application.Boundary : throws(NoSuchEntityException{id=1})\n" +
-							"de.kontext_e.spikes.trace_to_plantuml.application.Boundary -> de.kontext_e.spikes.trace_to_plantuml.application.Controller : return([LoadEntityResult{results=NO_RESULT}])\n" +
-							"de.kontext_e.spikes.trace_to_plantuml.application.Controller -> de.kontext_e.spikes.trace_to_plantuml.application.LoadEntityResult : getResults([])\n" +
-							"de.kontext_e.spikes.trace_to_plantuml.application.LoadEntityResult -> de.kontext_e.spikes.trace_to_plantuml.application.Controller : return([NO_RESULT])\n" +
-							"@enduml";
+    @Test
+    public void thatSequenceDiagramIsRead() {
+        final String puml = "@startuml\n" +
+                "title First Level Components\n" +
+                "caption Level 1 Building Blocks\n" +
+                "\n" +
+                "legend right\n" +
+                "    | Element | Description |\n" +
+                "    |<#42788e>| Component |\n" +
+                "    | A --> B | A depends on B |\n" +
+                "endlegend\n" +
+                "\n" +
 
-		String[] lines = puml.split("\\n");
-		pumlLineParser = new PumlLineParser(mockStore, plantUmlFileDescriptor, ParsingState.ACCEPTING);
+                "autonumber\n" +
+                "participant de.kontext_e.spikes.trace_to_plantuml.application.Controller <<Controller>>\n" +
+                "de.kontext_e.spikes.trace_to_plantuml.application.Controller -> de.kontext_e.spikes.trace_to_plantuml.application.Boundary : loadEntity([1])\n" +
+                "de.kontext_e.spikes.trace_to_plantuml.application.Boundary -> de.kontext_e.spikes.trace_to_plantuml.application.Repository : readEntity([1])\n" +
+                "de.kontext_e.spikes.trace_to_plantuml.application.Repository -> de.kontext_e.spikes.trace_to_plantuml.application.Boundary : throws(NoSuchEntityException{id=1})\n" +
+                "de.kontext_e.spikes.trace_to_plantuml.application.Boundary -> de.kontext_e.spikes.trace_to_plantuml.application.Controller : return([LoadEntityResult{results=NO_RESULT}])\n" +
+                "de.kontext_e.spikes.trace_to_plantuml.application.Controller -> de.kontext_e.spikes.trace_to_plantuml.application.LoadEntityResult : getResults([])\n" +
+                "de.kontext_e.spikes.trace_to_plantuml.application.LoadEntityResult -> de.kontext_e.spikes.trace_to_plantuml.application.Controller : return([NO_RESULT])\n" +
+                "@enduml";
 
-		final PlantUmlSequenceDiagramDescriptor mockDescriptor = mock(PlantUmlSequenceDiagramDescriptor.class);
-		when(mockStore.create(PlantUmlSequenceDiagramDescriptor.class)).thenReturn(mockDescriptor);
-		final PlantUmlParticipantDescriptor participantDescriptor = mock(PlantUmlParticipantDescriptor.class);
-		when(mockStore.create(PlantUmlParticipantDescriptor.class)).thenReturn(participantDescriptor);
-		final PlantUmlSequenceDiagramMessageDescriptor messageDescriptor = mock(PlantUmlSequenceDiagramMessageDescriptor.class);
-		when(mockStore.create(participantDescriptor, PlantUmlSequenceDiagramMessageDescriptor.class, participantDescriptor)).thenReturn(messageDescriptor);
+        String[] lines = puml.split("\\n");
+        pumlLineParser = new PumlLineParser(mockStore, plantUmlFileDescriptor, ParsingState.ACCEPTING);
 
-		for (String line : lines) {
-			pumlLineParser.parseLine(line);
-		}
+        final PlantUmlSequenceDiagramDescriptor mockDescriptor = mock(PlantUmlSequenceDiagramDescriptor.class);
+        when(mockStore.create(PlantUmlSequenceDiagramDescriptor.class)).thenReturn(mockDescriptor);
+        final PlantUmlParticipantDescriptor participantDescriptor = mock(PlantUmlParticipantDescriptor.class);
+        when(mockStore.create(PlantUmlParticipantDescriptor.class)).thenReturn(participantDescriptor);
+        final PlantUmlSequenceDiagramMessageDescriptor messageDescriptor = mock(PlantUmlSequenceDiagramMessageDescriptor.class);
+        when(mockStore.create(participantDescriptor, PlantUmlSequenceDiagramMessageDescriptor.class, participantDescriptor)).thenReturn(messageDescriptor);
 
-		verify(mockStore).create(PlantUmlSequenceDiagramDescriptor.class);
-		verify(mockDescriptor).setType("SEQUENCEDIAGRAM");
-		verify(participantDescriptor, times(4)).setType("PARTICIPANT");
-		verify(participantDescriptor).setName("de.kontext_e.spikes.trace_to_plantuml.application.controller");
+        for (String line : lines) {
+            pumlLineParser.parseLine(line);
+        }
+
+        verify(mockStore).create(PlantUmlSequenceDiagramDescriptor.class);
+        verify(mockDescriptor).setType("SEQUENCEDIAGRAM");
+        verify(mockDescriptor).setTitle("first level components");
+        verify(mockDescriptor).setCaption("level 1 building blocks");
+        verify(mockDescriptor).setLegend("| element | description ||<#42788e>| component || a --> b | a depends on b |");
+        verify(participantDescriptor, times(4)).setType("PARTICIPANT");
+        verify(participantDescriptor).setName("de.kontext_e.spikes.trace_to_plantuml.application.controller");
 // fails in Maven for unkown reason		verify(participantDescriptor).setStereotype("<<controller>>");
-		verify(messageDescriptor).setMessage("[loadentity([1])]");
-		verify(messageDescriptor).setMessageNumber("<b>1</b>");
+        verify(messageDescriptor).setMessage("[loadentity([1])]");
+        verify(messageDescriptor).setMessageNumber("<b>1</b>");
     }
 
 

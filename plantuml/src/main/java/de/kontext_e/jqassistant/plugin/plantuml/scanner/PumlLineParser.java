@@ -1,47 +1,19 @@
 package de.kontext_e.jqassistant.plugin.plantuml.scanner;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.buschmais.jqassistant.core.store.api.Store;
-import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlClassDiagramDescriptor;
-import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlDescriptionDiagramDescriptor;
-import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlDiagramDescriptor;
-import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlElement;
-import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlFileDescriptor;
-import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlGroupDescriptor;
-import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlLeafDescriptor;
-import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlPackageDescriptor;
-import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlParticipantDescriptor;
-import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlSequenceDiagramDescriptor;
-import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlSequenceDiagramMessageDescriptor;
-import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlStateDescriptor;
-import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlStateDiagramDescriptor;
+import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.*;
 import net.sourceforge.plantuml.BlockUml;
 import net.sourceforge.plantuml.PSystemError;
 import net.sourceforge.plantuml.SourceStringReader;
 import net.sourceforge.plantuml.UmlDiagramType;
 import net.sourceforge.plantuml.classdiagram.AbstractEntityDiagram;
 import net.sourceforge.plantuml.core.Diagram;
-import net.sourceforge.plantuml.cucadiagram.DisplayPositionned;
-import net.sourceforge.plantuml.cucadiagram.GroupType;
-import net.sourceforge.plantuml.cucadiagram.IGroup;
-import net.sourceforge.plantuml.cucadiagram.ILeaf;
-import net.sourceforge.plantuml.cucadiagram.LeafType;
-import net.sourceforge.plantuml.cucadiagram.Link;
-import net.sourceforge.plantuml.cucadiagram.LinkStyle;
-import net.sourceforge.plantuml.cucadiagram.LinkType;
-import net.sourceforge.plantuml.cucadiagram.Stereotype;
-import net.sourceforge.plantuml.sequencediagram.Event;
-import net.sourceforge.plantuml.sequencediagram.Message;
-import net.sourceforge.plantuml.sequencediagram.Participant;
-import net.sourceforge.plantuml.sequencediagram.ParticipantType;
-import net.sourceforge.plantuml.sequencediagram.SequenceDiagram;
+import net.sourceforge.plantuml.cucadiagram.*;
+import net.sourceforge.plantuml.sequencediagram.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.*;
 
 class PumlLineParser {
     private static final Logger LOGGER = LoggerFactory.getLogger(PumlLineParser.class);
@@ -116,6 +88,10 @@ class PumlLineParser {
 
             final String type = umlDiagramType.name(); // incompatible with 1.2018.11
             diagramDescriptor.setType(type+"DIAGRAM");
+
+            diagramDescriptor.setTitle(extractString(sequenceDiagram.getTitle()));
+            diagramDescriptor.setCaption(extractString(sequenceDiagram.getCaption()));
+            diagramDescriptor.setLegend(extractString(sequenceDiagram.getLegend()));
 
             sequenceDiagram.participants().forEach(this::addParticipant);  // incompatible with 1.2018.11
             sequenceDiagram.events().forEach(this::addEvent);
