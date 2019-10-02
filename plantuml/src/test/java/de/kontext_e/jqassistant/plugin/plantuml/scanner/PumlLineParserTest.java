@@ -10,6 +10,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static java.util.Arrays.stream;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
@@ -453,6 +455,23 @@ public class PumlLineParserTest {
         // mock returns two times the same other mock
         // so only one entry is in the map
         assertEquals(1, leafs.size());
+    }
+
+    @Test
+    public void thatEmbeddedFileNameAndTypeWereFound() {
+        final String plantUmlMarker = "[\"plantuml\",\"MainBuildingBlocks.png\",\"png\"]\n";
+
+        final String[] parts = plantUmlMarker
+                .replaceAll("\\[", "")
+                .replaceAll("]", "")
+                .replaceAll("\"", "")
+                .replaceAll("\n", "")
+                .split(",");
+
+        assertThat("Wrong length of splitted array", parts.length, is(3));
+        assertThat("Wrong file name", parts[1], is("MainBuildingBlocks.png"));
+        assertThat("Wrong file type", parts[2], is("png"));
+
     }
 
 }

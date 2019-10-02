@@ -24,6 +24,8 @@ class PumlLineParser {
     private ParsingState parsingState = ParsingState.ACCEPTING;
     private StringBuilder lineBuffer = new StringBuilder();
     private final Map<String, PlantUmlParticipantDescriptor> participantDescriptors = new HashMap<>();
+    private String pictureFileName;
+    private String pictureFileType;
 
     PumlLineParser(final Store store, final PlantUmlFileDescriptor plantUmlFileDescriptor, final ParsingState parsingState) {
         this.store = store;
@@ -43,6 +45,16 @@ class PumlLineParser {
 
         if(parsingState == ParsingState.IGNORING && normalizedLine.startsWith("[\"plantuml\"")) {
             parsingState = ParsingState.PLANTUMLFOUND;
+            final String[] parts = normalizedLine
+                    .replaceAll("\\[", "")
+                    .replaceAll("]", "")
+                    .replaceAll("\"", "")
+                    .replaceAll("\n", "")
+                    .split(",");
+            if(parts!= null && parts.length >= 3) {
+                pictureFileName = parts[1];
+                pictureFileType = parts[2];
+            }
         }
 
         if(parsingState == ParsingState.ACCEPTING && (normalizedLine.startsWith("----") || normalizedLine.startsWith("@enduml"))) {
@@ -50,6 +62,8 @@ class PumlLineParser {
             lineBuffer.append("\n");
             lineBuffer.append("@enduml");
             storeDiagram();
+            pictureFileName = null;
+            pictureFileType = null;
         }
 
         if(parsingState == ParsingState.PLANTUMLFOUND && normalizedLine.startsWith("----")) {
@@ -86,6 +100,9 @@ class PumlLineParser {
             final PlantUmlDiagramDescriptor diagramDescriptor = createDiagramDescriptor(umlDiagramType);
             if(diagramDescriptor == null) return;
 
+            diagramDescriptor.setPictureFileName(pictureFileName);
+            diagramDescriptor.setPictureFileType(pictureFileType);
+
             final String type = umlDiagramType.name(); // incompatible with 1.2018.11
             diagramDescriptor.setType(type+"DIAGRAM");
 
@@ -104,6 +121,9 @@ class PumlLineParser {
             final UmlDiagramType umlDiagramType = descriptionDiagram.getUmlDiagramType();
             final PlantUmlDiagramDescriptor diagramDescriptor = createDiagramDescriptor(umlDiagramType);
             if(diagramDescriptor == null) return;
+
+            diagramDescriptor.setPictureFileName(pictureFileName);
+            diagramDescriptor.setPictureFileType(pictureFileType);
 
             final String type = umlDiagramType.name();  // incompatible with 1.2018.11
             diagramDescriptor.setType(type+"DIAGRAM");
