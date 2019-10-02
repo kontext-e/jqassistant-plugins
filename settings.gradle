@@ -23,7 +23,7 @@ include 'asciidoc'
 include 'javaparser'
 
 include 'excel'
+
 include 'ods'
 
-include 'ruby'
 
