@@ -1,10 +1,10 @@
 package de.kontext_e.jqassistant.plugin.git.scanner;
 
-import java.io.File;
-import java.io.IOException;
+import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitRepositoryDescriptor;
 import org.junit.Test;
 
-import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitRepositoryDescriptor;
+import java.io.File;
+import java.io.IOException;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -21,7 +21,7 @@ import static org.mockito.Mockito.verify;
 public class GitScannerPluginTest {
     private static final boolean IS_WINDOWS = isWindows();
 
-    private static final boolean isWindows () {
+    private static boolean isWindows () {
         // TODO: This is really ugly, isn't it?
         final String osName = System.getProperty("os.name");
         return null != osName && osName.startsWith("Windows");

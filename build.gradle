@@ -3,7 +3,7 @@ apply plugin: 'maven'
 apply plugin: 'org.asciidoctor.gradle.asciidoctor'
 apply plugin: 'com.github.jruby-gradle.base'
 
-project.ext["jqaversion"] = "1.7.0-MS3"
+project.ext["jqaversion"] = "1.7.0"
 project.group = 'de.kontext-e.jqassistant.plugin'
 project.version = '1.7.0-SNAPSHOT'
 
@@ -195,10 +195,8 @@ dependencies {
     jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.plantuml:${project.version}")
     jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.pmd:${project.version}")
     jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.excel:${project.version}")
-    jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.ruby:${project.version}")
     //  jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.cpp:${project.version}")
 
-    gems 'rubygems:asciidoctor-diagram:1.2.1'
 }
 
 task removeJQAReport(type: Delete) {

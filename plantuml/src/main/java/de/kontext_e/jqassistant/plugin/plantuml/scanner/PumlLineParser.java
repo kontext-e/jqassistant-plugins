@@ -3,7 +3,8 @@ package de.kontext_e.jqassistant.plugin.plantuml.scanner;
 import com.buschmais.jqassistant.core.store.api.Store;
 import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.*;
 import net.sourceforge.plantuml.BlockUml;
-import net.sourceforge.plantuml.PSystemError;
+import net.sourceforge.plantuml.Guillemet;
+import net.sourceforge.plantuml.error.PSystemError;
 import net.sourceforge.plantuml.SourceStringReader;
 import net.sourceforge.plantuml.UmlDiagramType;
 import net.sourceforge.plantuml.classdiagram.AbstractEntityDiagram;
@@ -21,7 +22,7 @@ class PumlLineParser {
     private final Store store;
     private final Map<String, PlantUmlElement> mappingFromFqnToPackage = new HashMap<>();
     private final PlantUmlFileDescriptor plantUmlFileDescriptor;
-    private ParsingState parsingState = ParsingState.ACCEPTING;
+    private ParsingState parsingState;
     private StringBuilder lineBuffer = new StringBuilder();
     private final Map<String, PlantUmlParticipantDescriptor> participantDescriptors = new HashMap<>();
     private String pictureFileName;
@@ -88,7 +89,7 @@ class PumlLineParser {
         final Diagram diagram = blocks.get(0).getDiagram();
         if(diagram instanceof PSystemError) {
             PSystemError error = (PSystemError) diagram;
-            final int higherErrorPosition = error.getHigherErrorPosition2().getPosition();  // incompatible with 1.2018.11
+            final int higherErrorPosition = error.getLineLocation().getPosition();
             LOGGER.warn("Error while parsing at postion "+higherErrorPosition+": "+error.getErrorsUml());
             return;
         }
@@ -103,14 +104,14 @@ class PumlLineParser {
             diagramDescriptor.setPictureFileName(pictureFileName);
             diagramDescriptor.setPictureFileType(pictureFileType);
 
-            final String type = umlDiagramType.name(); // incompatible with 1.2018.11
+            final String type = umlDiagramType.name();
             diagramDescriptor.setType(type+"DIAGRAM");
 
             diagramDescriptor.setTitle(extractString(sequenceDiagram.getTitle()));
             diagramDescriptor.setCaption(extractString(sequenceDiagram.getCaption()));
             diagramDescriptor.setLegend(extractString(sequenceDiagram.getLegend()));
 
-            sequenceDiagram.participants().forEach(this::addParticipant);  // incompatible with 1.2018.11
+            sequenceDiagram.participants().forEach(this::addParticipant);
             sequenceDiagram.events().forEach(this::addEvent);
 
             plantUmlFileDescriptor.getPlantUmlDiagrams().add(diagramDescriptor);
@@ -125,7 +126,7 @@ class PumlLineParser {
             diagramDescriptor.setPictureFileName(pictureFileName);
             diagramDescriptor.setPictureFileType(pictureFileType);
 
-            final String type = umlDiagramType.name();  // incompatible with 1.2018.11
+            final String type = umlDiagramType.name();
             diagramDescriptor.setType(type+"DIAGRAM");
 
             final String namespaceSeparator = descriptionDiagram.getNamespaceSeparator();
@@ -240,12 +241,12 @@ class PumlLineParser {
             PlantUmlLeafDescriptor leafNode = store.create(PlantUmlLeafDescriptor.class);
             final String fullName = iLeaf.getCode().getFullName();
             leafNode.setFullName(fullName);
-            final LeafType entityType = iLeaf.getLeafType();  // incompatible with 1.2018.11
+            final LeafType entityType = iLeaf.getLeafType();
             leafNode.setType(entityType.name());
             mappingFromFqnToPackage.put(fullName, leafNode);
             final Stereotype stereotype = iLeaf.getStereotype();
             if(stereotype != null) {
-                leafNode.setStereotype(stereotype.getLabel(true));
+                leafNode.setStereotype(stereotype.getLabel(Guillemet.DOUBLE_COMPARATOR));
             }
             leafNode.setDescription(iteratorToText(iLeaf.getDisplay().iterator()));
             if(plantUmlGroupDescriptor != null) {
@@ -291,7 +292,7 @@ class PumlLineParser {
     private void addEvent(final Event event) {
         if(event instanceof Message) {
             Message message = (Message) event;
-            final String messageText = message.getLabel().toString();  // incompatible with 1.2018.11
+            final String messageText = message.getLabel().toString();
             final String messageNumber = message.getMessageNumber();
             final Participant participant1 = message.getParticipant1();
             final Participant participant2 = message.getParticipant2();
@@ -325,7 +326,7 @@ class PumlLineParser {
 
         final Stereotype stereotype = participant.getStereotype();
         if(stereotype != null) {
-            plantUmlParticipantDescriptor.setStereotype(stereotype.getLabel(true));
+            plantUmlParticipantDescriptor.setStereotype(stereotype.getLabel(Guillemet.DOUBLE_COMPARATOR));
         }
 
         participantDescriptors.put(participant.getCode(), plantUmlParticipantDescriptor);
