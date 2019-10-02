@@ -1,7 +1,7 @@
 Note: rename this file to index.adoc to make it active.
 The default rule conflicts with default.xml, so only one of both may be active.
 
-= Coding Rules
+== Coding Rules
 
 The following constraints apply for modules:
 
