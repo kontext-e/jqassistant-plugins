@@ -80,3 +80,11 @@ Represents a cell in an Excel sheet.
 | DEPENDS_ON   | <<:Excel:Cell>>   | 0..n        | References other cells that were used in formulas.
 |====
 
+== Additional Note
+
+This plugin was inspred by Felienne Hermans. Here's a talk she gave
+at GraphConnect Europe 2015: Spreadsheets are Graphs!
+https://www.youtube.com/watch?v=LAHJUcGXmZA&list=WL&index=58&t=0s
+
+She also wrote a dissertation with the title "Analyzingandvisualizing spreadsheets".
+
