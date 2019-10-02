@@ -39,15 +39,17 @@ From master branch. Note: most recent versions from branches may differ.
 * [JavaParser Plugin](https://github.com/kontext-e/jqassistant-plugins/blob/master/javaparser/src/main/asciidoc/javaparser.adoc)
 * [PlantUML Plugin](https://github.com/kontext-e/jqassistant-plugins/blob/master/plantuml/src/main/asciidoc/plantuml.adoc)
 * [PMD Plugin](https://github.com/kontext-e/jqassistant-plugins/blob/master/pmd/src/main/asciidoc/pmd.adoc)
+* [Excel Plugin](https://github.com/kontext-e/jqassistant-plugins/blob/master/excel/src/main/asciidoc/excel.adoc)
 
 Latest Changes
 ==============
 
-Upcoming Release
-----------------
+Release 1.7.0
+-------------
 * Use jQAssistant 1.7
 * added a plantuml constraint plantuml:WrongDirection that checks packages with package diagrams
 * more properties in PlantUML nodes
+* new plugin to import Excel files
 
 Release 1.6.0
 -------------

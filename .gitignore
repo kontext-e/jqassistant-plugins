@@ -8,6 +8,9 @@ target
 *.eml
 *.userlibraries
 /jqassistant/store
+/jqassistant/certificates
+/jqassistant/logs
+/jqassistant/store_lock
 .gradle/
 build/
 data/
