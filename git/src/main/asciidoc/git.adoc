@@ -21,7 +21,7 @@ Represents a git repository filesystem directory.
 | HAS_COMMIT   | <<:Git:Commit>>   | 0..n        | References the commits of the Git repository.
 | HAS_AUTHOR   | <<:Git:Author>>   | 0..n        | References the authors of the Git repository.
 | HAS_FILE     | <<:Git:File>>     | 0..n        | References the files of the Git repository.
-| HAS_BRANCHE  | <<:Git:Branch>>   | 0..n        | References the branches of the Git repository.
+| HAS_BRANCH   | <<:Git:Branch>>   | 0..n        | References the branches of the Git repository.
 | HAS_TAG      | <<:Git:Tag>>      | 0..n        | References the tags of the Git repository.
 |====
 
@@ -66,7 +66,7 @@ Represents a single commit.
 |====
 | Name              | Target label(s)            | Cardinality | Description
 | CONTAINS_CHANGE   | <<:Git:Change>>            | 0..n        | References the files of this commit
-| HAS_PARENTS       | <<:Git:Commit>>            | 0..n        | References to parent <<:Git:Commit>>s
+| HAS_PARENT        | <<:Git:Commit>>            | 0..n        | References to parent <<:Git:Commit>>s
 |====
 
 
@@ -167,7 +167,7 @@ MATCH
       // Any branch
       --> (branch:GitBranch)
       -[:HEAD]-> (branchHead:Git:Commit)
-      <-[r:HAS_PARENTS*]-(developHead:Git:Commit)
+      <-[r:HAS_PARENT*]-(developHead:Git:Commit)
       // The develop branch
       <-[:HEAD]- (develop:GitBranch {name: "remotes/origin/develop"})
 WHERE branch.name =~ "remotes/origin/release/.*"
@@ -187,7 +187,7 @@ MATCH
       // Any branch
       --> (branch:Git:Branch)
       -[:HEAD]-> (branchHead:Git:Commit)
-      <-[r:HAS_PARENTS*]-(developHead:Git:Commit)
+      <-[r:HAS_PARENT*]-(developHead:Git:Commit)
       <-[:HEAD]- (develop:GitBranch {name: "remotes/origin/develop"})
 WHERE branch.name =~ "remotes/origin/release/.*"
   AND r is NULL
@@ -195,7 +195,7 @@ RETURN * // git, develop, branch
 //MATCH
 //    (gitD) --> (develop:Git:Branch {name: "remotes/origin/develop"}) -[:HEAD]-> (developHead:Git:Commit)
 //OPTIONAL MATCH
-//    (developHead)<-[r:HAS_PARENTS*]-(parent:Git:Commit)
+//    (developHead)<-[r:HAS_PARENT*]-(parent:Git:Commit)
 //WHERE r is null
 RETURN git
 ----
