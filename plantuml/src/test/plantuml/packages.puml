@@ -2,9 +2,19 @@
 
 skinparam packageStyle rect
 
-package de.kontext_e.jqassistant.plugin.plantuml.scanner {}
-package de.kontext_e.jqassistant.plugin.plantuml.store.descriptor {}
+class SomeClass
+package scanner as myscanner {}
+package store {
+    package descriptor {
+        interface PlantUmlDescriptor
+    }
+}
+note left of myscanner
+  this is my
+  note on this package
+end note
 
-de.kontext_e.jqassistant.plugin.plantuml.scanner <-- de.kontext_e.jqassistant.plugin.plantuml.store.descriptor
+myscanner --> descriptor
+SomeClass --> PlantUmlDescriptor
 
 @enduml

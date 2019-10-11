@@ -15,8 +15,8 @@ public interface AsciidocSectionDescriptor extends AsciidocBlockDescriptor {
     Integer getNumber();
 
     @Property("numbered")
-    void setNumbered(Integer numbered);
-    Integer getNumbered();
+    void setNumbered(boolean numbered);
+    boolean getNumbered();
 
     @Property("sectname")
     void setSectname(String sectname);

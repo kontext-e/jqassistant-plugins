@@ -5,5 +5,6 @@ jar {
 }
 
 dependencies {
-  compile 'net.sourceforge.plantuml:plantuml:8057'
+  // use the dependency that comes with jqassistant itself now
+//  compile 'net.sourceforge.plantuml:plantuml:1.2018.12'
 }

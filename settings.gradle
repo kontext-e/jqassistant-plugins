@@ -2,7 +2,7 @@ rootProject.name = 'jqassistant-plugins'
 
 include 'checkstyle'
 
-include 'findbugs'
+include 'spotbugs'
 
 include 'jacoco'
 
@@ -19,4 +19,11 @@ include 'linecount'
 include 'cpp'
 
 include 'asciidoc'
+
+include 'javaparser'
+
+include 'excel'
+
+include 'ods'
+
 

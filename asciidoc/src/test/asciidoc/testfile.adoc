@@ -25,7 +25,7 @@ de.kontext_e.jqassistant.plugin.plantuml.scanner -up-> de.kontext_e.jqassistant.
 -----
 
 .Description of de.kontext_e.jqassistant.plugin.plantuml packages
-[options="header"]
+[options="header", myAttribute, components="packages"]
 |====
 | Package       | Purpose
 | scanner       | Scan a text file and create Neo4j nodes for packages and relationships for links.
@@ -50,3 +50,23 @@ resolve dependency circles, move responsibilities etc. Open tasks are:
 |===
 
 MyTerm:: The definition of my term
+
+
+==== Design Pattern of Classes Matched by Regular Expressions
+
+Just as Carola Lilienthal explains in her talks, classes which
+use Design Patterns may be identified by regular expressions.
+She does it in her analysis tools, but a better way is to document
+it in the Architecture Documentation. It could be done like in
+this example.
+
+.Design Pattern of Classes Matched by Regular Expressions
+[options="header", label="Pattern"]
+|===
+| Regex                                 | Pattern
+| de.kontext_e.jqassistant.*Plugin      | Plugin
+| de.kontext_e.jqassistant.*Command     | Command
+| de.kontext_e.jqassistant.*Factory     | Factory
+|===
+
+See index.adoc for Concepts that are using this table to enhance the graph with design information.

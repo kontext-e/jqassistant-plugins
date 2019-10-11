@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.buschmais.jqassistant.core.store.api.Store;
+import de.kontext_e.jqassistant.plugin.asciidoc.store.descriptor.AsciidocAttribute;
 import de.kontext_e.jqassistant.plugin.asciidoc.store.descriptor.AsciidocBlockDescriptor;
 import de.kontext_e.jqassistant.plugin.asciidoc.store.descriptor.AsciidocCommonProperties;
 import de.kontext_e.jqassistant.plugin.asciidoc.store.descriptor.AsciidocListDescriptor;
@@ -50,7 +51,7 @@ class AsciidocImporter {
         scanBlocks(document.getBlocks(), asciidocFile);
     }
 
-    private void scanBlocks(List<AbstractBlock> blocks, BlockContainer blockContainer) {
+    void scanBlocks(List<AbstractBlock> blocks, BlockContainer blockContainer) {
         // was for(AbstractBlock block : blocks) but there is a but in Asciidoctor 1.5.4.1
         // which causes a ClassCastException
         // so check first if it is really an AbstractBlock
@@ -65,7 +66,7 @@ class AsciidocImporter {
                     blockContainer.getAsciidocBlocks().add(blockDescriptor);
                     scanBlocks(block.getBlocks(), blockDescriptor);
                 } catch (Exception e) {
-                    LOGGER.warn("Error while scanning Asciidoc block " + block.getNodeName() + "; reason is: " + e);
+                    LOGGER.warn("Error while scanning Asciidoc block " + block.getNodeName() + "; reason is: " + e, e);
                 }
             }
         }
@@ -103,13 +104,15 @@ class AsciidocImporter {
 
     private AsciidocBlockDescriptor scanListBlock(final ListNode list) {
         final AsciidocListDescriptor listDescriptor = store.create(AsciidocListDescriptor.class);
-        listDescriptor.setIsItem(list.isItem());
         for (Object o: list.getItems()) {
             if(o instanceof AbstractBlock) {
                 AbstractBlock abstractBlock = (AbstractBlock) o;
                 listDescriptor.getListItems().add(scanOneBlock(abstractBlock));
             }
         }
+
+        addAttributes(listDescriptor, list.getAttributes());
+
         return listDescriptor;
     }
 
@@ -120,6 +123,9 @@ class AsciidocImporter {
         sectionDescriptor.setNumbered(section.numbered());
         sectionDescriptor.setSectname(section.sectname());
         sectionDescriptor.setSpecial(section.special());
+
+        addAttributes(sectionDescriptor, section.getAttributes());
+
         return sectionDescriptor;
     }
 
@@ -128,24 +134,48 @@ class AsciidocImporter {
         tableDescriptor.setFrame(table.getFrame());
         tableDescriptor.setGrid(table.getGrid());
 
+        addAttributes(tableDescriptor, table.getAttributes());
+
         int colnumber = 0;
         for (Column column : table.getColumns()) {
             tableDescriptor.getAsciidocTableColumns().add(scanTableColumn(column, colnumber++));
         }
 
+        int rownumber = 0;
         for (Row row : table.getHeader()) {
-            tableDescriptor.getAsciidocTableHeaderRows().add(scanTableRow(row));
+        	tableDescriptor.getAsciidocTableHeaderRows().add(scanTableRow(row, rownumber, tableDescriptor.getAsciidocTableColumns()));
+        	rownumber++;
         }
 
+		rownumber = 0;
         for (Row row : table.getBody()) {
-            tableDescriptor.getAsciidocTableBodyRows().add(scanTableRow(row));
+            tableDescriptor.getAsciidocTableBodyRows().add(scanTableRow(row, rownumber, tableDescriptor.getAsciidocTableColumns()));
+			rownumber++;
         }
 
+		rownumber = 0;
         for (Row row : table.getFooter()) {
-            tableDescriptor.getAsciidocTableFooterRows().add(scanTableRow(row));
+            tableDescriptor.getAsciidocTableFooterRows().add(scanTableRow(row, rownumber, tableDescriptor.getAsciidocTableColumns()));
+			rownumber++;
         }
 
         return tableDescriptor;
+    }
+
+    private void addAttributes(final AsciidocCommonProperties descriptor, Map<String, Object> attributes) {
+        // forEach does not work because of asciidocj bug:
+        // java.lang.ClassCastException: org.jruby.RubySymbol cannot be cast to java.lang.String
+        for (Map.Entry<String, Object> stringObjectEntry : attributes.entrySet()) {
+            final AsciidocAttribute asciidocAttribute = store.create(AsciidocAttribute.class);
+            final Object key = stringObjectEntry.getKey();
+            if(key instanceof String) {
+                asciidocAttribute.setName((String)key);
+            } else {
+                asciidocAttribute.setName(key.toString());
+            }
+            asciidocAttribute.setValue("" + stringObjectEntry.getValue());
+            descriptor.getAttributes().add(asciidocAttribute);
+        }
     }
 
     private AsciidocTableColumnDescriptor scanTableColumn(final Column column, final int colnumber) {
@@ -167,14 +197,17 @@ class AsciidocImporter {
         addCommonProperties(block, blockDescriptor);
     }
 
-    private AsciidocTableRowDescriptor scanTableRow(final Row row) {
+    private AsciidocTableRowDescriptor scanTableRow(final Row row, final int rownumber, final List<AsciidocTableColumnDescriptor> columns) {
         int colNumber = 0;
         AsciidocTableRowDescriptor rowDescriptor = store.create(AsciidocTableRowDescriptor.class);
+		rowDescriptor.setRownumber(rownumber);
         for (Cell cell : row.getCells()) {
             AsciidocTableCellDescriptor cellDescriptor = store.create(AsciidocTableCellDescriptor.class);
             rowDescriptor.getAsciidocTableCells().add(cellDescriptor);
             cellDescriptor.setText(cell.getText());
-// does not work because of
+			cellDescriptor.setColumn(columns.get(colNumber));
+
+			// does not work because of
 // java.lang.ClassCastException: org.jruby.gen.InterfaceImpl1670529912 cannot be cast to org.asciidoctor.ast.Column
 // try again with later asciidoctorj version
 //            cellDescriptor.setColnumber(cell.getColumn().getColnumber());

@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.buschmais.jqassistant.plugin.common.api.model.FileDescriptor;
 import com.buschmais.xo.neo4j.api.annotation.Label;
+import com.buschmais.xo.neo4j.api.annotation.Property;
 import com.buschmais.xo.neo4j.api.annotation.Relation;
 
 /**
@@ -13,6 +14,14 @@ import com.buschmais.xo.neo4j.api.annotation.Relation;
 @Label("Report")
 public interface PmdReportDescriptor extends PmdDescriptor, FileDescriptor {
 
-    @Relation("HAS_FILES")
+    @Relation("HAS_FILE")
     Set<PmdFileDescriptor> getFiles();
+
+	@Property("version")
+	String getVersion();
+    void setVersion(String version);
+
+	@Property("timestamp")
+	String getTimestamp();
+    void setTimestamp(String timestamp);
 }

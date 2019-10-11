@@ -1,18 +1,26 @@
-<jqa-plugin:jqassistant-plugin
-        xmlns:jqa-plugin="http://www.buschmais.com/jqassistant/core/plugin/schema/v1.0" name="PlantUML">
+<jqa-plugin:jqassistant-plugin xmlns:jqa-plugin="http://www.buschmais.com/jqassistant/core/plugin/schema/v1.0" name="PlantUML">
     <description>Provides a scanner for PlantUML diagrams.</description>
     <model>
         <class>de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlDescriptor</class>
+        <class>de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlDiagramDescriptor</class>
         <class>de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlClassDiagramDescriptor</class>
+        <class>de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlDescriptionDiagramDescriptor</class>
+        <class>de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlGroupDescriptor</class>
+        <class>de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlLeafDescriptor</class>
         <class>de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlElement</class>
         <class>de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlFileDescriptor</class>
         <class>de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlPackageDescriptor</class>
+        <class>de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlParticipantDescriptor</class>
         <class>de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlSequenceDiagramDescriptor</class>
+        <class>de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlSequenceDiagramMessageDescriptor</class>
+        <class>de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlStateDescriptor</class>
+        <class>de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlStateDiagramDescriptor</class>
     </model>
     <scanner>
         <class>de.kontext_e.jqassistant.plugin.plantuml.scanner.PlantUmlFileScannerPlugin</class>
     </scanner>
-  <rules>
-      <resource>plantuml.xml</resource>
-  </rules>
+
+    <rules>
+        <resource>plantuml.xml</resource>
+    </rules>
 </jqa-plugin:jqassistant-plugin>

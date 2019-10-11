@@ -27,7 +27,7 @@ Represents a JaCoCo report file.
 [options="header"]
 |====
 | Name              | Target label(s)       | Cardinality | Description
-| HAS_PACKAGES      | <<:Jacoco:Package>>   | 0..n        | A Java package containing the Java classes for which the test coverage were recorded.
+| HAS_PACKAGE       | <<:Jacoco:Package>>   | 0..n        | A Java package containing the Java classes for which the test coverage were recorded.
 |====
 
 === :Jacoco:Counter
@@ -58,7 +58,7 @@ Represents a Java method in the Jacoco report.
 [options="header"]
 |====
 | Name              | Target label(s)       | Cardinality | Description
-| HAS_COUNTERS      | <<:Jacoco:Counter>>   | 0..n        | The test coverage results: missed and covered lines and branches.
+| HAS_COUNTER       | <<:Jacoco:Counter>>   | 0..n        | The test coverage results: missed and covered lines and branches.
 |====
 
 === :Jacoco:Class
@@ -76,7 +76,7 @@ Represents a Java class in the Jacoco report.
 [options="header"]
 |====
 | Name              | Target label(s)       | Cardinality | Description
-| HAS_METHODS       | <<:Jacoco:Method>>    | 0..n        | A Java method for which the test coverage were recorded.
+| HAS_METHOD        | <<:Jacoco:Method>>    | 0..n        | A Java method for which the test coverage were recorded.
 |====
 
 === :Jacoco:Package
@@ -86,5 +86,5 @@ Represents a Java package containing the Java classes for which the test coverag
 [options="header"]
 |====
 | Name              | Target label(s)       | Cardinality | Description
-| HAS_CLASSES       | <<:Jacoco:Class>>     | 0..n        | A Java class for which the test coverage were recorded.
+| HAS_CLASS         | <<:Jacoco:Class>>     | 0..n        | A Java class for which the test coverage were recorded.
 |====

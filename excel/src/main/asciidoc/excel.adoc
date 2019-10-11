@@ -1,0 +1,90 @@
+<<ExcelScanner>>
+[[ExcelScanner]]
+
+== Scanner for Excel files
+
+=== :Excel:File
+Represents an Excel file.
+
+.Properties of :Excel:Cell
+[options="header"]
+|====
+| Name          | Description
+| fileName      | The path of the file from scanning start folder to and including this Excel file.
+|====
+
+.Relations of :Excel:Cell
+[options="header"]
+|====
+| Name         | Target label(s)   | Cardinality | Description
+| HAS_SHEET    | <<:Excel:Sheet>>  | 0..n        | References the sheets of this Excel file.
+|====
+
+=== :Excel:Sheet
+Represents an Excel sheet.
+
+.Properties of :Excel:Sheet
+[options="header"]
+|====
+| Name          | Description
+| name          | The name of this sheet.
+|====
+
+.Relations of :Excel:Sheet
+[options="header"]
+|====
+| Name         | Target label(s)   | Cardinality | Description
+| HAS_ROW      | <<:Excel:Row>>    | 0..n        | References the rows of this Excel sheet.
+|====
+
+=== :Excel:Row
+Represents a row in the sheet.
+
+.Properties of :Excel:Row
+[options="header"]
+|====
+| Name          | Description
+| RowNumber     | The number of the row, starting with 0.
+|====
+
+.Relations of :Excel:Row
+[options="header"]
+|====
+| Name         | Target label(s)   | Cardinality | Description
+| HAS_CELL     | <<:Excel:Cell>>   | 0..n        | References the cells of this row.
+|====
+
+=== :Excel:Cell
+Represents a cell in an Excel sheet.
+
+.Properties of :Excel:Cell
+[options="header"]
+|====
+| Name          | Description
+| name          | The name of the cell, e.g. A1 or BA67.
+| column        | The column number.
+| row           | The row number.
+| type          | The type of the cell.
+| boolValue     | The typed value of the cell if boolean.
+| stringValue   | The typed value of the cell if string.
+| dateValue     | The typed value of the cell if date.
+| numericValue  | The typed value of the cell if numeric.
+| comment       | The comment of the cell.
+| blank         | True if the cell is set blank.
+|====
+
+.Relations of :Excel:Cell
+[options="header"]
+|====
+| Name         | Target label(s)   | Cardinality | Description
+| DEPENDS_ON   | <<:Excel:Cell>>   | 0..n        | References other cells that were used in formulas.
+|====
+
+== Additional Note
+
+This plugin was inspred by Felienne Hermans. Here's a talk she gave
+at GraphConnect Europe 2015: Spreadsheets are Graphs!
+https://www.youtube.com/watch?v=LAHJUcGXmZA&list=WL&index=58&t=0s
+
+She also wrote a dissertation with the title "Analyzingandvisualizing spreadsheets".
+

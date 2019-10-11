@@ -18,11 +18,11 @@ Represents a git repository filesystem directory.
 [options="header"]
 |====
 | Name         | Target label(s)   | Cardinality | Description
-| HAS_COMMITS  | <<:Git:Commit>>   | 0..n        | References the commits of the Git repository.
-| HAS_AUTHORS  | <<:Git:Author>>   | 0..n        | References the authors of the Git repository.
-| HAS_FILES    | <<:Git:File>>     | 0..n        | References the files of the Git repository.
-| HAS_BRANCHES | <<:Git:Branch>>   | 0..n        | References the branches of the Git repository.
-| HAS_TAGS     | <<:Git:Tag>>      | 0..n        | References the tags of the Git repository.
+| HAS_COMMIT   | <<:Git:Commit>>   | 0..n        | References the commits of the Git repository.
+| HAS_AUTHOR   | <<:Git:Author>>   | 0..n        | References the authors of the Git repository.
+| HAS_FILE     | <<:Git:File>>     | 0..n        | References the files of the Git repository.
+| HAS_BRANCH   | <<:Git:Branch>>   | 0..n        | References the branches of the Git repository.
+| HAS_TAG      | <<:Git:Tag>>      | 0..n        | References the tags of the Git repository.
 |====
 
 === :Git:Author
@@ -53,10 +53,12 @@ Represents a single commit.
 | Name          | Description
 | sha           | The sha key
 | author        | The author as a string, e.g. Jens Nerche <j.nerche@kontext-e.de>
+| committer     | The committer as a string, e.g. GitHub <noreply@github.com>
 | date          | The date with time
 | time          | The time part of the date
 | epoch         | The date in epoch representation: milliseconds since 1970-01-01
 | message       | The commit message
+| shortMessage  | The short commit message
 |====
 
 .Relations of :Git:Commit
@@ -64,7 +66,7 @@ Represents a single commit.
 |====
 | Name              | Target label(s)            | Cardinality | Description
 | CONTAINS_CHANGE   | <<:Git:Change>>            | 0..n        | References the files of this commit
-| HAS_PARENTS       | <<:Git:Commit>>            | 0..n        | References to parent <<:Git:Commit>>s
+| HAS_PARENT        | <<:Git:Commit>>            | 0..n        | References to parent <<:Git:Commit>>s
 |====
 
 
@@ -83,6 +85,11 @@ Represents the change of one file in one commit.
 |====
 | Name              | Target label(s)            | Cardinality | Description
 | MODIFIES          | <<:Git:File>>              | 1           | References to one modified <<:Git:File>>
+| CREATES           | <<:Git:File>>              | 1           | References to one created <<:Git:File>>
+| UPDATES           | <<:Git:File>>              | 1           | References to one updated <<:Git:File>>
+| DELETES           | <<:Git:File>>              | 1           | References to one deleted <<:Git:File>>
+| RENAMES           | <<:Git:File>>              | 1           | References to one renamed <<:Git:File>> This relation points to the old file. A RENAME change has also two additional relations CREATES for the new and DELETES for the old file.
+| COPIES            | <<:Git:File>>              | 1           | References to one copied <<:Git:File>> This relation points to the old file. A COPIES change also has an additional relation CREATES for the new file.
 |====
 
 === :Git:File
@@ -99,6 +106,14 @@ Represents a file in the repository which was added, modified, or deleted in the
 | createdAtEpoch            | Creation timestamp in epoch representation, e.g. 1398851290000
 | deletedAtEpoch            | Deletion timestamp in epoch representation, e.g. 1398851290000
 | lastModificationAtEpoch   | Last modification timestamp in epoch representation, e.g. 1398851290000
+|====
+
+.Relations of :Git:File
+[options="header"]
+|====
+| Name              | Target label(s)   | Cardinality   | Description
+| HAS_NEW_NAME      | <<:Git:File>>     | 1             | References the <<:Git:File>> with the new name
+| COPY_OF           | <<:Git:File>>     | 1             | References the <<:Git:File>> from which this was copied
 |====
 
 === :Git:Branch
@@ -152,7 +167,7 @@ MATCH
       // Any branch
       --> (branch:GitBranch)
       -[:HEAD]-> (branchHead:Git:Commit)
-      <-[r:HAS_PARENTS*]-(developHead:Git:Commit)
+      <-[r:HAS_PARENT*]-(developHead:Git:Commit)
       // The develop branch
       <-[:HEAD]- (develop:GitBranch {name: "remotes/origin/develop"})
 WHERE branch.name =~ "remotes/origin/release/.*"
@@ -172,7 +187,7 @@ MATCH
       // Any branch
       --> (branch:Git:Branch)
       -[:HEAD]-> (branchHead:Git:Commit)
-      <-[r:HAS_PARENTS*]-(developHead:Git:Commit)
+      <-[r:HAS_PARENT*]-(developHead:Git:Commit)
       <-[:HEAD]- (develop:GitBranch {name: "remotes/origin/develop"})
 WHERE branch.name =~ "remotes/origin/release/.*"
   AND r is NULL
@@ -180,7 +195,7 @@ RETURN * // git, develop, branch
 //MATCH
 //    (gitD) --> (develop:Git:Branch {name: "remotes/origin/develop"}) -[:HEAD]-> (developHead:Git:Commit)
 //OPTIONAL MATCH
-//    (developHead)<-[r:HAS_PARENTS*]-(parent:Git:Commit)
+//    (developHead)<-[r:HAS_PARENT*]-(parent:Git:Commit)
 //WHERE r is null
 RETURN git
 ----

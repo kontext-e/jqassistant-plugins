@@ -13,6 +13,9 @@ import com.buschmais.xo.neo4j.api.annotation.Relation;
 @Label("File")
 public interface CheckstyleFileDescriptor extends CheckstyleDescriptor, NamedDescriptor, FullQualifiedNameDescriptor {
 
-    @Relation("CHECKSTYLE_ERRORS")
+    @Relation("CHECKSTYLE_ERROR")
     Set<CheckstyleErrorDescriptor> getErrors();
+
+	String getPath();
+	void setPath(String path);
 }

@@ -9,10 +9,10 @@ import com.buschmais.xo.neo4j.api.annotation.Relation;
 @Label("Directory")
 public interface PlaintextDirectoryDescriptor extends PlaintextDescriptor, NamedDescriptor {
 
-    @Relation("HAS_FILES")
+    @Relation("HAS_FILE")
     Set<PlaintextFileDescriptor> getFiles();
 
-    @Relation("HAS_DIRECTORIES")
+    @Relation("HAS_DIRECTORY")
     Set<PlaintextDirectoryDescriptor> getDirectories();
 
     PlaintextDirectoryDescriptor getParent();

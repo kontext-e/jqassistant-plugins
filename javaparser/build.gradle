@@ -1,0 +1,10 @@
+apply from: "${rootDir}/gradle/uploadArchives.gradle"
+
+jar {
+    baseName = 'jqassistant.plugin.javaparser'
+}
+
+dependencies {
+    compile 'com.github.javaparser:javaparser-core:3.6.25'
+}
+

@@ -1,0 +1,16 @@
+[[section-technical-risks]]
+== Risks and Technical Debts
+
+
+=== PMD
+
+.Max number of allowed warnings
+[options="header", metric="pmd"]
+|===
+| Priority  | Max. allowed warnings
+| 1         | 18
+| 2         | 43
+| 3         | 1000000000
+| 4         | 1000000000
+|===
+

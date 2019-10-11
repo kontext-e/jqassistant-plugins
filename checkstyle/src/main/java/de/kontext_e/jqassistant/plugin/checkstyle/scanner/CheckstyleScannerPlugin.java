@@ -11,8 +11,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.buschmais.jqassistant.core.scanner.api.Scanner;
+import com.buschmais.jqassistant.core.scanner.api.ScannerPlugin;
 import com.buschmais.jqassistant.core.scanner.api.Scope;
 import com.buschmais.jqassistant.core.store.api.Store;
+import com.buschmais.jqassistant.plugin.common.api.model.FileDescriptor;
 import com.buschmais.jqassistant.plugin.common.api.scanner.AbstractScannerPlugin;
 import com.buschmais.jqassistant.plugin.common.api.scanner.filesystem.FileResource;
 import de.kontext_e.jqassistant.plugin.checkstyle.jaxb.CheckstyleType;
@@ -27,14 +29,13 @@ import de.kontext_e.jqassistant.plugin.checkstyle.store.descriptor.CheckstyleFil
 /**
  * @author jn4, Kontext E GmbH, 11.02.14
  */
+@ScannerPlugin.Requires(FileDescriptor.class)
 public class CheckstyleScannerPlugin extends AbstractScannerPlugin<FileResource, CheckstyleReportDescriptor> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CheckstyleScannerPlugin.class);
-    public static final String JQASSISTANT_PLUGIN_CHECKSTYLE_BASEPACKAGE = "jqassistant.plugin.checkstyle.basepackage";
-    public static final String JQASSISTANT_PLUGIN_CHECKSTYLE_FILENAME = "jqassistant.plugin.checkstyle.filename";
-    public static final String JQASSISTANT_PLUGIN_CHECKSTYLE_DIRNAME = "jqassistant.plugin.checkstyle.dirname";
+    private static final String JQASSISTANT_PLUGIN_CHECKSTYLE_FILENAME = "jqassistant.plugin.checkstyle.filename";
+    private static final String JQASSISTANT_PLUGIN_CHECKSTYLE_DIRNAME = "jqassistant.plugin.checkstyle.dirname";
     private JAXBContext jaxbContext;
-    private static String basePackage = "org";
     private String checkstyleFileName = "checkstyle.xml";
     private String checkstyleDirName = "checkstyle";
 
@@ -47,20 +48,28 @@ public class CheckstyleScannerPlugin extends AbstractScannerPlugin<FileResource,
     }
 
     @Override
-    public boolean accepts(FileResource item, String path, Scope scope) throws IOException {
-        boolean accepted = path.endsWith(checkstyleFileName) || (checkstyleDirName.equals(item.getFile().toPath().getParent().toFile().getName()) && path.endsWith(".xml"));
-        if(accepted) {
-            LOGGER.debug("Checkstyle accepted path "+path);
+    public boolean accepts(FileResource item, String path, Scope scope) {
+        try {
+            boolean accepted = path.endsWith(checkstyleFileName) || (checkstyleDirName.equals(item.getFile().toPath().getParent().toFile().getName()) && path.endsWith(".xml"));
+            if(accepted) {
+                LOGGER.debug("Checkstyle accepted path "+path);
+            }
+            return accepted;
+        } catch (NullPointerException e) {
+            // could do a lengthy null check at beginning or do it the short dirty way
+            return false;
+        } catch (Exception e) {
+            LOGGER.error("Error while checking path: "+e, e);
+            return false;
         }
-        return accepted;
     }
 
     @Override
     public CheckstyleReportDescriptor scan(final FileResource file, String path, Scope scope, Scanner scanner) throws IOException {
         LOGGER.debug("Checkstyle scans path "+path);
         final CheckstyleType checkstyleType = unmarshalCheckstyleXml(file.createStream());
-        final CheckstyleReportDescriptor checkstyleReportDescriptor = scanner.getContext().getStore().create(CheckstyleReportDescriptor.class);
-        checkstyleReportDescriptor.setFileName(path);
+		FileDescriptor fileDescriptor = scanner.getContext().getCurrentDescriptor();
+		final CheckstyleReportDescriptor checkstyleReportDescriptor = scanner.getContext().getStore().addDescriptorType(fileDescriptor, CheckstyleReportDescriptor.class);
         readFiles(scanner.getContext().getStore(), checkstyleType, checkstyleReportDescriptor);
         return checkstyleReportDescriptor;
     }
@@ -69,7 +78,7 @@ public class CheckstyleScannerPlugin extends AbstractScannerPlugin<FileResource,
         for (FileType fileType : checkstyleType.getFile()) {
             final CheckstyleFileDescriptor checkstyleFileDescriptor = store.create(CheckstyleFileDescriptor.class);
             checkstyleFileDescriptor.setName(truncateName(fileType.getName()));
-            checkstyleFileDescriptor.setFullQualifiedName(convertToFullQualifiedName(fileType.getName()));
+            checkstyleFileDescriptor.setPath(fileType.getName());
             checkstyleReportDescriptor.getFiles().add(checkstyleFileDescriptor);
             readErrors(store, fileType, checkstyleFileDescriptor);
         }
@@ -87,28 +96,14 @@ public class CheckstyleScannerPlugin extends AbstractScannerPlugin<FileResource,
         }
     }
 
-    protected String convertToFullQualifiedName(final String name) {
-        final String separator = "/".equals(System.getProperty("file.separator")) ? "/" :"\\\\";
-        final String normalizedName = name.replaceAll(separator, ".");
-        if(!normalizedName.contains(basePackage)) {
-            LOGGER.error(String.format("Normalized name %s does not contain base package %s", normalizedName, basePackage));
-            return "FQN.ERROR";
-        }
-        if(normalizedName.length() < 5) {
-            LOGGER.error(String.format("Normalized name %s is shorter as expected", normalizedName));
-            return "FQN.ERROR";
-        }
-        return normalizedName.substring(normalizedName.indexOf(basePackage), normalizedName.length() - 5);
-    }
-
-    protected String truncateName(final String name) {
+    private String truncateName(final String name) {
         if(name.lastIndexOf(System.getProperty("file.separator")) <= 0) {
             return name;
         }
         return name.substring(name.lastIndexOf(System.getProperty("file.separator")) + 1);
     }
 
-    protected CheckstyleType unmarshalCheckstyleXml(final InputStream streamSource) throws IOException {
+    private CheckstyleType unmarshalCheckstyleXml(final InputStream streamSource) throws IOException {
         final CheckstyleType checkstyleType;
         try {
             final Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
@@ -122,15 +117,6 @@ public class CheckstyleScannerPlugin extends AbstractScannerPlugin<FileResource,
     @Override
     protected void configure() {
         super.configure();
-
-        final String property = (String) getProperties().get(JQASSISTANT_PLUGIN_CHECKSTYLE_BASEPACKAGE);
-        if(property != null) {
-            basePackage = property;
-        }
-        if(System.getProperty(JQASSISTANT_PLUGIN_CHECKSTYLE_BASEPACKAGE) != null) {
-            basePackage = System.getProperty(JQASSISTANT_PLUGIN_CHECKSTYLE_BASEPACKAGE);
-        }
-        LOGGER.info("Checkstyle uses base package "+basePackage+" to determine the full qualified name. If the fqn property contains FQN.ERROR you should set property "+JQASSISTANT_PLUGIN_CHECKSTYLE_BASEPACKAGE+" to the base package of your application.");
 
         final String checkstyleFileNameProperty = (String) getProperties().get(JQASSISTANT_PLUGIN_CHECKSTYLE_FILENAME);
         if(checkstyleFileNameProperty != null) {

@@ -1,11 +1,8 @@
 package de.kontext_e.jqassistant.plugin.git.store.descriptor;
 
-import java.util.List;
-
 import com.buschmais.xo.neo4j.api.annotation.Label;
 import com.buschmais.xo.neo4j.api.annotation.Property;
 import com.buschmais.xo.neo4j.api.annotation.Relation;
-import com.buschmais.xo.neo4j.api.annotation.Relation.Incoming;
 
 @Label("File")
 public interface GitFileDescriptor extends GitDescriptor {
@@ -38,4 +35,11 @@ public interface GitFileDescriptor extends GitDescriptor {
     Long getLastModificationAtEpoch();
     void setLastModificationAtEpoch(Long lastModificationAtEpoch);
 
+    @Relation("HAS_NEW_NAME")
+    GitFileDescriptor getHasNewName();
+    void setHasNewName(GitFileDescriptor gitFileDescriptor);
+
+    @Relation("COPY_OF")
+    GitFileDescriptor getCopyOf();
+    void setCopyOf(GitFileDescriptor oldFile);
 }

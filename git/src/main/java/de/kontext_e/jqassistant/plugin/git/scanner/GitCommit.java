@@ -7,24 +7,19 @@ import java.util.List;
 public class GitCommit {
     private final String sha;
     private String author;
+    private String committer;
     private Date date;
     private String message;
-    private final List<GitChange> gitChanges = new LinkedList<GitChange>();
-    private final List<GitCommit> parents = new LinkedList<GitCommit>();
+    private String shortMessage;
+    private final List<GitChange> gitChanges = new LinkedList<>();
+    private final List<GitCommit> parents = new LinkedList<>();
+    private String encoding;
 
-    public GitCommit(final String sha) {
+    GitCommit(final String sha) {
         this.sha = sha;
     }
 
-    private static String buildMessage(final List<String> message) {
-        StringBuilder builder = new StringBuilder();
-        for (String m : message) {
-            builder.append(m).append("\n");
-        }
-        return builder.toString();
-    }
-
-    public String getSha() {
+    String getSha() {
         return sha;
     }
 
@@ -33,32 +28,46 @@ public class GitCommit {
     }
     protected void setAuthor (final String author) {this.author = author;}
 
-    public Date getDate() {
+    String getCommitter() {
+        return committer;
+    }
+
+    void setCommitter(final String committer) {
+        this.committer = committer;
+    }
+
+    Date getDate() {
         return date;
     }
-    protected void setDate (final Date date) {this.date = date;}
+    void setDate(final Date date) {this.date = date;}
 
-    public String getMessage() {
+    String getMessage() {
         return message;
     }
-    protected void setMessage (String message) {this.message = message;}
+    void setMessage(String message) {this.message = message;}
 
-    public List<GitChange> getGitChanges() {
+    String getShortMessage() {
+        return shortMessage;
+    }
+
+    void setShortMessage(final String shortMessage) {
+        this.shortMessage = shortMessage;
+    }
+
+    List<GitChange> getGitChanges() {
         return gitChanges;
     }
 
-    public List<GitCommit> getParents() {
+    List<GitCommit> getParents() {
         return parents;
     }
 
-    @Override
-    public String toString() {
-        return "GitLogEntry{" +
-                "sha='" + sha + '\'' +
-                ", author='" + author + '\'' +
-                ", date='" + date + '\'' +
-                ", message=" + message +
-                '}';
+    void setEncoding(final String encoding) {
+        this.encoding = encoding;
+    }
+
+    String getEncoding() {
+        return encoding;
     }
 
     @Override
@@ -76,4 +85,20 @@ public class GitCommit {
     public int hashCode() {
         return sha.hashCode();
     }
+
+    @Override
+    public String toString() {
+        return "GitCommit{" +
+               "sha='" + sha + '\'' +
+               ", author='" + author + '\'' +
+               ", committer='" + committer + '\'' +
+               ", date=" + date +
+               ", message='" + message + '\'' +
+               ", shortMessage='" + shortMessage + '\'' +
+               ", gitChanges=" + gitChanges +
+               ", parents=" + parents +
+               ", encoding='" + encoding + '\'' +
+               '}';
+    }
+
 }

@@ -20,7 +20,7 @@ Represents a PMD report file.
 [options="header"]
 |====
 | Name              | Target label(s)           | Cardinality | Description
-| HAS_FILES         | <<:Pmd:File>>             | 0..n        | A file containing PMD issues
+| HAS_FILE          | <<:Pmd:File>>             | 0..n        | A file containing PMD issues
 |====
 
 === :Pmd:File
@@ -37,7 +37,7 @@ Represents a physical file with full path in a PMD report.
 [options="header"]
 |====
 | Name              | Target label(s)           | Cardinality | Description
-| HAS_VIOLATIONS    | <<:Pmd:Violation>>        | 0..n        | The PMD violations of this file.
+| HAS_VIOLATION     | <<:Pmd:Violation>>        | 0..n        | The PMD violations of this file.
 |====
 
 === :Pmd:Violation

@@ -13,6 +13,6 @@ import com.buschmais.xo.neo4j.api.annotation.Relation;
 @Label("Class")
 public interface JacocoClassDescriptor extends JacocoDescriptor, NamedDescriptor, FullQualifiedNameDescriptor {
 
-    @Relation("HAS_METHODS")
+    @Relation("HAS_METHOD")
     Set<JacocoMethodDescriptor> getJacocoMethods();
 }

@@ -1,0 +1,28 @@
+@startuml
+
+skinparam componentStyle uml2
+skinparam component {
+  FontSize 13
+  FontName Arial
+  FontColor #99c0d0
+  BorderColor black
+  BackgroundColor #42788e
+  ArrowFontName Impact
+  ArrowColor #42788e
+  ArrowFontColor #42788e
+
+
+  BackgroundColor<<UI>> Red
+  BorderColor<<UI>> #FF6655
+}
+
+component TestComponent1 [
+     <size:20><b><u>TestComponent1</u></b></size>
+]
+component TestComponent2 [
+     <size:20><b><u>TestComponent2</u></b></size>
+]
+
+TestComponent1 --> TestComponent2
+
+@enduml

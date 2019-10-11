@@ -1,6 +1,9 @@
 package de.kontext_e.jqassistant.plugin.asciidoc.store.descriptor;
 
+import java.util.Set;
+
 import com.buschmais.xo.neo4j.api.annotation.Property;
+import com.buschmais.xo.neo4j.api.annotation.Relation;
 
 public interface AsciidocCommonProperties {
     @Property("context")
@@ -18,4 +21,8 @@ public interface AsciidocCommonProperties {
     @Property("reftext")
     void setReftext(String reftext);
     String getReftext();
+
+    @Relation("HAS_ATTRIBUTE")
+    Set<AsciidocAttribute> getAttributes();
+
 }

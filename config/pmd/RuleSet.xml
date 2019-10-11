@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         name="Custom ruleset"
+         xmlns="http://pmd.sf.net/ruleset/1.0.0"
+         xsi:schemaLocation="http://pmd.sf.net/ruleset/1.0.0 http://pmd.sf.net/ruleset_xml_schema.xsd"
+         xsi:noNamespaceSchemaLocation="http://pmd.sf.net/ruleset_xml_schema.xsd">
+    <description>
+        This ruleset checks my code for bad stuff
+    </description>
+
+    <rule ref="basic.xml"/>
+    <rule ref="codesize.xml"/>
+    <rule ref="clone.xml"/>
+    <rule ref="controversial.xml"/>
+    <rule ref="coupling.xml"/>
+    <rule ref="design.xml"/>
+    <rule ref="finalizers.xml"/>
+    <rule ref="imports.xml"/>
+    <rule ref="unusedcode.xml"/>
+    <rule ref="typeresolution.xml"/>
+
+    <!-- We want to customize this rule a bit, change the message and raise the priority  -->
+<!--
+    <rule
+            ref="basic.xml/EmptyCatchBlock"
+            message="Must handle exceptions">
+        <priority>2</priority>
+    </rule>
+-->
+
+    <!-- Now we'll customize a rule's property value -->
+    <rule ref="codesize.xml/CyclomaticComplexity">
+        <properties>
+            <property name="reportLevel" value="5"/>
+        </properties>
+    </rule>
+
+    <!-- Note we want everything from braces.xml except WhileLoopsMustUseBraces -->
+<!--
+    <rule ref="braces.xml">
+        <exclude name="WhileLoopsMustUseBraces"/>
+    </rule>
+-->
+
+</ruleset>

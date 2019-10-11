@@ -21,7 +21,7 @@ import static org.mockito.Mockito.verify;
 public class GitScannerPluginTest {
     private static final boolean IS_WINDOWS = isWindows();
 
-    private static final boolean isWindows () {
+    private static boolean isWindows () {
         // TODO: This is really ugly, isn't it?
         final String osName = System.getProperty("os.name");
         return null != osName && osName.startsWith("Windows");
@@ -76,5 +76,4 @@ public class GitScannerPluginTest {
             e.printStackTrace();
         }
     }
-
 }

@@ -16,9 +16,12 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
+import com.buschmais.jqassistant.plugin.java.api.scanner.SignatureHelper;
 import com.buschmais.jqassistant.core.scanner.api.Scanner;
+import com.buschmais.jqassistant.core.scanner.api.ScannerPlugin;
 import com.buschmais.jqassistant.core.scanner.api.Scope;
 import com.buschmais.jqassistant.core.store.api.Store;
+import com.buschmais.jqassistant.plugin.common.api.model.FileDescriptor;
 import com.buschmais.jqassistant.plugin.common.api.scanner.AbstractScannerPlugin;
 import com.buschmais.jqassistant.plugin.common.api.scanner.filesystem.FileResource;
 import de.kontext_e.jqassistant.plugin.jacoco.jaxb.ClassType;
@@ -38,6 +41,7 @@ import static java.lang.String.format;
 /**
  * @author jn4, Kontext E GmbH, 11.02.14
  */
+@ScannerPlugin.Requires(FileDescriptor.class)
 public class JacocoScannerPlugin extends AbstractScannerPlugin<FileResource,JacocoReportDescriptor> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JacocoScannerPlugin.class);
@@ -69,19 +73,27 @@ public class JacocoScannerPlugin extends AbstractScannerPlugin<FileResource,Jaco
     }
 
     @Override
-    public boolean accepts(final FileResource item, String path, Scope scope) throws IOException {
-        boolean accepted = path.endsWith(jacocoFileName) || (jacocoDirName.equalsIgnoreCase(item.getFile().toPath().getParent().toFile().getName()) && path.endsWith(".xml"));
-        if(accepted) {
-            LOGGER.debug("Jacoco plugin accepted "+path);
+    public boolean accepts(final FileResource item, String path, Scope scope) {
+        try {
+            boolean accepted = path.endsWith(jacocoFileName) || (jacocoDirName.equalsIgnoreCase(item.getFile().toPath().getParent().toFile().getName()) && path.endsWith(".xml"));
+            if(accepted) {
+                LOGGER.debug("Jacoco plugin accepted "+path);
+            }
+            return accepted;
+        } catch (NullPointerException e) {
+            // could do a lengthy null check at beginning or do it the short dirty way
+            return false;
+        } catch (Exception e) {
+            LOGGER.error("Error while checking path: "+e, e);
+            return false;
         }
-        return accepted;
     }
 
     @Override
     public JacocoReportDescriptor scan(final FileResource file, String path, Scope scope, Scanner scanner) throws IOException {
         LOGGER.debug("Jacoco plugin scans "+path);
-        final JacocoReportDescriptor jacocoReportDescriptor = scanner.getContext().getStore().create(JacocoReportDescriptor.class);
-        jacocoReportDescriptor.setFileName(path);
+		FileDescriptor fileDescriptor = scanner.getContext().getCurrentDescriptor();
+		final JacocoReportDescriptor jacocoReportDescriptor = scanner.getContext().getStore().addDescriptorType(fileDescriptor, JacocoReportDescriptor.class);
         final ReportType reportType = unmarshalJacocoXml(file.createStream());
         readPackages(scanner.getContext().getStore(), reportType, jacocoReportDescriptor);
         return jacocoReportDescriptor;
@@ -110,7 +122,7 @@ public class JacocoScannerPlugin extends AbstractScannerPlugin<FileResource,Jaco
         for (MethodType methodType : classType.getMethod()) {
             final JacocoMethodDescriptor jacocoMethodDescriptor = store.create(JacocoMethodDescriptor.class);
             jacocoMethodDescriptor.setName(methodType.getName());
-            jacocoMethodDescriptor.setSignature(getMethodSignature(methodType.getName(), methodType.getDesc()));
+			jacocoMethodDescriptor.setSignature(SignatureHelper.getMethodSignature(methodType.getName(), methodType.getDesc()));
             jacocoMethodDescriptor.setLine(methodType.getLine());
             jacocoClassDescriptor.getJacocoMethods().add(jacocoMethodDescriptor);
             readCounters(store, methodType, jacocoMethodDescriptor);
@@ -128,28 +140,7 @@ public class JacocoScannerPlugin extends AbstractScannerPlugin<FileResource,Jaco
         }
     }
 
-    // copied from VisitorHelper, should be a common utility class
-    String getMethodSignature(String name, String desc) {
-        final StringBuilder signature = new StringBuilder();
-        String returnType = org.objectweb.asm.Type.getReturnType(desc).getClassName();
-        if (returnType != null) {
-            signature.append(returnType);
-            signature.append(' ');
-        }
-        signature.append(name);
-        signature.append('(');
-        org.objectweb.asm.Type[] types = org.objectweb.asm.Type.getArgumentTypes(desc);
-        for (int i = 0; i < types.length; i++) {
-            if (i > 0) {
-                signature.append(',');
-            }
-            signature.append(types[i].getClassName());
-        }
-        signature.append(')');
-        return signature.toString();
-    }
-
-    protected ReportType unmarshalJacocoXml(final InputStream streamSource) throws IOException {
+	protected ReportType unmarshalJacocoXml(final InputStream streamSource) throws IOException {
         ReportType reportType;
         try {
             // use own SAXSource to prevent reading of jacoco's report.dtd

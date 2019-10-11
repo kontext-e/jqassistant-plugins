@@ -8,6 +8,6 @@ import com.buschmais.xo.neo4j.api.annotation.Relation;
 
 public interface PlaintextFileDescriptor extends PlaintextDescriptor, NamedDescriptor, FileDescriptor {
 
-    @Relation("HAS_LINES")
+    @Relation("HAS_LINE")
     Set<PlaintextLineDescriptor> getLines();
 }

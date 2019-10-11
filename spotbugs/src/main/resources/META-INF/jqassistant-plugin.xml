@@ -1,0 +1,19 @@
+<jqa-plugin:jqassistant-plugin
+        xmlns:jqa-plugin="http://www.buschmais.com/jqassistant/core/plugin/schema/v1.0" name="SpotBugs">
+    <description>Provides a scanner for SpotBugs and FindBugs XML result files.</description>
+    <model>
+        <class>de.kontext_e.jqassistant.plugin.spotbugs.store.descriptor.FindBugsDescriptor</class>
+        <class>de.kontext_e.jqassistant.plugin.spotbugs.store.descriptor.SpotBugsReportDescriptor</class>
+        <class>de.kontext_e.jqassistant.plugin.spotbugs.store.descriptor.SpotBugsBugInstanceDescriptor</class>
+        <class>de.kontext_e.jqassistant.plugin.spotbugs.store.descriptor.FindBugsSourceLineDescriptor</class>
+        <class>de.kontext_e.jqassistant.plugin.spotbugs.store.descriptor.FindBugsBugInstanceClassDescriptor</class>
+        <class>de.kontext_e.jqassistant.plugin.spotbugs.store.descriptor.FindBugsBugInstanceMethodDescriptor</class>
+        <class>de.kontext_e.jqassistant.plugin.spotbugs.store.descriptor.FindBugsBugInstanceFieldDescriptor</class>
+    </model>
+    <scanner>
+        <class>de.kontext_e.jqassistant.plugin.spotbugs.scanner.SpotBugsScannerPlugin</class>
+    </scanner>
+  <rules>
+      <resource>spotbugs.xml</resource>
+  </rules>
+</jqa-plugin:jqassistant-plugin>

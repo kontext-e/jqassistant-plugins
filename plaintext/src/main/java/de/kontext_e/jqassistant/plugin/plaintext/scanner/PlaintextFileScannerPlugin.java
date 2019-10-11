@@ -9,14 +9,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.buschmais.jqassistant.core.scanner.api.Scanner;
+import com.buschmais.jqassistant.core.scanner.api.ScannerPlugin;
 import com.buschmais.jqassistant.core.scanner.api.Scope;
 import com.buschmais.jqassistant.core.store.api.Store;
+import com.buschmais.jqassistant.plugin.common.api.model.FileDescriptor;
 import com.buschmais.jqassistant.plugin.common.api.scanner.AbstractScannerPlugin;
 import com.buschmais.jqassistant.plugin.common.api.scanner.filesystem.FileResource;
 import de.kontext_e.jqassistant.plugin.plaintext.store.descriptor.PlaintextFileDescriptor;
 
 import static java.util.Arrays.asList;
 
+@ScannerPlugin.Requires(FileDescriptor.class)
 public class PlaintextFileScannerPlugin extends AbstractScannerPlugin<FileResource, PlaintextFileDescriptor> {
     private static final Logger LOGGER = LoggerFactory.getLogger(PlaintextFileScannerPlugin.class);
     public static final String JQASSISTANT_PLUGIN_PLAINTEXT_SUFFIXES = "jqassistant.plugin.plaintext.suffixes";
@@ -25,27 +28,35 @@ public class PlaintextFileScannerPlugin extends AbstractScannerPlugin<FileResour
 
 
     @Override
-    public boolean accepts(final FileResource item, final String path, final Scope scope) throws IOException {
-        int beginIndex = path.lastIndexOf(".");
-        if(beginIndex > 0) {
-            final String suffix = path.substring(beginIndex + 1).toLowerCase();
+    public boolean accepts(final FileResource item, final String path, final Scope scope) {
+        try {
+            int beginIndex = path.lastIndexOf(".");
+            if(beginIndex > 0) {
+                final String suffix = path.substring(beginIndex + 1).toLowerCase();
 
-            boolean accepted = suffixes.contains(suffix);
-            if(accepted) {
-                LOGGER.info("Plaintext accepted path "+path);
+                boolean accepted = suffixes.contains(suffix);
+                if(accepted) {
+                    LOGGER.info("Plaintext accepted path "+path);
+                }
+
+                return accepted;
             }
 
-            return accepted;
+            return false;
+        } catch (NullPointerException e) {
+            // could do a lengthy null check at beginning or do it the short dirty way
+            return false;
+        } catch (Exception e) {
+            LOGGER.error("Error while checking path: "+e, e);
+            return false;
         }
-
-        return false;
     }
 
     @Override
     public PlaintextFileDescriptor scan(final FileResource item, final String path, final Scope scope, final Scanner scanner) throws IOException {
         final Store store = scanner.getContext().getStore();
-        final PlaintextFileDescriptor plaintextFileDescriptor = store.create(PlaintextFileDescriptor.class);
-        plaintextFileDescriptor.setFileName(path);
+		FileDescriptor fileDescriptor = scanner.getContext().getCurrentDescriptor();
+		final PlaintextFileDescriptor plaintextFileDescriptor = store.addDescriptorType(fileDescriptor, PlaintextFileDescriptor.class);
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(item.createStream()))) {
             final PlaintextLineParser pumlLineParser = new PlaintextLineParser(store, plaintextFileDescriptor);
