@@ -11,7 +11,6 @@ import de.kontext_e.jqassistant.plugin.excel.store.descriptor.ExcelFileDescripto
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -44,14 +43,20 @@ public class ExcelFileScannerPlugin extends AbstractScannerPlugin<FileResource, 
     }
 
     @Override
-    public ExcelFileDescriptor scan(FileResource item, String path, Scope scope, Scanner scanner) throws IOException {
-        final Store store = scanner.getContext().getStore();
-        final FileDescriptor fileDescriptor = scanner.getContext().getCurrentDescriptor();
-        final ExcelFileDescriptor excelFileDescriptor = store.addDescriptorType(fileDescriptor, ExcelFileDescriptor.class);
+    public ExcelFileDescriptor scan(FileResource item, String path, Scope scope, Scanner scanner) {
+        try {
+            final Store store = scanner.getContext().getStore();
+            final FileDescriptor fileDescriptor = scanner.getContext().getCurrentDescriptor();
+            final ExcelFileDescriptor excelFileDescriptor = store.addDescriptorType(fileDescriptor, ExcelFileDescriptor.class);
 
-        final ExcelFileReader excelFileReader = new ExcelFileReader(store, excelFileDescriptor, item.createStream());
-        excelFileReader.read();
+            final ExcelFileReader excelFileReader = new ExcelFileReader(store, excelFileDescriptor, item.createStream());
+            excelFileReader.read();
 
-        return excelFileDescriptor;
+            return excelFileDescriptor;
+        } catch (Exception e) {
+            LOGGER.error("Error while scanning "+path+": "+e);
+            LOGGER.debug("Details:", e);
+            return null;
+        }
     }
 }
