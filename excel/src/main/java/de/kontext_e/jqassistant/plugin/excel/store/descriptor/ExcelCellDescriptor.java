@@ -4,7 +4,6 @@ import com.buschmais.jqassistant.plugin.common.api.model.NamedDescriptor;
 import com.buschmais.xo.neo4j.api.annotation.Label;
 import com.buschmais.xo.neo4j.api.annotation.Relation;
 
-import java.util.Date;
 import java.util.List;
 
 @Label("Cell")
@@ -23,9 +22,6 @@ public interface ExcelCellDescriptor extends ExcelDescriptor, ExcelStyleDescript
 
     void setStringValue(String value);
     String getStringValue();
-
-    void setDateValue(Date dateCellValue);
-    Date getDateValue();
 
     void setNumericValue(double numericCellValue);
     double getNumericValue();

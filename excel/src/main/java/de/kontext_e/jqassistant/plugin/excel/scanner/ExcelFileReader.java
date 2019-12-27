@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -115,7 +116,9 @@ public class ExcelFileReader {
         break;
       case NUMERIC:
         if (DateUtil.isCellDateFormatted(cell)) {
-          excelCellDescriptor.setDateValue(cell.getDateCellValue());
+          SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+          final String formattedDate = simpleDateFormat.format(cell.getDateCellValue());
+          excelCellDescriptor.setStringValue(formattedDate);
         } else {
           excelCellDescriptor.setNumericValue(cell.getNumericCellValue());
         }
