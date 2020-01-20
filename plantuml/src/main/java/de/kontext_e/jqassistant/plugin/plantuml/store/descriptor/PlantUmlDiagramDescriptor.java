@@ -10,34 +10,33 @@ import java.util.Set;
 @Label("Diagram")
 public interface PlantUmlDiagramDescriptor extends PlantUmlDescriptor, PlantUmlGroupDescriptor {
     @Property("type")
-    void setType(String type);
     String getType();
+    void setType(String type);
 
     @Property("namespaceSeparator")
-    void setNamespaceSeparator(String namespaceSeparator);
     String getNamespaceSeparator();
+    void setNamespaceSeparator(String namespaceSeparator);
 
     @Relation("CONTAINS_GROUP")
     Set<PlantUmlGroupDescriptor> getPlantUmlGroups();
 
     @Property("pictureFileName")
-    void setPictureFileName(String pictureFileName);
     String getPictureFileName();
+    void setPictureFileName(String pictureFileName);
 
     @Property("pictureFileType")
-    void setPictureFileType(String pictureFileType);
     String getPictureFileType();
+    void setPictureFileType(String pictureFileType);
 
     @Property("title")
-    void setTitle(String title);
     String getTitle();
-
+    void setTitle(String title);
 
     @Property("caption")
-    void setCaption(String caption);
     String getCaption();
+    void setCaption(String caption);
 
     @Property("legend")
-    void setLegend(String legend);
     String getLegend();
+    void setLegend(String legend);
 }

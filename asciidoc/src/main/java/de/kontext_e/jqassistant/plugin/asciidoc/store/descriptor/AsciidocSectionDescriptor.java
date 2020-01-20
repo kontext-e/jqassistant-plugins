@@ -7,23 +7,23 @@ import com.buschmais.xo.neo4j.api.annotation.Property;
 public interface AsciidocSectionDescriptor extends AsciidocBlockDescriptor {
 
     @Property("index")
-    void setIndex(Integer index);
     Integer getIndex();
+    void setIndex(Integer index);
 
     @Property("number")
-    void setNumber(Integer number);
     Integer getNumber();
+    void setNumber(Integer number);
 
     @Property("numbered")
-    void setNumbered(boolean numbered);
     boolean getNumbered();
+    void setNumbered(boolean numbered);
 
     @Property("sectname")
-    void setSectname(String sectname);
     String getSectname();
+    void setSectname(String sectname);
 
     @Property("special")
-    void setSpecial(Boolean special);
     Boolean getSpecial();
+    void setSpecial(Boolean special);
 
 }

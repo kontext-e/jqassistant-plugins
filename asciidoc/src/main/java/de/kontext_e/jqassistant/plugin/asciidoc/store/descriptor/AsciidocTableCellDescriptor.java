@@ -12,10 +12,10 @@ public interface AsciidocTableCellDescriptor extends AsciidocDescriptor, Asciido
 	void setColumn(AsciidocTableColumnDescriptor column);
 
     @Property("text")
-    void setText(String text);
     String getText();
+    void setText(String text);
 
     @Property("colnumber")
-    void setColnumber(Integer colnumber);
     Integer getColnumber();
+    void setColnumber(Integer colnumber);
 }

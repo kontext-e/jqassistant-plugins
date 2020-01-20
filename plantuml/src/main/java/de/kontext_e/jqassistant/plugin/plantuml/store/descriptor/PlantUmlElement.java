@@ -10,8 +10,8 @@ import com.buschmais.xo.neo4j.api.annotation.Relation;
 public interface PlantUmlElement extends PlantUmlDescriptor {
 
     @Property("fullName")
-    void setFullName(String fullName);
     String getFullName();
+    void setFullName(String fullName);
 
     @Relation("LINK_TO")
     Set<PlantUmlElement> getLinkTargets();

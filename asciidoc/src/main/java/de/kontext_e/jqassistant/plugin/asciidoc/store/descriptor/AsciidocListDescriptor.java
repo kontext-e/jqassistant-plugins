@@ -9,8 +9,8 @@ import com.buschmais.xo.neo4j.api.annotation.Relation;
 @Label("List")
 public interface AsciidocListDescriptor extends AsciidocBlockDescriptor {
     @Property("isItem")
-    void setIsItem(Boolean isItem);
     Boolean getIsItem();
+    void setIsItem(Boolean isItem);
 
     @Relation("HAS_ITEM")
     Set<AsciidocBlockDescriptor> getListItems();

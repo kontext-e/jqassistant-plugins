@@ -7,6 +7,6 @@ import com.buschmais.xo.neo4j.api.annotation.Property;
 public interface AsciidocTableColumnDescriptor extends AsciidocDescriptor, AsciidocCommonProperties {
 
     @Property("colnumber")
-    void setColnumber(Integer colnumber);
     Integer getColnumber();
+    void setColnumber(Integer colnumber);
 }

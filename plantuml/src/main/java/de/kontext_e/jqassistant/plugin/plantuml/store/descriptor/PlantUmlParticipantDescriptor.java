@@ -16,14 +16,14 @@ public interface PlantUmlParticipantDescriptor extends PlantUmlDescriptor {
     Set<PlantUmlSequenceDiagramMessageDescriptor> getTarget();
 
     @Property("type")
-    void setType(String name);
     String getType();
+    void setType(String name);
 
     @Property("name")
-    void setName(String actorName);
     String getName();
+    void setName(String actorName);
 
     @Property("stereotype")
-    void setStereotype(String stereotype);
     String getStereotype();
+    void setStereotype(String stereotype);
 }

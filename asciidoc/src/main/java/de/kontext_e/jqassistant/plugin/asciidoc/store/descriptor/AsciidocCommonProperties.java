@@ -7,20 +7,20 @@ import com.buschmais.xo.neo4j.api.annotation.Relation;
 
 public interface AsciidocCommonProperties {
     @Property("context")
-    void setContext(String context);
     String getContext();
+    void setContext(String context);
 
     @Property("role")
-    void setRole(String role);
     String getRole();
+    void setRole(String role);
 
     @Property("style")
-    void setStyle(String style);
     String getStyle();
+    void setStyle(String style);
 
     @Property("reftext")
-    void setReftext(String reftext);
     String getReftext();
+    void setReftext(String reftext);
 
     @Relation("HAS_ATTRIBUTE")
     Set<AsciidocAttribute> getAttributes();

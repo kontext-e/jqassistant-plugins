@@ -7,27 +7,27 @@ import com.buschmais.xo.neo4j.api.annotation.Property;
 public interface AsciidocBlockDescriptor extends AsciidocDescriptor, BlockContainer, AsciidocCommonProperties {
 
     @Property("context")
-    void setContext(String context);
     String getContext();
+    void setContext(String context);
 
     @Property("role")
-    void setRole(String role);
     String getRole();
+    void setRole(String role);
 
     @Property("style")
-    void setStyle(String style);
     String getStyle();
+    void setStyle(String style);
 
     @Property("title")
-    void setTitle(String title);
     String getTitle();
+    void setTitle(String title);
 
     @Property("reftext")
-    void setReftext(String reftext);
     String getReftext();
+    void setReftext(String reftext);
 
     @Property("level")
-    void setLevel(Integer level);
     Integer getLevel();
+    void setLevel(Integer level);
 
 }
