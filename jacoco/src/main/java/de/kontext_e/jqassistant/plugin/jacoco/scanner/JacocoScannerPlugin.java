@@ -1,22 +1,5 @@
 package de.kontext_e.jqassistant.plugin.jacoco.scanner;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import javax.xml.XMLConstants;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParserFactory;
-import javax.xml.transform.sax.SAXSource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
-
-import com.buschmais.jqassistant.plugin.java.api.scanner.SignatureHelper;
 import com.buschmais.jqassistant.core.scanner.api.Scanner;
 import com.buschmais.jqassistant.core.scanner.api.ScannerPlugin;
 import com.buschmais.jqassistant.core.scanner.api.Scope;
@@ -24,17 +7,25 @@ import com.buschmais.jqassistant.core.store.api.Store;
 import com.buschmais.jqassistant.plugin.common.api.model.FileDescriptor;
 import com.buschmais.jqassistant.plugin.common.api.scanner.AbstractScannerPlugin;
 import com.buschmais.jqassistant.plugin.common.api.scanner.filesystem.FileResource;
-import de.kontext_e.jqassistant.plugin.jacoco.jaxb.ClassType;
-import de.kontext_e.jqassistant.plugin.jacoco.jaxb.CounterType;
-import de.kontext_e.jqassistant.plugin.jacoco.jaxb.MethodType;
-import de.kontext_e.jqassistant.plugin.jacoco.jaxb.ObjectFactory;
-import de.kontext_e.jqassistant.plugin.jacoco.jaxb.PackageType;
-import de.kontext_e.jqassistant.plugin.jacoco.jaxb.ReportType;
-import de.kontext_e.jqassistant.plugin.jacoco.store.descriptor.JacocoClassDescriptor;
-import de.kontext_e.jqassistant.plugin.jacoco.store.descriptor.JacocoCounterDescriptor;
-import de.kontext_e.jqassistant.plugin.jacoco.store.descriptor.JacocoReportDescriptor;
-import de.kontext_e.jqassistant.plugin.jacoco.store.descriptor.JacocoMethodDescriptor;
-import de.kontext_e.jqassistant.plugin.jacoco.store.descriptor.JacocoPackageDescriptor;
+import com.buschmais.jqassistant.plugin.java.api.scanner.SignatureHelper;
+import de.kontext_e.jqassistant.plugin.jacoco.jaxb.*;
+import de.kontext_e.jqassistant.plugin.jacoco.store.descriptor.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+
+import javax.xml.XMLConstants;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParserFactory;
+import javax.xml.transform.sax.SAXSource;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import static java.lang.String.format;
 
@@ -47,7 +38,7 @@ public class JacocoScannerPlugin extends AbstractScannerPlugin<FileResource,Jaco
     private static final Logger LOGGER = LoggerFactory.getLogger(JacocoScannerPlugin.class);
     public static final String JQASSISTANT_PLUGIN_JACOCO_FILENAME = "jqassistant.plugin.jacoco.filename";
     public static final String JQASSISTANT_PLUGIN_JACOCO_DIRNAME = "jqassistant.plugin.jacoco.dirname";
-    private JAXBContext jaxbContext;
+    private final JAXBContext jaxbContext;
     private String jacocoDirName = "jacoco";
     private String jacocoFileName = "jacocoTestReport.xml";
 
@@ -75,9 +66,9 @@ public class JacocoScannerPlugin extends AbstractScannerPlugin<FileResource,Jaco
     @Override
     public boolean accepts(final FileResource item, String path, Scope scope) {
         try {
-            boolean accepted = path.endsWith(jacocoFileName) || (jacocoDirName.equalsIgnoreCase(item.getFile().toPath().getParent().toFile().getName()) && path.endsWith(".xml"));
+            boolean accepted = acceptsPath(path);
             if(accepted) {
-                LOGGER.debug("Jacoco plugin accepted "+path);
+                LOGGER.info("Jacoco plugin accepted "+path);
             }
             return accepted;
         } catch (NullPointerException e) {
@@ -87,6 +78,29 @@ public class JacocoScannerPlugin extends AbstractScannerPlugin<FileResource,Jaco
             LOGGER.error("Error while checking path: "+e, e);
             return false;
         }
+    }
+
+    boolean acceptsPath(String path) throws IOException {
+        return path.endsWith(jacocoFileName) || parentDirectoryHasAcceptableName(path);
+    }
+
+    private boolean parentDirectoryHasAcceptableName(String path) throws IOException {
+        if(!path.endsWith(".xml")) {
+            return false;
+        }
+
+        final String[] parts = path.split("/");
+        if(parts == null || parts.length < 2) {
+            return false;
+        }
+
+        if(jacocoDirName == null) {
+            return false;
+        }
+
+        String parentName = parts[parts.length - 2];
+
+        return jacocoDirName.equalsIgnoreCase(parentName);
     }
 
     @Override

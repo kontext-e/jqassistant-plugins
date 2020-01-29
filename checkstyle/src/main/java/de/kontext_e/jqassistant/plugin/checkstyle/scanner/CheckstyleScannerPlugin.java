@@ -1,15 +1,5 @@
 package de.kontext_e.jqassistant.plugin.checkstyle.scanner;
 
-import java.io.IOException;
-import java.io.InputStream;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.transform.stream.StreamSource;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.buschmais.jqassistant.core.scanner.api.Scanner;
 import com.buschmais.jqassistant.core.scanner.api.ScannerPlugin;
 import com.buschmais.jqassistant.core.scanner.api.Scope;
@@ -21,9 +11,18 @@ import de.kontext_e.jqassistant.plugin.checkstyle.jaxb.CheckstyleType;
 import de.kontext_e.jqassistant.plugin.checkstyle.jaxb.ErrorType;
 import de.kontext_e.jqassistant.plugin.checkstyle.jaxb.FileType;
 import de.kontext_e.jqassistant.plugin.checkstyle.jaxb.ObjectFactory;
-import de.kontext_e.jqassistant.plugin.checkstyle.store.descriptor.CheckstyleReportDescriptor;
 import de.kontext_e.jqassistant.plugin.checkstyle.store.descriptor.CheckstyleErrorDescriptor;
 import de.kontext_e.jqassistant.plugin.checkstyle.store.descriptor.CheckstyleFileDescriptor;
+import de.kontext_e.jqassistant.plugin.checkstyle.store.descriptor.CheckstyleReportDescriptor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.transform.stream.StreamSource;
+import java.io.IOException;
+import java.io.InputStream;
 
 
 /**
@@ -50,7 +49,7 @@ public class CheckstyleScannerPlugin extends AbstractScannerPlugin<FileResource,
     @Override
     public boolean accepts(FileResource item, String path, Scope scope) {
         try {
-            boolean accepted = path.endsWith(checkstyleFileName) || (checkstyleDirName.equals(item.getFile().toPath().getParent().toFile().getName()) && path.endsWith(".xml"));
+            boolean accepted = acceptsPath(path);
             if(accepted) {
                 LOGGER.debug("Checkstyle accepted path "+path);
             }
@@ -62,6 +61,29 @@ public class CheckstyleScannerPlugin extends AbstractScannerPlugin<FileResource,
             LOGGER.error("Error while checking path: "+e, e);
             return false;
         }
+    }
+
+    boolean acceptsPath(String path) throws IOException {
+        return path.endsWith(checkstyleFileName) || parentDirectoryHasAcceptableName(path);
+    }
+
+    private boolean parentDirectoryHasAcceptableName(String path) throws IOException {
+        if(!path.endsWith(".xml")) {
+            return false;
+        }
+
+        final String[] parts = path.split("/");
+        if(parts == null || parts.length < 2) {
+            return false;
+        }
+
+        if(checkstyleDirName == null) {
+            return false;
+        }
+
+        String parentName = parts[parts.length - 2];
+
+        return checkstyleDirName.equalsIgnoreCase(parentName);
     }
 
     @Override

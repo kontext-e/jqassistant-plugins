@@ -1,19 +1,5 @@
 package de.kontext_e.jqassistant.plugin.pmd.scanner;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.function.Consumer;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.w3c.dom.Document;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
-
 import com.buschmais.jqassistant.core.scanner.api.Scanner;
 import com.buschmais.jqassistant.core.scanner.api.ScannerPlugin;
 import com.buschmais.jqassistant.core.scanner.api.Scope;
@@ -24,6 +10,20 @@ import com.buschmais.jqassistant.plugin.common.api.scanner.filesystem.FileResour
 import de.kontext_e.jqassistant.plugin.pmd.store.PmdFileDescriptor;
 import de.kontext_e.jqassistant.plugin.pmd.store.PmdReportDescriptor;
 import de.kontext_e.jqassistant.plugin.pmd.store.PmdViolationDescriptor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.function.Consumer;
 
 
 /**
@@ -61,9 +61,9 @@ public class PmdReportScannerPlugin extends AbstractScannerPlugin<FileResource, 
     @Override
     public boolean accepts(FileResource item, String path, Scope scope) throws IOException {
         try {
-            boolean accepted = path.endsWith(pmdFileName) || (pmdDirName.equals(item.getFile().toPath().getParent().toFile().getName()) && path.endsWith(".xml"));
+            boolean accepted = acceptsPath(path);
             if(accepted) {
-                LOGGER.info("Pmd accepted path "+path);
+                LOGGER.info("PMD plugin accepted path "+path);
             }
             return accepted;
         } catch (NullPointerException e) {
@@ -73,6 +73,29 @@ public class PmdReportScannerPlugin extends AbstractScannerPlugin<FileResource, 
             LOGGER.error("Error while checking path: "+e, e);
             return false;
         }
+    }
+
+    boolean acceptsPath(String path) throws IOException {
+        return path.endsWith(pmdFileName) || parentDirectoryHasAcceptableName(path);
+    }
+
+    private boolean parentDirectoryHasAcceptableName(String path) throws IOException {
+        if(!path.endsWith(".xml")) {
+            return false;
+        }
+
+        final String[] parts = path.split("/");
+        if(parts == null || parts.length < 2) {
+            return false;
+        }
+
+        if(pmdDirName == null) {
+            return false;
+        }
+
+        String parentName = parts[parts.length - 2];
+
+        return pmdDirName.equalsIgnoreCase(parentName);
     }
 
     @Override
