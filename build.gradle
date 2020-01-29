@@ -3,9 +3,10 @@ apply plugin: 'maven'
 apply plugin: 'org.asciidoctor.gradle.asciidoctor'
 apply plugin: 'com.github.jruby-gradle.base'
 
-project.ext["jqaversion"] = "1.7.0"
+//project.ext["jqaversion"] = "1.7.0"
+project.ext["jqaversion"] = "1.8.0-MS1"
 project.group = 'de.kontext-e.jqassistant.plugin'
-project.version = '1.7.0-SNAPSHOT'
+project.version = '1.8.0-SNAPSHOT'
 
 buildscript {
   repositories {
@@ -180,6 +181,7 @@ dependencies {
     jqaRuntime("com.buschmais.jqassistant.cli:jqassistant-commandline-neo4jv3:${project.jqaversion}") {
         exclude module: 'asm'
     }
+    jqaRuntime("com.buschmais.jqassistant.core:report:${project.jqaversion}")
     jqaRuntime("com.buschmais.jqassistant.plugin:common:${project.jqaversion}")
     jqaRuntime("com.buschmais.jqassistant.plugin:java:${project.jqaversion}")
     jqaRuntime("com.buschmais.jqassistant.plugin:junit:${project.jqaversion}")
@@ -230,18 +232,20 @@ task(jqascan, dependsOn: 'removeJQAReport', type: JavaExec) {
 
     args '.git'
     args 'doc/architecture'
-    
+
     args 'plantuml/src/test/asciidoc'
     args 'plantuml/src/test/plantuml'
     args 'asciidoc/src/test/asciidoc'
     args 'plaintext/src/test/testfiles'
     args 'javaparser/src/test'
+
+    args 'excel/src/test/resources'
 }
 
 task(jqaanalyze, type: JavaExec) {
     main = 'com.buschmais.jqassistant.commandline.Main'
     classpath = configurations.jqaRuntime
-    
+
     // this is needed to work around a windows limitation
     // of a too long command path
     // see https://stackoverflow.com/questions/50707110/gradle-windows-java-io-ioexception-createprocess-error-206-filename-is-too-lon
@@ -284,5 +288,3 @@ task install2jqa(type: Copy) {
     details.file.name.contains('asm-3.1')
   }
 }
-
-build.dependsOn jqa
