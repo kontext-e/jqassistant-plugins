@@ -251,7 +251,7 @@ RETURN
     }
 
     // Return the result
-    var status = com.buschmais.jqassistant.core.analysis.api.Result.Status.SUCCESS;
-    new com.buschmais.jqassistant.core.analysis.api.Result(rule, status, severity, columnNames, rows);
+    var status = com.buschmais.jqassistant.core.report.api.model.Result.Status.SUCCESS;
+    new com.buschmais.jqassistant.core.report.api.model.Result(rule, status, severity, columnNames, rows);
 ----
 

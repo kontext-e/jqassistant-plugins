@@ -1,14 +1,5 @@
 package de.kontext_e.jqassistant.plugin.spotbugs.scanner;
 
-import java.io.IOException;
-import java.io.InputStream;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.transform.stream.StreamSource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.buschmais.jqassistant.core.scanner.api.Scanner;
 import com.buschmais.jqassistant.core.scanner.api.ScannerPlugin;
 import com.buschmais.jqassistant.core.scanner.api.Scope;
@@ -16,19 +7,17 @@ import com.buschmais.jqassistant.core.store.api.Store;
 import com.buschmais.jqassistant.plugin.common.api.model.FileDescriptor;
 import com.buschmais.jqassistant.plugin.common.api.scanner.AbstractScannerPlugin;
 import com.buschmais.jqassistant.plugin.common.api.scanner.filesystem.FileResource;
-import de.kontext_e.jqassistant.plugin.spotbugs.jaxb.BugCollectionType;
-import de.kontext_e.jqassistant.plugin.spotbugs.jaxb.BugInstanceType;
-import de.kontext_e.jqassistant.plugin.spotbugs.jaxb.FieldType;
-import de.kontext_e.jqassistant.plugin.spotbugs.jaxb.FileType;
-import de.kontext_e.jqassistant.plugin.spotbugs.jaxb.MethodType;
-import de.kontext_e.jqassistant.plugin.spotbugs.jaxb.ObjectFactory;
-import de.kontext_e.jqassistant.plugin.spotbugs.jaxb.SourceLineType;
-import de.kontext_e.jqassistant.plugin.spotbugs.store.descriptor.FindBugsBugInstanceClassDescriptor;
-import de.kontext_e.jqassistant.plugin.spotbugs.store.descriptor.SpotBugsBugInstanceDescriptor;
-import de.kontext_e.jqassistant.plugin.spotbugs.store.descriptor.FindBugsBugInstanceFieldDescriptor;
-import de.kontext_e.jqassistant.plugin.spotbugs.store.descriptor.FindBugsBugInstanceMethodDescriptor;
-import de.kontext_e.jqassistant.plugin.spotbugs.store.descriptor.SpotBugsReportDescriptor;
-import de.kontext_e.jqassistant.plugin.spotbugs.store.descriptor.FindBugsSourceLineDescriptor;
+import de.kontext_e.jqassistant.plugin.spotbugs.jaxb.*;
+import de.kontext_e.jqassistant.plugin.spotbugs.store.descriptor.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.transform.stream.StreamSource;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * @author jn4, Kontext E GmbH, 05.02.14
@@ -72,18 +61,42 @@ public class SpotBugsScannerPlugin extends AbstractScannerPlugin<FileResource, S
     @Override
     public boolean accepts(FileResource item, String path, Scope scope) {
         try {
-            boolean accepted = path.endsWith(findBugsFileName)
-                               || (findBugsDirName.equals(item.getFile().toPath().getParent().toFile().getName()) && path.endsWith(".xml"))
-                               || path.endsWith(spotBugsFileName)
-                               || (spotBugsDirName.equals(item.getFile().toPath().getParent().toFile().getName()) && path.endsWith(".xml"));
+            boolean accepted = acceptsPath(path);
             if (accepted) {
-                LOGGER.debug(String.format("SpotBugs accepted file %s", path));
+                LOGGER.info(String.format("SpotBugs plugin accepted file %s", path));
             }
             return accepted;
         } catch (Exception e) {
             LOGGER.error("Error while checking path: "+e, e);
             return false;
         }
+    }
+
+    boolean acceptsPath(String path) {
+        return path.endsWith(findBugsFileName)
+                || path.endsWith(spotBugsFileName)
+                || parentDirectoryHasAcceptableName(path, findBugsDirName)
+                || parentDirectoryHasAcceptableName(path, spotBugsDirName)
+                ;
+    }
+
+    private boolean parentDirectoryHasAcceptableName(String path, String dirName) {
+        if(!path.endsWith(".xml")) {
+            return false;
+        }
+
+        final String[] parts = path.split("/");
+        if(parts == null || parts.length < 2) {
+            return false;
+        }
+
+        if(dirName == null) {
+            return false;
+        }
+
+        String parentName = parts[parts.length - 2];
+
+        return dirName.equalsIgnoreCase(parentName);
     }
 
     @Override
