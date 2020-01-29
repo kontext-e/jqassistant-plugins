@@ -80,11 +80,11 @@ public class JacocoScannerPlugin extends AbstractScannerPlugin<FileResource,Jaco
         }
     }
 
-    boolean acceptsPath(String path) throws IOException {
+    boolean acceptsPath(String path) {
         return path.endsWith(jacocoFileName) || parentDirectoryHasAcceptableName(path);
     }
 
-    private boolean parentDirectoryHasAcceptableName(String path) throws IOException {
+    private boolean parentDirectoryHasAcceptableName(String path) {
         if(!path.endsWith(".xml")) {
             return false;
         }

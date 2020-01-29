@@ -59,7 +59,7 @@ public class PmdReportScannerPlugin extends AbstractScannerPlugin<FileResource, 
     }
 
     @Override
-    public boolean accepts(FileResource item, String path, Scope scope) throws IOException {
+    public boolean accepts(FileResource item, String path, Scope scope) {
         try {
             boolean accepted = acceptsPath(path);
             if(accepted) {
@@ -75,11 +75,11 @@ public class PmdReportScannerPlugin extends AbstractScannerPlugin<FileResource, 
         }
     }
 
-    boolean acceptsPath(String path) throws IOException {
+    boolean acceptsPath(String path) {
         return path.endsWith(pmdFileName) || parentDirectoryHasAcceptableName(path);
     }
 
-    private boolean parentDirectoryHasAcceptableName(String path) throws IOException {
+    private boolean parentDirectoryHasAcceptableName(String path) {
         if(!path.endsWith(".xml")) {
             return false;
         }

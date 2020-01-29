@@ -34,7 +34,7 @@ public class CheckstyleScannerPlugin extends AbstractScannerPlugin<FileResource,
     private static final Logger LOGGER = LoggerFactory.getLogger(CheckstyleScannerPlugin.class);
     private static final String JQASSISTANT_PLUGIN_CHECKSTYLE_FILENAME = "jqassistant.plugin.checkstyle.filename";
     private static final String JQASSISTANT_PLUGIN_CHECKSTYLE_DIRNAME = "jqassistant.plugin.checkstyle.dirname";
-    private JAXBContext jaxbContext;
+    private final JAXBContext jaxbContext;
     private String checkstyleFileName = "checkstyle.xml";
     private String checkstyleDirName = "checkstyle";
 
@@ -63,11 +63,11 @@ public class CheckstyleScannerPlugin extends AbstractScannerPlugin<FileResource,
         }
     }
 
-    boolean acceptsPath(String path) throws IOException {
+    boolean acceptsPath(String path) {
         return path.endsWith(checkstyleFileName) || parentDirectoryHasAcceptableName(path);
     }
 
-    private boolean parentDirectoryHasAcceptableName(String path) throws IOException {
+    private boolean parentDirectoryHasAcceptableName(String path) {
         if(!path.endsWith(".xml")) {
             return false;
         }
