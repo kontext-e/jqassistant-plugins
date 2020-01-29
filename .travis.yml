@@ -9,3 +9,7 @@ cache:
   - $HOME/.m2
   - $HOME/.gradle/caches/
   - $HOME/.gradle/wrapper/
+
+script:
+ - ./gradlew clean install
+ - ./gradlew check jTR jqa
