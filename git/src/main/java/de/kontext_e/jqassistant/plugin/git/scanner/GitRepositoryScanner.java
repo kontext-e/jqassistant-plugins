@@ -1,14 +1,25 @@
 package de.kontext_e.jqassistant.plugin.git.scanner;
 
 import com.buschmais.jqassistant.core.store.api.Store;
-import de.kontext_e.jqassistant.plugin.git.store.descriptor.*;
+import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitAuthorDescriptor;
+import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitBranchDescriptor;
+import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitChangeDescriptor;
+import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitCommitDescriptor;
+import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitCommitterDescriptor;
+import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitFileDescriptor;
+import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitRepositoryDescriptor;
+import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitTagDescriptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 class GitRepositoryScanner {
     private static final Logger LOGGER = LoggerFactory.getLogger(GitRepositoryScanner.class);
@@ -19,7 +30,7 @@ class GitRepositoryScanner {
 
     private final Store store;
     private final GitRepositoryDescriptor gitRepositoryDescriptor;
-    private String range;
+    private final String range;
     private final Map<String, GitAuthorDescriptor> authors = new HashMap<>();
     private final Map<String, GitCommitterDescriptor> committers = new HashMap<>();
     private final Map<String, GitFileDescriptor> files = new HashMap<>();

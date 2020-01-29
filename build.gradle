@@ -213,7 +213,7 @@ task(jqascan, dependsOn: 'removeJQAReport', type: JavaExec) {
     // this is needed to work around a windows limitation
     // of a too long command path
     // see https://stackoverflow.com/questions/50707110/gradle-windows-java-io-ioexception-createprocess-error-206-filename-is-too-lon
-    def cp = CollectionUtils.join(File.pathSeparator, classpath.getFiles())
+    def cp = org.gradle.util.CollectionUtils.join(File.pathSeparator, classpath.getFiles())
     environment 'CLASSPATH', cp
     classpath = classpath.filter { false }
 
@@ -249,7 +249,7 @@ task(jqaanalyze, type: JavaExec) {
     // this is needed to work around a windows limitation
     // of a too long command path
     // see https://stackoverflow.com/questions/50707110/gradle-windows-java-io-ioexception-createprocess-error-206-filename-is-too-lon
-    def cp = CollectionUtils.join(File.pathSeparator, classpath.getFiles())
+    def cp = org.gradle.util.CollectionUtils.join(File.pathSeparator, classpath.getFiles())
     environment 'CLASSPATH', cp
     classpath = classpath.filter { false }
 
@@ -269,7 +269,7 @@ task(jqs, type: JavaExec) {
     // this is needed to work around a windows limitation
     // of a too long command path
     // see https://stackoverflow.com/questions/50707110/gradle-windows-java-io-ioexception-createprocess-error-206-filename-is-too-lon
-    def cp = CollectionUtils.join(File.pathSeparator, classpath.getFiles())
+    def cp = org.gradle.util.CollectionUtils.join(File.pathSeparator, classpath.getFiles())
     environment 'CLASSPATH', cp
     classpath = classpath.filter { false }
 
