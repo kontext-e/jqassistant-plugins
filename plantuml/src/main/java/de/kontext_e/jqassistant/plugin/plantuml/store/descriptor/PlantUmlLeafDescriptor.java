@@ -7,14 +7,14 @@ import com.buschmais.xo.neo4j.api.annotation.Property;
 public interface PlantUmlLeafDescriptor extends PlantUmlDescriptor, PlantUmlElement {
 
     @Property("type")
-    void setType(String name);
     String getType();
+    void setType(String name);
 
     @Property("stereotype")
-    void setStereotype(String stereotype);
     String getStereotype();
+    void setStereotype(String stereotype);
 
     @Property("description")
-    void setDescription(String description);
     String getDescription();
+    void setDescription(String description);
 }

@@ -75,7 +75,8 @@ public class JacocoScannerPlugin extends AbstractScannerPlugin<FileResource,Jaco
     @Override
     public boolean accepts(final FileResource item, String path, Scope scope) {
         try {
-            boolean accepted = path.endsWith(jacocoFileName) || (jacocoDirName.equalsIgnoreCase(item.getFile().toPath().getParent().toFile().getName()) && path.endsWith(".xml"));
+            boolean accepted = path.endsWith(jacocoFileName)
+                    || (path.endsWith(".xml") && jacocoDirName.equalsIgnoreCase(item.getFile().toPath().getParent().toFile().getName()));
             if(accepted) {
                 LOGGER.debug("Jacoco plugin accepted "+path);
             }

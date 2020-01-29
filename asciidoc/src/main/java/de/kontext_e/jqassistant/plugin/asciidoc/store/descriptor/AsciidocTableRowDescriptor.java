@@ -13,7 +13,7 @@ public interface AsciidocTableRowDescriptor extends AsciidocDescriptor {
     Set<AsciidocTableCellDescriptor> getAsciidocTableCells();
 
 	@Property("rownumber")
-	void setRownumber(Integer rownumber);
 	Integer getRownumber();
+	void setRownumber(Integer rownumber);
 
 }

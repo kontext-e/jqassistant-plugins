@@ -8,6 +8,6 @@ import com.buschmais.xo.neo4j.api.annotation.Property;
 public interface AsciidocAttribute extends AsciidocDescriptor, NamedDescriptor {
 
     @Property("value")
-    void setValue(String value);
     String getValue();
+    void setValue(String value);
 }

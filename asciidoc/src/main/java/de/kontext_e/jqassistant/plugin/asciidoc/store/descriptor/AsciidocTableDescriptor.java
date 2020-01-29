@@ -22,11 +22,11 @@ public interface AsciidocTableDescriptor extends AsciidocBlockDescriptor {
     List<AsciidocTableRowDescriptor> getAsciidocTableFooterRows();
 
     @Property("frame")
-    void setFrame(String frame);
     String getFrame();
+    void setFrame(String frame);
 
     @Property("grid")
-    void setGrid(String grid);
     String getGrid();
+    void setGrid(String grid);
 
 }
