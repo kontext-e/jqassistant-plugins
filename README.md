@@ -49,7 +49,7 @@ Release 1.8.0
 * Use jQAssistant 1.8
 * 67 JaCoCo plugins slows down scanning
 * 68 Adopt XO related annotations for jQA 1.8
-* 70 Upgrade Gradle vom v4 to v5
+* 70 Upgrade Gradle from v4 to v5
 
 Release 1.7.0
 -------------

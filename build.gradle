@@ -5,7 +5,7 @@ apply plugin: 'com.github.jruby-gradle.base'
 
 project.ext["jqaversion"] = "1.8.0"
 project.group = 'de.kontext-e.jqassistant.plugin'
-project.version = '1.8.0-SNAPSHOT'
+project.version = '1.8.0'
 
 buildscript {
   repositories {
