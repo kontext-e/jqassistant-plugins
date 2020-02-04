@@ -5,7 +5,7 @@ apply plugin: 'com.github.jruby-gradle.base'
 
 project.ext["jqaversion"] = "1.8.0"
 project.group = 'de.kontext-e.jqassistant.plugin'
-project.version = '1.8.0'
+project.version = '1.9.0-SNAPSHOT'
 
 buildscript {
   repositories {
@@ -160,7 +160,7 @@ subprojects {
 }
 
 repositories {
-    mavenLocal()
+//    mavenLocal()
     maven {
         url "https://oss.sonatype.org/content/repositories/snapshots"
     }
@@ -172,7 +172,7 @@ configurations {
         // newer gradle versions resolve ALL depencencies before build
         // so on version number changes this version needs to be set once
         // until new version is in local maven repo installed
-//        project.version = '1.6.0-SNAPSHOT'
+//        project.version = '1.8.0-SNAPSHOT'
     }
 }
 
