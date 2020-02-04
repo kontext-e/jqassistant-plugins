@@ -212,8 +212,8 @@ class PumlLineParser {
                 continue;
             }
 
-            String lhs = link.getEntity1().getCode().getFullName();
-            String rhs = link.getEntity2().getCode().getFullName();
+            String lhs = link.getEntity1().getCode().getName();
+            String rhs = link.getEntity2().getCode().getName();
             if("ARROW".equalsIgnoreCase(link.getType().getDecor2().name())) {
                 String swap = rhs;
                 rhs = lhs;
@@ -239,7 +239,7 @@ class PumlLineParser {
     private void addLeafs(final Collection<ILeaf> leafsvalues, final PlantUmlGroupDescriptor plantUmlGroupDescriptor) {
         for (final ILeaf iLeaf : leafsvalues) {
             PlantUmlLeafDescriptor leafNode = store.create(PlantUmlLeafDescriptor.class);
-            final String fullName = iLeaf.getCode().getFullName();
+            final String fullName = iLeaf.getCode().getName();
             leafNode.setFullName(fullName);
             final LeafType entityType = iLeaf.getLeafType();
             leafNode.setType(entityType.name());
@@ -273,7 +273,7 @@ class PumlLineParser {
             }
 
             if(plantUmlGroupDescriptor != null) {
-                final String fullGroupName = iGroup.getCode().getFullName();
+                final String fullGroupName = iGroup.getCode().getName();
                 plantUmlGroupDescriptor.setFullName(fullGroupName);
                 diagramDescriptor.getPlantUmlGroups().add(plantUmlGroupDescriptor);
                 mappingFromFqnToPackage.put(fullGroupName, plantUmlGroupDescriptor);
