@@ -32,7 +32,6 @@ public class AsciidocImporterTest {
         Store mockStore = mock(Store.class);
         AsciidocImporter asciidocImporter = new AsciidocImporter(mockFile, mockStore, 5);
         final Map<String, Object> parameters = new HashMap<>();
-        parameters.put(Asciidoctor.STRUCTURE_MAX_LEVEL, 10);
         Asciidoctor asciidoctor = Asciidoctor.Factory.create();
         String content = ".Description of de.kontext_e.jqassistant.plugin.plantuml packages\n" +
                          "[options=\"header\", myAttribute, architecture=\"packages\"]\n" +
@@ -65,8 +64,7 @@ public class AsciidocImporterTest {
         verify(mockAsciidocTableCellDescriptor).setText("Purpose");
         verify(mockAsciidocTableCellDescriptor).setText("scanner");
         verify(mockAsciidocTableCellDescriptor).setText("store");
-        verify(mockAttribute).setName("options");
-        verify(mockAttribute).setValue("header");
+        verify(mockAttribute).setName("header-option");
         verify(mockAttribute).setValue("myAttribute");
         verify(mockAttribute).setName("architecture");
         verify(mockAttribute).setValue("packages");

@@ -5,17 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.asciidoctor.Asciidoctor;
-import org.asciidoctor.ast.AbstractBlock;
-import org.asciidoctor.ast.AbstractNode;
-import org.asciidoctor.ast.Block;
-import org.asciidoctor.ast.Cell;
-import org.asciidoctor.ast.Column;
-import org.asciidoctor.ast.Document;
-import org.asciidoctor.ast.ListItem;
-import org.asciidoctor.ast.ListNode;
-import org.asciidoctor.ast.Row;
-import org.asciidoctor.ast.Section;
-import org.asciidoctor.ast.Table;
+import org.asciidoctor.ast.*;
+import org.asciidoctor.ast.StructuralNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,7 +34,6 @@ class AsciidocImporter {
     AsciidocImporter(final File file, final Store store, int structureMaxLevel) {
         this.file = file;
         this.store = store;
-        parameters.put(Asciidoctor.STRUCTURE_MAX_LEVEL, structureMaxLevel);
     }
 
     void importDocument(BlockContainer asciidocFile) {
@@ -51,13 +41,13 @@ class AsciidocImporter {
         scanBlocks(document.getBlocks(), asciidocFile);
     }
 
-    void scanBlocks(List<AbstractBlock> blocks, BlockContainer blockContainer) {
-        // was for(AbstractBlock block : blocks) but there is a but in Asciidoctor 1.5.4.1
+    void scanBlocks(List<StructuralNode> blocks, BlockContainer blockContainer) {
+        // was for(StructuralNode block : blocks) but there is a but in Asciidoctor 1.5.4.1
         // which causes a ClassCastException
-        // so check first if it is really an AbstractBlock
+        // so check first if it is really an StructuralNode
         for (Object o: blocks) {
-            if(o instanceof AbstractBlock) {
-                AbstractBlock block = (AbstractBlock) o;
+            if(o instanceof StructuralNode) {
+                StructuralNode block = (StructuralNode) o;
                 // ListItem is reported twice: as first class and as part of ListNode
                 if (block instanceof ListItem) continue;
 
@@ -72,12 +62,12 @@ class AsciidocImporter {
         }
     }
 
-    private AsciidocBlockDescriptor scanOneBlock(final AbstractBlock block) {
+    private AsciidocBlockDescriptor scanOneBlock(final StructuralNode block) {
         AsciidocBlockDescriptor blockDescriptor;
         if(block instanceof Table) {
             blockDescriptor = scanTableBlock((Table) block);
-        } else if(block instanceof ListNode) {
-            blockDescriptor = scanListBlock((ListNode) block);
+        } else if(block instanceof org.asciidoctor.ast.List) {
+            blockDescriptor = scanListBlock((org.asciidoctor.ast.List) block);
         } else if(block instanceof ListItem) {
             blockDescriptor = scanListItemBlock((ListItem) block);
         } else if(block instanceof Section) {
@@ -102,12 +92,12 @@ class AsciidocImporter {
         return listItemDescriptor;
     }
 
-    private AsciidocBlockDescriptor scanListBlock(final ListNode list) {
+    private AsciidocBlockDescriptor scanListBlock(final org.asciidoctor.ast.List list) {
         final AsciidocListDescriptor listDescriptor = store.create(AsciidocListDescriptor.class);
         for (Object o: list.getItems()) {
-            if(o instanceof AbstractBlock) {
-                AbstractBlock abstractBlock = (AbstractBlock) o;
-                listDescriptor.getListItems().add(scanOneBlock(abstractBlock));
+            if(o instanceof StructuralNode) {
+                StructuralNode StructuralNode = (StructuralNode) o;
+                listDescriptor.getListItems().add(scanOneBlock(StructuralNode));
             }
         }
 
@@ -187,7 +177,7 @@ class AsciidocImporter {
         return columnDescriptor;
     }
 
-    private void setCommonBlockProperties(final AbstractBlock block, final AsciidocBlockDescriptor blockDescriptor) {
+    private void setCommonBlockProperties(final StructuralNode block, final AsciidocBlockDescriptor blockDescriptor) {
         blockDescriptor.setContext(block.getContext());
         blockDescriptor.setLevel(block.getLevel());
         blockDescriptor.setRole(block.getRole());
@@ -220,11 +210,10 @@ class AsciidocImporter {
         return rowDescriptor;
     }
 
-    private void addCommonProperties(final AbstractNode abstractNode, final AsciidocCommonProperties descriptor) {
+    private void addCommonProperties(final ContentNode abstractNode, final AsciidocCommonProperties descriptor) {
         descriptor.setContext(abstractNode.getContext());
         descriptor.setReftext(abstractNode.getReftext());
         descriptor.setRole(abstractNode.getRole());
-        descriptor.setStyle(abstractNode.getStyle());
     }
 
     public static void main(String[] args) {
