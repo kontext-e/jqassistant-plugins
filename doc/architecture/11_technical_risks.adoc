@@ -14,3 +14,23 @@
 | 4         | 1000000000
 |===
 
+=== Checkstyle
+
+.Max number of allowed warnings
+[options="header", metric="checkstyle"]
+|===
+| Priority  | M
+ax. allowed warnings
+| error     | 23
+| warning   | 1
+|===
+
+=== SpotBugs
+
+.Max number of allowed warnings
+[options="header", metric="spotbugs"]
+|===
+| Priority  | Max. allowed warnings
+| 1         | 7
+| 2         | 17
+|===

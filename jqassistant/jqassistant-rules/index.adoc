@@ -14,7 +14,6 @@ The following constraints apply for modules:
 - <<structure:MarkAsciidocTypeRegex>>
 - <<structure:LabelTypesMatchedByRegex>>
 - <<metrics:MaxSpotBugsWarnings>>
-- <<metrics:MaxCheckstyleErrors>>
 - <<metrics:MaxCheckstyleWarnings>>
 - <<metrics:MaxPmdWarnings>>
 
@@ -56,63 +55,75 @@ with c1, c2
 There is also some Technical Debt regarding SpotBugs.
 This query works with the old FindBugs file format which the Gradle plugin produces.
 
-[[metrics:MaxSpotBugsWarnings]]
-.There must be less than X warnings reported by SpotBugs
-[source,cypher,role=constraint]
-----
-    MATCH
-        (c:FindBugs:BugInstance)-[:HAS_SOURCELINE]->(s:FindBugs:SourceLine)
-    WHERE
-        not(c.category='PERFORMANCE')
-    RETURN
-        s.fqn, s.start, c.priority, c.category, c.type
-    ORDER BY
-        c.priority, c.category, c.type
-    SKIP
-        31
-----
-
-[[metrics:MaxCheckstyleErrors]]
-.There must be less than X errors reported by Checkstyle.
-[source,cypher,role=constraint]
-----
-    MATCH
-        (n:Checkstyle:Error {severity: 'error'})--(f:Checkstyle:File)
-    RETURN
-        n.message,f.name, n.line
-    SKIP
-        21
-----
-
-[[metrics:MaxCheckstyleWarnings]]
-.There must be less than X warnings reported by Checkstyle.
-[source,cypher,role=constraint]
-----
-    MATCH
-        (n:Checkstyle:Error {severity: 'warning'})--(f:Checkstyle:File)
-    RETURN
-        n.message,f.name, n.line
-    SKIP
-        1
-----
-
-[[metrics:MarkAsciidocTypeMetric]]
+[[metrics:MarkAsciidocTypePMDMetric]]
 .Enrich Asciidoc cells for PMD constraints.
-[source,cypher,role=concept]
+[source,cypher,role=concept,severity=major]
 ----
     MATCH
         (a:Asciidoc:Table)-[:HAS_ROW]->(body),
         (a)-[:HAS_ATTRIBUTE]->(att:Asciidoc:Attribute)
     WHERE
-        att.name='metric' AND att.value='pmd'
+        att.name='metric' AND toLower(att.value) = 'pmd'
     WITH
         body
     MATCH
         (body)-[:CONTAINS_CELL]->(prioCell:Asciidoc:Cell {colnumber: 0}),
         (body)-[:CONTAINS_CELL]->(thresholdCell:Asciidoc:Cell {colnumber: 1})
     SET
-        prioCell:Pmd:PriorityCell,
-        thresholdCell:Pmd:ThresholdCell
+        prioCell:Pmd:Priority:Metric,
+        thresholdCell:Pmd:Threshold:Metric,
+        prioCell.priority = toInt(prioCell.text),
+        thresholdCell.threshold = toInt(thresholdCell.text)
+    CREATE UNIQUE
+        (prioCell)-[:HAS_UPPER_THRESHOLD]->(thresholdCell)
+    RETURN
+        prioCell, thresholdCell
+----
+
+[[metrics:MarkAsciidocTypeCheckstyleMetric]]
+.Enrich Asciidoc cells for Checkstyle constraints.
+[source,cypher,role=concept,severity=major]
+----
+    MATCH
+        (a:Asciidoc:Table)-[:HAS_ROW]->(body),
+        (a)-[:HAS_ATTRIBUTE]->(att:Asciidoc:Attribute)
+    WHERE
+        att.name='metric' AND toLower(att.value) = 'checkstyle'
+    WITH
+        body
+    MATCH
+        (body)-[:CONTAINS_CELL]->(prioCell:Asciidoc:Cell {colnumber: 0}),
+        (body)-[:CONTAINS_CELL]->(thresholdCell:Asciidoc:Cell {colnumber: 1})
+    SET
+        prioCell:Checkstyle:Priority:Metric,
+        thresholdCell:Checkstyle:Threshold:Metric,
+        prioCell.priority = prioCell.text,
+        thresholdCell.threshold = toInt(thresholdCell.text)
+    CREATE UNIQUE
+        (prioCell)-[:HAS_UPPER_THRESHOLD]->(thresholdCell)
+    RETURN
+        prioCell, thresholdCell
+----
+
+[[metrics:MarkAsciidocTypeSpotBugsMetric]]
+.Enrich Asciidoc cells for SpotBugs constraints.
+[source,cypher,role=concept,severity=major]
+----
+    MATCH
+        (a:Asciidoc:Table)-[:HAS_ROW]->(body),
+        (a)-[:HAS_ATTRIBUTE]->(att:Asciidoc:Attribute)
+    WHERE
+        att.name='metric' AND toLower(att.value) = 'spotbugs'
+    WITH
+        body
+    MATCH
+        (body)-[:CONTAINS_CELL]->(prioCell:Asciidoc:Cell {colnumber: 0}),
+        (body)-[:CONTAINS_CELL]->(thresholdCell:Asciidoc:Cell {colnumber: 1})
+    SET
+        prioCell:SpotBugs:Priority:Metric,
+        thresholdCell:SpotBugs:Threshold:Metric,
+        prioCell.priority = toInt(prioCell.text),
+        thresholdCell.threshold = toInt(thresholdCell.text)
     CREATE UNIQUE
         (prioCell)-[:HAS_UPPER_THRESHOLD]->(thresholdCell)
     RETURN
@@ -121,21 +132,21 @@ This query works with the old FindBugs file format which the Gradle plugin produ
 
 [[metrics:MaxPmdWarnings]]
 .There must be less than X warnings reported by PMD.
-[source,cypher,role=constraint,requiresConcepts="metrics:MarkAsciidocTypeMetric"]
+[source,cypher,role=constraint,requiresConcepts="metrics:MarkAsciidocTypePMDMetric"]
 ----
     MATCH
-        (prioCell:Pmd:PriorityCell)-[:HAS_UPPER_THRESHOLD]->(thresholdCell)
+        (priority:Pmd:Priority:Metric)-[:HAS_UPPER_THRESHOLD]->(threshold)
     WITH
-        prioCell, thresholdCell
+        priority, threshold
     MATCH
         (f:Pmd:File)-[:HAS_VIOLATION]->(v:Pmd:Violation)
     WHERE
-        v.priority=toInt(prioCell.text)
+        v.priority=priority.priority
     WITH
-        collect(v) as vios, thresholdCell
+        collect(v) as vios, threshold
     WITH
     CASE
-        WHEN length(vios) > toInt(thresholdCell.text)
+        WHEN length(vios) > threshold.threshold
         THEN vios
     END AS out
     UNWIND
@@ -144,6 +155,58 @@ This query works with the old FindBugs file format which the Gradle plugin produ
         v.package+"."+v.className+":"+v.beginLine as location, v.priority, v.message
     ORDER BY
         v.priority
+----
+
+[[metrics:MaxCheckstyleWarnings]]
+.There must be less than X warnings reported by Checkstyle.
+[source,cypher,role=constraint,requiresConcepts="metrics:MarkAsciidocTypeCheckstyleMetric"]
+----
+    MATCH
+        (priority:Checkstyle:Priority:Metric)-[:HAS_UPPER_THRESHOLD]->(threshold)
+    WITH
+        priority, threshold
+    MATCH
+        (n:Checkstyle:Error)<-[:CHECKSTYLE_ERROR]-(f:Checkstyle:File)
+    WHERE
+        n.severity=priority.priority
+    WITH
+        collect({message: n.message, name: f.name, line: n.line, severity: n.severity}) as vios, threshold
+    WITH
+    CASE
+        WHEN length(vios) > threshold.threshold
+        THEN vios
+    END AS out
+    UNWIND
+        out AS v
+    RETURN
+        v.message, v.name, v.line, v.severity
+----
+
+[[metrics:MaxSpotBugsWarnings]]
+.There must be less than X warnings reported by SpotBugs.
+[source,cypher,role=constraint,requiresConcepts="metrics:MarkAsciidocTypeSpotBugsMetric"]
+----
+    MATCH
+        (priority:SpotBugs:Priority:Metric)-[:HAS_UPPER_THRESHOLD]->(threshold)
+    WITH
+        priority, threshold
+    MATCH
+        (c:FindBugs:BugInstance)-[:HAS_SOURCELINE]->(s:FindBugs:SourceLine)
+    WHERE
+        toInt(c.priority)=priority.priority
+    WITH
+        collect({fqn: s.fqn, start: s.start, priority: c.priority, category: c.category, type: c.type}) as vios, threshold
+    WITH
+    CASE
+        WHEN length(vios) > threshold.threshold
+        THEN vios
+    END AS out
+    UNWIND
+        out AS v
+    RETURN
+        v.fqn, v.start, v.priority, v.category, v.type
+    ORDER BY
+        v.priority, v.category, v.type
 ----
 
 
