@@ -1,14 +1,14 @@
 package de.kontext_e.jqassistant.plugin.spotbugs.scanner;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import org.junit.Test;
-
 import de.kontext_e.jqassistant.plugin.spotbugs.jaxb.BugCollectionType;
 import de.kontext_e.jqassistant.plugin.spotbugs.jaxb.BugInstanceType;
+import org.junit.Test;
+
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 public class SpotBugsScannerPluginTest {
 	private SpotBugsScannerPlugin plugin = new SpotBugsScannerPlugin();
