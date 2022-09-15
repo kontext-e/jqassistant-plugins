@@ -8,7 +8,7 @@
 [options="header", metric="pmd"]
 |===
 | Priority  | Max. allowed warnings
-| 1         | 18
+| 1         | 20
 | 2         | 44
 | 3         | 1000000000
 | 4         | 1000000000
