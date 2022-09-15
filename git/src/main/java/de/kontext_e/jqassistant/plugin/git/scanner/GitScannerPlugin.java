@@ -1,12 +1,5 @@
 package de.kontext_e.jqassistant.plugin.git.scanner;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.Map;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.buschmais.jqassistant.core.scanner.api.Scanner;
 import com.buschmais.jqassistant.core.scanner.api.ScannerPlugin;
 import com.buschmais.jqassistant.core.scanner.api.Scope;
@@ -15,6 +8,15 @@ import com.buschmais.jqassistant.plugin.common.api.model.FileDescriptor;
 import com.buschmais.jqassistant.plugin.common.api.scanner.AbstractScannerPlugin;
 import com.buschmais.jqassistant.plugin.common.api.scanner.filesystem.FileResource;
 import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitRepositoryDescriptor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author jn4, Kontext E GmbH
@@ -23,8 +25,7 @@ import de.kontext_e.jqassistant.plugin.git.store.descriptor.GitRepositoryDescrip
 public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitRepositoryDescriptor> {
     private static final Logger LOGGER = LoggerFactory.getLogger(GitScannerPlugin.class);
     private static final String GIT_RANGE = "jqassistant.plugin.git.range";
-    private static int counter = 0;
-
+    private static final Set<String> scannedPaths = new HashSet<>();
     private String range = null;
 
     @Override
@@ -35,19 +36,22 @@ public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitRep
      * repository and the scanner may perform it's work on it (call to "scan" method).
      */
     public boolean accepts(final FileResource item, final String path, final Scope scope) {
-        // in some maven project layouts, the .git repo is offered in every subproject
-        // but needs to be imported only once
-        if(counter > 0) return false;
-
         try {
             if(path.endsWith("/HEAD")) {
                 final File gitDirectory = item.getFile();
                 LOGGER.debug("Checking path {} / dir {}", path, gitDirectory);
-                boolean isGitDir = ".git".equals(gitDirectory.toPath().toAbsolutePath().getParent().toFile().getName());
+                final Path absolutePath = gitDirectory.toPath().toAbsolutePath();
+                boolean isGitDir = ".git".equals(absolutePath.getParent().toFile().getName());
                 if (!isGitDir) {
                     return false;
                 } else {
-                    String pathToGitProject = gitDirectory.toPath().getParent().toFile().getAbsolutePath();
+                    final String pathToGitProject = gitDirectory.toPath().getParent().toFile().getAbsolutePath();
+                    if(scannedPaths.contains(pathToGitProject)) {
+                        // in some maven project layouts, the .git repo is offered in every subproject
+                        // but needs to be imported only once
+                        return false;
+                    }
+                    scannedPaths.add(pathToGitProject);
                     LOGGER.info("Accepted Git project in '{}'", pathToGitProject);
                     return true;
                 }
@@ -65,8 +69,6 @@ public class GitScannerPlugin extends AbstractScannerPlugin<FileResource, GitRep
 
     @Override
     public GitRepositoryDescriptor scan(final FileResource item, final String path, final Scope scope, final Scanner scanner) throws IOException {
-        counter++;
-
         // This is called with path = "/HEAD" since this is the only "accepted" file
         LOGGER.debug ("Scanning Git directory '{}' (call with path: '{}')", item.getFile(), path);
         Store store = scanner.getContext().getStore();
