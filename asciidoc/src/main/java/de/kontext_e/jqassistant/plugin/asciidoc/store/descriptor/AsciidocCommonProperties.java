@@ -1,25 +1,25 @@
 package de.kontext_e.jqassistant.plugin.asciidoc.store.descriptor;
 
-import java.util.Set;
-
 import com.buschmais.xo.neo4j.api.annotation.Property;
 import com.buschmais.xo.neo4j.api.annotation.Relation;
 
+import java.util.Set;
+
 public interface AsciidocCommonProperties {
-    @Property("context")
     void setContext(String context);
+    @Property("context")
     String getContext();
 
-    @Property("role")
     void setRole(String role);
+    @Property("role")
     String getRole();
 
-    @Property("style")
     void setStyle(String style);
+    @Property("style")
     String getStyle();
 
-    @Property("reftext")
     void setReftext(String reftext);
+    @Property("reftext")
     String getReftext();
 
     @Relation("HAS_ATTRIBUTE")

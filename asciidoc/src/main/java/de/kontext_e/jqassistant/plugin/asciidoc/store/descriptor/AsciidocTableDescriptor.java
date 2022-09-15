@@ -1,10 +1,10 @@
 package de.kontext_e.jqassistant.plugin.asciidoc.store.descriptor;
 
-import java.util.List;
-
 import com.buschmais.xo.neo4j.api.annotation.Label;
 import com.buschmais.xo.neo4j.api.annotation.Property;
 import com.buschmais.xo.neo4j.api.annotation.Relation;
+
+import java.util.List;
 
 @Label("Table")
 public interface AsciidocTableDescriptor extends AsciidocBlockDescriptor {
@@ -22,11 +22,11 @@ public interface AsciidocTableDescriptor extends AsciidocBlockDescriptor {
     List<AsciidocTableRowDescriptor> getAsciidocTableFooterRows();
 
     @Property("frame")
-    void setFrame(String frame);
     String getFrame();
+    void setFrame(String frame);
 
     @Property("grid")
-    void setGrid(String grid);
     String getGrid();
+    void setGrid(String grid);
 
 }

@@ -6,14 +6,14 @@ import com.buschmais.xo.neo4j.api.annotation.Property;
 @Label("ListItem")
 public interface AsciidocListItemDescriptor extends AsciidocBlockDescriptor {
     @Property("marker")
-    void setMarker(String marker);
     String getMarker();
+    void setMarker(String marker);
 
     @Property("text")
-    void setText(String text);
     String getText();
+    void setText(String text);
 
     @Property("hasText")
-    void setHasText(Boolean hasText);
     Boolean getHasText();
+    void setHasText(Boolean hasText);
 }
