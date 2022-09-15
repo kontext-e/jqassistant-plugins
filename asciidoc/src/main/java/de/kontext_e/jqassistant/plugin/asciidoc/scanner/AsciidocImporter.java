@@ -33,7 +33,7 @@ class AsciidocImporter {
     void scanBlocks(List<StructuralNode> blocks, BlockContainer blockContainer) {
         // was for(AbstractBlock block : blocks) but there is a bug in Asciidoctor 1.5.4.1
         // which causes a ClassCastException
-        // so check first if it is really an AbstractBlock
+        // so check first if it is really an StructuralNode
         for (Object o: blocks) {
             if(o instanceof StructuralNode) {
                 StructuralNode block = (StructuralNode) o;
@@ -85,8 +85,8 @@ class AsciidocImporter {
         final AsciidocListDescriptor listDescriptor = store.create(AsciidocListDescriptor.class);
         for (Object o: list.getItems()) {
             if(o instanceof StructuralNode) {
-                StructuralNode abstractBlock = (StructuralNode) o;
-                listDescriptor.getListItems().add(scanOneBlock(abstractBlock));
+                StructuralNode StructuralNode = (StructuralNode) o;
+                listDescriptor.getListItems().add(scanOneBlock(StructuralNode));
             }
         }
 
