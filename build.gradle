@@ -3,9 +3,9 @@ apply plugin: 'maven'
 apply plugin: 'org.asciidoctor.gradle.asciidoctor'
 apply plugin: 'com.github.jruby-gradle.base'
 
-project.ext["jqaversion"] = "1.8.0"
+project.ext["jqaversion"] = "1.9.1"
 project.group = 'de.kontext-e.jqassistant.plugin'
-project.version = '1.8.1'
+project.version = '1.9.0-SNAPSHOT'
 
 buildscript {
   repositories {
@@ -172,7 +172,7 @@ configurations {
         // newer gradle versions resolve ALL depencencies before build
         // so on version number changes this version needs to be set once
         // until new version is in local maven repo installed
-        project.version = '1.8.1'
+        //project.version = '1.8.1'
     }
 }
 
@@ -185,7 +185,7 @@ dependencies {
     jqaRuntime("com.buschmais.jqassistant.plugin:java:${project.jqaversion}")
     jqaRuntime("com.buschmais.jqassistant.plugin:junit:${project.jqaversion}")
 
-    jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.asciidoc:${project.version}")
+// due to dependency to incompatible jruby/asciidoctorj version of jqa core also this asciidoc plugin suffers   jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.asciidoc:${project.version}")
     jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.checkstyle:${project.version}")
     jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.spotbugs:${project.version}")
     jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.git:${project.version}")
