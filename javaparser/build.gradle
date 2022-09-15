@@ -4,6 +4,7 @@ jar {
     baseName = 'jqassistant.plugin.javaparser'
 }
 
+// depends on ANTLR - sync versions with jQAssistant core!
 dependencies {
     compile 'com.github.javaparser:javaparser-core:3.6.25'
 }
