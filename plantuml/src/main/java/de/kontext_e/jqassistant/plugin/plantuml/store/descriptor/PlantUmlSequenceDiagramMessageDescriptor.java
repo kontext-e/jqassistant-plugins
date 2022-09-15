@@ -12,9 +12,9 @@ public interface PlantUmlSequenceDiagramMessageDescriptor extends Descriptor {
     @Relation.Incoming
     PlantUmlParticipantDescriptor getTargetParticipant();
 
-    void setMessage(String messageText);
     String getMessage();
+    void setMessage(String messageText);
 
-    void setMessageNumber(String messageNumber);
     String getMessageNumber();
+    void setMessageNumber(String messageNumber);
 }
