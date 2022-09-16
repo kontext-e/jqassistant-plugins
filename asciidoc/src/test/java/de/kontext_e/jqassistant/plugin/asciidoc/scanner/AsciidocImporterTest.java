@@ -72,8 +72,6 @@ public class AsciidocImporterTest {
         verify(mockAsciidocTableCellDescriptor).setText("Purpose");
         verify(mockAsciidocTableCellDescriptor).setText("scanner");
         verify(mockAsciidocTableCellDescriptor).setText("store");
-        verify(mockAttribute).setName("options");
-        verify(mockAttribute).setValue("header");
         verify(mockAttribute).setValue("myAttribute");
         verify(mockAttribute).setName("architecture");
         verify(mockAttribute).setValue("packages");
