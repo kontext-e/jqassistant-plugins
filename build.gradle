@@ -3,9 +3,9 @@ apply plugin: 'maven'
 apply plugin: 'org.asciidoctor.gradle.asciidoctor'
 apply plugin: 'com.github.jruby-gradle.base'
 
-project.ext["jqaversion"] = "1.10.0"
+project.ext["jqaversion"] = "1.11.1"
 project.group = 'de.kontext-e.jqassistant.plugin'
-project.version = '1.10.0-SNAPSHOT'
+project.version = '1.11.0-SNAPSHOT'
 
 buildscript {
   repositories {
@@ -172,7 +172,7 @@ configurations {
         // newer gradle versions resolve ALL depencencies before build
         // so on version number changes this version needs to be set once
         // until new version is in local maven repo installed
-//        project.version = '1.8.0-SNAPSHOT'
+        project.version = '1.10.0-SNAPSHOT'
     }
 }
 
@@ -190,7 +190,7 @@ dependencies {
     jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.spotbugs:${project.version}")
     jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.git:${project.version}")
     jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.jacoco:${project.version}")
-//  jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.javaparser:${project.version}")
+    jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.javaparser:${project.version}")
     jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.linecount:${project.version}")
     jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.plaintext:${project.version}")
     jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.plantuml:${project.version}")
