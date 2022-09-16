@@ -85,8 +85,8 @@ class AsciidocImporter {
         final AsciidocListDescriptor listDescriptor = store.create(AsciidocListDescriptor.class);
         for (Object o: list.getItems()) {
             if(o instanceof StructuralNode) {
-                StructuralNode StructuralNode = (StructuralNode) o;
-                listDescriptor.getListItems().add(scanOneBlock(StructuralNode));
+                StructuralNode structuralNode = (StructuralNode) o;
+                listDescriptor.getListItems().add(scanOneBlock(structuralNode));
             }
         }
 
