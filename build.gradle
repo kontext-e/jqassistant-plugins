@@ -3,9 +3,9 @@ apply plugin: 'maven'
 apply plugin: 'org.asciidoctor.gradle.asciidoctor'
 apply plugin: 'com.github.jruby-gradle.base'
 
-project.ext["jqaversion"] = "1.11.1"
+project.ext["jqaversion"] = "1.12.0"
 project.group = 'de.kontext-e.jqassistant.plugin'
-project.version = '1.11.0-SNAPSHOT'
+project.version = '1.12.0'
 
 buildscript {
   repositories {
@@ -107,7 +107,7 @@ subprojects {
     }
 
     jacoco {
-        toolVersion = "0.8.1"
+        toolVersion = "0.8.6"
     }
 
     jacocoTestReport {
