@@ -35,7 +35,11 @@ public class LinecountScannerPlugin extends AbstractScannerPlugin<FileResource, 
         try {
             if(path.lastIndexOf(".") <= 0) return false;
             String suffix = path.substring(path.lastIndexOf(".") + 1);
-            return acceptedSuffixes.contains(suffix.toLowerCase());
+            boolean accepted = acceptedSuffixes.contains(suffix.toLowerCase());
+            if (accepted) {
+                LOGGER.info("LineCountPlugin accepted path " + path);
+            }
+            return accepted;
         } catch (NullPointerException e) {
             // could do a lengthy null check at beginning or do it the short dirty way
             return false;
