@@ -98,7 +98,7 @@ class PumlLineParser {
         if(diagram instanceof SequenceDiagram) {
             final SequenceDiagram sequenceDiagram = (SequenceDiagram) diagram;
             final UmlDiagramType umlDiagramType = sequenceDiagram.getUmlDiagramType();
-            final PlantUmlDiagramDescriptor diagramDescriptor = createDiagramDescriptor(umlDiagramType);
+            final PlantUmlSequenceDiagramDescriptor diagramDescriptor = (PlantUmlSequenceDiagramDescriptor) createDiagramDescriptor(umlDiagramType);
             if(diagramDescriptor == null) return;
 
             diagramDescriptor.setPictureFileName(pictureFileName);
@@ -113,6 +113,10 @@ class PumlLineParser {
 
             sequenceDiagram.participants().forEach(this::addParticipant);
             sequenceDiagram.events().forEach(this::addEvent);
+
+            for (PlantUmlParticipantDescriptor participant : participantDescriptors.values()) {
+                diagramDescriptor.getPlantUmlParticipants().add(participant);
+            }
 
             plantUmlFileDescriptor.getPlantUmlDiagrams().add(diagramDescriptor);
             setOldRelationsForCompatibility(diagramDescriptor);
