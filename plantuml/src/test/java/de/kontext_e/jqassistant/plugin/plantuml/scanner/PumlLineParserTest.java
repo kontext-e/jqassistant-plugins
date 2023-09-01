@@ -22,7 +22,7 @@ public class PumlLineParserTest {
 
     @Before
     public void setUp() {
-        pumlLineParser = new PumlLineParser(mockStore, plantUmlFileDescriptor, ParsingState.ACCEPTING);
+        pumlLineParser = new PumlLineParser(mockStore, plantUmlFileDescriptor);
     }
 
     @Test
@@ -37,7 +37,7 @@ public class PumlLineParserTest {
                             "@enduml\n";
 
         String[] lines = puml.split("\\n");
-        pumlLineParser = new PumlLineParser(mockStore, plantUmlFileDescriptor, ParsingState.ACCEPTING);
+        pumlLineParser = new PumlLineParser(mockStore, plantUmlFileDescriptor);
 
         final PlantUmlClassDiagramDescriptor mockPlantUmlClassDiagramDescriptor = mock(PlantUmlClassDiagramDescriptor.class);
         when(mockStore.create(PlantUmlClassDiagramDescriptor.class)).thenReturn(mockPlantUmlClassDiagramDescriptor);
@@ -73,7 +73,7 @@ public class PumlLineParserTest {
                             "\n" +
                             "@enduml\n";
         String[] lines = puml.split("\\n");
-        pumlLineParser = new PumlLineParser(mockStore, plantUmlFileDescriptor, ParsingState.ACCEPTING);
+        pumlLineParser = new PumlLineParser(mockStore, plantUmlFileDescriptor);
 
         final PlantUmlClassDiagramDescriptor mockPlantUmlClassDiagramDescriptor = mock(PlantUmlClassDiagramDescriptor.class);
         when(mockStore.create(PlantUmlClassDiagramDescriptor.class)).thenReturn(mockPlantUmlClassDiagramDescriptor);
@@ -129,7 +129,7 @@ public class PumlLineParserTest {
                             "\n" +
                             "@enduml\n";
         String[] lines = puml.split("\\n");
-        pumlLineParser = new PumlLineParser(mockStore, plantUmlFileDescriptor, ParsingState.ACCEPTING);
+        pumlLineParser = new PumlLineParser(mockStore, plantUmlFileDescriptor);
 
         final PlantUmlClassDiagramDescriptor mockDescriptionDiagramDescriptor = mock(PlantUmlClassDiagramDescriptor.class);
         when(mockStore.create(PlantUmlClassDiagramDescriptor.class)).thenReturn(mockDescriptionDiagramDescriptor);
@@ -165,7 +165,7 @@ public class PumlLineParserTest {
                                "@enduml";
 
         String[] lines = puml.split("\\n");
-        pumlLineParser = new PumlLineParser(mockStore, plantUmlFileDescriptor, ParsingState.ACCEPTING);
+        pumlLineParser = new PumlLineParser(mockStore, plantUmlFileDescriptor);
 
         final PlantUmlStateDiagramDescriptor mockDescriptor = mock(PlantUmlStateDiagramDescriptor.class);
         when(mockStore.create(PlantUmlStateDiagramDescriptor.class)).thenReturn(mockDescriptor);
@@ -213,7 +213,7 @@ public class PumlLineParserTest {
                 "@enduml";
 
         String[] lines = puml.split("\\n");
-        pumlLineParser = new PumlLineParser(mockStore, plantUmlFileDescriptor, ParsingState.ACCEPTING);
+        pumlLineParser = new PumlLineParser(mockStore, plantUmlFileDescriptor);
 
         final PlantUmlSequenceDiagramDescriptor mockDescriptor = mock(PlantUmlSequenceDiagramDescriptor.class);
         when(mockStore.create(PlantUmlSequenceDiagramDescriptor.class)).thenReturn(mockDescriptor);
@@ -259,7 +259,7 @@ public class PumlLineParserTest {
                                 "\n" +
                                 "Comments regarding structure and interdependencies at Level 1:\n";
         String[] lines = asciidoc.split("\\n");
-        pumlLineParser = new PumlLineParser(mockStore, plantUmlFileDescriptor, ParsingState.IGNORING);
+        pumlLineParser = new PumlLineParser(mockStore, plantUmlFileDescriptor);
 
         final PlantUmlClassDiagramDescriptor mockPlantUmlClassDiagramDescriptor = mock(PlantUmlClassDiagramDescriptor.class);
         when(mockStore.create(PlantUmlClassDiagramDescriptor.class)).thenReturn(mockPlantUmlClassDiagramDescriptor);
@@ -294,7 +294,7 @@ public class PumlLineParserTest {
                                         "\n" +
                                         "Comments regarding structure and interdependencies at Level 1:\n")
                 .split("\\n");
-        pumlLineParser = new PumlLineParser(mockStore, plantUmlFileDescriptor, ParsingState.IGNORING);
+        pumlLineParser = new PumlLineParser(mockStore, plantUmlFileDescriptor);
 
         final PlantUmlDescriptionDiagramDescriptor mockDescriptionDiagramDescriptor = mock(PlantUmlDescriptionDiagramDescriptor.class);
         when(mockStore.create(PlantUmlDescriptionDiagramDescriptor.class)).thenReturn(mockDescriptionDiagramDescriptor);
@@ -357,7 +357,7 @@ public class PumlLineParserTest {
                           "-----\n" +
                           "\n")
                 .split("\\n");
-        pumlLineParser = new PumlLineParser(mockStore, plantUmlFileDescriptor, ParsingState.IGNORING);
+        pumlLineParser = new PumlLineParser(mockStore, plantUmlFileDescriptor);
 
         final PlantUmlClassDiagramDescriptor mockDescriptionDiagramDescriptor = mock(PlantUmlClassDiagramDescriptor.class);
         when(mockStore.create(PlantUmlClassDiagramDescriptor.class)).thenReturn(mockDescriptionDiagramDescriptor);
@@ -431,7 +431,7 @@ public class PumlLineParserTest {
                           "-----\n" +
                           "\n")
                 .split("\\n");
-        pumlLineParser = new PumlLineParser(mockStore, plantUmlFileDescriptor, ParsingState.IGNORING);
+        pumlLineParser = new PumlLineParser(mockStore, plantUmlFileDescriptor);
 
         final PlantUmlClassDiagramDescriptor mockDescriptionDiagramDescriptor = mock(PlantUmlClassDiagramDescriptor.class);
         when(mockStore.create(PlantUmlClassDiagramDescriptor.class)).thenReturn(mockDescriptionDiagramDescriptor);

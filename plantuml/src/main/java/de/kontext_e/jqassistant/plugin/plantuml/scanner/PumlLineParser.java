@@ -28,60 +28,75 @@ class PumlLineParser {
     private String pictureFileName;
     private String pictureFileType;
 
-    PumlLineParser(final Store store, final PlantUmlFileDescriptor plantUmlFileDescriptor, final ParsingState parsingState) {
+    PumlLineParser(final Store store, final PlantUmlFileDescriptor plantUmlFileDescriptor) {
         this.store = store;
         this.plantUmlFileDescriptor = plantUmlFileDescriptor;
-        this.parsingState = parsingState;
+        this.parsingState = ParsingState.SEARCHING;
     }
 
-    void parseLine(final String line) {
-        if(line == null) return;
-
+    void parseLine(String line){
+        if (line == null) return;
         String normalizedLine = line.trim().toLowerCase();
+        if (normalizedLine.startsWith("!include")) return;
 
-        // inlcudes cannot be handled because of working directory mismatch while scanning
-        if(normalizedLine.startsWith("!include")) {
-            return;
+        LOGGER.info(normalizedLine);
+
+        if (parsingState == ParsingState.SEARCHING && line.startsWith("[\"plantuml\"")){
+            LOGGER.info("1");
+            parsingState = ParsingState.PUMLFOUNDINADOC;
+            evaluatePlantUMLHeader(normalizedLine);
         }
 
-        if(parsingState == ParsingState.IGNORING && normalizedLine.startsWith("[\"plantuml\"")) {
-            parsingState = ParsingState.PLANTUMLFOUND;
-            final String[] parts = normalizedLine
-                    .replaceAll("\\[", "")
-                    .replaceAll("]", "")
-                    .replaceAll("\"", "")
-                    .replaceAll("\n", "")
-                    .split(",");
-            if(parts!= null && parts.length >= 3) {
-                pictureFileName = parts[1];
-                pictureFileType = parts[2];
-            }
-        }
-
-        if(parsingState == ParsingState.ACCEPTING && (normalizedLine.startsWith("----") || normalizedLine.startsWith("@enduml"))) {
-            parsingState = ParsingState.IGNORING;
-            lineBuffer.append("\n");
-            lineBuffer.append("@enduml");
-            storeDiagram();
-            pictureFileName = null;
-            pictureFileType = null;
-        }
-
-        if(parsingState == ParsingState.PLANTUMLFOUND && normalizedLine.startsWith("----")) {
+        if (parsingState == ParsingState.SEARCHING && line.startsWith("@startuml")){
+            LOGGER.info("2");
             parsingState = ParsingState.ACCEPTING;
-            lineBuffer = new StringBuilder();
+        }
+
+        if (parsingState == ParsingState.PUMLFOUNDINADOC && line.startsWith("----")){
+            LOGGER.info("3");
             lineBuffer.append("@startuml");
             lineBuffer.append("\n");
+            parsingState = ParsingState.ACCEPTING;
             return;
         }
 
-        if(parsingState == ParsingState.ACCEPTING) {
+        if (parsingState == ParsingState.ACCEPTING && !line.startsWith("----")){
+            LOGGER.info("4");
             lineBuffer.append(normalizedLine);
             lineBuffer.append("\n");
+        }
+
+        if (parsingState == ParsingState.ACCEPTING && (line.startsWith("@enduml") || line.startsWith("----"))){
+            LOGGER.info("5");
+            lineBuffer.append("@enduml");
+            storeDiagram();
+            resetLineParser();
+        }
+
+    }
+
+    private void resetLineParser() {
+        pictureFileName = null;
+        pictureFileType = null;
+        parsingState = ParsingState.SEARCHING;
+        lineBuffer.setLength(0);
+    }
+
+    private void evaluatePlantUMLHeader(String normalizedLine) {
+        final String[] parts = normalizedLine
+                .replaceAll("\\[", "")
+                .replaceAll("]", "")
+                .replaceAll("\"", "")
+                .replaceAll("\n", "")
+                .split(",");
+        if(parts != null && parts.length >= 3) {
+            pictureFileName = parts[1];
+            pictureFileType = parts[2];
         }
     }
 
     private void storeDiagram() {
+        LOGGER.info("Storing Diagram: " + lineBuffer.toString());
         SourceStringReader reader = new SourceStringReader(lineBuffer.toString());
         List<BlockUml> blocks = reader.getBlocks();
         if(blocks.isEmpty()) return;
@@ -98,7 +113,7 @@ class PumlLineParser {
         if(diagram instanceof SequenceDiagram) {
             final SequenceDiagram sequenceDiagram = (SequenceDiagram) diagram;
             final UmlDiagramType umlDiagramType = sequenceDiagram.getUmlDiagramType();
-            final PlantUmlDiagramDescriptor diagramDescriptor = createDiagramDescriptor(umlDiagramType);
+            final PlantUmlSequenceDiagramDescriptor diagramDescriptor = (PlantUmlSequenceDiagramDescriptor) createDiagramDescriptor(umlDiagramType);
             if(diagramDescriptor == null) return;
 
             diagramDescriptor.setPictureFileName(pictureFileName);
@@ -113,6 +128,10 @@ class PumlLineParser {
 
             sequenceDiagram.participants().forEach(this::addParticipant);
             sequenceDiagram.events().forEach(this::addEvent);
+
+            for (PlantUmlParticipantDescriptor participant : participantDescriptors.values()) {
+                diagramDescriptor.getPlantUmlParticipants().add(participant);
+            }
 
             plantUmlFileDescriptor.getPlantUmlDiagrams().add(diagramDescriptor);
             setOldRelationsForCompatibility(diagramDescriptor);
@@ -256,6 +275,7 @@ class PumlLineParser {
     }
 
     private void addGroups(final PlantUmlDiagramDescriptor diagramDescriptor, final Collection<IGroup> groups, PlantUmlGroupDescriptor parent) {
+        LOGGER.info(diagramDescriptor.toString(), groups.toString(), parent.toString());
         for (IGroup iGroup : groups) {
             final GroupType groupType = iGroup.getGroupType();
             PlantUmlGroupDescriptor plantUmlGroupDescriptor = null;
