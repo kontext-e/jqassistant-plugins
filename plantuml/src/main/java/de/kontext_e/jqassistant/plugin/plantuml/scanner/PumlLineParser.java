@@ -39,21 +39,16 @@ class PumlLineParser {
         String normalizedLine = line.trim().toLowerCase();
         if (normalizedLine.startsWith("!include")) return;
 
-        LOGGER.info(normalizedLine);
-
         if (parsingState == ParsingState.SEARCHING && line.startsWith("[\"plantuml\"")){
-            LOGGER.info("1");
             parsingState = ParsingState.PUMLFOUNDINADOC;
             evaluatePlantUMLHeader(normalizedLine);
         }
 
         if (parsingState == ParsingState.SEARCHING && line.startsWith("@startuml")){
-            LOGGER.info("2");
             parsingState = ParsingState.ACCEPTING;
         }
 
         if (parsingState == ParsingState.PUMLFOUNDINADOC && line.startsWith("----")){
-            LOGGER.info("3");
             lineBuffer.append("@startuml");
             lineBuffer.append("\n");
             parsingState = ParsingState.ACCEPTING;
@@ -61,13 +56,11 @@ class PumlLineParser {
         }
 
         if (parsingState == ParsingState.ACCEPTING && !line.startsWith("----")){
-            LOGGER.info("4");
             lineBuffer.append(normalizedLine);
             lineBuffer.append("\n");
         }
 
         if (parsingState == ParsingState.ACCEPTING && (line.startsWith("@enduml") || line.startsWith("----"))){
-            LOGGER.info("5");
             lineBuffer.append("@enduml");
             storeDiagram();
             resetLineParser();
@@ -96,7 +89,6 @@ class PumlLineParser {
     }
 
     private void storeDiagram() {
-        LOGGER.info("Storing Diagram: " + lineBuffer.toString());
         SourceStringReader reader = new SourceStringReader(lineBuffer.toString());
         List<BlockUml> blocks = reader.getBlocks();
         if(blocks.isEmpty()) return;
@@ -275,7 +267,6 @@ class PumlLineParser {
     }
 
     private void addGroups(final PlantUmlDiagramDescriptor diagramDescriptor, final Collection<IGroup> groups, PlantUmlGroupDescriptor parent) {
-        LOGGER.info(diagramDescriptor.toString(), groups.toString(), parent.toString());
         for (IGroup iGroup : groups) {
             final GroupType groupType = iGroup.getGroupType();
             PlantUmlGroupDescriptor plantUmlGroupDescriptor = null;
