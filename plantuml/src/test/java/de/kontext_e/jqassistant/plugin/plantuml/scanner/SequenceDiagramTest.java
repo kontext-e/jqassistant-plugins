@@ -27,7 +27,7 @@ public class SequenceDiagramTest {
 
     @Before
     public void setUp() {
-        pumlLineParser = new PumlLineParser(mockStore, plantUmlFileDescriptor, ParsingState.ACCEPTING);
+        pumlLineParser = new PumlLineParser(mockStore, plantUmlFileDescriptor);
         mockDescriptor = mock(PlantUmlSequenceDiagramDescriptor.class);
         mockPlantUmlParticipantDescriptor = mock(PlantUmlParticipantDescriptor.class);
         mockPlantUmlSequenceDiagramMessageDescriptor = mock(PlantUmlSequenceDiagramMessageDescriptor.class);
@@ -37,7 +37,7 @@ public class SequenceDiagramTest {
         when(mockStore.create(Mockito.any(PlantUmlParticipantDescriptor.class), Mockito.eq(PlantUmlSequenceDiagramMessageDescriptor.class), Mockito.any(PlantUmlParticipantDescriptor.class)))
                 .thenReturn(mockPlantUmlSequenceDiagramMessageDescriptor);
 
-        pumlLineParser = new PumlLineParser(mockStore, plantUmlFileDescriptor, ParsingState.ACCEPTING);
+        pumlLineParser = new PumlLineParser(mockStore, plantUmlFileDescriptor);
     }
 
     @Test
