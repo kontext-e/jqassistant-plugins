@@ -4,6 +4,7 @@
         <class>de.kontext_e.jqassistant.plugin.dot.store.descriptor.DotFileDescriptor</class>
         <class>de.kontext_e.jqassistant.plugin.dot.store.descriptor.DotGraphDescriptor</class>
         <class>de.kontext_e.jqassistant.plugin.dot.store.descriptor.DotNodeDescriptor</class>
+        <class>de.kontext_e.jqassistant.plugin.dot.store.descriptor.DotAttributeDescriptor</class>
     </model>
     <scanner>
         <class>de.kontext_e.jqassistant.plugin.dot.scanner.DotScannerPlugin</class>

@@ -10,6 +10,7 @@ import com.buschmais.jqassistant.plugin.common.api.scanner.filesystem.FileResour
 import com.khubla.dot4j.DOTMarshaller;
 import com.khubla.dot4j.domain.*;
 import de.kontext_e.jqassistant.plugin.dot.store.descriptor.*;
+import de.kontext_e.jqassistant.plugin.dot.store.descriptor.AttributesContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,6 +56,13 @@ public class DotScannerPlugin extends AbstractScannerPlugin<FileResource, DotDes
 
     void importGraph(Store store, HasGraph graphParent, Graph graph) {
         final DotGraphDescriptor dotGraphDescriptor = store.create(DotGraphDescriptor.class);
+        dotGraphDescriptor.setStrict(graph.isStrict());
+        dotGraphDescriptor.setType(graph.getGraphType().name());
+        dotGraphDescriptor.setDotId(graph.getId());
+        importAttributes(store, graph.getAnonymousAttributes(), dotGraphDescriptor);
+        importAttributes(store, graph.getNodeAttributes(), dotGraphDescriptor);
+        importAttributes(store, graph.getEdgeAttributes(), dotGraphDescriptor);
+        importAttributes(store, graph.getGraphAttributes(), dotGraphDescriptor);
         graphParent.getGraphs().add(dotGraphDescriptor);
 
         final Map<String, Node> nodes = graph.getNodes();
@@ -64,10 +72,12 @@ public class DotScannerPlugin extends AbstractScannerPlugin<FileResource, DotDes
             dotNodeDescriptor.setDotId(node.getId());
             dotGraphDescriptor.getNodes().add(dotNodeDescriptor);
             nodeDescriptors.put(node.getId(), dotNodeDescriptor);
+            importAttributes(store, node.getAttributes(), dotNodeDescriptor);
         }
 
         final List<Edge> edges = graph.getEdges();
         for (Edge edge : edges) {
+            // todo attributes for edges, see PlantUmlSequenceDiagramMessageDescriptor as an example
             final EdgeConnectionPoint from = edge.getFrom();
             final EdgeConnectionPoint to = edge.getTo();
             final NodeId fromNodeId = from.getNodeId();
@@ -89,6 +99,17 @@ public class DotScannerPlugin extends AbstractScannerPlugin<FileResource, DotDes
         final List<Graph> subGraphs = graph.getSubGraphs();
         for (Graph subGraph : subGraphs) {
             importGraph(store, dotGraphDescriptor, subGraph);
+        }
+    }
+
+    private static void importAttributes(Store store, Attributes attributes, AttributesContainer dotAttributeContainer) {
+        final List<Attribute> attributeList = attributes.getAttributes();
+        for (Attribute attribute : attributeList) {
+            final DotAttributeDescriptor dotAttributeDescriptor = store.create(DotAttributeDescriptor.class);
+            dotAttributeDescriptor.setName(attribute.getLhs());
+            dotAttributeDescriptor.setValue(attribute.getRhs());
+            dotAttributeDescriptor.setType(attributes.getAttributeType().name());
+            dotAttributeContainer.getAttributes().add(dotAttributeDescriptor);
         }
     }
 }

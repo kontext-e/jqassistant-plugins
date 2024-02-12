@@ -7,7 +7,7 @@ import com.buschmais.xo.neo4j.api.annotation.Relation;
 import java.util.Set;
 
 @Label("Node")
-public interface DotNodeDescriptor extends DotDescriptor {
+public interface DotNodeDescriptor extends DotDescriptor, AttributesContainer {
 
     @Property("dotId")
     String getDotId();
