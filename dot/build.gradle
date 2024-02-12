@@ -1,0 +1,9 @@
+// apply from: "${rootDir}/gradle/uploadArchives.gradle"
+
+jar {
+    baseName = 'jqassistant.plugin.dot'
+}
+
+dependencies {
+    compile 'com.khubla.dot4j:dot4j:1.2.0'
+}
