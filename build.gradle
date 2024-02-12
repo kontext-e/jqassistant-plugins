@@ -187,6 +187,7 @@ dependencies {
 
     jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.asciidoc:${project.version}")
     jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.checkstyle:${project.version}")
+    jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.dot:${project.version}")
     jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.spotbugs:${project.version}")
     jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.git:${project.version}")
     jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.jacoco:${project.version}")
@@ -221,6 +222,7 @@ task(jqascan, dependsOn: 'removeJQAReport', type: JavaExec) {
     args 'jqassistant/jqassistant.properties'
     args '-f'
 
+/*
     rootProject.subprojects {
         args 'java:classpath::' + it.name + '/build/classes/java/main'
         args 'java:classpath::' + it.name + '/build/classes/java/test'
@@ -239,6 +241,10 @@ task(jqascan, dependsOn: 'removeJQAReport', type: JavaExec) {
     args 'javaparser/src/test'
 
     args 'excel/src/test/resources'
+*/
+
+    args 'dot/src/test/resources'
+
 }
 
 task(jqaanalyze, type: JavaExec) {

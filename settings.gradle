@@ -1,29 +1,31 @@
 rootProject.name = 'jqassistant-plugins'
 
-include 'checkstyle'
+//include 'checkstyle'
 
-include 'spotbugs'
+//include 'spotbugs'
 
-include 'jacoco'
+//include 'jacoco'
 
-include 'git'
+//include 'git'
 
-include 'pmd'
+//include 'pmd'
 
-include 'plantuml'
+//include 'plantuml'
 
-include 'plaintext'
+//include 'plaintext'
 
-include 'linecount'
+//include 'linecount'
 
-include 'cpp'
+//include 'cpp'
 
-include 'asciidoc'
+//include 'asciidoc'
 
-include 'javaparser'
+//include 'javaparser'
 
-include 'excel'
+//include 'excel'
 
-include 'ods'
+//include 'ods'
+
+include 'dot'
 
 
