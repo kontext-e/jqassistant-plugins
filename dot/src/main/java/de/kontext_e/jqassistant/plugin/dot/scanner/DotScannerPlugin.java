@@ -9,8 +9,8 @@ import com.buschmais.jqassistant.plugin.common.api.scanner.AbstractScannerPlugin
 import com.buschmais.jqassistant.plugin.common.api.scanner.filesystem.FileResource;
 import com.khubla.dot4j.DOTMarshaller;
 import com.khubla.dot4j.domain.*;
-import de.kontext_e.jqassistant.plugin.dot.store.descriptor.*;
 import de.kontext_e.jqassistant.plugin.dot.store.descriptor.AttributesContainer;
+import de.kontext_e.jqassistant.plugin.dot.store.descriptor.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,25 +59,33 @@ public class DotScannerPlugin extends AbstractScannerPlugin<FileResource, DotDes
         dotGraphDescriptor.setStrict(graph.isStrict());
         dotGraphDescriptor.setType(graph.getGraphType().name());
         dotGraphDescriptor.setDotId(graph.getId());
-        importAttributes(store, graph.getAnonymousAttributes(), dotGraphDescriptor);
-        importAttributes(store, graph.getNodeAttributes(), dotGraphDescriptor);
-        importAttributes(store, graph.getEdgeAttributes(), dotGraphDescriptor);
-        importAttributes(store, graph.getGraphAttributes(), dotGraphDescriptor);
+        importAttributes(graph.getAnonymousAttributes(), dotGraphDescriptor);
+        importAttributes(graph.getNodeAttributes(), dotGraphDescriptor);
+        importAttributes(graph.getEdgeAttributes(), dotGraphDescriptor);
+        importAttributes(graph.getGraphAttributes(), dotGraphDescriptor);
         graphParent.getGraphs().add(dotGraphDescriptor);
 
-        final Map<String, Node> nodes = graph.getNodes();
         final Map<String, DotNodeDescriptor> nodeDescriptors = new HashMap<>();
+
+        importNodes(store, graph, dotGraphDescriptor, nodeDescriptors);
+        importEdges(store, graph, nodeDescriptors);
+        importSubGraphs(store, graph, dotGraphDescriptor);
+    }
+
+    private static void importNodes(Store store, Graph graph, DotGraphDescriptor dotGraphDescriptor, Map<String, DotNodeDescriptor> nodeDescriptors) {
+        final Map<String, Node> nodes = graph.getNodes();
         for (Node node : nodes.values()) {
             final DotNodeDescriptor dotNodeDescriptor = store.create(DotNodeDescriptor.class);
             dotNodeDescriptor.setDotId(node.getId());
             dotGraphDescriptor.getNodes().add(dotNodeDescriptor);
             nodeDescriptors.put(node.getId(), dotNodeDescriptor);
-            importAttributes(store, node.getAttributes(), dotNodeDescriptor);
+            importAttributes(node.getAttributes(), dotNodeDescriptor);
         }
+    }
 
+    private static void importEdges(Store store, Graph graph, Map<String, DotNodeDescriptor> nodeDescriptors) {
         final List<Edge> edges = graph.getEdges();
         for (Edge edge : edges) {
-            // todo attributes for edges, see PlantUmlSequenceDiagramMessageDescriptor as an example
             final EdgeConnectionPoint from = edge.getFrom();
             final EdgeConnectionPoint to = edge.getTo();
             final NodeId fromNodeId = from.getNodeId();
@@ -88,28 +96,30 @@ public class DotScannerPlugin extends AbstractScannerPlugin<FileResource, DotDes
                     if (toNodeId != null) {
                         DotNodeDescriptor toDescriptor = nodeDescriptors.get(toNodeId.getId());
                         if (toDescriptor != null) {
-                            fromDescriptor.getConnectedNodes().add(toDescriptor);
+                            final DotRelationDescriptor dotRelationDescriptor = store.create(fromDescriptor, DotRelationDescriptor.class, toDescriptor);
+                            importAttributes(edge.getAttributes(), dotRelationDescriptor);
+                            final Attributes attributes = edge.getAttributes();
+                            for (Attribute attribute : attributes.getAttributes()) {
+                                dotRelationDescriptor.setAttribute(attribute.getLhs(), attribute.getRhs(), attributes.getAttributeType().name());
+                            }
                         }
                     }
                 }
             }
         }
+    }
 
-
+    private void importSubGraphs(Store store, Graph graph, DotGraphDescriptor dotGraphDescriptor) {
         final List<Graph> subGraphs = graph.getSubGraphs();
         for (Graph subGraph : subGraphs) {
             importGraph(store, dotGraphDescriptor, subGraph);
         }
     }
 
-    private static void importAttributes(Store store, Attributes attributes, AttributesContainer dotAttributeContainer) {
+    private static void importAttributes(Attributes attributes, AttributesContainer attributeDescriptors) {
         final List<Attribute> attributeList = attributes.getAttributes();
         for (Attribute attribute : attributeList) {
-            final DotAttributeDescriptor dotAttributeDescriptor = store.create(DotAttributeDescriptor.class);
-            dotAttributeDescriptor.setName(attribute.getLhs());
-            dotAttributeDescriptor.setValue(attribute.getRhs());
-            dotAttributeDescriptor.setType(attributes.getAttributeType().name());
-            dotAttributeContainer.getAttributes().add(dotAttributeDescriptor);
+            attributeDescriptors.setAttribute(attribute.getLhs(), attribute.getRhs(), attributes.getAttributeType().name());
         }
     }
 }

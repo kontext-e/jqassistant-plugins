@@ -3,10 +3,8 @@ package de.kontext_e.jqassistant.plugin.dot.scanner;
 import com.buschmais.jqassistant.core.store.api.Store;
 import com.khubla.dot4j.DOTMarshaller;
 import com.khubla.dot4j.domain.*;
-import de.kontext_e.jqassistant.plugin.dot.store.descriptor.DotAttributeDescriptor;
-import de.kontext_e.jqassistant.plugin.dot.store.descriptor.DotFileDescriptor;
-import de.kontext_e.jqassistant.plugin.dot.store.descriptor.DotGraphDescriptor;
-import de.kontext_e.jqassistant.plugin.dot.store.descriptor.DotNodeDescriptor;
+import de.kontext_e.jqassistant.plugin.dot.store.descriptor.*;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
@@ -26,6 +24,12 @@ import static org.mockito.Mockito.*;
 public class DotScannerPluginTest {
     private Store mockStore = mock(Store.class);
     private DotFileDescriptor mockDotFileDescriptor = mock(DotFileDescriptor.class);
+    private DotRelationDescriptor mockDotRelationshipDescriptor = mock(DotRelationDescriptor.class);
+
+    @Before
+    public void setUp() {
+        when(mockStore.create(any(DotNodeDescriptor.class), eq(DotRelationDescriptor.class), any(DotNodeDescriptor.class))).thenReturn(mockDotRelationshipDescriptor);
+    }
 
     @Test
     public void testImportSimpleGraph() throws IOException {
@@ -33,8 +37,6 @@ public class DotScannerPluginTest {
         InputStream inputStream = createExapmle1();
         DotScannerPlugin plugin = new DotScannerPlugin();
         Set<DotNodeDescriptor> nodes = new HashSet<>();
-        Set<DotNodeDescriptor> connectedNodes = new HashSet<>();
-        Set<DotAttributeDescriptor> attributes = new HashSet<>();
 
         final DotGraphDescriptor mockDotGraphDescriptor = mock(DotGraphDescriptor.class);
         when(mockStore.create(DotGraphDescriptor.class)).thenReturn(mockDotGraphDescriptor);
@@ -42,11 +44,6 @@ public class DotScannerPluginTest {
 
         final DotNodeDescriptor mockDotNodeDescriptor = mock(DotNodeDescriptor.class);
         when(mockStore.create(DotNodeDescriptor.class)).thenReturn(mockDotNodeDescriptor);
-        when(mockDotNodeDescriptor.getConnectedNodes()).thenReturn(connectedNodes);
-        when(mockDotNodeDescriptor.getAttributes()).thenReturn(attributes);
-
-        final DotAttributeDescriptor mockDotAttributeDescriptor = mock(DotAttributeDescriptor.class);
-        when(mockStore.create(DotAttributeDescriptor.class)).thenReturn(mockDotAttributeDescriptor);
 
         // Act
         plugin.readStream(mockStore, mockDotFileDescriptor, inputStream);
@@ -54,15 +51,11 @@ public class DotScannerPluginTest {
         // Assert
         verify(mockStore).create(DotGraphDescriptor.class);
         verify(mockStore, times(2)).create(DotNodeDescriptor.class);
-        verify(mockStore, times(2)).create(DotAttributeDescriptor.class);
         verify(mockDotNodeDescriptor).setDotId("node2");
         verify(mockDotNodeDescriptor).setDotId("n1");
-        verify(mockDotNodeDescriptor).getConnectedNodes();
-        verify(mockDotAttributeDescriptor).setName("att1");
-        verify(mockDotAttributeDescriptor).setValue("\"val1\"");
-        verify(mockDotAttributeDescriptor).setName("att2");
-        verify(mockDotAttributeDescriptor).setValue("\"val2\"");
-        assertThat(connectedNodes.size(), is(1));
+        verify(mockDotNodeDescriptor).setAttribute("att1","\"val1\"","node");
+        verify(mockDotNodeDescriptor).setAttribute("att2","\"val2\"","node");
+        verify(mockDotRelationshipDescriptor, times(2)).setAttribute("style","dotted","edge");
     }
 
     @Test
@@ -90,7 +83,7 @@ public class DotScannerPluginTest {
         String example = "digraph mygraph {\n" +
                 "   node2 [att1 = \"val1\", att2 = \"val2\"];\n" +
                 "   n1;\n" +
-                "   n1 -> node2;\n" +
+                "   n1 -> node2 [ style = dotted ]\n" +
                 "}";
         return new ByteArrayInputStream(example.getBytes(StandardCharsets.UTF_8));
     }
@@ -102,7 +95,7 @@ public class DotScannerPluginTest {
                 "];\n" +
                 "    \"node4\" [ label = \"acc\", shape = octagon ];\n" +
                 "    \"node5\" [ label = \"acc-asrc\", shape = octagon ];\n" +
-                "    \"node4\" -> \"node5\"  // acc -> acc-asrc\n" +
+                "    \"node4\" -> \"node5\" [ attr = \"val\"] // acc -> acc-asrc\n" +
                 "    \"node6\" [ label = \"cstublib-hifi5\", shape = septagon ];\n" +
                 "    \"node5\" -> \"node6\"  // acc-asrc -> cstublib-hifi5\n" +
                 "    \"node7\" [ label = \"src-test\", shape = egg ];\n" +
