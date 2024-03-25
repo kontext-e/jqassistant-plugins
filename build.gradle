@@ -1,11 +1,13 @@
+import org.gradle.util.CollectionUtils
+
 apply plugin: 'java'
 apply plugin: 'maven'
 apply plugin: 'org.asciidoctor.gradle.asciidoctor'
 apply plugin: 'com.github.jruby-gradle.base'
 
-project.ext["jqaversion"] = "1.11.1"
+project.ext["jqaversion"] = "2.1.0"
 project.group = 'de.kontext-e.jqassistant.plugin'
-project.version = '1.11.0-SNAPSHOT'
+project.version = '1.12.0'
 
 buildscript {
   repositories {
@@ -63,17 +65,14 @@ subprojects {
     }
 
   dependencies {
-    compileOnly  'com.buschmais.jqassistant.core:plugin:'+project.jqaversion
-    compileOnly  'com.buschmais.jqassistant.core:scanner:'+project.jqaversion
-    compileOnly  'com.buschmais.jqassistant.core:report:'+project.jqaversion
-    compileOnly  'com.buschmais.jqassistant.core:store:'+project.jqaversion
-    compileOnly  'com.buschmais.jqassistant.core:shared:'+project.jqaversion
-    compileOnly  'com.buschmais.jqassistant.plugin:common:'+project.jqaversion
+      implementation 'org.jqassistant.plugin:parent:'+project.jqaversion
+      implementation  'com.buschmais.jqassistant.core:scanner:'+project.jqaversion
+      implementation  'com.buschmais.jqassistant.core:report:'+project.jqaversion
+      implementation  'com.buschmais.jqassistant.plugin:common:'+project.jqaversion
+      implementation  'com.buschmais.jqassistant.core:store:'+project.jqaversion
+      implementation 'net.sourceforge.plantuml:plantuml:8059'
 
-    testCompile  'com.buschmais.jqassistant.core:store:'+project.jqaversion
-    testCompile  'com.buschmais.jqassistant.plugin:common:'+project.jqaversion
-    testCompile 'com.buschmais.jqassistant.core:scanner:'+project.jqaversion
-
+    testCompile  'com.buschmais.jqassistant.core:test:'+project.jqaversion
     testCompile group: 'junit', name: 'junit', version: '4.12'
     testCompile group: 'org.hamcrest', name: 'hamcrest-all', version: '1.3'
     testCompile group: 'org.mockito', name: 'mockito-all', version: '1.9.5'
@@ -107,7 +106,7 @@ subprojects {
     }
 
     jacoco {
-        toolVersion = "0.8.1"
+        toolVersion = "0.8.6"
     }
 
     jacocoTestReport {
@@ -172,25 +171,26 @@ configurations {
         // newer gradle versions resolve ALL depencencies before build
         // so on version number changes this version needs to be set once
         // until new version is in local maven repo installed
-        project.version = '1.10.0-SNAPSHOT'
+        project.version = '1.11.0'
     }
 }
 
 dependencies {
-    jqaRuntime("com.buschmais.jqassistant.cli:jqassistant-commandline-neo4jv3:${project.jqaversion}") {
-        exclude module: 'asm'
-    }
+    //jqaRuntime("com.buschmais.jqassistant.cli:jqassistant-commandline-distribution:${project.jqaversion}")
+//    jqaRuntime("com.buschmais.jqassistant.cli:jqassistant-commandline-neo4jv3:${project.jqaversion}") {
+//        exclude module: 'asm'
+//    }
     jqaRuntime("com.buschmais.jqassistant.core:report:${project.jqaversion}")
     jqaRuntime("com.buschmais.jqassistant.plugin:common:${project.jqaversion}")
     jqaRuntime("com.buschmais.jqassistant.plugin:java:${project.jqaversion}")
     jqaRuntime("com.buschmais.jqassistant.plugin:junit:${project.jqaversion}")
 
-    jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.asciidoc:${project.version}")
+    // jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.asciidoc:${project.version}")
     jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.checkstyle:${project.version}")
     jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.spotbugs:${project.version}")
     jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.git:${project.version}")
     jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.jacoco:${project.version}")
-    jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.javaparser:${project.version}")
+    //  jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.javaparser:${project.version}")
     jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.linecount:${project.version}")
     jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.plaintext:${project.version}")
     jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.plantuml:${project.version}")
@@ -212,7 +212,7 @@ task(jqascan, dependsOn: 'removeJQAReport', type: JavaExec) {
     // this is needed to work around a windows limitation
     // of a too long command path
     // see https://stackoverflow.com/questions/50707110/gradle-windows-java-io-ioexception-createprocess-error-206-filename-is-too-lon
-    def cp = org.gradle.util.CollectionUtils.join(File.pathSeparator, classpath.getFiles())
+    def cp = CollectionUtils.join(File.pathSeparator, classpath.getFiles())
     environment 'CLASSPATH', cp
     classpath = classpath.filter { false }
 
@@ -248,7 +248,7 @@ task(jqaanalyze, type: JavaExec) {
     // this is needed to work around a windows limitation
     // of a too long command path
     // see https://stackoverflow.com/questions/50707110/gradle-windows-java-io-ioexception-createprocess-error-206-filename-is-too-lon
-    def cp = org.gradle.util.CollectionUtils.join(File.pathSeparator, classpath.getFiles())
+    def cp = CollectionUtils.join(File.pathSeparator, classpath.getFiles())
     environment 'CLASSPATH', cp
     classpath = classpath.filter { false }
 
@@ -268,7 +268,7 @@ task(jqs, type: JavaExec) {
     // this is needed to work around a windows limitation
     // of a too long command path
     // see https://stackoverflow.com/questions/50707110/gradle-windows-java-io-ioexception-createprocess-error-206-filename-is-too-lon
-    def cp = org.gradle.util.CollectionUtils.join(File.pathSeparator, classpath.getFiles())
+    def cp = CollectionUtils.join(File.pathSeparator, classpath.getFiles())
     environment 'CLASSPATH', cp
     classpath = classpath.filter { false }
 

@@ -18,7 +18,7 @@ include 'linecount'
 
 include 'cpp'
 
-include 'asciidoc'
+//include 'asciidoc'
 
 include 'javaparser'
 
