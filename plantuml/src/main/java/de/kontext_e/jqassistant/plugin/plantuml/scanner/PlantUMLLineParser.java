@@ -2,11 +2,7 @@ package de.kontext_e.jqassistant.plugin.plantuml.scanner;
 
 import com.buschmais.jqassistant.core.store.api.Store;
 import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.*;
-import net.sourceforge.plantuml.BlockUml;
-import net.sourceforge.plantuml.Guillemet;
-import net.sourceforge.plantuml.error.PSystemError;
-import net.sourceforge.plantuml.SourceStringReader;
-import net.sourceforge.plantuml.UmlDiagramType;
+import net.sourceforge.plantuml.*;
 import net.sourceforge.plantuml.classdiagram.AbstractEntityDiagram;
 import net.sourceforge.plantuml.core.Diagram;
 import net.sourceforge.plantuml.cucadiagram.*;
@@ -16,8 +12,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
-class PumlLineParser {
-    private static final Logger LOGGER = LoggerFactory.getLogger(PumlLineParser.class);
+class PlantUMLLineParser {
+    private static final Logger LOGGER = LoggerFactory.getLogger(PlantUMLLineParser.class);
 
     private final Store store;
     private final Map<String, PlantUmlElement> mappingFromFqnToPackage = new HashMap<>();
@@ -28,7 +24,7 @@ class PumlLineParser {
     private String pictureFileName;
     private String pictureFileType;
 
-    PumlLineParser(final Store store, final PlantUmlFileDescriptor plantUmlFileDescriptor, final ParsingState parsingState) {
+    PlantUMLLineParser(final Store store, final PlantUmlFileDescriptor plantUmlFileDescriptor, final ParsingState parsingState) {
         this.store = store;
         this.plantUmlFileDescriptor = plantUmlFileDescriptor;
         this.parsingState = parsingState;
@@ -40,44 +36,52 @@ class PumlLineParser {
         String normalizedLine = line.trim().toLowerCase();
 
         // inlcudes cannot be handled because of working directory mismatch while scanning
-        if(normalizedLine.startsWith("!include")) {
-            return;
-        }
+        if(normalizedLine.startsWith("!include")) { return; }
 
         if(parsingState == ParsingState.IGNORING && normalizedLine.startsWith("[\"plantuml\"")) {
             parsingState = ParsingState.PLANTUMLFOUND;
-            final String[] parts = normalizedLine
-                    .replaceAll("\\[", "")
-                    .replaceAll("]", "")
-                    .replaceAll("\"", "")
-                    .replaceAll("\n", "")
-                    .split(",");
-            if(parts!= null && parts.length >= 3) {
-                pictureFileName = parts[1];
-                pictureFileType = parts[2];
-            }
+            analyzeHeader(normalizedLine);
         }
 
         if(parsingState == ParsingState.ACCEPTING && (normalizedLine.startsWith("----") || normalizedLine.startsWith("@enduml"))) {
             parsingState = ParsingState.IGNORING;
-            lineBuffer.append("\n");
-            lineBuffer.append("@enduml");
+            lineBuffer.append("\n").append("@enduml");
             storeDiagram();
-            pictureFileName = null;
-            pictureFileType = null;
+            prepareScannerForNextDiagram();
         }
 
         if(parsingState == ParsingState.PLANTUMLFOUND && normalizedLine.startsWith("----")) {
             parsingState = ParsingState.ACCEPTING;
-            lineBuffer = new StringBuilder();
-            lineBuffer.append("@startuml");
-            lineBuffer.append("\n");
+            startNewLineBuffer();
             return;
         }
 
         if(parsingState == ParsingState.ACCEPTING) {
-            lineBuffer.append(normalizedLine);
-            lineBuffer.append("\n");
+            lineBuffer.append(normalizedLine).append("\n");
+        }
+    }
+
+    private void startNewLineBuffer() {
+        lineBuffer = new StringBuilder();
+        lineBuffer.append("@startuml");
+        lineBuffer.append("\n");
+    }
+
+    private void prepareScannerForNextDiagram() {
+        pictureFileName = null;
+        pictureFileType = null;
+    }
+
+    private void analyzeHeader(String normalizedLine) {
+        final String[] parts = normalizedLine
+                .replaceAll("\\[", "")
+                .replaceAll("]", "")
+                .replaceAll("\"", "")
+                .replaceAll("\n", "")
+                .split(",");
+        if(parts.length >= 3) {
+            pictureFileName = parts[1];
+            pictureFileType = parts[2];
         }
     }
 
@@ -89,90 +93,97 @@ class PumlLineParser {
         final Diagram diagram = blocks.get(0).getDiagram();
         if(diagram instanceof PSystemError) {
             PSystemError error = (PSystemError) diagram;
-            final int higherErrorPosition = error.getLineLocation().getPosition();
-            LOGGER.warn("Error while parsing at postion "+higherErrorPosition+": "+error.getErrorsUml());
+            LOGGER.warn("Error while parsing at position: "+error.getErrorsUml());
             return;
         }
 
 
         if(diagram instanceof SequenceDiagram) {
-            final SequenceDiagram sequenceDiagram = (SequenceDiagram) diagram;
-            final UmlDiagramType umlDiagramType = sequenceDiagram.getUmlDiagramType();
-            final PlantUmlDiagramDescriptor diagramDescriptor = createDiagramDescriptor(umlDiagramType);
-            if(diagramDescriptor == null) return;
-
-            diagramDescriptor.setPictureFileName(pictureFileName);
-            diagramDescriptor.setPictureFileType(pictureFileType);
-
-            final String type = umlDiagramType.name();
-            diagramDescriptor.setType(type+"DIAGRAM");
-
-            diagramDescriptor.setTitle(extractString(sequenceDiagram.getTitle()));
-            diagramDescriptor.setCaption(extractString(sequenceDiagram.getCaption()));
-            diagramDescriptor.setLegend(extractString(sequenceDiagram.getLegend()));
-
-            sequenceDiagram.participants().forEach(this::addParticipant);
-            sequenceDiagram.events().forEach(this::addEvent);
+            final PlantUmlDiagramDescriptor diagramDescriptor = analyzeSequenceDiagram((SequenceDiagram) diagram);
+            if (diagramDescriptor == null) return;
 
             plantUmlFileDescriptor.getPlantUmlDiagrams().add(diagramDescriptor);
             setOldRelationsForCompatibility(diagramDescriptor);
         }
         else if(diagram instanceof AbstractEntityDiagram) {
-            final AbstractEntityDiagram descriptionDiagram = (AbstractEntityDiagram) diagram;
-            final UmlDiagramType umlDiagramType = descriptionDiagram.getUmlDiagramType();
-            final PlantUmlDiagramDescriptor diagramDescriptor = createDiagramDescriptor(umlDiagramType);
-            if(diagramDescriptor == null) return;
-
-            diagramDescriptor.setPictureFileName(pictureFileName);
-            diagramDescriptor.setPictureFileType(pictureFileType);
-
-            final String type = umlDiagramType.name();
-            diagramDescriptor.setType(type+"DIAGRAM");
-
-            final String namespaceSeparator = descriptionDiagram.getNamespaceSeparator();
-            diagramDescriptor.setNamespaceSeparator(namespaceSeparator);
-
-            diagramDescriptor.setTitle(extractString(descriptionDiagram.getTitle()));
-            diagramDescriptor.setCaption(extractString(descriptionDiagram.getCaption()));
-            diagramDescriptor.setLegend(extractString(descriptionDiagram.getLegend()));
-
-            final Collection<IGroup> groups = descriptionDiagram.getRootGroup().getChildren();
-            addGroups(diagramDescriptor, groups, diagramDescriptor);
-
-            final Collection<ILeaf> leafsvalues = descriptionDiagram.getRootGroup().getLeafsDirect();
-            addLeafs(leafsvalues, diagramDescriptor);
-
-            final List<Link> links = descriptionDiagram.getLinks();
-            addLinks(links);
+            final PlantUmlDiagramDescriptor diagramDescriptor = analyzeAbstractentityDiagram((AbstractEntityDiagram) diagram);
+            if (diagramDescriptor == null) return;
 
             plantUmlFileDescriptor.getPlantUmlDiagrams().add(diagramDescriptor);
             setOldRelationsForCompatibility(diagramDescriptor);
         }
     }
 
-    private String extractString(final DisplayPositionned displayPositionned) {
-        StringBuilder title = new StringBuilder();
-        if (displayPositionned != null && displayPositionned.getDisplay() != null && !displayPositionned.isNull()) {
-            displayPositionned.getDisplay().iterator().forEachRemaining(title::append);
+    private PlantUmlDiagramDescriptor analyzeSequenceDiagram(SequenceDiagram diagram) {
+        final UmlDiagramType umlDiagramType = diagram.getUmlDiagramType();
+        final PlantUmlDiagramDescriptor diagramDescriptor = createDiagramDescriptor(umlDiagramType);
+        if(diagramDescriptor == null) return null;
+
+        analyzeDiagramMetadata(diagramDescriptor, umlDiagramType, diagram);
+        analyzeSequenceDiagramContent(diagram);
+        return diagramDescriptor;
+    }
+
+    private PlantUmlDiagramDescriptor analyzeAbstractentityDiagram(AbstractEntityDiagram diagram) {
+        final UmlDiagramType umlDiagramType = diagram.getUmlDiagramType();
+        final PlantUmlDiagramDescriptor diagramDescriptor = createDiagramDescriptor(umlDiagramType);
+        if(diagramDescriptor == null) return null;
+
+        analyzeDiagramMetadata(diagramDescriptor, umlDiagramType, diagram);
+        analyzeAbstractEntityDiagramContent(diagram, diagramDescriptor);
+        return diagramDescriptor;
+    }
+
+    private void analyzeAbstractEntityDiagramContent(AbstractEntityDiagram descriptionDiagram, PlantUmlDiagramDescriptor diagramDescriptor) {
+        final String namespaceSeparator = descriptionDiagram.getNamespaceSeparator();
+        diagramDescriptor.setNamespaceSeparator(namespaceSeparator);
+
+        final Collection<IGroup> groups = descriptionDiagram.getRootGroup().getChildren();
+        addGroups(diagramDescriptor, groups, diagramDescriptor);
+
+        final Collection<ILeaf> leafsvalues = descriptionDiagram.getRootGroup().getLeafsDirect();
+        addLeafs(leafsvalues, diagramDescriptor);
+
+        final List<Link> links = descriptionDiagram.getLinks();
+        addLinks(links);
+    }
+
+    private void analyzeSequenceDiagramContent(SequenceDiagram sequenceDiagram) {
+        sequenceDiagram.participants().forEach((s, p) -> addParticipant(p));
+        sequenceDiagram.events().forEach(this::addEvent);
+    }
+
+    private void analyzeDiagramMetadata(PlantUmlDiagramDescriptor diagramDescriptor, UmlDiagramType umlDiagramType, UmlDiagram descriptionDiagram) {
+        diagramDescriptor.setPictureFileName(pictureFileName);
+        diagramDescriptor.setPictureFileType(pictureFileType);
+
+        final String type = umlDiagramType.name();
+        diagramDescriptor.setType(type+"DIAGRAM");
+
+        if (!(descriptionDiagram.getTitle().getDisplay().size() == 0)){
+            String title = String.join(" ", descriptionDiagram.getTitle().getDisplay());
+            diagramDescriptor.setTitle(title);
         }
-        return title.toString();
+        if (!(descriptionDiagram.getCaption().getDisplay().size() == 0)){
+            String caption = String.join(" ", descriptionDiagram.getCaption().getDisplay());
+            diagramDescriptor.setCaption(caption);
+        }
+        if (!(descriptionDiagram.getLegend().getDisplay().size() == 0)){
+            String legend = String.join("", descriptionDiagram.getLegend().getDisplay());
+            diagramDescriptor.setLegend(legend);
+        }
     }
 
     private PlantUmlDiagramDescriptor createDiagramDescriptor(final UmlDiagramType umlDiagramType) {
         switch (umlDiagramType) {
-            case ACTIVITY: break;
             case CLASS:
                 return store.create(PlantUmlClassDiagramDescriptor.class);
-            case COMPOSITE: break;
             case DESCRIPTION:
                 return store.create(PlantUmlDescriptionDiagramDescriptor.class);
-            case FLOW: break;
-            case OBJECT: break;
             case SEQUENCE:
                 return store.create(PlantUmlSequenceDiagramDescriptor.class);
             case STATE:
                 return store.create(PlantUmlStateDiagramDescriptor.class);
-            case TIMING: break;
             default: break;
         }
 
@@ -212,8 +223,8 @@ class PumlLineParser {
                 continue;
             }
 
-            String lhs = link.getEntity1().getCode().getName();
-            String rhs = link.getEntity2().getCode().getName();
+            String lhs = link.getEntity1().getCode().getFullName();
+            String rhs = link.getEntity2().getCode().getFullName();
             if("ARROW".equalsIgnoreCase(link.getType().getDecor2().name())) {
                 String swap = rhs;
                 rhs = lhs;
@@ -239,14 +250,14 @@ class PumlLineParser {
     private void addLeafs(final Collection<ILeaf> leafsvalues, final PlantUmlGroupDescriptor plantUmlGroupDescriptor) {
         for (final ILeaf iLeaf : leafsvalues) {
             PlantUmlLeafDescriptor leafNode = store.create(PlantUmlLeafDescriptor.class);
-            final String fullName = iLeaf.getCode().getName();
+            final String fullName = iLeaf.getCode().getFullName();
             leafNode.setFullName(fullName);
-            final LeafType entityType = iLeaf.getLeafType();
+            final LeafType entityType = iLeaf.getEntityType();
             leafNode.setType(entityType.name());
             mappingFromFqnToPackage.put(fullName, leafNode);
             final Stereotype stereotype = iLeaf.getStereotype();
             if(stereotype != null) {
-                leafNode.setStereotype(stereotype.getLabel(Guillemet.DOUBLE_COMPARATOR));
+                leafNode.setStereotype(stereotype.getLabel(true));
             }
             leafNode.setDescription(iteratorToText(iLeaf.getDisplay().iterator()));
             if(plantUmlGroupDescriptor != null) {
@@ -260,9 +271,6 @@ class PumlLineParser {
             final GroupType groupType = iGroup.getGroupType();
             PlantUmlGroupDescriptor plantUmlGroupDescriptor = null;
             switch (groupType) {
-                case CONCURRENT_ACTIVITY: break;
-                case CONCURRENT_STATE: break;
-                case INNER_ACTIVITY: break;
                 case PACKAGE:
                     plantUmlGroupDescriptor = store.create(PlantUmlPackageDescriptor.class);
                     break;
@@ -273,7 +281,7 @@ class PumlLineParser {
             }
 
             if(plantUmlGroupDescriptor != null) {
-                final String fullGroupName = iGroup.getCode().getName();
+                final String fullGroupName = iGroup.getCode().getFullName();
                 plantUmlGroupDescriptor.setFullName(fullGroupName);
                 diagramDescriptor.getPlantUmlGroups().add(plantUmlGroupDescriptor);
                 mappingFromFqnToPackage.put(fullGroupName, plantUmlGroupDescriptor);
@@ -326,7 +334,7 @@ class PumlLineParser {
 
         final Stereotype stereotype = participant.getStereotype();
         if(stereotype != null) {
-            plantUmlParticipantDescriptor.setStereotype(stereotype.getLabel(Guillemet.DOUBLE_COMPARATOR));
+            plantUmlParticipantDescriptor.setStereotype(stereotype.getLabel(true));
         }
 
         participantDescriptors.put(participant.getCode(), plantUmlParticipantDescriptor);

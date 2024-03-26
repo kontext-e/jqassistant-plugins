@@ -55,10 +55,10 @@ public class PlantUmlFileScannerPlugin extends AbstractScannerPlugin<FileResourc
 		final PlantUmlFileDescriptor plantUmlFileDescriptor = store.addDescriptorType(fileDescriptor, PlantUmlFileDescriptor.class);
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(item.createStream()))) {
-            final PumlLineParser pumlLineParser = new PumlLineParser(store, plantUmlFileDescriptor, path.endsWith(".puml") ? ParsingState.ACCEPTING : ParsingState.IGNORING);
+            final PlantUMLLineParser plantUMLLineParser = new PlantUMLLineParser(store, plantUmlFileDescriptor, path.endsWith(".puml") ? ParsingState.ACCEPTING : ParsingState.IGNORING);
             String line;
             while ((line = reader.readLine()) != null) {
-                pumlLineParser.parseLine(line);
+                plantUMLLineParser.parseLine(line);
             }
         }
 

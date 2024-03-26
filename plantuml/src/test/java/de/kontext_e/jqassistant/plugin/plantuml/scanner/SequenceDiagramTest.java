@@ -2,7 +2,6 @@ package de.kontext_e.jqassistant.plugin.plantuml.scanner;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 import com.buschmais.jqassistant.core.store.api.Store;
 import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlFileDescriptor;
@@ -11,15 +10,16 @@ import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlSequenc
 import de.kontext_e.jqassistant.plugin.plantuml.store.descriptor.PlantUmlSequenceDiagramMessageDescriptor;
 
 import static java.util.Arrays.asList;
+import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class SequenceDiagramTest {
-    private PumlLineParser pumlLineParser;
-    private Store mockStore = mock(Store.class);
-    private PlantUmlFileDescriptor plantUmlFileDescriptor = mock(PlantUmlFileDescriptor.class);
+    private PlantUMLLineParser plantUMLLineParser;
+    private final Store mockStore = mock(Store.class);
+    private final PlantUmlFileDescriptor plantUmlFileDescriptor = mock(PlantUmlFileDescriptor.class);
 
     private PlantUmlSequenceDiagramDescriptor mockDescriptor;
     private PlantUmlParticipantDescriptor mockPlantUmlParticipantDescriptor;
@@ -27,17 +27,17 @@ public class SequenceDiagramTest {
 
     @Before
     public void setUp() {
-        pumlLineParser = new PumlLineParser(mockStore, plantUmlFileDescriptor, ParsingState.ACCEPTING);
+        plantUMLLineParser = new PlantUMLLineParser(mockStore, plantUmlFileDescriptor, ParsingState.ACCEPTING);
         mockDescriptor = mock(PlantUmlSequenceDiagramDescriptor.class);
         mockPlantUmlParticipantDescriptor = mock(PlantUmlParticipantDescriptor.class);
         mockPlantUmlSequenceDiagramMessageDescriptor = mock(PlantUmlSequenceDiagramMessageDescriptor.class);
 
         when(mockStore.create(PlantUmlSequenceDiagramDescriptor.class)).thenReturn(mockDescriptor);
         when(mockStore.create(PlantUmlParticipantDescriptor.class)).thenReturn(mockPlantUmlParticipantDescriptor);
-        when(mockStore.create(Mockito.any(PlantUmlParticipantDescriptor.class), Mockito.eq(PlantUmlSequenceDiagramMessageDescriptor.class), Mockito.any(PlantUmlParticipantDescriptor.class)))
+        when(mockStore.create(any(PlantUmlParticipantDescriptor.class), eq(PlantUmlSequenceDiagramMessageDescriptor.class), any(PlantUmlParticipantDescriptor.class)))
                 .thenReturn(mockPlantUmlSequenceDiagramMessageDescriptor);
 
-        pumlLineParser = new PumlLineParser(mockStore, plantUmlFileDescriptor, ParsingState.ACCEPTING);
+        plantUMLLineParser = new PlantUMLLineParser(mockStore, plantUmlFileDescriptor, ParsingState.ACCEPTING);
     }
 
     @Test
@@ -50,12 +50,15 @@ public class SequenceDiagramTest {
                             "Alice <-- Bob: another authentication Response\n" +
                             "@enduml\n";
 
-        asList(puml.split("\\n")).forEach(line -> pumlLineParser.parseLine(line));
+        asList(puml.split("\\n")).forEach(line -> plantUMLLineParser.parseLine(line));
 
         verify(mockStore).create(PlantUmlSequenceDiagramDescriptor.class);
         verify(mockStore, times(2)).create(PlantUmlParticipantDescriptor.class);
-        verify(mockStore, times(4)).create(Mockito.any(PlantUmlParticipantDescriptor.class), Mockito.eq(PlantUmlSequenceDiagramMessageDescriptor.class), Mockito.any(PlantUmlParticipantDescriptor.class));
-        verify(mockPlantUmlSequenceDiagramMessageDescriptor, times(4)).setMessage(Mockito.anyString());
+        verify(mockStore, times(4)).create(
+                any(PlantUmlParticipantDescriptor.class),
+                eq(PlantUmlSequenceDiagramMessageDescriptor.class),
+                any(PlantUmlParticipantDescriptor.class));
+        verify(mockPlantUmlSequenceDiagramMessageDescriptor, times(4)).setMessage(anyString());
     }
 
     @Test
@@ -76,13 +79,16 @@ public class SequenceDiagramTest {
                             "\n" +
                             "@enduml";
 
-        asList(puml.split("\\n")).forEach(line -> pumlLineParser.parseLine(line));
+        asList(puml.split("\\n")).forEach(line -> plantUMLLineParser.parseLine(line));
 
         verify(mockStore).create(PlantUmlSequenceDiagramDescriptor.class);
         // 7 participants + 1 for renaming using "as"
         verify(mockStore, times(8)).create(PlantUmlParticipantDescriptor.class);
-        verify(mockStore, times(5)).create(Mockito.any(PlantUmlParticipantDescriptor.class), Mockito.eq(PlantUmlSequenceDiagramMessageDescriptor.class), Mockito.any(PlantUmlParticipantDescriptor.class));
-        verify(mockPlantUmlSequenceDiagramMessageDescriptor, times(5)).setMessage(Mockito.anyString());
+        verify(mockStore, times(5)).create(
+                any(PlantUmlParticipantDescriptor.class),
+                eq(PlantUmlSequenceDiagramMessageDescriptor.class),
+                any(PlantUmlParticipantDescriptor.class));
+        verify(mockPlantUmlSequenceDiagramMessageDescriptor, times(5)).setMessage(anyString());
     }
 
     @Test
@@ -102,12 +108,15 @@ public class SequenceDiagramTest {
                             "Bob->L: Log transaction\n" +
                             "@enduml";
 
-        asList(puml.split("\\n")).forEach(line -> pumlLineParser.parseLine(line));
+        asList(puml.split("\\n")).forEach(line -> plantUMLLineParser.parseLine(line));
 
         verify(mockStore).create(PlantUmlSequenceDiagramDescriptor.class);
         verify(mockStore, times(3)).create(PlantUmlParticipantDescriptor.class);
-        verify(mockStore, times(3)).create(Mockito.any(PlantUmlParticipantDescriptor.class), Mockito.eq(PlantUmlSequenceDiagramMessageDescriptor.class), Mockito.any(PlantUmlParticipantDescriptor.class));
-        verify(mockPlantUmlSequenceDiagramMessageDescriptor, times(3)).setMessage(Mockito.anyString());
+        verify(mockStore, times(3)).create(
+                any(PlantUmlParticipantDescriptor.class),
+                eq(PlantUmlSequenceDiagramMessageDescriptor.class),
+                any(PlantUmlParticipantDescriptor.class));
+        verify(mockPlantUmlSequenceDiagramMessageDescriptor, times(3)).setMessage(anyString());
     }
 
     @Test
@@ -120,12 +129,16 @@ public class SequenceDiagramTest {
                             "Long --> \"Bob()\" : ok\n" +
                             "@enduml";
 
-        asList(puml.split("\\n")).forEach(line -> pumlLineParser.parseLine(line));
+        asList(puml.split("\\n")).forEach(line -> plantUMLLineParser.parseLine(line));
 
         verify(mockStore).create(PlantUmlSequenceDiagramDescriptor.class);
         verify(mockStore, times(3)).create(PlantUmlParticipantDescriptor.class);
-        verify(mockStore, times(3)).create(Mockito.any(PlantUmlParticipantDescriptor.class), Mockito.eq(PlantUmlSequenceDiagramMessageDescriptor.class), Mockito.any(PlantUmlParticipantDescriptor.class));
-        verify(mockPlantUmlSequenceDiagramMessageDescriptor, times(3)).setMessage(Mockito.anyString());
+        verify(mockStore, times(3)).create(
+                any(PlantUmlParticipantDescriptor.class),
+                eq(PlantUmlSequenceDiagramMessageDescriptor.class),
+                any(PlantUmlParticipantDescriptor.class)
+        );
+        verify(mockPlantUmlSequenceDiagramMessageDescriptor, times(3)).setMessage(anyString());
     }
 
     @Test
@@ -134,12 +147,15 @@ public class SequenceDiagramTest {
                             "Alice->Alice: This is a signal to self.\\nIt also demonstrates\\nmultiline \\ntext\n" +
                             "@enduml";
 
-        asList(puml.split("\\n")).forEach(line -> pumlLineParser.parseLine(line));
+        asList(puml.split("\\n")).forEach(line -> plantUMLLineParser.parseLine(line));
 
         verify(mockStore).create(PlantUmlSequenceDiagramDescriptor.class);
         verify(mockStore, times(1)).create(PlantUmlParticipantDescriptor.class);
-        verify(mockStore, times(1)).create(Mockito.any(PlantUmlParticipantDescriptor.class), Mockito.eq(PlantUmlSequenceDiagramMessageDescriptor.class), Mockito.any(PlantUmlParticipantDescriptor.class));
-        verify(mockPlantUmlSequenceDiagramMessageDescriptor, times(1)).setMessage(Mockito.anyString());
+        verify(mockStore, times(1)).create(
+                any(PlantUmlParticipantDescriptor.class),
+                eq(PlantUmlSequenceDiagramMessageDescriptor.class),
+                any(PlantUmlParticipantDescriptor.class));
+        verify(mockPlantUmlSequenceDiagramMessageDescriptor, times(1)).setMessage(anyString());
     }
 
     @Test
@@ -159,12 +175,16 @@ public class SequenceDiagramTest {
                             "Bob <->o Alice\n" +
                             "@enduml";
 
-        asList(puml.split("\\n")).forEach(line -> pumlLineParser.parseLine(line));
+        asList(puml.split("\\n")).forEach(line -> plantUMLLineParser.parseLine(line));
 
         verify(mockStore).create(PlantUmlSequenceDiagramDescriptor.class);
         verify(mockStore, times(2)).create(PlantUmlParticipantDescriptor.class);
-        verify(mockStore, times(10)).create(Mockito.any(PlantUmlParticipantDescriptor.class), Mockito.eq(PlantUmlSequenceDiagramMessageDescriptor.class), Mockito.any(PlantUmlParticipantDescriptor.class));
-        verify(mockPlantUmlSequenceDiagramMessageDescriptor, times(10)).setMessage(Mockito.anyString());
+        verify(mockStore, times(10)).create(
+                any(PlantUmlParticipantDescriptor.class),
+                eq(PlantUmlSequenceDiagramMessageDescriptor.class),
+                any(PlantUmlParticipantDescriptor.class)
+        );
+        verify(mockPlantUmlSequenceDiagramMessageDescriptor, times(10)).setMessage(anyString());
     }
 
     @Test
@@ -174,12 +194,16 @@ public class SequenceDiagramTest {
                             "Alice -[#0000FF]->Bob : ok\n" +
                             "@enduml";
 
-        asList(puml.split("\\n")).forEach(line -> pumlLineParser.parseLine(line));
+        asList(puml.split("\\n")).forEach(line -> plantUMLLineParser.parseLine(line));
 
         verify(mockStore).create(PlantUmlSequenceDiagramDescriptor.class);
         verify(mockStore, times(2)).create(PlantUmlParticipantDescriptor.class);
-        verify(mockStore, times(2)).create(Mockito.any(PlantUmlParticipantDescriptor.class), Mockito.eq(PlantUmlSequenceDiagramMessageDescriptor.class), Mockito.any(PlantUmlParticipantDescriptor.class));
-        verify(mockPlantUmlSequenceDiagramMessageDescriptor, times(2)).setMessage(Mockito.anyString());
+        verify(mockStore, times(2)).create(
+                any(PlantUmlParticipantDescriptor.class),
+                eq(PlantUmlSequenceDiagramMessageDescriptor.class),
+                any(PlantUmlParticipantDescriptor.class)
+        );
+        verify(mockPlantUmlSequenceDiagramMessageDescriptor, times(2)).setMessage(anyString());
     }
 
     @Test
@@ -190,12 +214,16 @@ public class SequenceDiagramTest {
                             "Bob <- Alice : Authentication Response\n" +
                             "@enduml";
 
-        asList(puml.split("\\n")).forEach(line -> pumlLineParser.parseLine(line));
+        asList(puml.split("\\n")).forEach(line -> plantUMLLineParser.parseLine(line));
 
         verify(mockStore).create(PlantUmlSequenceDiagramDescriptor.class);
         verify(mockStore, times(2)).create(PlantUmlParticipantDescriptor.class);
-        verify(mockStore, times(2)).create(Mockito.any(PlantUmlParticipantDescriptor.class), Mockito.eq(PlantUmlSequenceDiagramMessageDescriptor.class), Mockito.any(PlantUmlParticipantDescriptor.class));
-        verify(mockPlantUmlSequenceDiagramMessageDescriptor, times(2)).setMessage(Mockito.anyString());
+        verify(mockStore, times(2)).create(
+                any(PlantUmlParticipantDescriptor.class),
+                eq(PlantUmlSequenceDiagramMessageDescriptor.class),
+                any(PlantUmlParticipantDescriptor.class)
+        );
+        verify(mockPlantUmlSequenceDiagramMessageDescriptor, times(2)).setMessage(anyString());
         verify(mockPlantUmlSequenceDiagramMessageDescriptor, times(1)).setMessageNumber("<b>1</b>");
         verify(mockPlantUmlSequenceDiagramMessageDescriptor, times(1)).setMessageNumber("<b>2</b>");
     }

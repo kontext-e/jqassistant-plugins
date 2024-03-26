@@ -19,7 +19,7 @@ import static org.junit.Assert.assertThat;
 public class PumlTest {
 
     @Test
-    public void test() throws Exception {
+    public void test() {
         String plantuml2 = "[plantuml,role=concept]\n" +
                            "----\n" +
                            "@startuml\n" +
@@ -63,10 +63,10 @@ public class PumlTest {
         Diagram diagram = blocks.get(0).getDiagram();
         AbstractEntityDiagram descriptionDiagram = (AbstractEntityDiagram) diagram;
         EntityFactory entityFactory = descriptionDiagram.getEntityFactory();
-        Collection<IGroup> groups = entityFactory.groups();
+        Collection<IGroup> groups = entityFactory.getGroups().values();
         assertThat(groups.size(), is(3));
         for (IGroup iGroup : groups) {
-            assertThat(iGroup.getCode().getName(), isOneOf(
+            assertThat(iGroup.getCode().getFullName(), isOneOf(
                     "de.kontext_e.project.domain",
                     "de.kontext_e.project.domain.sub1",
                     "de.kontext_e.project.services"
@@ -75,8 +75,8 @@ public class PumlTest {
 
         List<Link> links = entityFactory.getLinks();
         assertThat(links.size(), is(1));
-        assertThat(links.get(0).getEntity1().getCode().getName(), is("de.kontext_e.project.services"));
-        assertThat(links.get(0).getEntity2().getCode().getName(), is("de.kontext_e.project.domain"));
+        assertThat(links.get(0).getEntity1().getCode().getFullName(), is("de.kontext_e.project.services"));
+        assertThat(links.get(0).getEntity2().getCode().getFullName(), is("de.kontext_e.project.domain"));
     }
 
 }
