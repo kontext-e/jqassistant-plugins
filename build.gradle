@@ -70,7 +70,7 @@ subprojects {
       implementation  'com.buschmais.jqassistant.core:report:'+project.jqaversion
       implementation  'com.buschmais.jqassistant.plugin:common:'+project.jqaversion
       implementation  'com.buschmais.jqassistant.core:store:'+project.jqaversion
-      implementation 'net.sourceforge.plantuml:plantuml:8059'
+      implementation 'net.sourceforge.plantuml:plantuml:1.2024.3'
 
     testCompile  'com.buschmais.jqassistant.core:test:'+project.jqaversion
     testCompile group: 'junit', name: 'junit', version: '4.12'

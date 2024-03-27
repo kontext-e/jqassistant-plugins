@@ -2,11 +2,11 @@ package de.kontext_e.jqassistant.plugin.plantuml.scanner;
 
 import net.sourceforge.plantuml.BlockUml;
 import net.sourceforge.plantuml.SourceStringReader;
+import net.sourceforge.plantuml.abel.Entity;
+import net.sourceforge.plantuml.abel.EntityFactory;
+import net.sourceforge.plantuml.abel.Link;
 import net.sourceforge.plantuml.classdiagram.AbstractEntityDiagram;
 import net.sourceforge.plantuml.core.Diagram;
-import net.sourceforge.plantuml.cucadiagram.IGroup;
-import net.sourceforge.plantuml.cucadiagram.Link;
-import net.sourceforge.plantuml.cucadiagram.entity.EntityFactory;
 import org.junit.Test;
 
 import java.util.Collection;
@@ -63,10 +63,10 @@ public class PumlTest {
         Diagram diagram = blocks.get(0).getDiagram();
         AbstractEntityDiagram descriptionDiagram = (AbstractEntityDiagram) diagram;
         EntityFactory entityFactory = descriptionDiagram.getEntityFactory();
-        Collection<IGroup> groups = entityFactory.getGroups().values();
+        Collection<Entity> groups = entityFactory.groups();
         assertThat(groups.size(), is(3));
-        for (IGroup iGroup : groups) {
-            assertThat(iGroup.getCode().getFullName(), isOneOf(
+        for (Entity iGroup : groups) {
+            assertThat(iGroup.getName(), isOneOf(
                     "de.kontext_e.project.domain",
                     "de.kontext_e.project.domain.sub1",
                     "de.kontext_e.project.services"
@@ -75,8 +75,8 @@ public class PumlTest {
 
         List<Link> links = entityFactory.getLinks();
         assertThat(links.size(), is(1));
-        assertThat(links.get(0).getEntity1().getCode().getFullName(), is("de.kontext_e.project.services"));
-        assertThat(links.get(0).getEntity2().getCode().getFullName(), is("de.kontext_e.project.domain"));
+        assertThat(links.get(0).getEntity1().getName(), is("de.kontext_e.project.services"));
+        assertThat(links.get(0).getEntity2().getName(), is("de.kontext_e.project.domain"));
     }
 
 }
