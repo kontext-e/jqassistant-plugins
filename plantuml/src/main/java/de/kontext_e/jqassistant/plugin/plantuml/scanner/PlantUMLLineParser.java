@@ -77,6 +77,7 @@ class PlantUMLLineParser {
                 .replaceAll("\"", "")
                 .replaceAll("\n", "")
                 .split(",");
+
         if(parts.length >= 3) {
             pictureFileName = parts[1];
             pictureFileType = parts[2];
@@ -97,20 +98,28 @@ class PlantUMLLineParser {
 
 
         if(diagram instanceof SequenceDiagram) {
-            SequenceDiagramAnalyzer sequenceDiagramAnalyzer = new SequenceDiagramAnalyzer(store, pictureFileName, pictureFileType);
-            final PlantUmlDiagramDescriptor diagramDescriptor = sequenceDiagramAnalyzer.analyzeDiagram((SequenceDiagram) diagram);
-            if (diagramDescriptor == null) return;
-
-            plantUmlFileDescriptor.getPlantUmlDiagrams().add(diagramDescriptor);
+            analyzeSequenceDiagram((SequenceDiagram) diagram);
         }
         else if(diagram instanceof AbstractEntityDiagram) {
-            AbstractEntityDiagramAnalyzer diagramAnalyzer = new AbstractEntityDiagramAnalyzer(store, pictureFileName, pictureFileType);
-            final PlantUmlDiagramDescriptor diagramDescriptor = diagramAnalyzer.analyzeDiagram((AbstractEntityDiagram) diagram);
-            if (diagramDescriptor == null) return;
-
-            plantUmlFileDescriptor.getPlantUmlDiagrams().add(diagramDescriptor);
-            setOldRelationsForCompatibility(diagramDescriptor);
+            analyzeAbstractEntityDiagram((AbstractEntityDiagram) diagram);
         }
+    }
+
+    private void analyzeAbstractEntityDiagram(AbstractEntityDiagram diagram) {
+        AbstractEntityDiagramAnalyzer diagramAnalyzer = new AbstractEntityDiagramAnalyzer(store, pictureFileName, pictureFileType);
+        final PlantUmlDiagramDescriptor diagramDescriptor = diagramAnalyzer.analyzeDiagram(diagram);
+        if (diagramDescriptor == null) return;
+
+        plantUmlFileDescriptor.getPlantUmlDiagrams().add(diagramDescriptor);
+        setOldRelationsForCompatibility(diagramDescriptor);
+    }
+
+    private void analyzeSequenceDiagram(SequenceDiagram diagram) {
+        SequenceDiagramAnalyzer sequenceDiagramAnalyzer = new SequenceDiagramAnalyzer(store, pictureFileName, pictureFileType);
+        final PlantUmlDiagramDescriptor diagramDescriptor = sequenceDiagramAnalyzer.analyzeDiagram(diagram);
+        if (diagramDescriptor == null) return;
+
+        plantUmlFileDescriptor.getPlantUmlDiagrams().add(diagramDescriptor);
     }
 
     private void setOldRelationsForCompatibility(final PlantUmlDiagramDescriptor diagramDescriptor) {

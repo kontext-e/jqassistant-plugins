@@ -7,8 +7,6 @@ import net.sourceforge.plantuml.abel.Entity;
 import net.sourceforge.plantuml.abel.GroupType;
 import net.sourceforge.plantuml.abel.Link;
 import net.sourceforge.plantuml.classdiagram.AbstractEntityDiagram;
-import net.sourceforge.plantuml.decoration.LinkStyle;
-import net.sourceforge.plantuml.decoration.LinkType;
 import net.sourceforge.plantuml.plasma.Quark;
 import net.sourceforge.plantuml.stereo.Stereotype;
 import net.sourceforge.plantuml.text.Guillemet;
@@ -31,26 +29,87 @@ public class AbstractEntityDiagramAnalyzer extends AbstractDiagramAnalyzer{
     @Override
     protected void analyzeDiagramContent(UmlDiagram diagram, PlantUmlDiagramDescriptor diagramDescriptor) {
         AbstractEntityDiagram descriptionDiagram = (AbstractEntityDiagram) diagram;
-        final String namespaceSeparator = descriptionDiagram.getNamespaceSeparator();
-        diagramDescriptor.setNamespaceSeparator(namespaceSeparator);
+
+        diagramDescriptor.setNamespaceSeparator(descriptionDiagram.getNamespaceSeparator());
 
         final Collection<Quark<Entity>> groups = descriptionDiagram.getRootGroup().getQuark().getChildren();
-        analyzeEntities(diagramDescriptor, groups, diagramDescriptor);
+        analyzeEntities(groups, diagramDescriptor, diagramDescriptor);
+        addLinks(descriptionDiagram.getLinks());
+    }
 
-        final List<Link> links = descriptionDiagram.getLinks();
-        addLinks(links);
+    private void analyzeEntities(final Collection<Quark<Entity>> entities, PlantUmlGroupDescriptor parent, final PlantUmlDiagramDescriptor diagramDescriptor) {
+        for (Quark<Entity> entity : entities) {
+            if (entity.getData() == null){
+                analyzeEntities(entity.getChildren(), parent, diagramDescriptor);
+            } else if (entity.getData().isGroup()){
+                analyzeGroup(entity, parent, diagramDescriptor);
+            } else {
+                analyzeleaf(entity.getData(), diagramDescriptor);
+            }
+        }
+    }
+
+    private void analyzeleaf(final Entity leaf, final PlantUmlGroupDescriptor plantUmlGroupDescriptor) {
+        PlantUmlLeafDescriptor leafNode = store.create(PlantUmlLeafDescriptor.class);
+        mappingFromFqnToPackage.put(leaf.getName(), leafNode);
+        describeLeaf(leaf, leafNode);
+        if(plantUmlGroupDescriptor != null) {
+            plantUmlGroupDescriptor.getLeafs().add(leafNode);
+        }
+    }
+
+    private void describeLeaf(Entity leaf, PlantUmlLeafDescriptor leafDescriptor) {
+        leafDescriptor.setFullName(leaf.getQuark().getQualifiedName());
+        leafDescriptor.setType(leaf.getLeafType().name());
+        leafDescriptor.setDescription(iteratorToText(leaf.getDisplay().iterator()));
+        final Stereotype stereotype = leaf.getStereotype();
+        if(stereotype != null) {
+            leafDescriptor.setStereotype(stereotype.getLabel(Guillemet.GUILLEMET));
+        }
+    }
+
+    private String iteratorToText(Iterator<CharSequence> it) {
+        StringBuilder builder = new StringBuilder();
+        it.forEachRemaining(line -> builder.append(line).append("\n"));
+        return builder.toString();
+    }
+
+    private void analyzeGroup(Quark<Entity> iGroup, PlantUmlGroupDescriptor parent, PlantUmlDiagramDescriptor diagramDescriptor) {
+        Optional<PlantUmlGroupDescriptor> plantUmlGroupDescriptor = createGroupDescriptor(iGroup.getData().getGroupType());
+
+        if(plantUmlGroupDescriptor.isPresent()) {
+            describeGroup(diagramDescriptor, parent, iGroup, plantUmlGroupDescriptor.get());
+            analyzeEntities(iGroup.getChildren(), plantUmlGroupDescriptor.get(), diagramDescriptor);
+        } else {
+            LOGGER.warn("Not handled group type: "+ iGroup.getData().getGroupType());
+        }
+    }
+
+    private Optional<PlantUmlGroupDescriptor> createGroupDescriptor(GroupType groupType) {
+        switch (groupType) {
+            case PACKAGE:
+                return Optional.of(store.create(PlantUmlPackageDescriptor.class));
+            case STATE:
+                return Optional.of(store.create(PlantUmlStateDescriptor.class));
+            default: return Optional.empty();
+        }
+    }
+
+    private void describeGroup(PlantUmlDiagramDescriptor diagramDescriptor, PlantUmlGroupDescriptor parent, Quark<Entity> group, PlantUmlGroupDescriptor groupDescriptor) {
+        groupDescriptor.setFullName(group.getQualifiedName());
+        diagramDescriptor.getPlantUmlGroups().add(groupDescriptor);
+        mappingFromFqnToPackage.put(group.getName(), groupDescriptor);
+        if(parent != null) {
+            parent.getChildGroups().add(groupDescriptor);
+        }
     }
 
     private void addLinks(final List<Link> links) {
         for (Link link : links) {
-            final LinkType type = link.getType();
-            final LinkStyle style = type.getStyle();
             // there are invisible links between otherwise unconnected
             // entities; don't import these internal links which are
             // not declared in the diagram
-            if (style.toString().toLowerCase().contains("invis")) {
-                continue;
-            }
+            if (link.isInvis()) { continue; }
 
             String lhs = link.getEntity1().getName();
             String rhs = link.getEntity2().getName();
@@ -74,72 +133,5 @@ public class AbstractEntityDiagramAnalyzer extends AbstractDiagramAnalyzer{
 
             lhsDescriptor.getLinkTargets().add(rhsDescriptor);
         }
-    }
-
-    private void analyzeleaf(final Entity leaf, final PlantUmlGroupDescriptor plantUmlGroupDescriptor) {
-        PlantUmlLeafDescriptor leafNode = store.create(PlantUmlLeafDescriptor.class);
-        mappingFromFqnToPackage.put(leaf.getName(), leafNode);
-        describeLeaf(leaf, leafNode);
-        if(plantUmlGroupDescriptor != null) {
-            plantUmlGroupDescriptor.getLeafs().add(leafNode);
-        }
-    }
-
-    private void describeLeaf(Entity leaf, PlantUmlLeafDescriptor leafDescriptor) {
-        leafDescriptor.setFullName(leaf.getQuark().getQualifiedName());
-        leafDescriptor.setType(leaf.getLeafType().name());
-        leafDescriptor.setDescription(iteratorToText(leaf.getDisplay().iterator()));
-        final Stereotype stereotype = leaf.getStereotype();
-        if(stereotype != null) {
-            leafDescriptor.setStereotype(stereotype.getLabel(Guillemet.GUILLEMET));
-        }
-    }
-
-    private void analyzeEntities(final PlantUmlDiagramDescriptor diagramDescriptor, final Collection<Quark<Entity>> entities, PlantUmlGroupDescriptor parent) {
-        for (Quark<Entity> entity : entities) {
-            if (entity.getData() == null){
-                analyzeEntities(diagramDescriptor, entity.getChildren(), parent);
-            } else if (entity.getData().isGroup()){
-                anazalyzeGroup(diagramDescriptor, parent, entity);
-            } else {
-                analyzeleaf(entity.getData(), diagramDescriptor);
-            }
-        }
-    }
-
-    private void anazalyzeGroup(PlantUmlDiagramDescriptor diagramDescriptor, PlantUmlGroupDescriptor parent, Quark<Entity> iGroup) {
-        Optional<PlantUmlGroupDescriptor> plantUmlGroupDescriptor = createGroupDescriptor(iGroup.getData().getGroupType());
-
-        if(plantUmlGroupDescriptor.isPresent()) {
-            describeGroup(diagramDescriptor, parent, iGroup, plantUmlGroupDescriptor.get());
-            analyzeEntities(diagramDescriptor, iGroup.getChildren(), plantUmlGroupDescriptor.get());
-        } else {
-            LOGGER.warn("Not handled group type: "+ iGroup.getData().getGroupType());
-        }
-    }
-
-    private void describeGroup(PlantUmlDiagramDescriptor diagramDescriptor, PlantUmlGroupDescriptor parent, Quark<Entity> group, PlantUmlGroupDescriptor groupDescriptor) {
-        groupDescriptor.setFullName(group.getQualifiedName());
-        diagramDescriptor.getPlantUmlGroups().add(groupDescriptor);
-        mappingFromFqnToPackage.put(group.getName(), groupDescriptor);
-        if(parent != null) {
-            parent.getChildGroups().add(groupDescriptor);
-        }
-    }
-
-    private Optional<PlantUmlGroupDescriptor> createGroupDescriptor(GroupType groupType) {
-        switch (groupType) {
-            case PACKAGE:
-                return Optional.of(store.create(PlantUmlPackageDescriptor.class));
-            case STATE:
-                return Optional.of(store.create(PlantUmlStateDescriptor.class));
-            default: return Optional.empty();
-        }
-    }
-
-    private String iteratorToText(Iterator<CharSequence> it) {
-        StringBuilder builder = new StringBuilder();
-        it.forEachRemaining(line -> builder.append(line).append("\n"));
-        return builder.toString();
     }
 }
