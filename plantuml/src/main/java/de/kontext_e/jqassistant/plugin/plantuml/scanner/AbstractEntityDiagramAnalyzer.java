@@ -34,11 +34,8 @@ public class AbstractEntityDiagramAnalyzer extends AbstractDiagramAnalyzer{
         final String namespaceSeparator = descriptionDiagram.getNamespaceSeparator();
         diagramDescriptor.setNamespaceSeparator(namespaceSeparator);
 
-        final Collection<Quark<Entity>> groups = descriptionDiagram.getRootGroup().getQuark().getPlasma().quarks();
-        addGroups(diagramDescriptor, groups, diagramDescriptor);
-
-        final Collection<Entity> leafsvalues = descriptionDiagram.getRootGroup().leafs();
-        addLeafs(leafsvalues, diagramDescriptor);
+        final Collection<Quark<Entity>> groups = descriptionDiagram.getRootGroup().getQuark().getChildren();
+        analyzeEntities(diagramDescriptor, groups, diagramDescriptor);
 
         final List<Link> links = descriptionDiagram.getLinks();
         addLinks(links);
@@ -49,7 +46,7 @@ public class AbstractEntityDiagramAnalyzer extends AbstractDiagramAnalyzer{
             final LinkType type = link.getType();
             final LinkStyle style = type.getStyle();
             // there are invisible links between otherwise unconnected
-            // entities; dont import these internal links which are
+            // entities; don't import these internal links which are
             // not declared in the diagram
             if (style.toString().toLowerCase().contains("invis")) {
                 continue;
@@ -79,47 +76,52 @@ public class AbstractEntityDiagramAnalyzer extends AbstractDiagramAnalyzer{
         }
     }
 
-    private void addLeafs(final Collection<Entity> leafsvalues, final PlantUmlGroupDescriptor plantUmlGroupDescriptor) {
-        for (final Entity leaf : leafsvalues) {
-            PlantUmlLeafDescriptor leafNode = store.create(PlantUmlLeafDescriptor.class);
-            mappingFromFqnToPackage.put(leaf.getName(), leafNode);
-            describeLeaf(leaf, leafNode);
-            if(plantUmlGroupDescriptor != null) {
-                plantUmlGroupDescriptor.getLeafs().add(leafNode);
-            }
+    private void analyzeleaf(final Entity leaf, final PlantUmlGroupDescriptor plantUmlGroupDescriptor) {
+        PlantUmlLeafDescriptor leafNode = store.create(PlantUmlLeafDescriptor.class);
+        mappingFromFqnToPackage.put(leaf.getName(), leafNode);
+        describeLeaf(leaf, leafNode);
+        if(plantUmlGroupDescriptor != null) {
+            plantUmlGroupDescriptor.getLeafs().add(leafNode);
         }
     }
 
-    private void describeLeaf(Entity iLeaf, PlantUmlLeafDescriptor leafNode) {
-        leafNode.setFullName(iLeaf.getName());
-        leafNode.setType(iLeaf.getLeafType().name());
-        leafNode.setDescription(iteratorToText(iLeaf.getDisplay().iterator()));
-        final Stereotype stereotype = iLeaf.getStereotype();
+    private void describeLeaf(Entity leaf, PlantUmlLeafDescriptor leafDescriptor) {
+        leafDescriptor.setFullName(leaf.getQuark().getQualifiedName());
+        leafDescriptor.setType(leaf.getLeafType().name());
+        leafDescriptor.setDescription(iteratorToText(leaf.getDisplay().iterator()));
+        final Stereotype stereotype = leaf.getStereotype();
         if(stereotype != null) {
-            leafNode.setStereotype(stereotype.getLabel(Guillemet.GUILLEMET));
+            leafDescriptor.setStereotype(stereotype.getLabel(Guillemet.GUILLEMET));
         }
     }
 
-    private void addGroups(final PlantUmlDiagramDescriptor diagramDescriptor, final Collection<Quark<Entity>> groups, PlantUmlGroupDescriptor parent) {
-        for (Quark<Entity> iGroup : groups) {
-            if (!iGroup.getData().isGroup()) continue;
-            final GroupType groupType = iGroup.getData().getGroupType();
-            Optional<PlantUmlGroupDescriptor> plantUmlGroupDescriptor = createGroupDescriptor(groupType);
-
-            if(plantUmlGroupDescriptor.isPresent()) {
-                describeGroup(diagramDescriptor, parent, iGroup, plantUmlGroupDescriptor.get());
-                addGroups(diagramDescriptor, iGroup.getChildren(), plantUmlGroupDescriptor.get());
-                addLeafs(iGroup.getData().leafs(), plantUmlGroupDescriptor.get());
+    private void analyzeEntities(final PlantUmlDiagramDescriptor diagramDescriptor, final Collection<Quark<Entity>> entities, PlantUmlGroupDescriptor parent) {
+        for (Quark<Entity> entity : entities) {
+            if (entity.getData() == null){
+                analyzeEntities(diagramDescriptor, entity.getChildren(), parent);
+            } else if (entity.getData().isGroup()){
+                anazalyzeGroup(diagramDescriptor, parent, entity);
             } else {
-                LOGGER.warn("Not handled group type: "+groupType);
+                analyzeleaf(entity.getData(), diagramDescriptor);
             }
         }
     }
 
-    private void describeGroup(PlantUmlDiagramDescriptor diagramDescriptor, PlantUmlGroupDescriptor parent, Quark<Entity> iGroup, PlantUmlGroupDescriptor groupDescriptor) {
-        groupDescriptor.setFullName(iGroup.getName());
+    private void anazalyzeGroup(PlantUmlDiagramDescriptor diagramDescriptor, PlantUmlGroupDescriptor parent, Quark<Entity> iGroup) {
+        Optional<PlantUmlGroupDescriptor> plantUmlGroupDescriptor = createGroupDescriptor(iGroup.getData().getGroupType());
+
+        if(plantUmlGroupDescriptor.isPresent()) {
+            describeGroup(diagramDescriptor, parent, iGroup, plantUmlGroupDescriptor.get());
+            analyzeEntities(diagramDescriptor, iGroup.getChildren(), plantUmlGroupDescriptor.get());
+        } else {
+            LOGGER.warn("Not handled group type: "+ iGroup.getData().getGroupType());
+        }
+    }
+
+    private void describeGroup(PlantUmlDiagramDescriptor diagramDescriptor, PlantUmlGroupDescriptor parent, Quark<Entity> group, PlantUmlGroupDescriptor groupDescriptor) {
+        groupDescriptor.setFullName(group.getQualifiedName());
         diagramDescriptor.getPlantUmlGroups().add(groupDescriptor);
-        mappingFromFqnToPackage.put(iGroup.getName(), groupDescriptor);
+        mappingFromFqnToPackage.put(group.getName(), groupDescriptor);
         if(parent != null) {
             parent.getChildGroups().add(groupDescriptor);
         }

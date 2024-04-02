@@ -66,7 +66,7 @@ public class PumlTest {
         Collection<Entity> groups = entityFactory.groups();
         assertThat(groups.size(), is(3));
         for (Entity iGroup : groups) {
-            assertThat(iGroup.getName(), isOneOf(
+            assertThat(iGroup.getQuark().getQualifiedName(), isOneOf(
                     "de.kontext_e.project.domain",
                     "de.kontext_e.project.domain.sub1",
                     "de.kontext_e.project.services"
@@ -75,8 +75,8 @@ public class PumlTest {
 
         List<Link> links = entityFactory.getLinks();
         assertThat(links.size(), is(1));
-        assertThat(links.get(0).getEntity1().getName(), is("de.kontext_e.project.services"));
-        assertThat(links.get(0).getEntity2().getName(), is("de.kontext_e.project.domain"));
+        assertThat(links.get(0).getEntity1().getQuark().getQualifiedName(), is("de.kontext_e.project.services"));
+        assertThat(links.get(0).getEntity2().getQuark().getQualifiedName(), is("de.kontext_e.project.domain"));
     }
 
 }
