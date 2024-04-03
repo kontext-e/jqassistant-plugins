@@ -3,9 +3,9 @@ apply from: "${rootDir}/gradle/uploadArchives.gradle"
 apply plugin: 'groovy'
 
 jar {
-  baseName = 'jqassistant.plugin.git'
+  archiveBaseName = 'jqassistant.plugin.git'
 }
 
 dependencies {
-  compile 'org.eclipse.jgit:org.eclipse.jgit:4.8.0.201706111038-r'
+  implementation 'org.eclipse.jgit:org.eclipse.jgit:4.8.0.201706111038-r'
 }

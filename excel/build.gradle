@@ -1,13 +1,13 @@
 apply from: "${rootDir}/gradle/uploadArchives.gradle"
 
 jar {
-  baseName = 'jqassistant.plugin.excel'
+  archiveBaseName = 'jqassistant.plugin.excel'
 }
 
 // note: when copying the dependencies to jqassistant command line installation,
 // copy also transitive dependencies
 // poi-ooxml-schemas and xmlbeans
 dependencies {
-  compile 'org.apache.poi:poi:4.1.0'
-  compile 'org.apache.poi:poi-ooxml:4.1.0'
+  implementation 'org.apache.poi:poi:4.1.0'
+  implementation 'org.apache.poi:poi-ooxml:4.1.0'
 }

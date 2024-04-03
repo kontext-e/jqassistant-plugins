@@ -1,10 +1,9 @@
 apply from: "${rootDir}/gradle/uploadArchives.gradle"
 
 jar {
-  baseName = 'jqassistant.plugin.plantuml'
+  archiveBaseName = 'jqassistant.plugin.plantuml'
 }
 
 dependencies {
-  // use the dependency that comes with jqassistant itself now
-//  compile 'net.sourceforge.plantuml:plantuml:1.2018.12'
+  implementation 'net.sourceforge.plantuml:plantuml:1.2024.3'
 }

@@ -1,118 +1,124 @@
 import org.gradle.util.CollectionUtils
 
 apply plugin: 'java'
-apply plugin: 'maven'
-apply plugin: 'org.asciidoctor.gradle.asciidoctor'
-apply plugin: 'com.github.jruby-gradle.base'
+apply plugin: 'maven-publish'
+//apply plugin: 'org.asciidoctor.gradle.asciidoctor'
+//apply plugin: 'com.github.jruby-gradle.base'
 
 project.ext["jqaversion"] = "2.1.0"
 project.group = 'de.kontext-e.jqassistant.plugin'
 project.version = '1.12.0'
 
 buildscript {
-  repositories {
-    jcenter()
-      maven {
-          url "https://oss.sonatype.org/content/repositories/snapshots"
-      }
-      maven {
-          url "https://plugins.gradle.org/m2/"
-      }
-  }
+    repositories {
+        maven {
+            url "https://oss.sonatype.org/content/repositories/snapshots"
+        }
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
 
-  dependencies {
-    classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.2'
-    classpath 'com.github.jruby-gradle:jruby-gradle-plugin:0.1.11'
-    classpath "gradle.plugin.com.github.spotbugs:spotbugs-gradle-plugin:1.6.6"
-  }
+    dependencies {
+        //classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.2'
+        //classpath 'com.github.jruby-gradle:jruby-gradle-plugin:0.1.11'
+        classpath "com.github.spotbugs.snom:spotbugs-gradle-plugin:4.8.0"
+    }
 }
 
-asciidoctor {
-  dependsOn jrubyPrepareGems
-  requires = ['asciidoctor-diagram']
-  gemPath = jrubyPrepareGems.outputDir
-  sourceDir = file('doc/architecture')
-
-  resources {
-    from('doc/architecture') {
-      include '**/*.png'
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(11)
     }
-  }
 }
 
 subprojects {
     apply plugin: 'java'
-    apply plugin: 'maven'
+    apply plugin: 'maven-publish'
     apply plugin: 'signing'
     apply plugin: 'checkstyle'
     apply plugin: "com.github.spotbugs"
     apply plugin: "jacoco"
     apply plugin: 'pmd'
-    apply plugin: 'org.asciidoctor.gradle.asciidoctor'
-    apply plugin: 'com.github.jruby-gradle.base'
+    //apply plugin: 'org.asciidoctor.gradle.asciidoctor'
+    //apply plugin: 'com.github.jruby-gradle.base'
 
     project.version = project.parent.version
-    sourceCompatibility = 1.8
 
-	check.finalizedBy jacocoTestReport
+    check.finalizedBy jacocoTestReport
 
-	repositories {
+    repositories {
         mavenCentral()
         maven {
-            url "http://oss.sonatype.org/content/repositories/snapshots"
+            url "https://oss.sonatype.org/content/repositories/snapshots"
         }
         mavenLocal()
     }
 
-  dependencies {
-
-      implementation  'com.buschmais.jqassistant.core:scanner:'+project.jqaversion
-      implementation  'com.buschmais.jqassistant.core:report:'+project.jqaversion
-      implementation  'com.buschmais.jqassistant.plugin:common:'+project.jqaversion
-      implementation  'com.buschmais.jqassistant.core:store:'+project.jqaversion
-      implementation 'net.sourceforge.plantuml:plantuml:1.2024.3'
-
-    testCompile  'com.buschmais.jqassistant.core:test:'+project.jqaversion
-    testCompile group: 'junit', name: 'junit', version: '4.12'
-    testCompile group: 'org.hamcrest', name: 'hamcrest-all', version: '1.3'
-    testCompile group: 'org.mockito', name: 'mockito-all', version: '1.9.5'
-
-    testCompile  'org.slf4j:slf4j-simple:1.8.0-beta4'
-
-    gems 'rubygems:asciidoctor-diagram:1.2.1'
-  }
-
-    task javadocJar(type: Jar, dependsOn: javadoc) {
-      classifier = 'javadoc'
-      from tasks.javadoc.destinationDir
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                from components.java
+                afterEvaluate {
+                    artifactId = jar.archiveBaseName
+                }
+            }
+        }
+        repositories {
+            mavenCentral()
+            mavenLocal()
+        }
     }
 
-    task sourcesJar(type: Jar) {
-      from sourceSets.main.allSource
-      classifier = 'sources'
+    dependencies {
+
+        implementation 'com.buschmais.jqassistant.core:scanner:' + project.jqaversion
+        implementation 'com.buschmais.jqassistant.core:report:' + project.jqaversion
+        implementation 'com.buschmais.jqassistant.plugin:common:' + project.jqaversion
+        implementation ('com.buschmais.jqassistant.core:store:' + project.jqaversion)
+
+        testImplementation 'com.buschmais.jqassistant.core:test:' + project.jqaversion
+        testImplementation group: 'junit', name: 'junit', version: '4.12'
+        testImplementation group: 'org.hamcrest', name: 'hamcrest-all', version: '1.3'
+        testImplementation group: 'org.mockito', name: 'mockito-all', version: '1.9.5'
+
+        testImplementation 'org.slf4j:slf4j-simple:1.8.0-beta4'
+
+        //gems 'rubygems:asciidoctor-diagram:1.2.1'
+    }
+
+    tasks.register('javadocJar', Jar) {
+        dependsOn javadoc
+        archiveClassifier = 'javadoc'
+        from tasks.javadoc.destinationDir
+    }
+
+    tasks.register('sourcesJar', Jar) {
+        from sourceSets.main.allSource
+        archiveClassifier = 'sources'
     }
 
     artifacts {
-      archives jar
+        archives jar
 
-      archives javadocJar
-      archives sourcesJar
+        archives javadocJar
+        archives sourcesJar
     }
 
     if (JavaVersion.current().isJava8Compatible()) {
-        tasks.withType(Javadoc) {
+        tasks.withType(Javadoc).configureEach {
             options.addStringOption('Xdoclint:none', '-quiet')
         }
     }
 
     jacoco {
-        toolVersion = "0.8.6"
+        toolVersion = "0.8.11"
     }
 
     jacocoTestReport {
         reports {
-            xml.enabled true
-            csv.enabled false
+            xml
+            csv
         }
     }
 
@@ -131,43 +137,30 @@ subprojects {
     }
 
     pmd {
-        ruleSets = ["category/java/errorprone.xml", "category/java/multithreading.xml", "category/java/bestpractices.xml", "category/java/codestyle.xml","category/java/design.xml","category/java/security.xml"]
+        ruleSets = ["category/java/errorprone.xml", "category/java/multithreading.xml", "category/java/bestpractices.xml", "category/java/codestyle.xml", "category/java/design.xml", "category/java/security.xml"]
         ignoreFailures = true
         sourceSets = [sourceSets.main]
         toolVersion = '6.10.0'
     }
 
-    install {
-        repositories.mavenInstaller {
-            pom.groupId = 'de.kontext-e.jqassistant.plugin'
-        }
-    }
-
-    asciidoctor {
-        dependsOn jrubyPrepareGems
-        requires = ['asciidoctor-diagram']
-        gemPath = jrubyPrepareGems.outputDir
-        sourceDir = file('src/main/asciidoc')
-
-        resources {
-            from('src/main/asciidoc') {
-                include '**/*.png'
-            }
-        }
-    }
+//    install {
+//        repositories.mavenInstaller {
+//            pom.groupId = 'de.kontext-e.jqassistant.plugin'
+//        }
+//    }
 
 }
 
 repositories {
     mavenLocal()
     maven {
-        url "http://oss.sonatype.org/content/repositories/snapshots"
+        url "https://oss.sonatype.org/content/repositories/snapshots"
     }
     mavenCentral()
 }
 
 configurations {
-	jqaRuntime {
+    jqaRuntime {
         // newer gradle versions resolve ALL depencencies before build
         // so on version number changes this version needs to be set once
         // until new version is in local maven repo installed
@@ -176,16 +169,12 @@ configurations {
 }
 
 dependencies {
-    //jqaRuntime("com.buschmais.jqassistant.cli:jqassistant-commandline-distribution:${project.jqaversion}")
-//    jqaRuntime("com.buschmais.jqassistant.cli:jqassistant-commandline-neo4jv3:${project.jqaversion}") {
-//        exclude module: 'asm'
-//    }
     jqaRuntime("com.buschmais.jqassistant.core:report:${project.jqaversion}")
     jqaRuntime("com.buschmais.jqassistant.plugin:common:${project.jqaversion}")
     jqaRuntime("com.buschmais.jqassistant.plugin:java:${project.jqaversion}")
     jqaRuntime("com.buschmais.jqassistant.plugin:junit:${project.jqaversion}")
 
-    // jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.asciidoc:${project.version}")
+    //jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.asciidoc:1.9.0")
     jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.checkstyle:${project.version}")
     jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.spotbugs:${project.version}")
     jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.git:${project.version}")
@@ -197,15 +186,15 @@ dependencies {
     jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.pmd:${project.version}")
     jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.excel:${project.version}")
     //  jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.cpp:${project.version}")
-
 }
 
-task removeJQAReport(type: Delete) {
-  delete 'jqassistant/report'
-  delete 'jqassistant/store'
+tasks.register('removeJQAReport', Delete) {
+    delete 'jqassistant/report'
+    delete 'jqassistant/store'
 }
 
-task(jqascan, dependsOn: 'removeJQAReport', type: JavaExec) {
+tasks.register('jqascan', JavaExec) {
+    dependsOn 'removeJQAReport'
     main = 'com.buschmais.jqassistant.commandline.Main'
     classpath = configurations.jqaRuntime
 
@@ -241,7 +230,7 @@ task(jqascan, dependsOn: 'removeJQAReport', type: JavaExec) {
     args 'excel/src/test/resources'
 }
 
-task(jqaanalyze, type: JavaExec) {
+tasks.register('jqaanalyze', JavaExec) {
     main = 'com.buschmais.jqassistant.commandline.Main'
     classpath = configurations.jqaRuntime
 
@@ -257,11 +246,12 @@ task(jqaanalyze, type: JavaExec) {
     args 'jqassistant/jqassistant-rules'
 }
 
-task(jqa, dependsOn: ['jqascan','jqaanalyze']) {
-  jqaanalyze.mustRunAfter jqascan
+tasks.register('jqa') {
+    dependsOn = ['jqascan', 'jqaanalyze']
+    jqaanalyze.mustRunAfter jqascan
 }
 
-task(jqs, type: JavaExec) {
+tasks.register('jqs', JavaExec) {
     main = 'com.buschmais.jqassistant.commandline.Main'
     classpath = configurations.jqaRuntime
 
@@ -276,14 +266,14 @@ task(jqs, type: JavaExec) {
     standardInput = System.in
 }
 
-task install2jqa(type: Copy) {
-  def jqahome = "$System.env.JQASSISTANT_HOME"
-  println 'jqahome = ' + jqahome;
+tasks.register('install2jqa', Copy) {
+    def jqahome = "$System.env.JQASSISTANT_HOME"
+    println 'jqahome = ' + jqahome
 
-  mkdir "$projectDir/install"
-  into "$projectDir/install"
-  from configurations.runtime
-  exclude { details ->
-    details.file.name.contains('asm-3.1')
-  }
+    mkdir "$projectDir/install"
+    into "$projectDir/install"
+    from configurations.jqaRuntime
+    exclude { details ->
+        details.file.name.contains('asm-3.1')
+    }
 }

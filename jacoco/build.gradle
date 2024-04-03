@@ -1,9 +1,9 @@
 apply from: "${rootDir}/gradle/uploadArchives.gradle"
 
 jar {
-    baseName = 'jqassistant.plugin.jacoco'
+    archiveBaseName = 'jqassistant.plugin.jacoco'
 }
 
 dependencies {
-    compile("com.buschmais.jqassistant.plugin:java:${project.jqaversion}")
+    implementation "com.buschmais.jqassistant.plugin:java:${project.jqaversion}"
 }

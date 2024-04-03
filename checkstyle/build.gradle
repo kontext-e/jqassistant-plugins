@@ -1,5 +1,5 @@
 apply from: "${rootDir}/gradle/uploadArchives.gradle"
 
 jar {
-    baseName = 'jqassistant.plugin.checkstyle'
+    archiveBaseName = 'jqassistant.plugin.checkstyle'
 }
