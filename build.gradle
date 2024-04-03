@@ -60,7 +60,7 @@ subprojects {
             mavenJava(MavenPublication) {
                 from components.java
                 afterEvaluate {
-                    artifactId = jar.archiveBaseName
+                    artifactId = project.group.replace('de.kontext-e.', '') + '.' + artifactId
                 }
             }
         }

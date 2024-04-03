@@ -10,7 +10,7 @@ if(this.hasProperty('sonatypeUsername')) {
   uploadArchives {
     repositories {
       mavenDeployer {
-        beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+        beforeDeployment { deployment -> signing.signPom(deployment) }
 
         if(this.getProperty("version").contains("SNAPSHOT")) {
           // snapshots
@@ -23,7 +23,7 @@ if(this.hasProperty('sonatypeUsername')) {
             authentication(userName: sonatypeUsername, password: sonatypePassword)
           }
         }
-        
+
         pom.project {
           name 'ke-jqassistant-plugins'
           packaging 'jar'
