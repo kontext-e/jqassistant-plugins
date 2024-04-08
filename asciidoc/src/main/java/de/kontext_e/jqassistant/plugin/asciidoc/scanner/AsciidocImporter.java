@@ -20,7 +20,7 @@ class AsciidocImporter {
     private final Store store;
     private final Options parameters = Options.builder().build();
 
-    AsciidocImporter(final File file, final Store store, int structureMaxLevel) {
+    AsciidocImporter(final File file, final Store store) {
         this.file = file;
         this.store = store;
     }
@@ -31,22 +31,16 @@ class AsciidocImporter {
     }
 
     void scanBlocks(List<StructuralNode> blocks, BlockContainer blockContainer) {
-        // was for(AbstractBlock block : blocks) but there is a bug in Asciidoctor 1.5.4.1
-        // which causes a ClassCastException
-        // so check first if it is really an StructuralNode
-        for (Object o: blocks) {
-            if(o instanceof StructuralNode) {
-                StructuralNode block = (StructuralNode) o;
-                // ListItem is reported twice: as first class and as part of ListNode
-                if (block instanceof ListItem) continue;
+        for (StructuralNode block: blocks) {
+            // ListItem is reported twice: as first class and as part of ListNode
+            if (block instanceof ListItem) continue;
 
-                try {
-                    AsciidocBlockDescriptor blockDescriptor = scanOneBlock(block);
-                    blockContainer.getAsciidocBlocks().add(blockDescriptor);
-                    scanBlocks(block.getBlocks(), blockDescriptor);
-                } catch (Exception e) {
-                    LOGGER.warn("Error while scanning Asciidoc block " + block.getNodeName() + "; reason is: " + e, e);
-                }
+            try {
+                AsciidocBlockDescriptor blockDescriptor = scanOneBlock(block);
+                blockContainer.getAsciidocBlocks().add(blockDescriptor);
+                scanBlocks(block.getBlocks(), blockDescriptor);
+            } catch (Exception e) {
+                LOGGER.warn("Error while scanning Asciidoc block " + block.getNodeName() + "; reason is: " + e, e);
             }
         }
     }
@@ -77,17 +71,14 @@ class AsciidocImporter {
         listItemDescriptor.setText(listItem.getText());
         // currently disabled because of
         // org.jruby.exceptions.RaiseException: (NoMethodError) undefined method `hasText' for #<Asciidoctor::ListItem:0x3e592f7f>
-        // listItemDescriptor.setHasText(listItem.hasText());
+        listItemDescriptor.setHasText(listItem.hasText());
         return listItemDescriptor;
     }
 
     private AsciidocBlockDescriptor scanListBlock(final org.asciidoctor.ast.List list) {
         final AsciidocListDescriptor listDescriptor = store.create(AsciidocListDescriptor.class);
-        for (Object o: list.getItems()) {
-            if(o instanceof StructuralNode) {
-                StructuralNode structuralNode = (StructuralNode) o;
+        for (StructuralNode structuralNode: list.getItems()) {
                 listDescriptor.getListItems().add(scanOneBlock(structuralNode));
-            }
         }
 
         addAttributes(listDescriptor, list.getAttributes());
@@ -97,11 +88,11 @@ class AsciidocImporter {
 
     private AsciidocBlockDescriptor scanSectionBlock(final Section section) {
         final AsciidocSectionDescriptor sectionDescriptor = store.create(AsciidocSectionDescriptor.class);
-        sectionDescriptor.setIndex(section.index());
-        sectionDescriptor.setNumber(section.number());
-        sectionDescriptor.setNumbered(section.numbered());
-        sectionDescriptor.setSectname(section.sectname());
-        sectionDescriptor.setSpecial(section.special());
+        sectionDescriptor.setIndex(section.getIndex());
+        sectionDescriptor.setNumber(section.getIndex());
+        sectionDescriptor.setNumbered(section.isNumbered());
+        sectionDescriptor.setSectname(section.getSectionName());
+        sectionDescriptor.setSpecial(section.isSpecial());
 
         addAttributes(sectionDescriptor, section.getAttributes());
 
@@ -146,12 +137,7 @@ class AsciidocImporter {
         // java.lang.ClassCastException: org.jruby.RubySymbol cannot be cast to java.lang.String
         for (Map.Entry<String, Object> stringObjectEntry : attributes.entrySet()) {
             final AsciidocAttribute asciidocAttribute = store.create(AsciidocAttribute.class);
-            final Object key = stringObjectEntry.getKey();
-            if(key instanceof String) {
-                asciidocAttribute.setName((String)key);
-            } else {
-                asciidocAttribute.setName(key.toString());
-            }
+            asciidocAttribute.setName(stringObjectEntry.getKey());
             asciidocAttribute.setValue("" + stringObjectEntry.getValue());
             descriptor.getAttributes().add(asciidocAttribute);
         }
@@ -210,6 +196,6 @@ class AsciidocImporter {
     }
 
     public static void main(String[] args) {
-        new AsciidocImporter(new File("asciidoc/src/test/asciidoc/testfile.adoc"), null, 20).importDocument(null);
+        new AsciidocImporter(new File("asciidoc/src/test/asciidoc/testfile.adoc"), null).importDocument(null);
     }
 }
