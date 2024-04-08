@@ -57,7 +57,7 @@ public class AsciidocFileScannerPlugin extends AbstractScannerPlugin<FileResourc
             final AsciidocFileDescriptor asciidocFileDescriptor  = store.addDescriptorType(fileDescriptor, AsciidocFileDescriptor.class);
             asciidocFileDescriptor.setFileName(path);
 
-            new AsciidocImporter(item.getFile(), store, 20).importDocument(asciidocFileDescriptor);
+            new AsciidocImporter(item.getFile(), store).importDocument(asciidocFileDescriptor);
 
             return asciidocFileDescriptor;
         } catch (IOException e) {

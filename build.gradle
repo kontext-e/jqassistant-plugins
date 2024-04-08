@@ -1,14 +1,5 @@
 import org.gradle.util.CollectionUtils
 
-apply plugin: 'java'
-apply plugin: 'maven-publish'
-//apply plugin: 'org.asciidoctor.gradle.asciidoctor'
-//apply plugin: 'com.github.jruby-gradle.base'
-
-project.ext["jqaversion"] = "2.1.0"
-project.group = 'de.kontext-e.jqassistant.plugin'
-project.version = '1.12.0'
-
 buildscript {
     repositories {
         maven {
@@ -20,15 +11,36 @@ buildscript {
     }
 
     dependencies {
-        //classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.2'
-        //classpath 'com.github.jruby-gradle:jruby-gradle-plugin:0.1.11'
+        classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.2'
+        classpath 'com.github.jruby-gradle:jruby-gradle-plugin:0.1.11'
         classpath "com.github.spotbugs.snom:spotbugs-gradle-plugin:4.8.0"
     }
 }
 
+plugins{
+    id 'org.asciidoctor.jvm.convert' version '3.3.2'
+    id 'java'
+    id 'maven-publish'
+}
+
+project.ext["jqaversion"] = "2.1.0"
+project.group = 'de.kontext-e.jqassistant.plugin'
+project.version = '2.1.0'
+
+
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(11)
+    }
+}
+
+asciidoctor {
+    sourceDir = file('doc/architecture')
+
+    resources {
+        from('doc/architecture') {
+            include '**/*.png'
+        }
     }
 }
 
@@ -40,8 +52,7 @@ subprojects {
     apply plugin: "com.github.spotbugs"
     apply plugin: "jacoco"
     apply plugin: 'pmd'
-    //apply plugin: 'org.asciidoctor.gradle.asciidoctor'
-    //apply plugin: 'com.github.jruby-gradle.base'
+    apply plugin: 'org.asciidoctor.gradle.asciidoctor'
 
     project.version = project.parent.version
 
@@ -75,7 +86,7 @@ subprojects {
         implementation 'com.buschmais.jqassistant.core:scanner:' + project.jqaversion
         implementation 'com.buschmais.jqassistant.core:report:' + project.jqaversion
         implementation 'com.buschmais.jqassistant.plugin:common:' + project.jqaversion
-        implementation ('com.buschmais.jqassistant.core:store:' + project.jqaversion)
+        implementation 'com.buschmais.jqassistant.core:store:' + project.jqaversion
 
         testImplementation 'com.buschmais.jqassistant.core:test:' + project.jqaversion
         testImplementation group: 'junit', name: 'junit', version: '4.12'
@@ -83,8 +94,6 @@ subprojects {
         testImplementation group: 'org.mockito', name: 'mockito-all', version: '1.9.5'
 
         testImplementation 'org.slf4j:slf4j-simple:1.8.0-beta4'
-
-        //gems 'rubygems:asciidoctor-diagram:1.2.1'
     }
 
     tasks.register('javadocJar', Jar) {
@@ -143,12 +152,15 @@ subprojects {
         toolVersion = '6.10.0'
     }
 
-//    install {
-//        repositories.mavenInstaller {
-//            pom.groupId = 'de.kontext-e.jqassistant.plugin'
-//        }
-//    }
+    asciidoctor {
+        sourceDir = file('doc/architecture')
 
+        resources {
+            from('doc/architecture') {
+                include '**/*.png'
+            }
+        }
+    }
 }
 
 repositories {

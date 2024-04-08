@@ -17,7 +17,7 @@ public class AsciidocImporterTest {
     public void testScanTable() {
         File mockFile = mock(File.class);
         Store mockStore = mock(Store.class);
-        AsciidocImporter asciidocImporter = new AsciidocImporter(mockFile, mockStore, 5);
+        AsciidocImporter asciidocImporter = new AsciidocImporter(mockFile, mockStore);
         final Map<String, Object> parameters = new HashMap<>();
         Asciidoctor asciidoctor = Asciidoctor.Factory.create();
         String content = ".Description of de.kontext_e.jqassistant.plugin.plantuml packages\n" +
