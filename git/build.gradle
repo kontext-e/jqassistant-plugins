@@ -1,4 +1,3 @@
-apply from: "${rootDir}/gradle/uploadArchives.gradle"
 
 apply plugin: 'groovy'
 

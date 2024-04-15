@@ -1,10 +1,9 @@
-apply from: "${rootDir}/gradle/uploadArchives.gradle"
 
 jar {
     archiveBaseName = 'jqassistant.plugin.asciidoc'
 }
 
 dependencies {
-    implementation 'org.asciidoctor:asciidoctorj:2.5.12'
+    implementation 'org.asciidoctor:asciidoctorj:2.5.7'
 }
 

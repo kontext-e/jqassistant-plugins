@@ -18,14 +18,15 @@ buildscript {
 }
 
 plugins{
-    id 'org.asciidoctor.jvm.convert' version '3.3.2'
+    id 'org.asciidoctor.jvm.convert' version '4.0.2'
     id 'java'
+    id 'signing'
     id 'maven-publish'
 }
 
 project.ext["jqaversion"] = "2.1.0"
 project.group = 'de.kontext-e.jqassistant.plugin'
-project.version = '2.1.0'
+project.version = '2.1.0-SNAPSHOT'
 
 
 java {
@@ -70,15 +71,70 @@ subprojects {
         publications {
             mavenJava(MavenPublication) {
                 from components.java
+                pom {
+                    name = 'ke-jqassistant-plugins'
+                    packaging = 'jar'
+                    description = 'Some jQAssistant plugins sponsored by Kontext E'
+                    url = 'https://github.com/kontext-e/jqassistant-plugins'
+
+                    scm {
+                        url = 'scm:git@github.com:kontext-e/jqassistant.git'
+                        connection = 'scm:git@github.com:kontext-e/jqassistant.git'
+                        developerConnection = 'scm:git@github.com:kontext-e/jqassistant.git'
+                    }
+
+                    licenses {
+                        license {
+                            name = 'GNU General Public License, v3'
+                            url = 'http://www.gnu.org/licenses/gpl-3.0.html'
+                            distribution = 'repo'
+                        }
+                    }
+
+                    developers {
+                        developer {
+                            id = 'jens-nerche'
+                            name = 'Jens Nerche'
+                            email = 'j.nerche@kontext-e.de'
+                        }
+                        developer {
+                            id = 'gerd-aschemann'
+                            name = 'Gerd Aschemann'
+                            email = 'gerd@aschemann.net'
+                        }
+                        developer{
+                            id = 'william-thimm'
+                            name = 'William Thimm'
+                        }
+                    }
+                }
+
                 afterEvaluate {
-                    artifactId = project.group.replace('de.kontext-e.', '') + '.' + artifactId
+                    println(project.group)
+                    artifactId = project.group.replace('de.kontext-e.', '').replace('-', '.') + '.' + artifactId
                 }
             }
         }
         repositories {
-            mavenCentral()
+            maven {
+                // snapshots
+                // Test first
+                project.group = project.parent.group
+                url = "https://oss.sonatype.org/content/repositories/snapshots"
+                credentials{
+                    username = sonatypeUsername
+                    password = sonatypePassword
+                }
+            }
             mavenLocal()
         }
+    }
+
+    signing {
+        //I assume this only works with gpg installed.
+        //On windows this comes packaged with Kleopatra
+        useGpgCmd()
+        sign publishing.publications.mavenJava
     }
 
     dependencies {
