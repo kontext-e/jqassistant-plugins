@@ -9,8 +9,7 @@ import org.eclipse.jgit.lib.Repository;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import static org.hamcrest.Matchers.greaterThan;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -30,7 +29,7 @@ public class JGitScannerTest {
         JGitScanner jGitScanner = new JGitScanner("../.git", null);
         List<GitCommit> commits = jGitScanner.findCommits ();
 
-        assertThat (commits.size(), greaterThan (0));
+        assertThat(commits.size()).isGreaterThan(0);
     }
 
     @Ignore("No unit test, depends on state of git repo")
@@ -39,7 +38,7 @@ public class JGitScannerTest {
         JGitScanner jGitScanner = new JGitScanner("../.git", null);
         List<GitTag> tags = jGitScanner.findTags ();
 
-        assertThat (tags.size(), greaterThan (0));
+        assertThat(tags.size()).isGreaterThan(0);
     }
 
     @Test

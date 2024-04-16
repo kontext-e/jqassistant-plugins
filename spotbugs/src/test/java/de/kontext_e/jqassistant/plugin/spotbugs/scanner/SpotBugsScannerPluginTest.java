@@ -7,11 +7,10 @@ import org.junit.Test;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class SpotBugsScannerPluginTest {
-	private SpotBugsScannerPlugin plugin = new SpotBugsScannerPlugin();
+	private final SpotBugsScannerPlugin plugin = new SpotBugsScannerPlugin();
 
 	@Test
 	public void spotbugs() throws Exception {
@@ -36,11 +35,11 @@ public class SpotBugsScannerPluginTest {
 
 		final BugCollectionType bugCollectionType = plugin.unmarshalSpotBugsXml(input);
 
-		assertThat(bugCollectionType.getFile().size(), is(2));
-		assertThat(bugCollectionType.getFile().get(0).getClassname(), is("com.example.LogFormatter"));
+		assertThat(bugCollectionType.getFile().size()).isEqualTo(2);
+		assertThat(bugCollectionType.getFile().get(0).getClassname()).isEqualTo("com.example.LogFormatter");
 		BugInstanceType firstBug = bugCollectionType.getFile().get(0).getBugInstance().get(0);
-		assertThat(firstBug.getType(), is("DE_MIGHT_IGNORE"));
-		assertThat(firstBug.getLineNumber(), is(31));
+		assertThat(firstBug.getType()).isEqualTo("DE_MIGHT_IGNORE");
+		assertThat(firstBug.getLineNumber()).isEqualTo(31);
 	}
 
 }

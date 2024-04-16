@@ -10,9 +10,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static java.util.Arrays.stream;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 public class PumlLineParserTest {
@@ -313,7 +311,7 @@ public class PumlLineParserTest {
         verify(mockPlantUmlLeafDescriptor, times(1)).getLinkTargets();
         // mock returns two times the same other mock
         // so only one entry is in the map
-        assertEquals(1, leafs.size());
+        assertThat(leafs.size()).isEqualTo(1);
     }
 
     @Test
@@ -383,7 +381,7 @@ public class PumlLineParserTest {
         verify(mockPlantUmlLeafDescriptor, times(2)).getLinkTargets();
         // mock returns two times the same other mock
         // so only one entry is in the map
-        assertEquals(1, leafs.size());
+        assertThat(leafs.size()).isEqualTo(1);
     }
 
     @Test
@@ -453,7 +451,7 @@ public class PumlLineParserTest {
         verify(mockPlantUmlLeafDescriptor, times(0)).getLinkTargets();
         // mock returns two times the same other mock
         // so only one entry is in the map
-        assertEquals(1, leafs.size());
+        assertThat(leafs.size()).isEqualTo(1);
     }
 
     @Test
@@ -467,9 +465,9 @@ public class PumlLineParserTest {
                 .replaceAll("\n", "")
                 .split(",");
 
-        assertThat("Wrong length of splitted array", parts.length, is(3));
-        assertThat("Wrong file name", parts[1], is("MainBuildingBlocks.png"));
-        assertThat("Wrong file type", parts[2], is("png"));
+        assertThat(parts.length).withFailMessage("Wrong length of splitted array").isEqualTo(3);
+        assertThat(parts[1]).withFailMessage("Wrong file name").isEqualTo("MainBuildingBlocks.png");
+        assertThat(parts[2]).withFailMessage("Wrong file type").isEqualTo("png");
 
     }
 

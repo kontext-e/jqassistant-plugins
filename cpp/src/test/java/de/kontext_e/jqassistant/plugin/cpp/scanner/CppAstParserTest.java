@@ -7,15 +7,12 @@ import org.junit.Test;
 import com.buschmais.jqassistant.core.store.api.Store;
 import de.kontext_e.jqassistant.plugin.cpp.store.descriptor.ClassDescriptor;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class CppAstParserTest {
 
     private CppAstParser cppAstParser;
-    private Store store = mock(Store.class);
+    private final Store store = mock(Store.class);
 
     @Before
     public void setUp() {
@@ -28,7 +25,7 @@ public class CppAstParserTest {
 
         cppAstParser.readStream(store, is);
 
-        verifyZeroInteractions(store);
+        verifyNoInteractions(store);
     }
 
     @Test

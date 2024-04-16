@@ -3,6 +3,7 @@ package de.kontext_e.jqassistant.plugin.asciidoc.scanner;
 import com.buschmais.jqassistant.core.store.api.Store;
 import de.kontext_e.jqassistant.plugin.asciidoc.store.descriptor.*;
 import org.asciidoctor.Asciidoctor;
+import org.asciidoctor.Options;
 import org.asciidoctor.ast.Document;
 import org.junit.Test;
 
@@ -18,7 +19,7 @@ public class AsciidocImporterTest {
         File mockFile = mock(File.class);
         Store mockStore = mock(Store.class);
         AsciidocImporter asciidocImporter = new AsciidocImporter(mockFile, mockStore);
-        final Map<String, Object> parameters = new HashMap<>();
+        Options options = Options.builder().build();
         Asciidoctor asciidoctor = Asciidoctor.Factory.create();
         String content = ".Description of de.kontext_e.jqassistant.plugin.plantuml packages\n" +
                          "[options=\"header\", myAttribute, architecture=\"packages\"]\n" +
@@ -28,7 +29,7 @@ public class AsciidocImporterTest {
                          "| store         | contains jQAssistant compliant descriptors for Neo4j nodes.\n" +
                          "|====\n";
 
-        Document document = asciidoctor.load(content, parameters);
+        Document document = asciidoctor.load(content, options);
         final BlockContainer mockBlockContainer = mock(BlockContainer.class);
         final Set<AsciidocBlockDescriptor> asciidocBlocks = new HashSet<>();
         when(mockBlockContainer.getAsciidocBlocks()).thenReturn(asciidocBlocks);
@@ -45,7 +46,7 @@ public class AsciidocImporterTest {
         when(mockTableDescriptor.getAttributes()).thenReturn(new HashSet<>());
 		List<AsciidocTableColumnDescriptor> columns = new ArrayList<>();
 		when(mockTableDescriptor.getAsciidocTableColumns()).thenReturn(columns);
-        asciidocImporter.scanBlocks(document.blocks(), mockBlockContainer);
+        asciidocImporter.scanBlocks(document.getBlocks(), mockBlockContainer);
 
         verify(mockAttribute).setName("2");
         verify(mockAttribute).setValue("myAttribute");

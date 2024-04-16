@@ -12,9 +12,8 @@ import org.junit.Test;
 import java.util.Collection;
 import java.util.List;
 
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.isOneOf;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
+
 
 public class PumlTest {
 
@@ -64,19 +63,16 @@ public class PumlTest {
         AbstractEntityDiagram descriptionDiagram = (AbstractEntityDiagram) diagram;
         EntityFactory entityFactory = descriptionDiagram.getEntityFactory();
         Collection<Entity> groups = entityFactory.groups();
-        assertThat(groups.size(), is(3));
-        for (Entity iGroup : groups) {
-            assertThat(iGroup.getQuark().getQualifiedName(), isOneOf(
-                    "de.kontext_e.project.domain",
-                    "de.kontext_e.project.domain.sub1",
-                    "de.kontext_e.project.services"
-            ));
-        }
+        assertThat(groups.size()).isEqualTo(3);
+        assertThat(groups.stream().map(g->g.getQuark().getQualifiedName()))
+                .containsAll(List.of("de.kontext_e.project.domain",
+                "de.kontext_e.project.domain.sub1",
+                "de.kontext_e.project.services"));
 
         List<Link> links = entityFactory.getLinks();
-        assertThat(links.size(), is(1));
-        assertThat(links.get(0).getEntity1().getQuark().getQualifiedName(), is("de.kontext_e.project.services"));
-        assertThat(links.get(0).getEntity2().getQuark().getQualifiedName(), is("de.kontext_e.project.domain"));
+        assertThat(links.size()).isEqualTo(1);
+        assertThat(links.get(0).getEntity1().getQuark().getQualifiedName()).isEqualTo("de.kontext_e.project.services");
+        assertThat(links.get(0).getEntity2().getQuark().getQualifiedName()).isEqualTo("de.kontext_e.project.domain");
     }
 
 }

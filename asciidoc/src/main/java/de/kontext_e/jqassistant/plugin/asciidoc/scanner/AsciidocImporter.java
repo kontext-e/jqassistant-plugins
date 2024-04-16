@@ -173,9 +173,9 @@ class AsciidocImporter {
 			cellDescriptor.setColumn(columns.get(colNumber));
 
 			// does not work because of
-// java.lang.ClassCastException: org.jruby.gen.InterfaceImpl1670529912 cannot be cast to org.asciidoctor.ast.Column
-// try again with later asciidoctorj version
-//            cellDescriptor.setColnumber(cell.getColumn().getColnumber());
+            // java.lang.ClassCastException: org.jruby.gen.InterfaceImpl1670529912 cannot be cast to org.asciidoctor.ast.Column
+            // try again with later asciidoctorj version
+            // cellDescriptor.setColnumber(cell.getColumn().getColnumber());
 
             // instead this workaround is used
             cellDescriptor.setColnumber(colNumber++);

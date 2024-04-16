@@ -1,11 +1,11 @@
 package de.kontext_e.jqassistant.plugin.linecount.scanner;
 
-import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.junit.Assert.assertThat;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class LinecountScannerPluginTest {
     private LinecountScannerPlugin linecountScannerPlugin;
@@ -19,18 +19,18 @@ public class LinecountScannerPluginTest {
     public void thatConfiguredSuffixesWereSaved() throws Exception {
         linecountScannerPlugin.acceptSuffixes("java, xml; cs:gradle adoc");
 
-        assertThat("Unexpected suffix list: "+linecountScannerPlugin.getAcceptedSuffixes(),
-                   linecountScannerPlugin.getAcceptedSuffixes(),
-                   containsInAnyOrder("java","xml","cs","gradle","adoc"));
+        assertThat(linecountScannerPlugin.getAcceptedSuffixes().containsAll(List.of("java","xml","cs","gradle","adoc")))
+                .withFailMessage("Unexpected suffix list: "+linecountScannerPlugin.getAcceptedSuffixes())
+                .isTrue();
     }
 
     @Test
     public void thatConfiguredSuffixesWereAccepted() throws Exception {
         linecountScannerPlugin.acceptSuffixes("java, xml");
 
-        assertThat("java suffix is configured and should be accepted", linecountScannerPlugin.accepts(null, "File.java", null), Matchers.is(true));
-        assertThat("xml suffix is configured and should be accepted", linecountScannerPlugin.accepts(null, "File.xml", null), Matchers.is(true));
-        assertThat("suffix should not be case sensitive", linecountScannerPlugin.accepts(null, "File.XML", null), Matchers.is(true));
+        assertThat(linecountScannerPlugin.accepts(null, "File.java", null)).withFailMessage("java suffix is configured and should be accepted").isTrue();
+        assertThat(linecountScannerPlugin.accepts(null, "File.xml", null)).withFailMessage("xml suffix is configured and should be accepted").isTrue();
+        assertThat(linecountScannerPlugin.accepts(null, "File.XML", null)).withFailMessage("suffix should not be case sensitive").isTrue();
     }
 
 
