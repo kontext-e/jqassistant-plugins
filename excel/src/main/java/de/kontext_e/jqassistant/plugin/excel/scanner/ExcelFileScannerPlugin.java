@@ -18,7 +18,7 @@ import static java.util.Arrays.asList;
 @ScannerPlugin.Requires(FileDescriptor.class)
 public class ExcelFileScannerPlugin extends AbstractScannerPlugin<FileResource, ExcelFileDescriptor> {
     private static final Logger LOGGER = LoggerFactory.getLogger(ExcelFileScannerPlugin.class);
-    private static List<String> suffixes = asList("xls", "xlsx");
+    private static final List<String> suffixes = asList("xls", "xlsx");
 
     @Override
     public boolean accepts(FileResource item, String path, Scope scope) {

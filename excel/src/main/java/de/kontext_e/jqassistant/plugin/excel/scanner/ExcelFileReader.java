@@ -29,9 +29,9 @@ public class ExcelFileReader {
   private static final Logger LOGGER = LoggerFactory.getLogger(ExcelFileReader.class);
   private final Store store;
   private final ExcelFileDescriptor excelFileDescriptor;
-  private InputStream inputStream;
-  private Map<CellKey, ExcelCellDescriptor> nameToCellDescriptors = new HashMap<>();
-  private Map<CellKey, ExcelCellDescriptor> preCreatedCells = new HashMap<>();
+  private final InputStream inputStream;
+  private final Map<CellKey, ExcelCellDescriptor> nameToCellDescriptors = new HashMap<>();
+  private final Map<CellKey, ExcelCellDescriptor> preCreatedCells = new HashMap<>();
 
   public ExcelFileReader(Store store, ExcelFileDescriptor excelFileDescriptor, InputStream inputStream) {
     this.store = store;

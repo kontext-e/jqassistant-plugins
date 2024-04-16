@@ -7,6 +7,6 @@ jar {
 // copy also transitive dependencies
 // poi-ooxml-schemas and xmlbeans
 dependencies {
-  implementation 'org.apache.poi:poi:4.1.0'
-  implementation 'org.apache.poi:poi-ooxml:4.1.0'
+  implementation 'org.apache.poi:poi:5.2.0'
+  implementation 'org.apache.poi:poi-ooxml:5.2.0'
 }
