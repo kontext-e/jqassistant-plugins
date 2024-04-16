@@ -77,7 +77,7 @@ public class PackageStatsType {
      */
     public List<ClassStatsType> getClassStats() {
         if (classStats == null) {
-            classStats = new ArrayList<ClassStatsType>();
+            classStats = new ArrayList<>();
         }
         return this.classStats;
     }

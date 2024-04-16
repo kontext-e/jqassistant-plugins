@@ -119,7 +119,7 @@ public class BugInstanceType {
      */
     public List<FieldType> getField() {
         if (field == null) {
-            field = new ArrayList<FieldType>();
+            field = new ArrayList<>();
         }
         return this.field;
     }
@@ -148,7 +148,7 @@ public class BugInstanceType {
      */
     public List<MethodType> getMethod() {
         if (method == null) {
-            method = new ArrayList<MethodType>();
+            method = new ArrayList<>();
         }
         return this.method;
     }

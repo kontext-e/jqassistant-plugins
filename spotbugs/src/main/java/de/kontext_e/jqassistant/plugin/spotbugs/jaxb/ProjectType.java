@@ -84,7 +84,7 @@ public class ProjectType {
      */
     public List<String> getJar() {
         if (jar == null) {
-            jar = new ArrayList<String>();
+            jar = new ArrayList<>();
         }
         return this.jar;
     }
@@ -113,7 +113,7 @@ public class ProjectType {
      */
     public List<String> getAuxClasspathEntry() {
         if (auxClasspathEntry == null) {
-            auxClasspathEntry = new ArrayList<String>();
+            auxClasspathEntry = new ArrayList<>();
         }
         return this.auxClasspathEntry;
     }
@@ -142,7 +142,7 @@ public class ProjectType {
      */
     public List<String> getSrcDir() {
         if (srcDir == null) {
-            srcDir = new ArrayList<String>();
+            srcDir = new ArrayList<>();
         }
         return this.srcDir;
     }

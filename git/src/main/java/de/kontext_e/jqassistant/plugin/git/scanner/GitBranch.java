@@ -7,8 +7,8 @@ package de.kontext_e.jqassistant.plugin.git.scanner;
  * @since 1.1.0
  */
 public class GitBranch {
-    private String name;
-    private String commitSha;
+    private final String name;
+    private final String commitSha;
 
     public GitBranch (String name, String commitSha) {
         this.name = name;

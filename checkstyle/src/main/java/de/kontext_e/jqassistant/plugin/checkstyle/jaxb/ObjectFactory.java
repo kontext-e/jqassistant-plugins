@@ -71,7 +71,7 @@ public class ObjectFactory {
      */
     @XmlElementDecl(namespace = "", name = "checkstyle")
     public JAXBElement<CheckstyleType> createCheckstyle(CheckstyleType value) {
-        return new JAXBElement<CheckstyleType>(_Checkstyle_QNAME, CheckstyleType.class, null, value);
+        return new JAXBElement<>(_Checkstyle_QNAME, CheckstyleType.class, null, value);
     }
 
     /**
@@ -80,7 +80,7 @@ public class ObjectFactory {
      */
     @XmlElementDecl(namespace = "", name = "error", scope = FileType.class)
     public JAXBElement<ErrorType> createFileTypeError(ErrorType value) {
-        return new JAXBElement<ErrorType>(_FileTypeError_QNAME, ErrorType.class, FileType.class, value);
+        return new JAXBElement<>(_FileTypeError_QNAME, ErrorType.class, FileType.class, value);
     }
 
 }

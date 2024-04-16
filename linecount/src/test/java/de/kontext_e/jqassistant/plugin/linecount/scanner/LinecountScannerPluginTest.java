@@ -16,7 +16,7 @@ public class LinecountScannerPluginTest {
     }
 
     @Test
-    public void thatConfiguredSuffixesWereSaved() throws Exception {
+    public void thatConfiguredSuffixesWereSaved() {
         linecountScannerPlugin.acceptSuffixes("java, xml; cs:gradle adoc");
 
         assertThat(linecountScannerPlugin.getAcceptedSuffixes().containsAll(List.of("java","xml","cs","gradle","adoc")))
@@ -25,7 +25,7 @@ public class LinecountScannerPluginTest {
     }
 
     @Test
-    public void thatConfiguredSuffixesWereAccepted() throws Exception {
+    public void thatConfiguredSuffixesWereAccepted() {
         linecountScannerPlugin.acceptSuffixes("java, xml");
 
         assertThat(linecountScannerPlugin.accepts(null, "File.java", null)).withFailMessage("java suffix is configured and should be accepted").isTrue();

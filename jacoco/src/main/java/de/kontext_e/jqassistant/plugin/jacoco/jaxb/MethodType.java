@@ -76,7 +76,7 @@ public class MethodType {
      */
     public List<CounterType> getCounter() {
         if (counter == null) {
-            counter = new ArrayList<CounterType>();
+            counter = new ArrayList<>();
         }
         return this.counter;
     }

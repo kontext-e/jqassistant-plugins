@@ -143,7 +143,7 @@ public class ObjectFactory {
      */
     @XmlElementDecl(namespace = "", name = "BugCollection")
     public JAXBElement<BugCollectionType> createBugCollection(BugCollectionType value) {
-        return new JAXBElement<BugCollectionType>(_BugCollection_QNAME, BugCollectionType.class, null, value);
+        return new JAXBElement<>(_BugCollection_QNAME, BugCollectionType.class, null, value);
     }
 
 }

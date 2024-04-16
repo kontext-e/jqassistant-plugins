@@ -2,6 +2,8 @@ package de.kontext_e.jqassistant.plugin.git.scanner;
 
 import org.eclipse.jgit.diff.DiffEntry;
 
+import java.util.Objects;
+
 public class GitChange {
     private final String modificationKind;
     private final String relativePath;
@@ -44,11 +46,11 @@ public class GitChange {
 
         final GitChange gitChange = (GitChange) o;
 
-        if (modificationKind != null ? !modificationKind.equals(gitChange.modificationKind) : gitChange.modificationKind != null) return false;
-        if (relativePath != null ? !relativePath.equals(gitChange.relativePath) : gitChange.relativePath != null) return false;
-        if (changeType != null ? !changeType.equals(gitChange.changeType) : gitChange.changeType != null) return false;
-        if (oldPath != null ? !oldPath.equals(gitChange.oldPath) : gitChange.oldPath != null) return false;
-        if (newPath != null ? !newPath.equals(gitChange.newPath) : gitChange.newPath != null) return false;
+        if (!Objects.equals(modificationKind, gitChange.modificationKind)) return false;
+        if (!Objects.equals(relativePath, gitChange.relativePath)) return false;
+        if (!Objects.equals(changeType, gitChange.changeType)) return false;
+        if (!Objects.equals(oldPath, gitChange.oldPath)) return false;
+        if (!Objects.equals(newPath, gitChange.newPath)) return false;
 
         return true;
     }

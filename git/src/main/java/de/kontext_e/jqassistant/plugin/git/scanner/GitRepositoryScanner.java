@@ -223,23 +223,23 @@ class GitRepositoryScanner {
     }
 
     private boolean isCopyChange(final GitChangeDescriptor gitChangeDescriptor) {
-        return "C".equals(gitChangeDescriptor.getModificationKind().toUpperCase());
+        return "C".equalsIgnoreCase(gitChangeDescriptor.getModificationKind());
     }
 
     private boolean isRenameChange(final GitChangeDescriptor gitChangeDescriptor) {
-        return "R".equals(gitChangeDescriptor.getModificationKind().toUpperCase());
+        return "R".equalsIgnoreCase(gitChangeDescriptor.getModificationKind());
     }
 
     private boolean isDeleteChange(final GitChangeDescriptor gitChangeDescriptor) {
-        return "D".equals(gitChangeDescriptor.getModificationKind().toUpperCase());
+        return "D".equalsIgnoreCase(gitChangeDescriptor.getModificationKind());
     }
 
     private boolean isUpdateChange(final GitChangeDescriptor gitChangeDescriptor) {
-        return "M".equals(gitChangeDescriptor.getModificationKind().toUpperCase());
+        return "M".equalsIgnoreCase(gitChangeDescriptor.getModificationKind());
     }
 
     private boolean isAddChange(final GitChangeDescriptor gitChangeDescriptor) {
-        return "A".equals(gitChangeDescriptor.getModificationKind().toUpperCase());
+        return "A".equalsIgnoreCase(gitChangeDescriptor.getModificationKind());
     }
 
     private GitFileDescriptor getOrCreateGitFileDescriptor(final Map<String, GitFileDescriptor> files, String relativePath) {

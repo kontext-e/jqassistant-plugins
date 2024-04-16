@@ -70,7 +70,7 @@ public class CheckstyleType {
      */
     public List<FileType> getFile() {
         if (file == null) {
-            file = new ArrayList<FileType>();
+            file = new ArrayList<>();
         }
         return this.file;
     }

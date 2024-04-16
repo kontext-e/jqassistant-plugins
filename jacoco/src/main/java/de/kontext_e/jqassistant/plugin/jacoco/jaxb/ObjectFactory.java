@@ -110,7 +110,7 @@ public class ObjectFactory {
      */
     @XmlElementDecl(namespace = "", name = "report")
     public JAXBElement<ReportType> createReport(ReportType value) {
-        return new JAXBElement<ReportType>(_Report_QNAME, ReportType.class, null, value);
+        return new JAXBElement<>(_Report_QNAME, ReportType.class, null, value);
     }
 
 }

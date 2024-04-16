@@ -44,9 +44,9 @@ class JGitScanner {
 
     private static final Logger logger = LoggerFactory.getLogger(JGitScanner.class);
 
-    private String path = null;
-    private String range = null;
-    private Map<String,GitCommit> commits = new HashMap<>();
+    private final String path;
+    private final String range;
+    private final Map<String,GitCommit> commits = new HashMap<>();
 
     JGitScanner(final String path, String range) {
         this.path = path;
@@ -199,7 +199,7 @@ class JGitScanner {
 
     private RevCommit resolveFirstCommitForTag (Git git, Ref tagRef) throws IOException, GitAPIException {
         LogCommand log = git.log();
-        Ref peeledRef = git.getRepository().peel(tagRef);
+        Ref peeledRef = git.getRepository().getRefDatabase().peel(tagRef);
         if(peeledRef.getPeeledObjectId() != null) {
             log.add(peeledRef.getPeeledObjectId());
         } else {

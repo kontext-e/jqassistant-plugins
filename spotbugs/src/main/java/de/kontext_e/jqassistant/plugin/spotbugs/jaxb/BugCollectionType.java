@@ -124,7 +124,7 @@ public class BugCollectionType {
      */
     public List<BugInstanceType> getBugInstance() {
         if (bugInstance == null) {
-            bugInstance = new ArrayList<BugInstanceType>();
+            bugInstance = new ArrayList<>();
         }
         return this.bugInstance;
     }

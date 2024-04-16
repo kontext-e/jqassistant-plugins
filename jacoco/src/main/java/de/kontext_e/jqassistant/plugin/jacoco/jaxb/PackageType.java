@@ -78,7 +78,7 @@ public class PackageType {
      */
     public List<ClassType> getClazz() {
         if (clazz == null) {
-            clazz = new ArrayList<ClassType>();
+            clazz = new ArrayList<>();
         }
         return this.clazz;
     }
@@ -107,7 +107,7 @@ public class PackageType {
      */
     public List<SourcefileType> getSourcefile() {
         if (sourcefile == null) {
-            sourcefile = new ArrayList<SourcefileType>();
+            sourcefile = new ArrayList<>();
         }
         return this.sourcefile;
     }
@@ -136,7 +136,7 @@ public class PackageType {
      */
     public List<CounterType> getCounter() {
         if (counter == null) {
-            counter = new ArrayList<CounterType>();
+            counter = new ArrayList<>();
         }
         return this.counter;
     }

@@ -73,7 +73,7 @@ public class SourcefileType {
      */
     public List<LineType> getLine() {
         if (line == null) {
-            line = new ArrayList<LineType>();
+            line = new ArrayList<>();
         }
         return this.line;
     }
@@ -102,7 +102,7 @@ public class SourcefileType {
      */
     public List<CounterType> getCounter() {
         if (counter == null) {
-            counter = new ArrayList<CounterType>();
+            counter = new ArrayList<>();
         }
         return this.counter;
     }

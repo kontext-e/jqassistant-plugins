@@ -20,7 +20,7 @@ public class CppAstParserTest {
     }
 
     @Test
-    public void parseEmptyStream() throws Exception {
+    public void parseEmptyStream() {
         ByteArrayInputStream is = new ByteArrayInputStream(new byte[0]);
 
         cppAstParser.readStream(store, is);
@@ -29,7 +29,7 @@ public class CppAstParserTest {
     }
 
     @Test
-    public void parseCxxRecordDefinition() throws Exception {
+    public void parseCxxRecordDefinition() {
         ByteArrayInputStream is = new ByteArrayInputStream(
                 "|-CXXRecordDecl 0x2b24038 <line:12:1, line:36:1> line:12:7 class Alice definition     "
                         .getBytes());

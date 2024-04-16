@@ -73,7 +73,7 @@ public class ClassType {
      */
     public List<MethodType> getMethod() {
         if (method == null) {
-            method = new ArrayList<MethodType>();
+            method = new ArrayList<>();
         }
         return this.method;
     }
@@ -102,7 +102,7 @@ public class ClassType {
      */
     public List<CounterType> getCounter() {
         if (counter == null) {
-            counter = new ArrayList<CounterType>();
+            counter = new ArrayList<>();
         }
         return this.counter;
     }

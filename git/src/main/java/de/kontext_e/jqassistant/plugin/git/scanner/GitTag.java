@@ -7,8 +7,8 @@ package de.kontext_e.jqassistant.plugin.git.scanner;
  * @since 1.1.0
  */
 public class GitTag {
-    private String label;
-    private String commitSha;
+    private final String label;
+    private final String commitSha;
 
     public GitTag(String label, String commitSha) {
         this.label = label;

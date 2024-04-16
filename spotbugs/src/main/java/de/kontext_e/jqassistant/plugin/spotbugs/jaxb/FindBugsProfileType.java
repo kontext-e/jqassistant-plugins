@@ -61,7 +61,7 @@ public class FindBugsProfileType {
      */
     public List<ClassProfileType> getClassProfile() {
         if (classProfile == null) {
-            classProfile = new ArrayList<ClassProfileType>();
+            classProfile = new ArrayList<>();
         }
         return this.classProfile;
     }

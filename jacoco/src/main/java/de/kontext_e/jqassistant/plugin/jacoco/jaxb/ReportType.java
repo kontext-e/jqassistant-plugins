@@ -103,7 +103,7 @@ public class ReportType {
      */
     public List<PackageType> getPackage() {
         if (_package == null) {
-            _package = new ArrayList<PackageType>();
+            _package = new ArrayList<>();
         }
         return this._package;
     }
@@ -132,7 +132,7 @@ public class ReportType {
      */
     public List<CounterType> getCounter() {
         if (counter == null) {
-            counter = new ArrayList<CounterType>();
+            counter = new ArrayList<>();
         }
         return this.counter;
     }

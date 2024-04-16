@@ -108,7 +108,7 @@ public class FindBugsSummaryType {
      */
     public List<PackageStatsType> getPackageStats() {
         if (packageStats == null) {
-            packageStats = new ArrayList<PackageStatsType>();
+            packageStats = new ArrayList<>();
         }
         return this.packageStats;
     }
