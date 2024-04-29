@@ -118,7 +118,6 @@ subprojects {
         repositories {
             maven {
                 // snapshots
-                // Test first
                 project.group = project.parent.group
                 url = "https://oss.sonatype.org/content/repositories/snapshots"
                 credentials{

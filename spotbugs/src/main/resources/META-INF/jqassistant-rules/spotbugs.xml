@@ -17,7 +17,7 @@
                     (c:Class), (s:SourceLine)--(b:BugInstance)
                 WHERE
                 c.fqn = s.fqn
-            CREATE UNIQUE
+            MERGE
                     (c)-[:HAS_BUG]->(b)
             RETURN
                     count(c)
@@ -55,7 +55,7 @@
                     (c:Class), (s:SourceLine)--(b:BugInstance)
                 WHERE
                 c.fqn = s.fqn
-            CREATE UNIQUE
+            MERGE
                     (c)-[:HAS_BUG]->(b)
             RETURN
                     count(c)

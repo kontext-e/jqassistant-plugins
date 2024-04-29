@@ -23,6 +23,7 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.FileSystems;
 
 
 /**
@@ -73,7 +74,7 @@ public class CheckstyleScannerPlugin extends AbstractScannerPlugin<FileResource,
         }
 
         final String[] parts = path.split("/");
-        if(parts == null || parts.length < 2) {
+        if(parts.length < 2) {
             return false;
         }
 
@@ -119,10 +120,10 @@ public class CheckstyleScannerPlugin extends AbstractScannerPlugin<FileResource,
     }
 
     private String truncateName(final String name) {
-        if(name.lastIndexOf(System.getProperty("file.separator")) <= 0) {
+        if(name.lastIndexOf(FileSystems.getDefault().getSeparator()) <= 0) {
             return name;
         }
-        return name.substring(name.lastIndexOf(System.getProperty("file.separator")) + 1);
+        return name.substring(name.lastIndexOf(FileSystems.getDefault().getSeparator()) + 1);
     }
 
     private CheckstyleType unmarshalCheckstyleXml(final InputStream streamSource) throws IOException {

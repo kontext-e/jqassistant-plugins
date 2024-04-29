@@ -219,7 +219,7 @@ Constraints were neede to find dependencies in the wrong direction.
 
 [[package:PackageLevel]]
 .Set the level property of a package, e.g. 1 for de, 2 for de.kontext_e and so on.
-[source,cypher,role=concept,requiresConcepts="dependency:Package"]
+[source,cypher,role=concept,requiresConcepts="java:PackageDependency"]
 ----
 MATCH
     (p:Java:Package)

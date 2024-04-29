@@ -7,7 +7,7 @@
                 (c:Class), (s:JacocoClass)
             WHERE
                 c.fqn=s.fqn
-            CREATE UNIQUE
+            MERGE
                 (c)-[:JACOCO_CLASS]->(s)
             RETURN
                 count(c)
@@ -21,7 +21,7 @@
                 (c:Class)-[:DECLARES]->(m:Method), (jc:JacocoClass)-->(jm:JacocoMethod)
             WHERE
                 c.fqn=jc.fqn AND m.signature=jm.signature
-            CREATE UNIQUE
+            MERGE
                 (m)-[:HAS_JACOCO_METHOD]->(jm)
             RETURN
                 count(m)

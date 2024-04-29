@@ -7,7 +7,7 @@
               (c:Class), (p:PmdFile)--(v:PmdViolation)
             WHERE
               c.fqn=p.fqn
-            CREATE UNIQUE
+            MERGE
               (c)-[:HAS_PMD_VIOLATION]->(v)
             RETURN count(c);
 	    ]]></cypher>

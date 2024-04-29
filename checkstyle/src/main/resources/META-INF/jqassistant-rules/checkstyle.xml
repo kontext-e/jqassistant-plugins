@@ -25,7 +25,7 @@
     <cypher><![CDATA[
             MATCH
               (e:Checkstyle:Error)--(cs:Checkstyle:File)-[:CHECKSTYLE_RESULT_FOR]->(class:Java:Class)
-            CREATE UNIQUE
+            MERGE
               (class)-[:HAS_CHECKSTYLE_ERROR]->(e)
             RETURN
               count(class);
