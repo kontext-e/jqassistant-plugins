@@ -199,11 +199,11 @@ class GitRepositoryScanner {
             gitFileDescriptor.setCreatedAtEpoch(date.getTime());
             gitChangeDescriptor.setCreates(gitFileDescriptor);
         } else if(isUpdateChange(gitChangeDescriptor)) {
-            if (date.getTime() > gitFileDescriptor.getLastModificationAtEpoch()) {
+            gitChangeDescriptor.setUpdates(gitFileDescriptor);
+            if (gitFileDescriptor.getLastModificationAtEpoch() == null || date.getTime() < gitFileDescriptor.getLastModificationAtEpoch()){
                 gitFileDescriptor.setLastModificationAt(DATE_TIME_FORMAT.format(date));
                 gitFileDescriptor.setLastModificationAtEpoch(date.getTime());
             }
-            gitChangeDescriptor.setUpdates(gitFileDescriptor);
         } else if(isDeleteChange(gitChangeDescriptor)) {
             gitFileDescriptor.setDeletedAt(DATE_TIME_FORMAT.format(date));
             gitFileDescriptor.setDeletedAtEpoch(date.getTime());
