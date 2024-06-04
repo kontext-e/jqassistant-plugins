@@ -16,14 +16,14 @@ include 'plaintext'
 
 include 'linecount'
 
-include 'cpp'
+//include 'cpp'
 
 include 'asciidoc'
 
-include 'javaparser'
+//include 'javaparser'
 
 include 'excel'
 
-include 'ods'
+//include 'ods'
 
 
