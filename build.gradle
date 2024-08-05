@@ -16,6 +16,7 @@ buildscript {
 }
 
 plugins{
+    id 'de.kontext_e.jqassistant.gradle' version "2.0.0"
     id 'org.asciidoctor.jvm.convert' version '4.0.2'
     id 'java'
     id 'signing'
@@ -120,6 +121,7 @@ subprojects {
                         developer{
                             id = 'william-thimm'
                             name = 'William Thimm'
+                            email = 'w.thimm@kontext-e.de'
                         }
                     }
                 }
@@ -244,107 +246,4 @@ dependencies {
     jqaRuntime("com.buschmais.jqassistant.plugin:common:${project.jqaversion}")
     jqaRuntime("com.buschmais.jqassistant.plugin:java:${project.jqaversion}")
     jqaRuntime("com.buschmais.jqassistant.plugin:junit:${project.jqaversion}")
-
-    //jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.asciidoc:1.9.0")
-    jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.checkstyle:${project.version}")
-    jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.spotbugs:${project.version}")
-    jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.git:${project.version}")
-    jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.jacoco:${project.version}")
-    //  jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.javaparser:${project.version}")
-    jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.linecount:${project.version}")
-    jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.plaintext:${project.version}")
-    jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.plantuml:${project.version}")
-    jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.pmd:${project.version}")
-    jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.excel:${project.version}")
-    //  jqaRuntime("de.kontext-e.jqassistant.plugin:jqassistant.plugin.cpp:${project.version}")
-}
-
-tasks.register('removeJQAReport', Delete) {
-    delete 'jqassistant/report'
-    delete 'jqassistant/store'
-}
-
-tasks.register('jqascan', JavaExec) {
-    dependsOn 'removeJQAReport'
-    main = 'com.buschmais.jqassistant.commandline.Main'
-    classpath = configurations.jqaRuntime
-
-    // this is needed to work around a windows limitation
-    // of a too long command path
-    // see https://stackoverflow.com/questions/50707110/gradle-windows-java-io-ioexception-createprocess-error-206-filename-is-too-lon
-    def cp = CollectionUtils.join(File.pathSeparator, classpath.getFiles())
-    environment 'CLASSPATH', cp
-    classpath = classpath.filter { false }
-
-    args 'scan'
-    args '-p'
-    args 'jqassistant/jqassistant.properties'
-    args '-f'
-
-    rootProject.subprojects {
-        args 'java:classpath::' + it.name + '/build/classes/java/main'
-        args 'java:classpath::' + it.name + '/build/classes/java/test'
-        args it.name + '/build/reports'
-        args it.name + '/src/main'
-        args it.name + '/src/test'
-    }
-
-    args '.git'
-    args 'doc/architecture'
-
-    args 'plantuml/src/test/asciidoc'
-    args 'plantuml/src/test/plantuml'
-    args 'asciidoc/src/test/asciidoc'
-    args 'plaintext/src/test/testfiles'
-    args 'javaparser/src/test'
-
-    args 'excel/src/test/resources'
-}
-
-tasks.register('jqaanalyze', JavaExec) {
-    main = 'com.buschmais.jqassistant.commandline.Main'
-    classpath = configurations.jqaRuntime
-
-    // this is needed to work around a windows limitation
-    // of a too long command path
-    // see https://stackoverflow.com/questions/50707110/gradle-windows-java-io-ioexception-createprocess-error-206-filename-is-too-lon
-    def cp = CollectionUtils.join(File.pathSeparator, classpath.getFiles())
-    environment 'CLASSPATH', cp
-    classpath = classpath.filter { false }
-
-    args 'analyze'
-    args '-r'
-    args 'jqassistant/jqassistant-rules'
-}
-
-tasks.register('jqa') {
-    dependsOn = ['jqascan', 'jqaanalyze']
-    jqaanalyze.mustRunAfter jqascan
-}
-
-tasks.register('jqs', JavaExec) {
-    main = 'com.buschmais.jqassistant.commandline.Main'
-    classpath = configurations.jqaRuntime
-
-    // this is needed to work around a windows limitation
-    // of a too long command path
-    // see https://stackoverflow.com/questions/50707110/gradle-windows-java-io-ioexception-createprocess-error-206-filename-is-too-lon
-    def cp = CollectionUtils.join(File.pathSeparator, classpath.getFiles())
-    environment 'CLASSPATH', cp
-    classpath = classpath.filter { false }
-
-    args 'server'
-    standardInput = System.in
-}
-
-tasks.register('install2jqa', Copy) {
-    def jqahome = "$System.env.JQASSISTANT_HOME"
-    println 'jqahome = ' + jqahome
-
-    mkdir "$projectDir/install"
-    into "$projectDir/install"
-    from configurations.jqaRuntime
-    exclude { details ->
-        details.file.name.contains('asm-3.1')
-    }
 }
