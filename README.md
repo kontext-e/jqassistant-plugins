@@ -1,5 +1,30 @@
 jqassistant-plugins
 ===================
+
+PROJECTS MOVED
+===========
+This repository is no longer maintained.
+The individual plugins can now be found in their respective new repositories:
+
+| Plugin     | New Location                                                                                                     |
+|------------|------------------------------------------------------------------------------------------------------------------|
+| Asciidoc   | [github.com/kontext-e/jqassistant-asciidoc-plugin](https://github.com/kontext-e/jqassistant-asciidoc-plugin)     |
+| Checkstyle | [github.com/kontext-e/jqassistant-checkstyle-plugin](https://github.com/kontext-e/jqassistant-checkstyle-plugin) |
+| Excel      | [github.com/kontext-e/jqassistant-excel-plugin](https://github.com/kontext-e/jqassistant-excel-plugin)           |
+| Git        | [github.com/kontext-e/jqassistant-git-plugin](https://github.com/kontext-e/jqassistant-git-plugin)               |
+| Jacoco     | [github.com/kontext-e/jqassistant-jacoco-plugin](https://github.com/kontext-e/jqassistant-jacoco-plugin)         |
+| Javaparser | discontinued                                                                                                     |
+| Linecount  | [github.com/kontext-e/jqassistant-linecount-plugin](https://github.com/kontext-e/jqassistant-linecount-plugin)   |
+| ODS        | discontinued                                                                                                     |
+| Plaintext  | [github.com/kontext-e/jqassistant-plaintext-plugin](https://github.com/kontext-e/jqassistant-plaintext-plugin)   |
+| PlantUML   | [github.com/kontext-e/jqassistant-plantuml-plugin](https://github.com/kontext-e/jqassistant-plantuml-plugin)     |
+| PMD        | [github.com/kontext-e/jqassistant-pmd-plugin](https://github.com/kontext-e/jqassistant-pmd-plugin)               |
+| Spotbugs   | [github.com/kontext-e/jqassistant-spotbugs-plugin](https://github.com/kontext-e/jqassistant-spotbugs-plugin)     |
+
+All currently maintained plugins are compatible with jQA 2.1+
+
+-----------------------------------------
+
 This repository contains plugins for buschmais' [jQAssistant](http://jqassistant.org).
 
 How to install
@@ -24,7 +49,7 @@ How to install
 * execute jQAssistant tasks
 
 * If you want to add the git plugins to your [jQAssistant](http://jqassistant.org) downloaded commandline installation you currently have to
-  manually add the an org.eclipse.jgit jar file to the plugins directory of jqassistant: Use at least version 
+  manually add the org.eclipse.jgit jar file to the plugins directory of jqassistant: Use at least version 
   [4.8.0.201706111038-r from Maven Central](https://repo1.maven.org/maven2/org/eclipse/jgit/org.eclipse.jgit/4.8.0.201706111038-r/org.eclipse.jgit-4.8.0.201706111038-r.jar).
 
 Some docs
@@ -69,7 +94,7 @@ Release 1.6.0
 Release 1.5.0
 -------------
 * Use jQAssistant 1.5
-* #61 PlantUML jar to version 1.2018.11 to be compabible with main distro
+* #61 PlantUML jar to version 1.2018.11 to be compatible with main distro
 * Simplified Checkstyle plugin graph connection to Java graph; configuration property "jqassistant.plugin.checkstyle.basepackage" is obsolete now
 * Own jqa uses Neo4j 3 now
 * jacoco: use jqa Java plugins 'SignatureHelper' to create the signature string which replaces own dependency to ASM by dependency to jqa Java plugin; should be more robust and create less trouble
@@ -125,10 +150,6 @@ Release 1.3.0
 A newer PlantUML jar is now used. This had some API changes. As a consequence, there are some
 incompatibilities with former graphs that may affect existing queries:
 
-* :Diagram Property "type" is completely upper cased
+* :Diagram Property "type" is completely upper-cased
 * Sequence Diagram labels are in brackets
 * Component Diagram is not a :DescriptionDiagram but a :ClassDiagram
-
-## Continuous Build
-
-[![Build Status](https://travis-ci.org/kontext-e/jqassistant-plugins.svg?branch=master)](https://travis-ci.org/kontext-e/jqassistant-plugins)
